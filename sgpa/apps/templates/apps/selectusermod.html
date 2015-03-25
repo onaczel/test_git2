@@ -2,8 +2,10 @@
 
 {% if users %}
 	{% for user in users %}
-		<p>{{ user.username }}</p>
-		<a href="{% url 'apps:muser' user.id %}">Modificar</a>
+		{% if user.is_active == True %}
+			<p>{{ user.username }}</p>
+			<a href="{% url 'apps:muser' user.id %}">Modificar</a>
+		{% endif %}
 	{% endfor %}
 {% else %}
 	<p>There are no users in database</p>

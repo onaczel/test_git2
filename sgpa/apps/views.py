@@ -56,7 +56,17 @@ def nuevo_usuario(request):
         formulario = UserCreateForm(request.POST)
         if formulario.is_valid:
             formulario.save()
-        return render_to_response('apps/usercreado.html', context_instance=RequestContext(request))
+            ur = Users_Roles()
+            user = User()
+            user = User.objects.get(username=formulario.cleaned_data['username'])
+            ur.user_id = user.id
+            if user.is_superuser:
+                ur.role_id = 1
+            else:
+                ur.role_id = 2   
+            #ur.id = 3
+            ur.save()
+            return render_to_response('apps/usercreado.html', context_instance=RequestContext(request))
     else:
         formulario = UserCreateForm()
     return render_to_response('apps/nuevousuario.html', {'formulario':formulario}, context_instance=RequestContext(request))
@@ -165,7 +175,7 @@ def muser(request, user_id):
             #form.save()
             return render_to_response("apps/usermodificado.html", RequestContext(request))
     else:
-        form = UserCreateForm(initial={'username':'Sergio5', 'email':'sergio2@gmai.com'})
+        form = UserCreateForm(initial={'username':user.username, 'email':user.email, 'is_superuser':user.is_superuser})
         
         
     args = {}
