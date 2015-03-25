@@ -1,0 +1,10 @@
+<h1>Usuarios registrados</h1>
+
+{% if users %}
+	{% for user in users %}
+		<p>{{ user.username }}</p>
+		<a href="{% url 'apps:muser' user.id %}">Modificar</a>
+	{% endfor %}
+{% else %}
+	<p>There are no users in database</p>
+{% endif %} 

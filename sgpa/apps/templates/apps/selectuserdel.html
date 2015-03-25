@@ -1,0 +1,11 @@
+<h1>Usuarios registrados</h1>
+
+
+{% if users %}
+	{% for user in users %}
+		{% if user.is_active == True %}
+			<p>{{user.username}}</p><a href="{% url 'apps:deluser' user.id %}">Eliminar</a>
+		{% endif %}
+	{% endfor %}
+
+{% endif %}
