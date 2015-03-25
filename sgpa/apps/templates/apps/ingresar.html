@@ -1,10 +1,37 @@
-{% block titulo %}Ingresa al sistema{% endblock %}
+{% block titulo %}
+<title>SGPA</title>
+
+<center>
+	<div style="color: blue">
+		<h2>Sistema Gestor de Proyectos Agiles</h2>
+	</div>
+</center>
+
+{% endblock %} 
+
+
 {% block encabezado %}
-	<h1>Ingresa</h1>
-{% endblock %}
+<center>
+	<h1>Acceso al sistema</h1>
+</center>
+
+{% endblock %} 
+
+
 {% block contenido %}
-	<form action="{% url 'apps:ingresar' %}" id='formulario' method='post' >{% csrf_token %}
-		<table>{{formulario}}</table>
-		<p><input type='submit' value='Ingresar' /></p>
-	</form>
+<center>
+<div style="background-color: #AFEEEE;">
+	<div
+		style="border: 2px; width: 400; height: 200; border-style: dotted; border-width: 5px;">
+		<form action="{% url 'apps:ingresar' %}" id='formulario' method='post'>
+			{% csrf_token %}
+			<table>{{formulario}}
+			</table>
+			<p>
+				<input type='submit' value='Ingresar' />
+			</p>
+		</form>
+	</div>
+</div>
+</center>
 {% endblock %}
