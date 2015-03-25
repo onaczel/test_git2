@@ -26,11 +26,11 @@ from django.core.context_processors import csrf
 import user
 from gc import get_objects
 
-class SelectUserView(generic.DetailView):
-    model = User
-    template_name = 'apps/selectusermod.html'
-    #def get_queryset(self):
-    #   return User.objects.all()
+class IndexView(generic.DetailView):
+    template_name='apps/index.html'
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name)
+
 
 class UserCreateForm(UserCreationForm):
     email = forms.EmailField(required=False)
@@ -50,7 +50,6 @@ class UserCreateForm(UserCreationForm):
             user.save()
         return user 
 
-#'''
 def nuevo_usuario(request):
     if request.method=='POST':
         formulario = UserCreateForm(request.POST)
@@ -63,14 +62,14 @@ def nuevo_usuario(request):
             if user.is_superuser:
                 ur.role_id = 1
             else:
-                ur.role_id = 2   
-            #ur.id = 3
+                ur.role_id = 2
+            #CONTROLAR!   
             ur.save()
             return render_to_response('apps/usercreado.html', context_instance=RequestContext(request))
     else:
         formulario = UserCreateForm()
     return render_to_response('apps/nuevousuario.html', {'formulario':formulario}, context_instance=RequestContext(request))
-#'''
+
     
 def ingresar(request):
     if request.method == 'POST':
@@ -155,11 +154,6 @@ def listuserdel(request):
 
     
 def moduser(request):
-    #u = get_object_or_404(User, pk=request.POST['user'])
-    #return HttpResponseRedirect(reverse('apps:usermodificado'), args=(u.id))
-    #return render_to_response('apps/usermodificado.html',context_instance=RequestContext(request))
-    #return HttpResponseRedirect(reverse('apps:muser', args=(u.id)))
-    #return render_to_response("apps/formmoduser.html", RequestContext(request, {}))
     return render(request, 'apps/selectusermod.html')
 
 def muser(request, user_id):
@@ -193,12 +187,5 @@ def deluser(request, id):
 
     u.is_active = False
     u.save()
-    #return HttpResponseRedirect("apps/usereliminado.html")
     return render_to_response("apps/usereliminado.html", RequestContext(request))
-    
-
-        
-    #return render_to_response('apps/selectuserdel.html', {"u":u}, context_instance=RequestContext(request))
-
-    
     
