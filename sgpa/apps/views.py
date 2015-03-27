@@ -8,7 +8,7 @@ from django.utils import timezone
 
 from django.template import RequestContext, loader
 
-from apps.models import Roles, Users_Roles
+from apps.models import Roles, Users_Roles, Permisos
 from django.contrib.auth.models import User
 
 from django.contrib.auth.forms import AuthenticationForm
@@ -25,6 +25,7 @@ from django.core.context_processors import csrf
 
 import user
 from gc import get_objects
+from django.contrib.redirects.models import Redirect
 
 class IndexView(generic.DetailView):
     template_name='apps/index.html'
@@ -35,15 +36,17 @@ class IndexView(generic.DetailView):
 class UserCreateForm(UserCreationForm):
     email = forms.EmailField(required=False)
     is_superuser = forms.BooleanField(required=False)
+    first_name = forms.Field(required=True)
     
     class Meta:
         model = User
-        fields = ("username", "email", "password1", "password2", "is_superuser")
+        fields = ("first_name", "username", "email", "password1", "password2", "is_superuser" )
 
     def save(self, commit=True):
         user = super(UserCreateForm, self).save(commit=False)
         user.email = self.cleaned_data["email"]
         user.is_superuser = self.cleaned_data["is_superuser"]
+        user.firs_name = self.cleaned_data["first_name"]
         if user.is_superuser == 'null':
             user.is_superuser='FALSE'
         if commit:
@@ -65,10 +68,10 @@ def nuevo_usuario(request):
                 ur.role_id = 2
             #CONTROLAR!   
             ur.save()
-            return render_to_response('apps/usercreado.html', context_instance=RequestContext(request))
+            return render_to_response('apps/user_created.html', context_instance=RequestContext(request))
     else:
         formulario = UserCreateForm()
-    return render_to_response('apps/nuevousuario.html', {'formulario':formulario}, context_instance=RequestContext(request))
+    return render_to_response('apps/user_create.html', {'formulario':formulario}, context_instance=RequestContext(request))
 
     
 def ingresar(request):
@@ -88,15 +91,15 @@ def ingresar(request):
     #'''De la tabla de Roles se trae el id del rol del usuario'''
                     rol = Roles.objects.get(descripcion=ur.role)
     #'''Si el usuario es administrador'''
-                if rol.id == 1:
-                    return HttpResponseRedirect('/apps/privado')
+                    if rol.id == 1:
+                        return HttpResponseRedirect('/apps/user_private_admin')
     #'''Si es usuario normal'''
+                    else:
+                        return HttpResponseRedirect('/apps/user_private_user')
                 else:
-                    return HttpResponseRedirect('/apps/privadoNoadmin')
+                    return render_to_response('apps/user_no_active.html', context_instance=RequestContext(request))
             else:
-                return render_to_response('apps/noactivo.html', context_instance=RequestContext(request))
-        else:
-            return render_to_response('apps/modadmin.html', context_instance=RequestContext(request))
+                return render_to_response('apps/user_no_exists.html', context_instance=RequestContext(request))
     else:
         formulario = AuthenticationForm()
     return render_to_response('apps/ingresar.html', {'formulario':formulario}, context_instance=RequestContext(request))
@@ -106,12 +109,12 @@ def ingresar(request):
 @login_required(login_url='apps/ingresar')
 def privado(request):
     usuario = request.user
-    return render_to_response('apps/privado.html', {'usuario':usuario}, context_instance=RequestContext(request))
+    return render_to_response('apps/user_private_admin.html', {'usuario':usuario}, context_instance=RequestContext(request))
 
 @login_required(login_url='apps/ingresar')
 def privadoNoadmin(request):
     usuario = request.user
-    return render_to_response('apps/privadoNoadmin.html', {'usuario':usuario}, context_instance=RequestContext(request))
+    return render_to_response('apps/user_private_user.html', {'usuario':usuario}, context_instance=RequestContext(request))
 
 @login_required(login_url='apps/ingresar')
 def cerrar(request):
@@ -123,17 +126,22 @@ Cada vista debe tener una clase, o funcion
 y un render que llame al template
 '''
 class modadmin(generic.DetailView):
-    template_name = 'apps/modadmin.html'
+    template_name = 'apps/admin_mod.html'
     def get(self, request, *args, **kwargs):
         return render(request, self.template_name)
 
 class modproyecto(generic.DetailView):
-    template_name = 'apps/modproyecto.html'
+    template_name = 'apps/project_mod.html'
     def get(self, request, *args, **kwargs):
         return render(request, self.template_name)
 
 class adminuser(generic.DetailView):
-    template_name="apps/adminuser.html"
+    template_name="apps/user_admin.html"
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name)
+
+class adminrole(generic.DetailView):
+    template_name ='apps/role_admin.html'
     def get(self, request, *args, **kwargs):
         return render(request, self.template_name)
 
@@ -146,15 +154,30 @@ Por supuesto, la funcion se debe encontrar en urls
 '''
 def listuser(request):
     users = User.objects.all()
-    return render_to_response("apps/selectusermod.html", {"users":users})
+    return render_to_response("apps/user_select_mod.html", {"users":users})
 
 def listuserdel(request):
     users = User.objects.all()
-    return render_to_response("apps/selectuserdel.html", {"users":users})
-
+    return render_to_response("apps/user_select_del.html", {"users":users})
+#Noreversematch es un error de configuracion de url
+def listpermisos(request):
+    if request.method == 'POST':
+        form = RoleCreateForm(request.POST)
+        if form.is_valid():
+            form.save()
+        #return render_to_response('apps:listpermisos', context_instance=RequestContext(request))
+        #return render(request, 'apps/ingresar.html') 
+        permisos = Permisos.objects.all()
+        return render_to_response("apps/role_set_permisos.html", {"permisos":permisos})
+    else:
+        form = RoleCreateForm()
     
-def moduser(request):
-    return render(request, 'apps/selectusermod.html')
+    return render_to_response('apps/role_create.html' ,{'form':form}, context_instance=RequestContext(request))
+    #permisos = Permisos.objects.all()
+    #return render_to_response("apps/role_set_permisos.html", {"permisos":permisos})
+    
+#def moduser(request):
+    #return render(request, 'apps/user_select_mod.html')
 
 def muser(request, user_id):
     user = get_object_or_404(User, pk=user_id)
@@ -167,7 +190,7 @@ def muser(request, user_id):
             user.is_superuser = form.cleaned_data['is_superuser']
             user.save()
             #form.save()
-            return render_to_response("apps/usermodificado.html", RequestContext(request))
+            return render_to_response("apps/user_modified.html", RequestContext(request))
     else:
         form = UserCreateForm(initial={'username':user.username, 'email':user.email, 'is_superuser':user.is_superuser})
         
@@ -177,15 +200,38 @@ def muser(request, user_id):
     
     args['form'] = form
     
-    return render_to_response('apps/formmoduser.html', args)
+    return render_to_response('apps/user_form_mod.html', args)
 
 def eliminaruser(request):
-    return render(request, 'apps/selectuserdel.html')
+    return render(request, 'apps/user_select_del.html')
 
 def deluser(request, id):
     u = get_object_or_404(User, pk=id)
 
     u.is_active = False
     u.save()
-    return render_to_response("apps/usereliminado.html", RequestContext(request))
+    return render_to_response("apps/user_deleted.html", RequestContext(request))
+
+class RoleCreateForm(forms.ModelForm):
+    class Meta:
+        fields = ("descripcion", "estado")
+        model = Roles
+        
+
+def crearRol(request):
+    if request.method == 'POST':
+        form = RoleCreateForm(request.POST)
+        if form.is_valid():
+            form.save()
+        return render_to_response('apps:listpermisos', context_instance=RequestContext(request))
+        #return render(request, 'apps/ingresar.html') 
+    else:
+        form = RoleCreateForm()
     
+    return render_to_response('apps/role_create.html' ,{'form':form}, context_instance=RequestContext(request))
+
+def asignarrol(request):
+    if request.method == 'POST':
+        list_permisos = request.POST.getlist('lista')
+        #perm = 
+    return render_to_response('apps/ingresar.html', RequestContext(request))
