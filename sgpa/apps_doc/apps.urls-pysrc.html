@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>apps.urls</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="apps-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+      <th class="navbar" width="100%"></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="apps-module.html">Package&nbsp;apps</a> ::
+        Module&nbsp;urls
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="apps.urls-pysrc.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<h1 class="epydoc">Source Code for <a href="apps.urls-module.html">Module apps.urls</a></h1>
+<pre class="py-src">
+<a name="L1"></a><tt class="py-lineno"> 1</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">django</tt><tt class="py-op">.</tt><tt class="py-name">conf</tt><tt class="py-op">.</tt><tt id="link-0" class="py-name" targets="Module apps.urls=apps.urls-module.html"><a title="apps.urls" class="py-name" href="#" onclick="return doclink('link-0', 'urls', 'link-0');">urls</a></tt> <tt class="py-keyword">import</tt> <tt class="py-name">patterns</tt><tt class="py-op">,</tt> <tt class="py-name">url</tt> </tt>
+<a name="L2"></a><tt class="py-lineno"> 2</tt>  <tt class="py-line"> </tt>
+<a name="L3"></a><tt class="py-lineno"> 3</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-1" class="py-name" targets="Package apps=apps-module.html"><a title="apps" class="py-name" href="#" onclick="return doclink('link-1', 'apps', 'link-1');">apps</a></tt> <tt class="py-keyword">import</tt> <tt id="link-2" class="py-name" targets="Module apps.views=apps.views-module.html"><a title="apps.views" class="py-name" href="#" onclick="return doclink('link-2', 'views', 'link-2');">views</a></tt> </tt>
+<a name="L4"></a><tt class="py-lineno"> 4</tt>  <tt class="py-line"> </tt>
+<a name="L5"></a><tt class="py-lineno"> 5</tt>  <tt class="py-line"><tt id="link-3" class="py-name" targets="Variable apps.urls.urlpatterns=apps.urls-module.html#urlpatterns"><a title="apps.urls.urlpatterns" class="py-name" href="#" onclick="return doclink('link-3', 'urlpatterns', 'link-3');">urlpatterns</a></tt> <tt class="py-op">=</tt> <tt class="py-name">patterns</tt><tt class="py-op">(</tt><tt class="py-string">''</tt><tt class="py-op">,</tt> </tt>
+<a name="L6"></a><tt class="py-lineno"> 6</tt>  <tt class="py-line">    <tt class="py-name">url</tt><tt class="py-op">(</tt><tt class="py-string">r'^$'</tt><tt class="py-op">,</tt> <tt id="link-4" class="py-name"><a title="apps.views" class="py-name" href="#" onclick="return doclink('link-4', 'views', 'link-2');">views</a></tt><tt class="py-op">.</tt><tt id="link-5" class="py-name" targets="Class apps.views.IndexView=apps.views.IndexView-class.html"><a title="apps.views.IndexView" class="py-name" href="#" onclick="return doclink('link-5', 'IndexView', 'link-5');">IndexView</a></tt><tt class="py-op">.</tt><tt class="py-name">as_view</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> <tt class="py-name">name</tt><tt class="py-op">=</tt><tt class="py-string">'index'</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L7"></a><tt class="py-lineno"> 7</tt>  <tt class="py-line">    <tt class="py-name">url</tt><tt class="py-op">(</tt><tt class="py-string">r'^usuario/nuevo'</tt><tt class="py-op">,</tt> <tt id="link-6" class="py-name"><a title="apps.views" class="py-name" href="#" onclick="return doclink('link-6', 'views', 'link-2');">views</a></tt><tt class="py-op">.</tt><tt id="link-7" class="py-name" targets="Function apps.views.nuevo_usuario()=apps.views-module.html#nuevo_usuario"><a title="apps.views.nuevo_usuario" class="py-name" href="#" onclick="return doclink('link-7', 'nuevo_usuario', 'link-7');">nuevo_usuario</a></tt><tt class="py-op">,</tt> <tt class="py-name">name</tt><tt class="py-op">=</tt><tt class="py-string">'nuevousuario'</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L8"></a><tt class="py-lineno"> 8</tt>  <tt class="py-line">    <tt class="py-name">url</tt><tt class="py-op">(</tt><tt class="py-string">r'^ingresar/$'</tt><tt class="py-op">,</tt> <tt id="link-8" class="py-name"><a title="apps.views" class="py-name" href="#" onclick="return doclink('link-8', 'views', 'link-2');">views</a></tt><tt class="py-op">.</tt><tt id="link-9" class="py-name" targets="Function apps.views.ingresar()=apps.views-module.html#ingresar"><a title="apps.views.ingresar" class="py-name" href="#" onclick="return doclink('link-9', 'ingresar', 'link-9');">ingresar</a></tt><tt class="py-op">,</tt> <tt class="py-name">name</tt><tt class="py-op">=</tt><tt class="py-string">'ingresar'</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L9"></a><tt class="py-lineno"> 9</tt>  <tt class="py-line">    <tt class="py-name">url</tt><tt class="py-op">(</tt><tt class="py-string">r'^user_private_admin/$'</tt><tt class="py-op">,</tt> <tt id="link-10" class="py-name"><a title="apps.views" class="py-name" href="#" onclick="return doclink('link-10', 'views', 'link-2');">views</a></tt><tt class="py-op">.</tt><tt id="link-11" class="py-name" targets="Function apps.views.privado()=apps.views-module.html#privado"><a title="apps.views.privado" class="py-name" href="#" onclick="return doclink('link-11', 'privado', 'link-11');">privado</a></tt><tt class="py-op">,</tt> <tt class="py-name">name</tt><tt class="py-op">=</tt><tt class="py-string">'user_private_admin'</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L10"></a><tt class="py-lineno">10</tt>  <tt class="py-line">    <tt class="py-name">url</tt><tt class="py-op">(</tt><tt class="py-string">r'^user_private_user/$'</tt><tt class="py-op">,</tt> <tt id="link-12" class="py-name"><a title="apps.views" class="py-name" href="#" onclick="return doclink('link-12', 'views', 'link-2');">views</a></tt><tt class="py-op">.</tt><tt id="link-13" class="py-name" targets="Function apps.views.privadoNoadmin()=apps.views-module.html#privadoNoadmin"><a title="apps.views.privadoNoadmin" class="py-name" href="#" onclick="return doclink('link-13', 'privadoNoadmin', 'link-13');">privadoNoadmin</a></tt><tt class="py-op">,</tt> <tt class="py-name">name</tt><tt class="py-op">=</tt><tt class="py-string">'privadoNoadmin'</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L11"></a><tt class="py-lineno">11</tt>  <tt class="py-line">    <tt class="py-name">url</tt><tt class="py-op">(</tt><tt class="py-string">r'^cerrar/$'</tt><tt class="py-op">,</tt> <tt id="link-14" class="py-name"><a title="apps.views" class="py-name" href="#" onclick="return doclink('link-14', 'views', 'link-2');">views</a></tt><tt class="py-op">.</tt><tt id="link-15" class="py-name" targets="Function apps.views.cerrar()=apps.views-module.html#cerrar"><a title="apps.views.cerrar" class="py-name" href="#" onclick="return doclink('link-15', 'cerrar', 'link-15');">cerrar</a></tt><tt class="py-op">,</tt> <tt class="py-name">name</tt><tt class="py-op">=</tt><tt class="py-string">'cerrar'</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L12"></a><tt class="py-lineno">12</tt>  <tt class="py-line">    <tt class="py-name">url</tt><tt class="py-op">(</tt><tt class="py-string">r'^modadmin/$'</tt><tt class="py-op">,</tt> <tt id="link-16" class="py-name"><a title="apps.views" class="py-name" href="#" onclick="return doclink('link-16', 'views', 'link-2');">views</a></tt><tt class="py-op">.</tt><tt id="link-17" class="py-name" targets="Class apps.views.modadmin=apps.views.modadmin-class.html"><a title="apps.views.modadmin" class="py-name" href="#" onclick="return doclink('link-17', 'modadmin', 'link-17');">modadmin</a></tt><tt class="py-op">.</tt><tt class="py-name">as_view</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> <tt class="py-name">name</tt><tt class="py-op">=</tt><tt class="py-string">'modadmin'</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L13"></a><tt class="py-lineno">13</tt>  <tt class="py-line">    <tt class="py-name">url</tt><tt class="py-op">(</tt><tt class="py-string">r'^modproyecto/$'</tt><tt class="py-op">,</tt> <tt id="link-18" class="py-name"><a title="apps.views" class="py-name" href="#" onclick="return doclink('link-18', 'views', 'link-2');">views</a></tt><tt class="py-op">.</tt><tt id="link-19" class="py-name" targets="Class apps.views.modproyecto=apps.views.modproyecto-class.html"><a title="apps.views.modproyecto" class="py-name" href="#" onclick="return doclink('link-19', 'modproyecto', 'link-19');">modproyecto</a></tt><tt class="py-op">.</tt><tt class="py-name">as_view</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> <tt class="py-name">name</tt><tt class="py-op">=</tt><tt class="py-string">'modproyecto'</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L14"></a><tt class="py-lineno">14</tt>  <tt class="py-line">    <tt class="py-name">url</tt><tt class="py-op">(</tt><tt class="py-string">r'^modadmin/adminuser/$'</tt><tt class="py-op">,</tt> <tt id="link-20" class="py-name"><a title="apps.views" class="py-name" href="#" onclick="return doclink('link-20', 'views', 'link-2');">views</a></tt><tt class="py-op">.</tt><tt id="link-21" class="py-name" targets="Class apps.views.adminuser=apps.views.adminuser-class.html"><a title="apps.views.adminuser" class="py-name" href="#" onclick="return doclink('link-21', 'adminuser', 'link-21');">adminuser</a></tt><tt class="py-op">.</tt><tt class="py-name">as_view</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> <tt class="py-name">name</tt><tt class="py-op">=</tt><tt class="py-string">"adminuser"</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L15"></a><tt class="py-lineno">15</tt>  <tt class="py-line">    <tt class="py-name">url</tt><tt class="py-op">(</tt><tt class="py-string">r'^modadmin/adminuser/moduser/$'</tt><tt class="py-op">,</tt> <tt id="link-22" class="py-name"><a title="apps.views" class="py-name" href="#" onclick="return doclink('link-22', 'views', 'link-2');">views</a></tt><tt class="py-op">.</tt><tt id="link-23" class="py-name" targets="Function apps.views.listuser()=apps.views-module.html#listuser"><a title="apps.views.listuser" class="py-name" href="#" onclick="return doclink('link-23', 'listuser', 'link-23');">listuser</a></tt><tt class="py-op">,</tt> <tt class="py-name">name</tt><tt class="py-op">=</tt><tt class="py-string">'listuser'</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L16"></a><tt class="py-lineno">16</tt>  <tt class="py-line">   <tt class="py-comment"># url(r'^modadmin/adminuser/moduser/mod/$', views.moduser, name="moduser"),</tt> </tt>
+<a name="L17"></a><tt class="py-lineno">17</tt>  <tt class="py-line">    <tt class="py-name">url</tt><tt class="py-op">(</tt><tt class="py-string">r'^(?P&lt;user_id&gt;\d+)/muser/$'</tt><tt class="py-op">,</tt> <tt id="link-24" class="py-name"><a title="apps.views" class="py-name" href="#" onclick="return doclink('link-24', 'views', 'link-2');">views</a></tt><tt class="py-op">.</tt><tt id="link-25" class="py-name" targets="Function apps.views.muser()=apps.views-module.html#muser"><a title="apps.views.muser" class="py-name" href="#" onclick="return doclink('link-25', 'muser', 'link-25');">muser</a></tt><tt class="py-op">,</tt> <tt class="py-name">name</tt><tt class="py-op">=</tt><tt class="py-string">"muser"</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L18"></a><tt class="py-lineno">18</tt>  <tt class="py-line">    <tt class="py-name">url</tt><tt class="py-op">(</tt><tt class="py-string">r'^modadmin/adminuser/eliminaruser/$'</tt><tt class="py-op">,</tt> <tt id="link-26" class="py-name"><a title="apps.views" class="py-name" href="#" onclick="return doclink('link-26', 'views', 'link-2');">views</a></tt><tt class="py-op">.</tt><tt id="link-27" class="py-name" targets="Function apps.views.listuserdel()=apps.views-module.html#listuserdel"><a title="apps.views.listuserdel" class="py-name" href="#" onclick="return doclink('link-27', 'listuserdel', 'link-27');">listuserdel</a></tt><tt class="py-op">,</tt> <tt class="py-name">name</tt><tt class="py-op">=</tt><tt class="py-string">"eliminaruser"</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L19"></a><tt class="py-lineno">19</tt>  <tt class="py-line">    <tt class="py-name">url</tt><tt class="py-op">(</tt><tt class="py-string">r'^(?P&lt;id&gt;\d+)/deluser/$'</tt><tt class="py-op">,</tt> <tt id="link-28" class="py-name"><a title="apps.views" class="py-name" href="#" onclick="return doclink('link-28', 'views', 'link-2');">views</a></tt><tt class="py-op">.</tt><tt id="link-29" class="py-name" targets="Function apps.views.deluser()=apps.views-module.html#deluser"><a title="apps.views.deluser" class="py-name" href="#" onclick="return doclink('link-29', 'deluser', 'link-29');">deluser</a></tt><tt class="py-op">,</tt> <tt class="py-name">name</tt><tt class="py-op">=</tt><tt class="py-string">"deluser"</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L20"></a><tt class="py-lineno">20</tt>  <tt class="py-line">    <tt class="py-name">url</tt><tt class="py-op">(</tt><tt class="py-string">r'^modadmin/adminuser/eliminaruser/del/$'</tt><tt class="py-op">,</tt> <tt id="link-30" class="py-name"><a title="apps.views" class="py-name" href="#" onclick="return doclink('link-30', 'views', 'link-2');">views</a></tt><tt class="py-op">.</tt><tt id="link-31" class="py-name" targets="Function apps.views.eliminaruser()=apps.views-module.html#eliminaruser"><a title="apps.views.eliminaruser" class="py-name" href="#" onclick="return doclink('link-31', 'eliminaruser', 'link-31');">eliminaruser</a></tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L21"></a><tt class="py-lineno">21</tt>  <tt class="py-line">    <tt class="py-name">url</tt><tt class="py-op">(</tt><tt class="py-string">r'^modadmin/adminrole/$'</tt><tt class="py-op">,</tt> <tt id="link-32" class="py-name"><a title="apps.views" class="py-name" href="#" onclick="return doclink('link-32', 'views', 'link-2');">views</a></tt><tt class="py-op">.</tt><tt id="link-33" class="py-name" targets="Class apps.views.adminrole=apps.views.adminrole-class.html"><a title="apps.views.adminrole" class="py-name" href="#" onclick="return doclink('link-33', 'adminrole', 'link-33');">adminrole</a></tt><tt class="py-op">.</tt><tt class="py-name">as_view</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> <tt class="py-name">name</tt><tt class="py-op">=</tt><tt class="py-string">"adminrole"</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L22"></a><tt class="py-lineno">22</tt>  <tt class="py-line">    <tt class="py-name">url</tt><tt class="py-op">(</tt><tt class="py-string">r'^modadmin/adminrole/crearrole/$'</tt><tt class="py-op">,</tt> <tt id="link-34" class="py-name"><a title="apps.views" class="py-name" href="#" onclick="return doclink('link-34', 'views', 'link-2');">views</a></tt><tt class="py-op">.</tt><tt id="link-35" class="py-name" targets="Function apps.views.crearRol()=apps.views-module.html#crearRol"><a title="apps.views.crearRol" class="py-name" href="#" onclick="return doclink('link-35', 'crearRol', 'link-35');">crearRol</a></tt><tt class="py-op">,</tt> <tt class="py-name">name</tt><tt class="py-op">=</tt><tt class="py-string">"crearrol"</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L23"></a><tt class="py-lineno">23</tt>  <tt class="py-line">    <tt class="py-name">url</tt><tt class="py-op">(</tt><tt class="py-string">r'^asigpermisos/$'</tt><tt class="py-op">,</tt> <tt id="link-36" class="py-name"><a title="apps.views" class="py-name" href="#" onclick="return doclink('link-36', 'views', 'link-2');">views</a></tt><tt class="py-op">.</tt><tt id="link-37" class="py-name" targets="Function apps.views.listpermisos()=apps.views-module.html#listpermisos"><a title="apps.views.listpermisos" class="py-name" href="#" onclick="return doclink('link-37', 'listpermisos', 'link-37');">listpermisos</a></tt><tt class="py-op">,</tt> <tt class="py-name">name</tt><tt class="py-op">=</tt><tt class="py-string">"listpermisos"</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L24"></a><tt class="py-lineno">24</tt>  <tt class="py-line">    <tt class="py-name">url</tt><tt class="py-op">(</tt><tt class="py-string">r'^(?P&lt;role_id&gt;\d+)/asignarrol/$'</tt><tt class="py-op">,</tt> <tt id="link-38" class="py-name"><a title="apps.views" class="py-name" href="#" onclick="return doclink('link-38', 'views', 'link-2');">views</a></tt><tt class="py-op">.</tt><tt id="link-39" class="py-name" targets="Function apps.views.asignarrol()=apps.views-module.html#asignarrol"><a title="apps.views.asignarrol" class="py-name" href="#" onclick="return doclink('link-39', 'asignarrol', 'link-39');">asignarrol</a></tt><tt class="py-op">,</tt> <tt class="py-name">name</tt><tt class="py-op">=</tt><tt class="py-string">"asignarrol"</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L25"></a><tt class="py-lineno">25</tt>  <tt class="py-line"><tt class="py-op">)</tt> </tt>
+<a name="L26"></a><tt class="py-lineno">26</tt>  <tt class="py-line"> </tt><script type="text/javascript">
+<!--
+expandto(location.href);
+// -->
+</script>
+</pre>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="apps-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+      <th class="navbar" width="100%"></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Fri Mar 27 16:07:06 2015
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>
