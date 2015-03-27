@@ -53,6 +53,32 @@ class UserCreateForm(UserCreationForm):
             user.save()
         return user 
 
+class UserModifyForm(UserCreationForm):
+    email = forms.EmailField(required=False)
+    is_superuser = forms.BooleanField(required=False)
+    first_name = forms.Field(required=True)
+    
+    def __init__(self, *args, **kwargs):
+        super(UserModifyForm, self).__init__(*args, **kwargs)
+        del self.fields['username']
+        
+    class Meta:
+        model = User
+        
+        fields = ("first_name", "email", "password1", "password2", "is_superuser" )
+        
+
+    def save(self, commit=True):
+        user = super(UserCreateForm, self).save(commit=False)
+        user.email = self.cleaned_data["email"]
+        user.is_superuser = self.cleaned_data["is_superuser"]
+        user.firs_name = self.cleaned_data["first_name"]
+        if user.is_superuser == 'null':
+            user.is_superuser='FALSE'
+        if commit:
+            user.save()
+        return user 
+    
 def nuevo_usuario(request):
     if request.method=='POST':
         formulario = UserCreateForm(request.POST)
@@ -167,8 +193,10 @@ def listpermisos(request):
             form.save()
         #return render_to_response('apps:listpermisos', context_instance=RequestContext(request))
         #return render(request, 'apps/ingresar.html') 
+        role = Roles.objects.get(descripcion=form.cleaned_data['descripcion'])
+        role_id = role.id
         permisos = Permisos.objects.all()
-        return render_to_response("apps/role_set_permisos.html", {"permisos":permisos})
+        return render_to_response("apps/role_set_permisos.html", {"permisos":permisos, "role_id":role_id})
     else:
         form = RoleCreateForm()
     
@@ -182,17 +210,18 @@ def listpermisos(request):
 def muser(request, user_id):
     user = get_object_or_404(User, pk=user_id)
     if request.POST:
-        form = UserCreateForm(request.POST)
+        form = UserModifyForm(request.POST)
         if form.is_valid():
-            user.username = form.cleaned_data['username']
+            #user.save(update_field=['username'])
             user.set_password(form.cleaned_data['password1'])
             user.email = form.cleaned_data['email']
             user.is_superuser = form.cleaned_data['is_superuser']
+            user.first_name = form.cleaned_data['first_name']
             user.save()
             #form.save()
             return render_to_response("apps/user_modified.html", RequestContext(request))
     else:
-        form = UserCreateForm(initial={'username':user.username, 'email':user.email, 'is_superuser':user.is_superuser})
+        form = UserModifyForm(initial={ 'email':user.email, 'is_superuser':user.is_superuser})
         
         
     args = {}
@@ -230,8 +259,11 @@ def crearRol(request):
     
     return render_to_response('apps/role_create.html' ,{'form':form}, context_instance=RequestContext(request))
 
-def asignarrol(request):
-    if request.method == 'POST':
-        list_permisos = request.POST.getlist('lista')
+def asignarrol(request, role_id):
+    p = get_object_or_404(Roles, pk=role_id)
+    #try:
+        
+    #if request.method == 'POST':
+     #   list_permisos = request.POST.getlist('lista')
         #perm = 
-    return render_to_response('apps/ingresar.html', RequestContext(request))
+    return render_to_response("apps/user_deleted.html", RequestContext(request))

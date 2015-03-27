@@ -21,5 +21,5 @@ urlpatterns = patterns('',
     url(r'^modadmin/adminrole/$', views.adminrole.as_view(), name="adminrole"),
     url(r'^modadmin/adminrole/crearrole/$', views.crearRol, name="crearrol"),
     url(r'^asigpermisos/$', views.listpermisos, name="listpermisos"),
-    url(r'^asignarrol/$', views.asignarrol, name="asignarrol"),
+    url(r'^(?P<role_id>\d+)/asignarrol/$', views.asignarrol, name="asignarrol"),
 )

@@ -7,7 +7,7 @@ from test.test_support import args_from_interpreter_flags
 
     
 class Roles(models.Model):
-    descripcion = models.CharField(max_length=200)
+    descripcion = models.CharField(max_length=200, unique=True)
     estado = models.BooleanField(default = 1)
     def __str__(self):
         return self.descripcion
