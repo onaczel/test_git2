@@ -50,6 +50,7 @@ apps.views.RoleCreateForm.Meta.fields	apps.views.RoleCreateForm.Meta-class.html#
 apps.views.RoleCreateForm.Meta.model	apps.views.RoleCreateForm.Meta-class.html#model
 apps.views.UserCreateForm	apps.views.UserCreateForm-class.html
 apps.views.UserCreateForm.first_name	apps.views.UserCreateForm-class.html#first_name
+apps.views.UserCreateForm.last_name	apps.views.UserCreateForm-class.html#last_name
 apps.views.UserCreateForm.is_superuser	apps.views.UserCreateForm-class.html#is_superuser
 apps.views.UserCreateForm.Meta	apps.views.UserCreateForm.Meta-class.html
 apps.views.UserCreateForm.save	apps.views.UserCreateForm-class.html#save
@@ -59,6 +60,7 @@ apps.views.UserCreateForm.Meta.fields	apps.views.UserCreateForm.Meta-class.html#
 apps.views.UserCreateForm.Meta.model	apps.views.UserCreateForm.Meta-class.html#model
 apps.views.UserModifyForm	apps.views.UserModifyForm-class.html
 apps.views.UserModifyForm.first_name	apps.views.UserModifyForm-class.html#first_name
+apps.views.UserModifyForm.last_name	apps.views.UserModifyForm-class.html#last_name
 apps.views.UserModifyForm.is_superuser	apps.views.UserModifyForm-class.html#is_superuser
 apps.views.UserModifyForm.Meta	apps.views.UserModifyForm.Meta-class.html
 apps.views.UserModifyForm.save	apps.views.UserModifyForm-class.html#save

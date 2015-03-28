@@ -153,7 +153,9 @@
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a name="nuevo_usuario"></a><span class="summary-sig-name">nuevo_usuario</span>(<span class="summary-sig-arg">request</span>)</span></td>
+          <td><span class="summary-sig"><a name="nuevo_usuario"></a><span class="summary-sig-name">nuevo_usuario</span>(<span class="summary-sig-arg">request</span>)</span><br />
+      Verifica que el formulario es valido y almacena el nuevo usuario en 
+      la base de datos</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="apps.views-pysrc.html#nuevo_usuario">source&nbsp;code</a></span>
             
@@ -169,7 +171,8 @@
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a name="ingresar"></a><span class="summary-sig-name">ingresar</span>(<span class="summary-sig-arg">request</span>)</span></td>
+          <td><span class="summary-sig"><a href="apps.views-module.html#ingresar" class="summary-sig-name">ingresar</a>(<span class="summary-sig-arg">request</span>)</span><br />
+      Metodo que permite el inicio de sesion en el sistema</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="apps.views-pysrc.html#ingresar">source&nbsp;code</a></span>
             
@@ -185,7 +188,9 @@
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a href="apps.views-module.html#privado" class="summary-sig-name">privado</a>(<span class="summary-sig-arg">request</span>)</span></td>
+          <td><span class="summary-sig"><a href="apps.views-module.html#privado" class="summary-sig-name">privado</a>(<span class="summary-sig-arg">request</span>)</span><br />
+      Retorna el template correspondiente a un usuario con rol 
+      Administrador</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="apps.views-pysrc.html#privado">source&nbsp;code</a></span>
             
@@ -201,7 +206,8 @@
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a href="apps.views-module.html#privadoNoadmin" class="summary-sig-name">privadoNoadmin</a>(<span class="summary-sig-arg">request</span>)</span></td>
+          <td><span class="summary-sig"><a href="apps.views-module.html#privadoNoadmin" class="summary-sig-name">privadoNoadmin</a>(<span class="summary-sig-arg">request</span>)</span><br />
+      Retorna el template correspondiente a un usuario con rol Usuario</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="apps.views-pysrc.html#privadoNoadmin">source&nbsp;code</a></span>
             
@@ -217,7 +223,8 @@
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a href="apps.views-module.html#cerrar" class="summary-sig-name">cerrar</a>(<span class="summary-sig-arg">request</span>)</span></td>
+          <td><span class="summary-sig"><a href="apps.views-module.html#cerrar" class="summary-sig-name">cerrar</a>(<span class="summary-sig-arg">request</span>)</span><br />
+      Recibe un request y cierra la sesion correspondiente</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="apps.views-pysrc.html#cerrar">source&nbsp;code</a></span>
             
@@ -233,7 +240,9 @@
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a name="listuser"></a><span class="summary-sig-name">listuser</span>(<span class="summary-sig-arg">request</span>)</span></td>
+          <td><span class="summary-sig"><a name="listuser"></a><span class="summary-sig-name">listuser</span>(<span class="summary-sig-arg">request</span>)</span><br />
+      Retorna una lista con todos los usuarios del sistema y lo envia al 
+      template de modificacion de usuario</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="apps.views-pysrc.html#listuser">source&nbsp;code</a></span>
             
@@ -249,7 +258,9 @@
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a name="listuserdel"></a><span class="summary-sig-name">listuserdel</span>(<span class="summary-sig-arg">request</span>)</span></td>
+          <td><span class="summary-sig"><a name="listuserdel"></a><span class="summary-sig-name">listuserdel</span>(<span class="summary-sig-arg">request</span>)</span><br />
+      Retorna una lista con todos los usuarios del sistema y lo envia al 
+      template de eliminacion de usuario</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="apps.views-pysrc.html#listuserdel">source&nbsp;code</a></span>
             
@@ -282,7 +293,9 @@
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
           <td><span class="summary-sig"><a name="muser"></a><span class="summary-sig-name">muser</span>(<span class="summary-sig-arg">request</span>,
-        <span class="summary-sig-arg">user_id</span>)</span></td>
+        <span class="summary-sig-arg">user_id</span>)</span><br />
+      Metodo que obtiene los campos modificados del formulario de 
+      modificacion de usuario</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="apps.views-pysrc.html#muser">source&nbsp;code</a></span>
             
@@ -377,6 +390,27 @@
   </td>
 </tr>
 </table>
+<a name="ingresar"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">ingresar</span>(<span class="sig-arg">request</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="apps.views-pysrc.html#ingresar">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Metodo que permite el inicio de sesion en el sistema</p>
+  <p>Verifica que el usuario este activo y lo redirige a su template 
+  correspondiente segun su rol en el sistema</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
 <a name="privado"></a>
 <div>
 <table class="details" border="1" cellpadding="3"
@@ -391,7 +425,8 @@
     </td>
   </tr></table>
   
-  
+  <p>Retorna el template correspondiente a un usuario con rol 
+  Administrador</p>
   <dl class="fields">
     <dt>Decorators:</dt>
     <dd><ul class="nomargin-top">
@@ -414,7 +449,7 @@
     </td>
   </tr></table>
   
-  
+  <p>Retorna el template correspondiente a un usuario con rol Usuario</p>
   <dl class="fields">
     <dt>Decorators:</dt>
     <dd><ul class="nomargin-top">
@@ -437,7 +472,7 @@
     </td>
   </tr></table>
   
-  
+  <p>Recibe un request y cierra la sesion correspondiente</p>
   <dl class="fields">
     <dt>Decorators:</dt>
     <dd><ul class="nomargin-top">
@@ -473,7 +508,7 @@
 <table border="0" cellpadding="0" cellspacing="0" width="100%%">
   <tr>
     <td align="left" class="footer">
-    Generated by Epydoc 3.0.1 on Fri Mar 27 16:07:06 2015
+    Generated by Epydoc 3.0.1 on Fri Mar 27 22:43:48 2015
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"
