@@ -1,0 +1,10 @@
+<p>Nuevo Rol</p>
+<h1>Registrar un nuevo Rol</h1>
+
+<form action="{% url 'apps:listpermisos' %}" method="post">{% csrf_token %}
+	<table>{{ form }}</table>
+	<p><input type='submit' value='Registrar'/></p>
+	
+
+
+</form>

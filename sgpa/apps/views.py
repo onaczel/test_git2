@@ -8,8 +8,9 @@ from django.utils import timezone
 
 from django.template import RequestContext, loader
 
-from apps.models import Roles, Users_Roles, Permisos
-from django.contrib.auth.models import User
+from apps.models import Roles, Users_Roles, Permisos, Permisos_Roles
+from django.contrib.auth.models import User, Group
+
 
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
@@ -27,6 +28,10 @@ import user
 from gc import get_objects
 from django.contrib.redirects.models import Redirect
 from gi.overrides.keysyms import blank
+from apt_pkg import Group
+from django.forms.fields import RegexField
+from cProfile import label
+from django.db.models.fields import BooleanField
 
 class IndexView(generic.DetailView):
     template_name='apps/index.html'
@@ -235,13 +240,18 @@ def listpermisos(request):
         role = Roles.objects.get(descripcion=form.cleaned_data['descripcion'])
         role_id = role.id
         permisos = Permisos.objects.all()
-        return render_to_response("apps/role_set_permisos.html", {"permisos":permisos, "role_id":role_id})
+        return render_to_response("apps/role_set_permisos.html", {"permisos":permisos, "role_id":role_id}, context_instance=RequestContext(request))
     else:
         form = RoleCreateForm()
     
     return render_to_response('apps/role_create.html' ,{'form':form}, context_instance=RequestContext(request))
     #permisos = Permisos.objects.all()
     #return render_to_response("apps/role_set_permisos.html", {"permisos":permisos})
+   
+#def asigpermisos(request, role_id):
+#    get_object_or_404(Roles, role_id)
+#    if  request.method == 'POST':
+
     
 #def moduser(request):
     #return render(request, 'apps/user_select_mod.html')
@@ -286,10 +296,10 @@ def deluser(request, id):
 
 class RoleCreateForm(forms.ModelForm):
     class Meta:
-        fields = ("descripcion", "estado")
         model = Roles
-        
+        fields = ("descripcion", "estado")
 
+     
 def crearRol(request):
     if request.method == 'POST':
         form = RoleCreateForm(request.POST)
@@ -301,9 +311,24 @@ def crearRol(request):
         form = RoleCreateForm()
     
     return render_to_response('apps/role_create.html' ,{'form':form}, context_instance=RequestContext(request))
-
+#MAnager isn't accesible via model isntances, no se pude acceder desde un modelo a 
+#una instancia de una clase
 def asignarrol(request, role_id):
-    p = get_object_or_404(Roles, pk=role_id)
+    r = get_object_or_404(Roles, pk=role_id)
+    if request.POST:
+        lista = request.POST.getlist(u'permisos')
+        for p in lista:
+            try:
+                #permiso = Permisos.objects.get(descripcion=p)
+                permiso = Permisos.objects.get(pk=p)
+            except Permisos.DoesNotExist:
+                permiso = None
+            permrol = Permisos_Roles()
+            permrol.roles_id = r.id
+            permrol.permisos_id = permiso.id
+            permrol.save()
+            
+        return render_to_response("apps/role_created.html", RequestContext(request))
     #try:
         
     #if request.method == 'POST':
