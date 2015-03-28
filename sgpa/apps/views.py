@@ -26,6 +26,7 @@ from django.core.context_processors import csrf
 import user
 from gc import get_objects
 from django.contrib.redirects.models import Redirect
+from gi.overrides.keysyms import blank
 
 class IndexView(generic.DetailView):
     template_name='apps/index.html'
@@ -34,19 +35,21 @@ class IndexView(generic.DetailView):
 
 
 class UserCreateForm(UserCreationForm):
-    email = forms.EmailField(required=False)
+    email = forms.EmailField(required=True)
     is_superuser = forms.BooleanField(required=False)
     first_name = forms.Field(required=True)
-    
+    last_name = forms.Field(required=True)
+
     class Meta:
         model = User
-        fields = ("first_name", "username", "email", "password1", "password2", "is_superuser" )
+        fields = ("first_name", "last_name", "username", "email", "password1", "password2", "is_superuser" )
 
     def save(self, commit=True):
         user = super(UserCreateForm, self).save(commit=False)
         user.email = self.cleaned_data["email"]
         user.is_superuser = self.cleaned_data["is_superuser"]
         user.firs_name = self.cleaned_data["first_name"]
+        user.last_name = self.cleaned_data["last_name"]
         if user.is_superuser == 'null':
             user.is_superuser='FALSE'
         if commit:
@@ -54,9 +57,10 @@ class UserCreateForm(UserCreationForm):
         return user 
 
 class UserModifyForm(UserCreationForm):
-    email = forms.EmailField(required=False)
+    email = forms.EmailField(required=True)
     is_superuser = forms.BooleanField(required=False)
     first_name = forms.Field(required=True)
+    last_name = forms.Field(required=True)
     
     def __init__(self, *args, **kwargs):
         super(UserModifyForm, self).__init__(*args, **kwargs)
@@ -65,7 +69,7 @@ class UserModifyForm(UserCreationForm):
     class Meta:
         model = User
         
-        fields = ("first_name", "email", "password1", "password2", "is_superuser" )
+        fields = ("first_name", "last_name",  "email", "password1", "password2", "is_superuser" )
         
 
     def save(self, commit=True):
@@ -73,6 +77,7 @@ class UserModifyForm(UserCreationForm):
         user.email = self.cleaned_data["email"]
         user.is_superuser = self.cleaned_data["is_superuser"]
         user.firs_name = self.cleaned_data["first_name"]
+        user.last_name = self.cleaned_data["last_name"]
         if user.is_superuser == 'null':
             user.is_superuser='FALSE'
         if commit:
@@ -96,7 +101,8 @@ def nuevo_usuario(request):
             ur.save()
             return render_to_response('apps/user_created.html', context_instance=RequestContext(request))
     else:
-        formulario = UserCreateForm()
+        formulario = UserCreateForm(initial={'email':'example@mail.com'})
+
     return render_to_response('apps/user_create.html', {'formulario':formulario}, context_instance=RequestContext(request))
 
     
@@ -217,11 +223,12 @@ def muser(request, user_id):
             user.email = form.cleaned_data['email']
             user.is_superuser = form.cleaned_data['is_superuser']
             user.first_name = form.cleaned_data['first_name']
+            user.last_name = form.cleaned_data['last_name']
             user.save()
             #form.save()
             return render_to_response("apps/user_modified.html", RequestContext(request))
     else:
-        form = UserModifyForm(initial={ 'email':user.email, 'is_superuser':user.is_superuser})
+        form = UserModifyForm(initial={ 'email':user.email, 'is_superuser':user.is_superuser, 'first_name':user.first_name, 'last_name':user.last_name})
         
         
     args = {}
