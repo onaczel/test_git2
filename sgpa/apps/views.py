@@ -45,6 +45,9 @@ class UserCreateForm(UserCreationForm):
         fields = ("first_name", "last_name", "username", "email", "password1", "password2", "is_superuser" )
 
     def save(self, commit=True):
+        """
+        Obtiene los datos del formulario creacion de usuario y registra el usuario en el sistema
+        """
         user = super(UserCreateForm, self).save(commit=False)
         user.email = self.cleaned_data["email"]
         user.is_superuser = self.cleaned_data["is_superuser"]
@@ -73,6 +76,9 @@ class UserModifyForm(UserCreationForm):
         
 
     def save(self, commit=True):
+        """
+        Obtiene los datos del formulario de modificacion de usuario y registra los cambios en el sistema
+        """
         user = super(UserCreateForm, self).save(commit=False)
         user.email = self.cleaned_data["email"]
         user.is_superuser = self.cleaned_data["is_superuser"]
@@ -85,6 +91,9 @@ class UserModifyForm(UserCreationForm):
         return user 
     
 def nuevo_usuario(request):
+    """
+    Verifica que el formulario es valido y almacena el nuevo usuario en la base de datos
+    """
     if request.method=='POST':
         formulario = UserCreateForm(request.POST)
         if formulario.is_valid:
@@ -107,6 +116,12 @@ def nuevo_usuario(request):
 
     
 def ingresar(request):
+    """
+    Metodo que permite el inicio de sesion en el sistema
+    
+    Verifica que el usuario este activo y lo redirige a su template correspondiente
+    segun su rol en el sistema 
+    """
     if request.method == 'POST':
         formulario = AuthenticationForm(request.POST)
         if formulario.is_valid:
@@ -140,16 +155,25 @@ def ingresar(request):
 
 @login_required(login_url='apps/ingresar')
 def privado(request):
+    """
+    Retorna el template correspondiente a un usuario con rol Administrador
+    """
     usuario = request.user
     return render_to_response('apps/user_private_admin.html', {'usuario':usuario}, context_instance=RequestContext(request))
 
 @login_required(login_url='apps/ingresar')
 def privadoNoadmin(request):
+    """
+    Retorna el template correspondiente a un usuario con rol Usuario
+    """
     usuario = request.user
     return render_to_response('apps/user_private_user.html', {'usuario':usuario}, context_instance=RequestContext(request))
 
 @login_required(login_url='apps/ingresar')
 def cerrar(request):
+    """
+    Recibe un request y cierra la sesion correspondiente
+    """
     logout(request)
     return HttpResponseRedirect('/apps/ingresar/')
 
@@ -185,14 +209,23 @@ al html que trabajara con el.
 Por supuesto, la funcion se debe encontrar en urls
 '''
 def listuser(request):
+    """
+    Retorna una lista con todos los usuarios del sistema y lo envia al template
+    de modificacion de usuario
+    """
     users = User.objects.all()
     return render_to_response("apps/user_select_mod.html", {"users":users})
 
 def listuserdel(request):
+    """
+    Retorna una lista con todos los usuarios del sistema y lo envia al template
+    de eliminacion de usuario
+    """
     users = User.objects.all()
     return render_to_response("apps/user_select_del.html", {"users":users})
 #Noreversematch es un error de configuracion de url
 def listpermisos(request):
+    
     if request.method == 'POST':
         form = RoleCreateForm(request.POST)
         if form.is_valid():
@@ -214,6 +247,9 @@ def listpermisos(request):
     #return render(request, 'apps/user_select_mod.html')
 
 def muser(request, user_id):
+    """
+    Metodo que obtiene los campos modificados del formulario de modificacion de usuario
+    """
     user = get_object_or_404(User, pk=user_id)
     if request.POST:
         form = UserModifyForm(request.POST)
