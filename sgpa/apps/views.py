@@ -207,6 +207,10 @@ class adminrole(generic.DetailView):
     def get(self, request, *args, **kwargs):
         return render(request, self.template_name)
 
+class adminproject(generic.DetailView):
+    template_name = 'apps/project_admin.html'
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name)
 
 '''
 Se debe crear una funcion que tome una request, y guarde en una variable
@@ -233,6 +237,10 @@ def listuserdel(request):
 def listrolesmod(request):
     roles = Roles.objects.all()
     return render_to_response("apps/role_modify.html", {"roles":roles})
+
+def listrolesdel(request):
+    roles = Roles.objects.all()
+    return render_to_response("apps/role_delete.html", {"roles":roles})
 
 #Noreversematch es un error de configuracion de url
 def listpermisos(request):
@@ -354,20 +362,22 @@ def asignarpermisosmod(request, role_id):
         permrol.roles_id = r.id
         permrol.permisos_id = permiso.id
         permrol.save()
-        #pdentro permiso en lista
-        #user role id
-        #pfuera permiso que no esta en lista
-        
-            
-            
-        
-    
+
     return render_to_response("apps/role_modified.html", context_instance=RequestContext(request))
     
 def inicializarPermisos():
     for p in Permisos.objects.all():
         p.estado = False
         p.save()
+        
+def roledelete(request, role_id):
+    r = get_object_or_404(Roles, pk=role_id)
+    
+    r.estado = False
+    r.save()
+    
+    return render_to_response("apps/role_deleted.html", RequestContext(request))
+    
 '''
 def selectrolmod(request):
     try:
@@ -414,3 +424,5 @@ def asignarpermisosmod(request, role_id):
         permrol.save()
         
     return render_to_response("apps/role_modified.html", context_instance=RequestContext(request))'''
+        
+

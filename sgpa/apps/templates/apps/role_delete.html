@@ -1,0 +1,13 @@
+<p>Eliminar Roles</p>
+<h1>Seleccionar el rol a eliminar</h1>
+
+{% if roles %}
+	{% for r in roles %}
+		{% if r.estado == True %}
+			<label>{{r.descripcion}}</label>
+			<a href="{% url 'apps:roledelete' r.id %}">Eliminar</a><br />
+		{% endif %}
+	{% endfor %}
+{% else %}
+	<p>There is no roles in db</p>
+{% endif %}
