@@ -8,7 +8,7 @@ from django.utils import timezone
 
 from django.template import RequestContext, loader
 
-from apps.models import Roles, Users_Roles, Permisos, Permisos_Roles
+from apps.models import Roles, Users_Roles, Permisos, Permisos_Roles, Flujos, Actividades, Actividades_Estados
 from django.contrib.auth.models import User, Group
 
 
@@ -211,6 +211,11 @@ class adminproject(generic.DetailView):
     template_name = 'apps/project_admin.html'
     def get(self, request, *args, **kwargs):
         return render(request, self.template_name)
+    
+class adminflow(generic.DetailView):
+    template_name = 'apps/flow_admin.html'
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name)
 
 '''
 Se debe crear una funcion que tome una request, y guarde en una variable
@@ -377,7 +382,53 @@ def roledelete(request, role_id):
     r.save()
     
     return render_to_response("apps/role_deleted.html", RequestContext(request))
+
+class FlowCreateForm(forms.ModelForm):
+    class Meta:
+        model = Flujos
+        fields = ("descripcion", "estado") 
+        
+class ActivityCreateForm(forms.ModelForm):
+    class Meta:
+        model = Actividades
+        fields = ("descripcion",)
+        
+        
+def crearflujo(request):
+    if request.method == 'POST':
+        form = FlowCreateForm(request.POST)
+        if form.is_valid():
+            form.save()
+            flow = Flujos.objects.get(descripcion = form.cleaned_data['descripcion'])
+            flow_id = flow.id
+            formulario = ActivityCreateForm()
+        return render_to_response('apps/flow_set_activities.html', {'formulario':formulario, 'flow_id':flow_id}, context_instance=RequestContext(request))
+    else:
+        form = FlowCreateForm()
     
+    return render_to_response('apps/flow_create.html', {'form':form}, context_instance=RequestContext(request))
+    
+def setactividades(request, flow_id):
+    f = get_object_or_404(Flujos, pk=flow_id)
+    if request.method == 'POST':
+        form = ActivityCreateForm(request.POST)
+        if form.is_valid():
+            actv = Actividades()
+            actv.flujo_id = f.id
+            actv.descripcion = form.cleaned_data['descripcion']
+            actv.save()
+            #form.save()
+            if request.POST['submit'] == "Guardar y Agregar otra Actividad":
+                formulario = ActivityCreateForm()
+                return render_to_response('apps/flow_set_activities.html', {'formulario':formulario, 'flow_id':flow_id}, context_instance=RequestContext(request))
+            elif request.POST['submit'] == "Guardar y Salir":
+                return render_to_response('apps/flow_created.html', context_instance = RequestContext(request))
+        else:
+            return render_to_response('apps/flow_not_valid.html', context_instance=RequestContext(request))
+    else:
+        form = ActivityCreateForm()
+    
+    return render_to_response('apps/flow_set_activities.html', {'form':form, 'flow_id':flow_id}, context_instance=RequestContext(request))
 '''
 def selectrolmod(request):
     try:

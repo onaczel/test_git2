@@ -29,4 +29,8 @@ urlpatterns = patterns('',
     url(r'^modadmin/adminrole/eliminarrol/$', views.listrolesdel, name="eliminarrol"),
     url(r'^(?P<role_id>\d+)/delrole/$', views.roledelete, name="roledelete"),
     url(r'^modadmin/adminproyecto/$', views.adminproject.as_view(), name="adminproyecto"),
+    url(r'^modadmin/adminflujo/$', views.adminflow.as_view(), name="adminflujo"),
+    
+    url(r'^modadmin/adminflujo/crearflujo/$', views.crearflujo, name="crearflujo"),
+    url(r'^(?P<flow_id>\d+)/setactividades/$', views.setactividades, name="setactividades"),
 )

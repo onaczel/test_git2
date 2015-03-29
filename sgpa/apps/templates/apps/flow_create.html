@@ -1,0 +1,6 @@
+<h1>Crear un Flujo</h1>
+
+<form action="{% url 'apps:crearflujo' %}" method='post'>{% csrf_token %}
+	<table>{{ form }}</table>
+	<input type="submit" value="Registrar">
+</form>

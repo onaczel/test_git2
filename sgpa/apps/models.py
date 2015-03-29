@@ -4,6 +4,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 from test.test_support import args_from_interpreter_flags
+from django.db.models.fields import CharField
+from django.template.defaultfilters import default
 
     
 class Roles(models.Model):
@@ -41,4 +43,25 @@ class Permisos_Roles(models.Model):
     roles = models.ForeignKey(Roles)
     permisos = models.ForeignKey(Permisos)
 
+class Flujos(models.Model):
+    """
+    Modelo para almacenar los flujosc
+    """
+    descripcion = models.CharField(max_length = 50)
+    estado = models.BooleanField(default = True)
+
+class Actividades(models.Model):
+    """
+    Modelo para almacenar las actividades en un flujo
+    """
+    descripcion = models.CharField(max_length= 50)
+    flujo = models.ForeignKey(Flujos)
+    
+class Estados(models.Model):
+    descripcion = models.CharField(max_length = 50)
+    
+class Actividades_Estados(models.Model):
+    actividad = models.ForeignKey(Actividades)
+    estados = models.ForeignKey(Estados)
+    
 #User.add_to_class('roles', models.ForeignKey(Users_Roles))
