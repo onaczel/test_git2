@@ -3,8 +3,8 @@
 {% if users %}
 	{% for user in users %}
 		{% if user.is_active == True %}
-			<p>{{ user.username }}</p>
-			<a href="{% url 'apps:muser' user.id %}">Modificar</a>
+			<label><b>{{user.username}}</b></label>
+			<a href="{% url 'apps:muser' user.id %}">Modificar</a><br />
 		{% endif %}
 	{% endfor %}
 {% else %}

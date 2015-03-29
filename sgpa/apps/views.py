@@ -32,6 +32,7 @@ from apt_pkg import Group
 from django.forms.fields import RegexField
 from cProfile import label
 from django.db.models.fields import BooleanField
+from django.contrib.sites import requests
 
 class IndexView(generic.DetailView):
     template_name='apps/index.html'
@@ -228,6 +229,11 @@ def listuserdel(request):
     """
     users = User.objects.all()
     return render_to_response("apps/user_select_del.html", {"users":users})
+
+def listrolesmod(request):
+    roles = Roles.objects.all()
+    return render_to_response("apps/role_modify.html", {"roles":roles})
+
 #Noreversematch es un error de configuracion de url
 def listpermisos(request):
     
@@ -235,8 +241,6 @@ def listpermisos(request):
         form = RoleCreateForm(request.POST)
         if form.is_valid():
             form.save()
-        #return render_to_response('apps:listpermisos', context_instance=RequestContext(request))
-        #return render(request, 'apps/ingresar.html') 
         role = Roles.objects.get(descripcion=form.cleaned_data['descripcion'])
         role_id = role.id
         permisos = Permisos.objects.all()
@@ -245,16 +249,6 @@ def listpermisos(request):
         form = RoleCreateForm()
     
     return render_to_response('apps/role_create.html' ,{'form':form}, context_instance=RequestContext(request))
-    #permisos = Permisos.objects.all()
-    #return render_to_response("apps/role_set_permisos.html", {"permisos":permisos})
-   
-#def asigpermisos(request, role_id):
-#    get_object_or_404(Roles, role_id)
-#    if  request.method == 'POST':
-
-    
-#def moduser(request):
-    #return render(request, 'apps/user_select_mod.html')
 
 def muser(request, user_id):
     """
@@ -300,38 +294,123 @@ class RoleCreateForm(forms.ModelForm):
         fields = ("descripcion", "estado")
 
      
-def crearRol(request):
-    if request.method == 'POST':
-        form = RoleCreateForm(request.POST)
-        if form.is_valid():
-            form.save()
-        return render_to_response('apps:listpermisos', context_instance=RequestContext(request))
-        #return render(request, 'apps/ingresar.html') 
-    else:
-        form = RoleCreateForm()
-    
-    return render_to_response('apps/role_create.html' ,{'form':form}, context_instance=RequestContext(request))
 #MAnager isn't accesible via model isntances, no se pude acceder desde un modelo a 
 #una instancia de una clase
 def asignarrol(request, role_id):
     r = get_object_or_404(Roles, pk=role_id)
-    if request.POST:
-        lista = request.POST.getlist(u'permisos')
-        for p in lista:
-            try:
-                #permiso = Permisos.objects.get(descripcion=p)
-                permiso = Permisos.objects.get(pk=p)
-            except Permisos.DoesNotExist:
-                permiso = None
-            permrol = Permisos_Roles()
-            permrol.roles_id = r.id
-            permrol.permisos_id = permiso.id
-            permrol.save()
-            
-        return render_to_response("apps/role_created.html", RequestContext(request))
-    #try:
+    
+    lista = request.POST.getlist(u'permisos')
+    for p in lista:
+        try:
+            #permiso = Permisos.objects.get(descripcion=p)
+            permiso = Permisos.objects.get(pk=p)
+        except Permisos.DoesNotExist:
+            permiso = None
+        permrol = Permisos_Roles()
+        permrol.roles_id = r.id
+        permrol.permisos_id = permiso.id
+        permrol.save()
         
-    #if request.method == 'POST':
-     #   list_permisos = request.POST.getlist('lista')
-        #perm = 
-    return render_to_response("apps/user_deleted.html", RequestContext(request))
+    return render_to_response("apps/role_created.html", RequestContext(request))
+
+def rolemodify(request, role_id):
+    rol = get_object_or_404(Roles, pk=role_id)
+    if request.method == 'POST':
+        form = RoleCreateForm(request.POST)
+        if form.is_valid():
+            form.save()
+        #role = Roles.objects.get(descripcion=form.cleaned_data['descripcion'])
+        role_id = rol.id
+        permisos = Permisos.objects.all()
+        proles = Permisos_Roles.objects.all()
+        inicializarPermisos()
+        for p in permisos:
+            for ur in proles:
+                if ur.roles_id == role_id and ur.permisos_id == p.id:
+                    p.estado = True
+                    p.save()
+        return render_to_response("apps/role_set_permisos_mod.html", {"permisos":permisos, "role_id":role_id}, context_instance=RequestContext(request))
+    else:
+        form = RoleCreateForm(initial={'descripcion':rol.descripcion, 'estado':rol.estado})
+    
+    return render_to_response('apps/role_modify_form.html' ,{'form':form, "rol":rol }, context_instance=RequestContext(request))
+    
+def asignarpermisosmod(request, role_id):
+    r = get_object_or_404(Roles, pk=role_id)
+    #CONTROLAR!
+    lista = request.POST.getlist(u'permisos')
+    user = r
+    for pr in Permisos_Roles.objects.all():
+        if pr.roles_id == user.id:
+            Permisos_Roles.objects.filter(pk=pr.id).delete()
+            
+    for p in lista:
+        try:
+            #permiso = Permisos.objects.get(descripcion=p)
+            permiso = Permisos.objects.get(pk=p)
+        except Permisos.DoesNotExist:
+            permiso = None
+        permrol = Permisos_Roles()
+        permrol.roles_id = r.id
+        permrol.permisos_id = permiso.id
+        permrol.save()
+        #pdentro permiso en lista
+        #user role id
+        #pfuera permiso que no esta en lista
+        
+            
+            
+        
+    
+    return render_to_response("apps/role_modified.html", context_instance=RequestContext(request))
+    
+def inicializarPermisos():
+    for p in Permisos.objects.all():
+        p.estado = False
+        p.save()
+'''
+def selectrolmod(request):
+    try:
+        r = Roles.objects.get(pk=request.POST['r'])
+    except Roles.DoesNotExist:
+        r = None
+    
+    role_id = r.id
+    
+    modificarrol(request, role_id)
+    
+    return render_to_response("apps/index.html", context_instance=RequestContext(request))
+    
+def modificarrol(request, role_id):
+    r = get_object_or_404(Roles, pk=role_id)
+    if request.method == 'POST':
+        form = RoleCreateForm(request.POST)
+        if form.is_valid():
+            form.save()
+        #role = Roles.objects.get(descripcion=form.cleaned_data['descripcion'])
+        role_id = r.id
+        permisos = Permisos.objects.all()
+        return render_to_response("apps/role_set_permisos_mod.html", {"permisos":permisos, "role_id":role_id}, context_instance=RequestContext(request))
+    else:
+        form = RoleCreateForm(intial={'descripcion':r.descripcion, 'estado':r.estado})
+    
+    return render_to_response('apps/role_modify_form.html' ,{'form':form, "role_id":role_id}, context_instance=RequestContext(request))
+
+
+    
+def asignarpermisosmod(request, role_id):
+    r = get_object_or_404(Roles, pk=role_id)
+    
+    lista = request.POST.getlist(u'permisos')
+    for p in lista:
+        try:
+            #permiso = Permisos.objects.get(descripcion=p)
+            permiso = Permisos.objects.get(pk=p)
+        except Permisos.DoesNotExist:
+            permiso = None
+        permrol = Permisos_Roles()
+        permrol.roles_id = r.id
+        permrol.permisos_id = permiso.id
+        permrol.save()
+        
+    return render_to_response("apps/role_modified.html", context_instance=RequestContext(request))'''

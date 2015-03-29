@@ -4,7 +4,10 @@
 {% if users %}
 	{% for user in users %}
 		{% if user.is_active == True %}
-			<p>{{user.username}}</p><a href="{% url 'apps:deluser' user.id %}">Eliminar</a>
+			
+			<label for="option{{p.id}}"><b>{{user.username}}</b></label>
+			<!-- <p>{{user.username}}</p> -->
+			<a href="{% url 'apps:deluser' user.id %}">Eliminar</a><br />
 		{% endif %}
 	{% endfor %}
 

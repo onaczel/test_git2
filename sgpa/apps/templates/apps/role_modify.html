@@ -1,0 +1,13 @@
+<p>Modificar Roles</p>
+<h1>Seleccionar un Rol</h1>
+
+
+{% if roles %}
+	{% for r in roles %}
+		<label>{{r.descripcion}}</label>
+		<a href="{% url  'apps:rolemodify' r.id %}">Modificar</a><br />
+	{% endfor %}
+	<input type="submit" value="Seleccionar">
+{% else %}
+	<p>There is no roles in db</p>
+{% endif %}
