@@ -248,8 +248,12 @@ def listrolesdel(request):
     return render_to_response("apps/role_delete.html", {"roles":roles})
 
 def listflowmod(request):
-    flujos = Flujos.objects.all()
+    flujos = Flujos.objects.filter(estado = True)
     return render_to_response("apps/flow_modify.html", {"flujos":flujos})
+
+def listflowdel(request):
+    flujos = Flujos.objects.filter(estado = True)
+    return render_to_response("apps/flow_delete.html", {"flujos":flujos})
 
 
 #Noreversematch es un error de configuracion de url
@@ -364,7 +368,6 @@ def asignarpermisosmod(request, role_id):
             
     for p in lista:
         try:
-            #permiso = Permisos.objects.get(descripcion=p)
             permiso = Permisos.objects.get(pk=p)
         except Permisos.DoesNotExist:
             permiso = None
@@ -465,7 +468,7 @@ def setactividadesmod(request, flow_id, actv_id):
         if form.is_valid():
             a.descripcion = form.cleaned_data['descripcion']
             a.save()
-            return render_to_response("apps:form_activitie_modified.html", {'flow_id':flow_id}, context_instance=RequestContext(request))
+            return render_to_response("apps/flow_activitie_modified.html", {'flow_id':flow_id}, context_instance=RequestContext(request))
         else:
             return render_to_response('apps/flow_not_valid.html', context_instance=RequestContext(request))
     else:
@@ -478,7 +481,15 @@ def setactividadesdel(request, flow_id, actv_id):
     a = Actividades.objects.get(pk=actv_id)
     a.estado = False
     a.save()
-    return render_to_response("apps/flow_activitie_eliminated.html", {"flow_id":flow_id}, context_instance=RequestContext(request)) 
+    return render_to_response("apps/flow_activitie_eliminated.html", {"flow_id":flow_id}, context_instance=RequestContext(request))
+
+
+def flowdelete(request, flow_id):
+    f = get_object_or_404(Flujos, pk=flow_id)
+    f.estado = False
+    f.save()
+    return render_to_response("apps/flow_eliminated.html", context_instance=RequestContext(request))
+     
 '''
 def selectrolmod(request):
     try:
