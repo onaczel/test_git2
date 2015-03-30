@@ -1,0 +1,16 @@
+<h1>Lista de Actividades</h1>
+
+{% if actividades%}
+	<form action="{% url 'apps:setactividades' flow_id  %}">{% csrf_token %}
+		{% for actv in actividades %}
+			{% if actv.estado == True %}
+				<label>{{actv.descripcion}}</label>
+				<a href="{% url 'apps:setactividadesdel' flow_id actv.id %}">Eliminar</a><br />
+			{% endif %}
+		{% endfor %}
+		<input type="submit" value="Agregar otra Actividad">
+		<a href="/apps/modadmin/adminflujo">Volver a administracion de Flujos</a>
+	</form>
+{% else %}
+	<p>No existen actividades en ese flujo</p>
+{% endif %}

@@ -1,4 +1,4 @@
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, render_to_response
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.http import HttpResponseRedirect
@@ -9,7 +9,7 @@ from django.utils import timezone
 from django.template import RequestContext, loader
 
 from apps.models import Roles, Users_Roles, Permisos, Permisos_Roles, Flujos, Actividades, Actividades_Estados
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import User
 
 
 from django.contrib.auth.forms import AuthenticationForm
@@ -28,11 +28,12 @@ import user
 from gc import get_objects
 from django.contrib.redirects.models import Redirect
 from gi.overrides.keysyms import blank
-from apt_pkg import Group
 from django.forms.fields import RegexField
 from cProfile import label
 from django.db.models.fields import BooleanField
 from django.contrib.sites import requests
+from django.contrib.gis.shortcuts import render_to_kml
+from django.template.context import RequestContext
 
 class IndexView(generic.DetailView):
     template_name='apps/index.html'
@@ -247,6 +248,11 @@ def listrolesdel(request):
     roles = Roles.objects.all()
     return render_to_response("apps/role_delete.html", {"roles":roles})
 
+def listflowmod(request):
+    flujos = Flujos.objects.all()
+    return render_to_response("apps/flow_modify.html", {"flujos":flujos})
+
+
 #Noreversematch es un error de configuracion de url
 def listpermisos(request):
     
@@ -426,9 +432,54 @@ def setactividades(request, flow_id):
         else:
             return render_to_response('apps/flow_not_valid.html', context_instance=RequestContext(request))
     else:
-        form = ActivityCreateForm()
+        formulario = ActivityCreateForm()
     
-    return render_to_response('apps/flow_set_activities.html', {'form':form, 'flow_id':flow_id}, context_instance=RequestContext(request))
+    return render_to_response('apps/flow_set_activities.html', {'formulario':formulario, 'flow_id':flow_id}, context_instance=RequestContext(request)) 
+
+
+def editarflujos(request, flow_id):
+    flujo = get_object_or_404(Flujos, pk=flow_id)
+    if request.method == 'POST':
+        form = FlowCreateForm(request.POST)
+        if form.is_valid():
+            flujo.descripcion = form.cleaned_data['descripcion']
+            flujo.save()
+            #form.save()
+            
+            actividades = Actividades.objects.filter(flujo_id=flow_id)
+            
+            return render_to_response("apps/flow_set_activities_mod.html", {"actividades":actividades, "flow_id":flow_id}, context_instance=RequestContext(request))
+    else:
+        form = FlowCreateForm(initial={'descripcion':flujo.descripcion, 'estado':flujo.estado})
+    
+    return render_to_response('apps/flow_modify_form.html', {'form':form, 'flujo':flujo}, context_instance=RequestContext(request))
+
+def listactivitiesmod(request, flow_id):
+    actividades = Actividades.objects.filter(flujo_id=flow_id)
+    return render_to_response("apps/flow_set_activities_mod.html", {"actividades":actividades, "flow_id":flow_id}, context_instance=RequestContext(request))
+
+def setactividadesmod(request, flow_id, actv_id):
+    f = get_object_or_404(Flujos, pk=flow_id)
+    a = get_object_or_404(Actividades, pk=actv_id)
+    if request.method == 'POST':
+        form = ActivityCreateForm(request.POST)
+        if form.is_valid():
+            a.descripcion = form.cleaned_data['descripcion']
+            a.save()
+            return render_to_response("apps:form_activitie_modified.html", {'flow_id':flow_id}, context_instance=RequestContext(request))
+        else:
+            return render_to_response('apps/flow_not_valid.html', context_instance=RequestContext(request))
+    else:
+        form = ActivityCreateForm(initial={'descripcion':a.descripcion})
+    
+    return render_to_response('apps/flow_set_activities_mod_form.html', {'form':form, 'flow_id':flow_id, 'actv_id':actv_id}, context_instance=RequestContext(request))
+
+
+def setactividadesdel(request, flow_id, actv_id):
+    a = Actividades.objects.get(pk=actv_id)
+    a.estado = False
+    a.save()
+    return render_to_response("apps/flow_activitie_eliminated.html", {"flow_id":flow_id}, context_instance=RequestContext(request)) 
 '''
 def selectrolmod(request):
     try:

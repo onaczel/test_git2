@@ -33,4 +33,10 @@ urlpatterns = patterns('',
     
     url(r'^modadmin/adminflujo/crearflujo/$', views.crearflujo, name="crearflujo"),
     url(r'^(?P<flow_id>\d+)/setactividades/$', views.setactividades, name="setactividades"),
+    
+    url(r'^modadmin/adminflujo/editarflujo/$', views.listflowmod, name="listflowmod"),
+    url(r'^(?P<flow_id>\d+)/modificarflujo', views.editarflujos, name="editarflujos"),
+    url(r'^(?P<flow_id>\d+)/listactivitiesmod', views.listactivitiesmod, name="listactivitiesmod"),
+    url(r'^(?P<flow_id>\d+)/setactividadesmod', views.setactividadesmod, name="setactividadesmod"),
+    url(r'^(?P<flow_id>\d+)/(?P<actv_id>\d+)/setactividadesdel', views.setactividadesdel, name="setactividadesdel"),
 )

@@ -7,7 +7,6 @@
 		<label>{{r.descripcion}}</label>
 		<a href="{% url  'apps:rolemodify' r.id %}">Modificar</a><br />
 	{% endfor %}
-	<input type="submit" value="Seleccionar">
 {% else %}
-	<p>There is no roles in db</p>
+	<p>There are no roles in db</p>
 {% endif %}
