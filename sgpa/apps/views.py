@@ -32,8 +32,7 @@ from django.forms.fields import RegexField
 from cProfile import label
 from django.db.models.fields import BooleanField
 from django.contrib.sites import requests
-from django.contrib.gis.shortcuts import render_to_kml
-from django.template.context import RequestContext
+
 
 class IndexView(generic.DetailView):
     template_name='apps/index.html'
