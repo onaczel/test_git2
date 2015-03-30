@@ -28,7 +28,7 @@ import user
 from gc import get_objects
 from django.contrib.redirects.models import Redirect
 from gi.overrides.keysyms import blank
-from apt_pkg import Group
+
 from django.forms.fields import RegexField
 from cProfile import label
 from django.db.models.fields import BooleanField
