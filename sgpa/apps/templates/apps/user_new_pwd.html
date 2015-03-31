@@ -1,0 +1,15 @@
+
+
+<h1>Se le enviara una nueva contraseña</h1>
+{% block contenido %}
+
+<form id="formulario2"  method="post">
+	<fieldset>
+		<legend>Recuperar contraseña</legend>
+		{% csrf_token %}
+		<label>Username</label> <input id="campo1" name="username" type="text" />
+		<input id="campo2" name="recuperar" type="submit" value="Recuperar" />
+	</fieldset>
+</form>
+
+{% endblock %}
