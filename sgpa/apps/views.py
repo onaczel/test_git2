@@ -22,7 +22,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 
-from django.core.context_processors import csrf
+from django.core.context_processors import csrf, request
 
 import user
 from gc import get_objects
@@ -33,6 +33,10 @@ from django.forms.fields import RegexField
 from cProfile import label
 from django.db.models.fields import BooleanField
 from django.contrib.sites import requests
+from random import choice
+from django.core.mail import send_mail
+from django.http import HttpResponse
+
 
 class IndexView(generic.DetailView):
     template_name='apps/index.html'
@@ -159,6 +163,46 @@ def ingresar(request):
 
 
 
+
+def recuperarContrasena(request):
+        if request.method == 'POST':
+            formulario2 = AuthenticationForm(request.POST)
+            if formulario2.is_valid:
+                     
+                usuario = request.POST['username']
+          
+
+                if User.objects.filter(username=usuario).exists():
+                    user = User.objects.get(username = usuario)
+                
+                    longitud = 6
+                    valores = "123456789abcdefghijklmnopqrstuvwxyz?*"
+ 
+                    p = ""
+                    p = p.join([choice(valores) for i in range(longitud)])
+                
+                    user.set_password(p)
+                    user.save()
+                    send_mail('SGPA-Cambio de clave de accseso', 'Su nueva clave de acceso: '+ p, 'noreply.sgpa@gmail.com', [user.email], fail_silently=False)
+                
+                    return render_to_response('apps/user_new_pwd_ok.html', {'username':usuario},context_instance=RequestContext(request))
+                
+                else:               
+                
+                    return render_to_response('apps/user_pwd_user_not_valid.html', context_instance=RequestContext(request))
+        
+        else:
+            formulario2 = AuthenticationForm()    
+        return render_to_response('apps/user_new_pwd.html', {'formulario2':formulario2}, context_instance=RequestContext(request)) 
+    
+
+
+
+
+
+
+
+
 @login_required(login_url='apps/ingresar')
 def privado(request):
     """
@@ -187,6 +231,8 @@ def cerrar(request):
 Cada vista debe tener una clase, o funcion
 y un render que llame al template
 '''
+
+    
 class modadmin(generic.DetailView):
     template_name = 'apps/admin_mod.html'
     def get(self, request, *args, **kwargs):
