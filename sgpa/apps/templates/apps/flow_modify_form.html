@@ -1,0 +1,8 @@
+<h1>Modificar Flujo</h1>
+
+<form action="" method="post">{% csrf_token %}
+	<p>{{flujo.descripcion}}</p>
+	<table>{{form}}</table>
+	<input type="submit" value="Registrar" >
+	<a href="{% url 'apps:listactivitiesmod' flujo.id%}">Ir a edicion de actividades</a>
+</form>

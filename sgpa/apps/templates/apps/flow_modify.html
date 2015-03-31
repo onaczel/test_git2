@@ -1,0 +1,10 @@
+<h1>Modificar Flujos</h1>
+
+{% if flujos %}
+	{% for f in flujos %}
+		<label>{{f.descripcion}}</label>
+		<a href="{% url 'apps:editarflujos' f.id %}">Modificar</a><br />
+	{% endfor %}
+{% else %}
+	<p>There are no flows in db</p>
+{% endif %}

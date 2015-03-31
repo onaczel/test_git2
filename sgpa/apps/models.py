@@ -55,7 +55,10 @@ class Actividades(models.Model):
     Modelo para almacenar las actividades en un flujo
     """
     descripcion = models.CharField(max_length= 50)
+    estado = models.BooleanField(default = True)
     flujo = models.ForeignKey(Flujos)
+    def __str__(self):
+        return self.descripcion
     
 class Estados(models.Model):
     descripcion = models.CharField(max_length = 50)
