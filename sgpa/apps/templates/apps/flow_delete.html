@@ -1,0 +1,11 @@
+<h1>Seleccionar Plantilla de Flujo</h1>
+
+{% if flujos %}
+	{% for f in flujos %}
+		<label>{{f.descripcion}}</label>
+		<a href="{% url 'apps:flowdelete' f.id %}">Eliminar</a><br />
+	{% endfor %}
+{% else %}
+	<p>No hay flujos en la base de datos</p>
+{% endif %}
+		
