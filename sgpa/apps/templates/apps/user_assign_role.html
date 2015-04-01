@@ -1,0 +1,14 @@
+<h1>Seleccionar el rol a asignar al usuario</h1>
+
+<form action="{% url 'apps:asignarrolusuario' user_id %}" method="post">{% csrf_token %}
+{% if roles %}
+	{% for r in roles%}
+		<!-- <p>hola</p> -->
+		<input type="checkbox" name="roles" id="option{{r.id}}" value={{r.id}} />
+		<label for="option{{r.id}}"><b>{{r.descripcion}}</b></label><br />
+	{% endfor %}
+{% else %}
+ 	<p>There are no elements in roles</p>
+ {% endif %}
+ <input type="submit" name="Asignar" value="Asignar roles"/>
+ </form>
