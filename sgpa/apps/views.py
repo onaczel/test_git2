@@ -108,22 +108,43 @@ def nuevo_usuario(request):
         formulario = UserCreateForm(request.POST)
         if formulario.is_valid:
             formulario.save()
-            ur = Users_Roles()
+            #ur = Users_Roles()
             user = User()
             user = User.objects.get(username=formulario.cleaned_data['username'])
-            ur.user_id = user.id
-            if user.is_superuser:
-                ur.role_id = 1
-            else:
-                ur.role_id = 2
-            #CONTROLAR!   
-            ur.save()
-            return render_to_response('apps/user_created.html', context_instance=RequestContext(request))
+            #ur.user_id = user.id
+            #if user.is_superuser:
+            #    ur.role_id = 1
+            #else:
+            #    ur.role_id = 2
+            #CONTROLAR!  
+            user_id = user.id 
+            #ur.save()
+            roles = Roles.objects.all()
+            return render_to_response('apps/user_assign_role.html',{'roles':roles, 'user_id':user_id}, context_instance=RequestContext(request))
     else:
         formulario = UserCreateForm(initial={'email':'example@mail.com'})
 
     return render_to_response('apps/user_create.html', {'formulario':formulario}, context_instance=RequestContext(request))
 
+def listroleuser(request, user_id):
+    roles = Roles.objects.all()
+    return render_to_response('apps/user_assign_role.html',{'roles':roles, 'user_id':user_id}, context_instance=RequestContext(request))
+
+def asignarrolusuario(request, user_id):
+    #role = get_object_or_404(Roles, role_id)
+    roles = request.POST.getlist(u'roles')
+    for r in roles:
+        try:
+            rol = Roles.objects.get(pk=r)
+        except:
+            rol = None
+        ur = Users_Roles()
+        ur.user_id = user_id
+        ur.role_id = rol.id
+        ur.save()
+    
+    return render_to_response('apps/user_created.html', RequestContext(request))
+  
     
 def ingresar(request):
     """

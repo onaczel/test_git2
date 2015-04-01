@@ -44,4 +44,7 @@ urlpatterns = patterns('',
     
     url(r'^modadmin/adminflujo/eliminarflujo/$', views.listflowdel, name="listflowdel"),
     url(r'^(?P<flow_id>\d+)/flowdelete', views.flowdelete, name="flowdelete"),
+    
+    url(r'^modadmin/adminuser/asignarrol/$', views.listroleuser, name="listroleuser"),
+    url(r'^(?P<user_id>\d+)/asignarrolusuario/$', views.asignarrolusuario, name="asignarrolusuario"),
 )
