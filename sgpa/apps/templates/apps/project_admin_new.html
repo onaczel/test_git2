@@ -1,0 +1,41 @@
+<h1>Crear nuevo proyecto</h1>
+
+{% block contenido %}
+
+<form id="formulario3"  method="post">
+	<fieldset>
+		<legend>Complete los campos</legend>
+		{% csrf_token %}
+		<p>(*)Campos obligatorios</p>
+		<table>
+			<tr>
+				<td><label>*Nombre:</label> </td>
+				<td><input id="campo1" name="nombre" type="text" size="20" maxlength="20" autofocus="autofocus" required/></td>
+			</tr>
+			
+			<tr>
+				<td><label>*Fecha de inicio:</label> </td>
+				<td><input type="date" id="campo2" name="fechaInicio" required/>AAAA-MM-DD</td>
+			</tr>
+			
+			<tr>
+				<td><label>*Fecha estimada de finalización:</label></td>
+				<td><input type="date" id="campo3" name="fechaFin" required/>AAAA-MM-DD</td>
+			</tr>
+			
+			<tr>
+				<td><label>Scrum Master:</label></td>
+				<td><input id="campo4" name="scrum" type="text" size="20" maxlength="20"/></td>
+			</tr>
+	
+		</table>
+		
+		<br><textarea name="descripcion" rows="10" cols="40">Descripción del proyecto</textarea></br>
+		<br><textarea name="observaciones" rows="10" cols="40">Observaciones</textarea></br>
+		<br><input id="campo5" name="crear" type="submit" value="Crear Proyecto" /></br>
+	
+	</fieldset>
+
+</form>
+
+{% endblock %}
