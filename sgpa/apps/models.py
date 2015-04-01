@@ -67,4 +67,27 @@ class Actividades_Estados(models.Model):
     actividad = models.ForeignKey(Actividades)
     estados = models.ForeignKey(Estados)
     
+
+class Proyectos(models.Model):
+    """
+    Modelo para almacenar los datos de los proyectos
+    """
+    nombre = models.CharField(max_length = 50)
+    #fecha de inicio
+    fecha_ini = models.DateField()
+    #fecha estimada de finalizacion
+    fecha_est_fin = models.DateField()
+    descripcion = models.CharField(max_length = 400)
+    observaciones = models.CharField(max_length = 400)
+
+    
+class Proy_Us_Rol(models.Model):
+    """
+    Modelo que asocia Proyecto Usuario Rol
+    """
+    proyecto = models.ForeignKey(Proyectos)
+    usuario  = models.ForeignKey(User)
+    rol      = models.ForeignKey(Roles)
+    
+    
 #User.add_to_class('roles', models.ForeignKey(Users_Roles))
