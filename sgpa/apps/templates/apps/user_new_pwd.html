@@ -7,7 +7,7 @@
 	<fieldset>
 		<legend>Recuperar contraseña</legend>
 		{% csrf_token %}
-		<label>Username</label> <input id="campo1" name="username" type="text" />
+		<label>Username</label> <input id="campo1" name="username" type="text" autofocus="autofocus" required />
 		<input id="campo2" name="recuperar" type="submit" value="Recuperar" />
 	</fieldset>
 </form>
