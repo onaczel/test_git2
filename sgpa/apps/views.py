@@ -8,7 +8,8 @@ from django.utils import timezone
 
 from django.template import RequestContext, loader
 
-from apps.models import Roles, Users_Roles, Permisos, Permisos_Roles, Flujos, Actividades, Actividades_Estados
+from apps.models import Roles, Users_Roles, Permisos, Permisos_Roles, Flujos, Actividades, Actividades_Estados,\
+    Proyectos
 from django.contrib.auth.models import User
 
 
@@ -35,6 +36,7 @@ from django.contrib.sites import requests
 from random import choice
 from django.core.mail import send_mail
 from django.http import HttpResponse
+from django.db.models.base import Model
 
 
 
@@ -166,8 +168,6 @@ def ingresar(request):
 
 def recuperarContrasena(request):
         if request.method == 'POST':
-            formulario2 = AuthenticationForm(request.POST)
-            if formulario2.is_valid:
                      
                 usuario = request.POST['username']
           
@@ -191,9 +191,8 @@ def recuperarContrasena(request):
                 
                     return render_to_response('apps/user_pwd_user_not_valid.html', context_instance=RequestContext(request))
         
-        else:
-            formulario2 = AuthenticationForm()    
-        return render_to_response('apps/user_new_pwd.html', {'formulario2':formulario2}, context_instance=RequestContext(request)) 
+ 
+        return render_to_response('apps/user_new_pwd.html', context_instance=RequestContext(request)) 
     
 
 
@@ -231,7 +230,10 @@ def cerrar(request):
 Cada vista debe tener una clase, o funcion
 y un render que llame al template
 '''
-
+class newProject(generic.DetailView):
+    template_name = 'apps/project_admin_new.html'
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name)
     
 class modadmin(generic.DetailView):
     template_name = 'apps/admin_mod.html'
@@ -262,6 +264,7 @@ class adminflow(generic.DetailView):
     template_name = 'apps/flow_admin.html'
     def get(self, request, *args, **kwargs):
         return render(request, self.template_name)
+    
 
 '''
 Se debe crear una funcion que tome una request, y guarde en una variable
@@ -583,4 +586,29 @@ def asignarpermisosmod(request, role_id):
         
     return render_to_response("apps/role_modified.html", context_instance=RequestContext(request))'''
         
+###############################creacion de proyecto###############################
+"""
+class projectCreateForm(forms.ModelForm):
+    class Meta:
+        model = Proyectos
+        fields = ("nombre", "fechaInicio", "fechaFin", "descripcion", "observaciones")
+####
+"""
 
+
+def crearProyecto(request):
+        if request.method == 'POST':
+            #form = projectCreateForm(request.POST)
+            #if form.is_valid():     
+               
+            proyecto = Proyectos()
+            proyecto.nombre = request.POST.get('nombre', False)
+            proyecto.fecha_ini = request.POST.get('fechaInicio', False)
+            proyecto.fecha_est_fin = request.POST.get('fechaFin', False)
+            proyecto.descripcion = request.POST.get('descripcion', False)
+            proyecto.observaciones = request.POST.get('observaciones', False)
+            proyecto.save() 
+            HttpResponse("se ha guardado")
+        #else: 
+            #form = projectCreateForm()
+        return render_to_response('apps/project_admin_new.html', context_instance=RequestContext(request)) 
