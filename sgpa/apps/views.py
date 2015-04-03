@@ -9,7 +9,7 @@ from django.utils import timezone
 from django.template import RequestContext, loader
 
 from apps.models import Roles, Users_Roles, Permisos, Permisos_Roles, Flujos, Actividades, Actividades_Estados,\
-    Proyectos
+    Proyectos, Equipo
 from django.contrib.auth.models import User
 
 
@@ -608,20 +608,14 @@ def asignarpermisosmod(request, role_id):
     return render_to_response("apps/role_modified.html", context_instance=RequestContext(request))'''
         
 ###############################creacion de proyecto###############################
-"""
-class projectCreateForm(forms.ModelForm):
-    class Meta:
-        model = Proyectos
-        fields = ("nombre", "fechaInicio", "fechaFin", "descripcion", "observaciones")
-####
-"""
+
 
 
 def crearProyecto(request):
         if request.method == 'POST':
-            #form = projectCreateForm(request.POST)
-            #if form.is_valid():     
-               
+  
+            
+            #Creacion de proyecto   
             proyecto = Proyectos()
             proyecto.nombre = request.POST.get('nombre', False)
             proyecto.fecha_ini = request.POST.get('fechaInicio', False)
@@ -629,7 +623,51 @@ def crearProyecto(request):
             proyecto.descripcion = request.POST.get('descripcion', False)
             proyecto.observaciones = request.POST.get('observaciones', False)
             proyecto.save() 
-            HttpResponse("se ha guardado")
-        #else: 
-            #form = projectCreateForm()
+            
+            #Creacion de equipo
+            equipo = Equipo()
+            
+            if User.objects.filter(username = request.POST.get('scrum', False)).exists(): 
+                
+                equipo.usuario = User.objects.get(username = request.POST.get('scrum', False))
+            
+            else:
+                #si el usuario no especifico un scrum master, el usuario se queda como scrum master
+                equipo.usuario = request.user
+                
+            
+            equipo.proyecto = proyecto
+            equipo.rol = Roles.objects.get(descripcion = 'Scrum Master')
+            equipo.save()
+            
+            flujo = Flujos.objects.filter(plantilla = True)
+            actividades = Actividades.objects.filter(plantilla = True)
+            return render_to_response('apps/project_add_plantilla.html', {'flujo':flujo,'actividades':actividades,'idp':proyecto.id},context_instance=RequestContext(request))
+
         return render_to_response('apps/project_admin_new.html', context_instance=RequestContext(request)) 
+
+
+def agregarPlantilla(request, proyecto_id):
+    
+    flujo = Flujos.objects.get(id=request.POST['f'])
+    
+    copyFlujo = Flujos()
+    copyFlujo.descripcion = flujo.descripcion
+    copyFlujo.plantilla = False
+    copyFlujo.estado = True
+    copyFlujo.proyeto_id = proyecto_id
+    copyFlujo.save()                 
+    
+    actividades = Actividades.objects.filter(flujo_id = request.POST['f'])    
+    
+    for actividad in actividades:
+        copyActividad = Actividades()             
+        copyActividad.descripcion = actividad.descripcion
+        copyActividad.estado = True
+        copyActividad.plantilla = False
+        copyActividad.flujo_id = copyFlujo.id
+        copyActividad.save()
+    
+    proyecto = Proyectos.objects.filter(id = proyecto_id)
+    return render_to_response('apps/plantilla_anadida.html',{'actividadades':actividades,'copyFlujo':copyFlujo,'proyecto':proyecto},context_instance=RequestContext(request))
+
