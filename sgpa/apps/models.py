@@ -42,32 +42,7 @@ class Permisos_Roles(models.Model):
     """
     roles = models.ForeignKey(Roles)
     permisos = models.ForeignKey(Permisos)
-
-class Flujos(models.Model):
-    """
-    Modelo para almacenar los flujosc
-    """
-    descripcion = models.CharField(max_length = 50)
-    estado = models.BooleanField(default = True)
-
-class Actividades(models.Model):
-    """
-    Modelo para almacenar las actividades en un flujo
-    """
-    descripcion = models.CharField(max_length= 50)
-    estado = models.BooleanField(default = True)
-    flujo = models.ForeignKey(Flujos)
-    def __str__(self):
-        return self.descripcion
     
-class Estados(models.Model):
-    descripcion = models.CharField(max_length = 50)
-    
-class Actividades_Estados(models.Model):
-    actividad = models.ForeignKey(Actividades)
-    estados = models.ForeignKey(Estados)
-    
-
 class Proyectos(models.Model):
     """
     Modelo para almacenar los datos de los proyectos
@@ -81,13 +56,44 @@ class Proyectos(models.Model):
     observaciones = models.CharField(max_length = 400)
 
     
-class Proy_Us_Rol(models.Model):
+class Equipo(models.Model):
     """
     Modelo que asocia Proyecto Usuario Rol
     """
     proyecto = models.ForeignKey(Proyectos)
     usuario  = models.ForeignKey(User)
     rol      = models.ForeignKey(Roles)
+    
+    
+class Flujos(models.Model):
+    """
+    Modelo para almacenar los flujos
+    """
+    proyeto = models.ForeignKey(Proyectos, null=True, blank=True)
+    descripcion = models.CharField(max_length = 50)
+    plantilla = models.BooleanField(default = True)    
+    estado = models.BooleanField(default = True)
+
+class Actividades(models.Model):
+    """
+    Modelo para almacenar las actividades en un flujo
+    """
+    descripcion = models.CharField(max_length= 50)
+    estado = models.BooleanField(default = True)
+    flujo = models.ForeignKey(Flujos)
+    plantilla = models.BooleanField(default = True)
+    def __str__(self):
+        return self.descripcion
+    
+class Estados(models.Model):
+    descripcion = models.CharField(max_length = 50)
+    
+class Actividades_Estados(models.Model):
+    actividad = models.ForeignKey(Actividades)
+    estados = models.ForeignKey(Estados)
+    
+
+
     
     
 #User.add_to_class('roles', models.ForeignKey(Users_Roles))
