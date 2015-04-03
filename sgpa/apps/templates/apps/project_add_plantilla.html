@@ -1,0 +1,51 @@
+{% block contenido %}
+<center>
+<h2>Seleccione una plantilla</h2>
+
+	
+<table border="10" frame="lhs" borderstyle= "doble" cellspacing=2 cellpadding=20 bordercolor="green">	
+	<center>
+	<form action="{% url 'apps:agregarPlantilla' idp %}" method="post">
+	{% csrf_token %} 
+	{% for f in flujo %}
+		
+		<tr>
+			<td><input type="radio" name="f" id="f{{ forloop.counter }}" value="{{ f.id }}" /></td>
+			<td>
+				<table border=1 cellspacing=0 cellpadding=2 bordercolor="666633">
+					<tr>
+						<strong>{{f.descripcion}}</strong>
+					</tr>
+				</center>
+					<tr>
+						{% for actividad in actividades %}
+							{% if actividad.flujo_id == f.id%}
+								<td colspan="3">{{actividad.descripcion}}</td>
+							
+							{% endif %}
+						{% endfor %} 
+					<tr>		
+				
+					<tr>
+						{% for actividad in actividades %}
+					 		{% if actividad.flujo_id == f.id%}
+								<td>To Do </td><td>Doing</td><td>Done</td>
+							{% endif %}
+						{% endfor %} 
+					</tr>
+				
+				</table>
+			</td>
+		</tr>
+	{% endfor %} 
+	
+</table>
+<br><input id="usar" name="usar" type="submit" value="Usar Plantilla" /></br>
+</form>
+</center>
+{% endblock %}
+
+
+
+
+
