@@ -1,4 +1,6 @@
-<h1>Crear nuevo proyecto</h1>
+<!DOCTYPE html> 
+<p><label style="font-size: 20pt;"><strong>Crear nuevo proyecto       </strong></label>    <a href="/apps/modadmin/adminproyecto/">Cancelar</a></p> 
+
 
 {% block contenido %}
 
@@ -15,17 +17,25 @@
 			
 			<tr>
 				<td><label>*Fecha de inicio:</label> </td>
-				<td><input type="date" id="campo2" name="fechaInicio" required/>AAAA-MM-DD</td>
+				<td><input type="date" id="campo2" name="fechaInicio" required>AAAA-MM-DD</input></td>
 			</tr>
 			
 			<tr>
 				<td><label>*Fecha estimada de finalización:</label></td>
-				<td><input type="date" id="campo3" name="fechaFin" required/>AAAA-MM-DD</td>
+				<td><input type="date" id="campo3" name="fechaFin" required/>AAAA-MM-DD <label style="color: red; font-size: 12pt">{{msg}}</label></td>
 			</tr>
 			
 			<tr>
-				<td><label>Scrum Master:</label></td>
-				<td><input id="campo4" name="scrum" type="text" size="20" maxlength="20"/>Dejar vacío si usted será el Scrum Master</td>
+				
+				<td><label>Scrum Master:</label></td>				 
+				<td>
+						<select name="sm"  style="width:190px">
+							{% for user in listuser %}
+								<option>{{user.username}}</option>
+							{% endfor %} 
+							<option selected>{{user}}</option>
+						</select>				
+				</td>
 			</tr>
 	
 		</table>
