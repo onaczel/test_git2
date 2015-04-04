@@ -204,7 +204,7 @@ def recuperarContrasena(request):
                 
                     user.set_password(p)
                     user.save()
-                    send_mail('SGPA-Cambio de clave de accseso', 'Su nueva clave de acceso: '+ p, 'noreply.sgpa@gmail.com', [user.email], fail_silently=False)
+                    send_mail('SGPA-Cambio de clave de accseso', 'Nueva clave de acceso para el usuario <'+usuario+'>: '+ p, 'noreply.sgpa@gmail.com', [user.email], fail_silently=False)
                 
                     return render_to_response('apps/user_new_pwd_ok.html', {'username':usuario},context_instance=RequestContext(request))
                 
