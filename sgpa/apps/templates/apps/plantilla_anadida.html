@@ -1,40 +1,45 @@
 {% block contenido %}
-{% csrf_token %} 
+
 <center>
 
-<h1>Proyecto creado correctamente</h1>
-<h2>Resumen</h2>
-<label>Nombre proyecto: </label><p>{{proyecto.nombre}}</p>
-<label>Fecha inicio: </label><p>{{proyecto.fecha_ini}}</p>
-<label>Fecha estimada de fin: </label><p>{{proyecto.fecha_est_fin}}</p>
-<label>Descripcion: </label><p>{{proyecto.descripcion}}</p>
-<label>Observaciones: </label><p>{{proyecto.observaciones}}</p>
-<label>Scrum Master: </label><p></p>
-<h3>Plantilla</h3>
+	<h1>Proyecto creado correctamente</h1>
+	<h2>Resumen</h2>
+	<table border=10 cellspacing=1 cellpadding=15 bordercolor="green">
+		<tr>
+			<td><strong>Nombre proyecto: </td><td>{{proyecto.nombre}}</td>
+		</tr>
+	
+		<tr>
+			<td><strong>Fecha inicio: </strong> </td><td>{{proyecto.fecha_ini}}</td>
+		</tr>
+	
+		<tr>
+			<td><strong>Fecha estimada de fin: </strong> </td><td>{{proyecto.fecha_est_fin}}</td>
+		</tr>
+	
+		<tr>
+			<td><strong>Descripción: </strong> </td><td><p>{{proyecto.descripcion}}</p></td>
+		</tr>
+	
+		<tr>
+			<td><strong>Observaciones: </strong> </td><td>{{proyecto.observaciones}}</td>
+		</tr>
+	
+		<tr>
+			<td><strong>Scrum Master: </strong> </td><td>{{scrum.username}}</td>
+		</tr>
+	
+		<tr>
+			<td><strong>Nombre de plantilla: </strong> </td><td>{{copyFlujo.descripcion}}</td>
+		</tr>
+	
+					
+	</table>
+	
+	
+	<br></br>
+	<a href="/apps/modadmin/adminproyecto/">Volver al menú</a><br />
 
-<table border=1 cellspacing=0 cellpadding=2 bordercolor="666633">
-					<tr>
-						<strong>{{copyFlujo.descripcion}}</strong>
-					</tr>
-				</center>
-					<tr>
-						{% for actividad in actividades %}
-							{% if actividad.flujo_id == copyFlujo.id%}
-								<td colspan="3">{{actividad.descripcion}}</td>
-							
-							{% endif %}
-						{% endfor %} 
-					<tr>		
-				
-					<tr>
-						{% for actividad in actividades %}
-					 		{% if actividad.flujo_id == copyFlujo.id%}
-								<td>To Do </td><td>Doing</td><td>Done</td>
-							{% endif %}
-						{% endfor %} 
-					</tr>
-				
-</table>
-<a href="createProject/">Volver al menú</a><br />
 </center>
+
 {% endblock %}
