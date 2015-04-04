@@ -31,7 +31,7 @@ urlpatterns = patterns('',
     url(r'^(?P<role_id>\d+)/delrole/$', views.roledelete, name="roledelete"),
     url(r'^modadmin/adminproyecto/$', views.adminproject.as_view(), name="adminproyecto"),
     url(r'^modadmin/adminproyecto/createProject/$', views.crearProyecto, name="createProject"),
-    url(r'^(?P<proyecto_id>\d+)/agregarPlantilla/$', views.agregarPlantilla, name='agregarPlantilla'),
+    url(r'^(?P<proyecto_pk>\d+)/agregarPlantilla/$', views.agregarPlantilla, name='agregarPlantilla'),
   #  url(r'^modadmin/adminproyecto/createProject/$', views.agregarPlantilla, name="agregarPlantilla"),
     url(r'^modadmin/adminflujo/$', views.adminflow.as_view(), name="adminflujo"),
     
