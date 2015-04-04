@@ -612,42 +612,51 @@ def asignarpermisosmod(request, role_id):
 
 
 def crearProyecto(request):
+        
         if request.method == 'POST':
   
-            
-            #Creacion de proyecto   
-            proyecto = Proyectos()
-            proyecto.nombre = request.POST.get('nombre', False)
-            proyecto.fecha_ini = request.POST.get('fechaInicio', False)
-            proyecto.fecha_est_fin = request.POST.get('fechaFin', False)
-            proyecto.descripcion = request.POST.get('descripcion', False)
-            proyecto.observaciones = request.POST.get('observaciones', False)
-            proyecto.save() 
-            
-            #Creacion de equipo
-            equipo = Equipo()
-            
-            if User.objects.filter(username = request.POST.get('scrum', False)).exists(): 
-                
-                equipo.usuario = User.objects.get(username = request.POST.get('scrum', False))
-            
+            if  request.POST.get('fechaFin', False) < request.POST.get('fechaInicio', False):
+                listUser = User.objects.filter(is_active = True)
+                msg = 'La fecha estimada de finalizacion debe ser mayor a la de inicio'
+                return render_to_response('apps/project_admin_new.html', {'listuser':listUser, 'user':request.user, 'msg':msg},context_instance=RequestContext(request)) 
             else:
-                #si el usuario no especifico un scrum master, el usuario se queda como scrum master
-                equipo.usuario = request.user
                 
+                #Creacion de proyecto   
+                proyecto = Proyectos()
+                proyecto.nombre = request.POST.get('nombre', False)                
+                proyecto.descripcion = request.POST.get('descripcion', False)
+                proyecto.observaciones = request.POST.get('observaciones', False)
+                proyecto.fecha_ini = request.POST.get('fechaInicio', False)
+                proyecto.fecha_est_fin = request.POST.get('fechaFin', False)             
+                proyecto.save()
+                
+                #Creacion de equipo
+                equipo = Equipo()
+                #se obtiene el usuario que se ha escogido
+                equipo.usuario = User.objects.get(username = request.POST['sm'])
+          
+                equipo.proyecto = proyecto
+                equipo.rol = Roles.objects.get(descripcion = 'Scrum Master')
+                equipo.save()
             
-            equipo.proyecto = proyecto
-            equipo.rol = Roles.objects.get(descripcion = 'Scrum Master')
-            equipo.save()
+                flujo = Flujos.objects.filter(plantilla = True)
+                actividades = Actividades.objects.filter(plantilla = True)
+                
+               
             
-            flujo = Flujos.objects.filter(plantilla = True)
-            actividades = Actividades.objects.filter(plantilla = True)
             return render_to_response('apps/project_add_plantilla.html', {'flujo':flujo,'actividades':actividades,'idp':proyecto.id},context_instance=RequestContext(request))
+            
+            
+        else:
+            
+            listUser = User.objects.filter(is_active = True)
+            return render_to_response('apps/project_admin_new.html', {'listuser':listUser, 'user':request.user},context_instance=RequestContext(request)) 
 
-        return render_to_response('apps/project_admin_new.html', context_instance=RequestContext(request)) 
+            
+        
 
 
-def agregarPlantilla(request, proyecto_id):
+def agregarPlantilla(request, proyecto_pk):
     
     flujo = Flujos.objects.get(id=request.POST['f'])
     
@@ -655,7 +664,7 @@ def agregarPlantilla(request, proyecto_id):
     copyFlujo.descripcion = flujo.descripcion
     copyFlujo.plantilla = False
     copyFlujo.estado = True
-    copyFlujo.proyeto_id = proyecto_id
+    copyFlujo.proyeto_id = proyecto_pk
     copyFlujo.save()                 
     
     actividades = Actividades.objects.filter(flujo_id = request.POST['f'])    
@@ -667,7 +676,12 @@ def agregarPlantilla(request, proyecto_id):
         copyActividad.plantilla = False
         copyActividad.flujo_id = copyFlujo.id
         copyActividad.save()
+      
+     
+    us = Equipo.objects.get(proyecto_id= proyecto_pk, rol_id=3)
     
-    proyecto = Proyectos.objects.filter(id = proyecto_id)
-    return render_to_response('apps/plantilla_anadida.html',{'actividadades':actividades,'copyFlujo':copyFlujo,'proyecto':proyecto},context_instance=RequestContext(request))
+    scrumMaster = User.objects.get(id = us.usuario_id)
+    
+    proyecto = Proyectos.objects.get(id = proyecto_pk)
+    return render_to_response('apps/plantilla_anadida.html',{'copyFlujo':copyFlujo,'proyecto':proyecto, 'scrum':scrumMaster},context_instance=RequestContext(request))
 
