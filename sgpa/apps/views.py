@@ -8,8 +8,7 @@ from django.utils import timezone
 
 from django.template import RequestContext, loader
 
-from apps.models import Roles, Users_Roles, Permisos, Permisos_Roles, Flujos, Actividades, Actividades_Estados,\
-    Proyectos, Equipo
+from apps.models import Roles, Users_Roles, Permisos, Permisos_Roles, Flujos, Actividades, Actividades_Estados, Proyectos, Equipo
 from django.contrib.auth.models import User
 
 
@@ -50,7 +49,6 @@ class UserCreateForm(UserCreationForm):
     email = forms.EmailField(required=True)
     first_name = forms.Field(required=True)
     last_name = forms.Field(required=True)
-    
 
     class Meta:
         model = User
