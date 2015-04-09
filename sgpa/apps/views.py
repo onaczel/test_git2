@@ -50,6 +50,7 @@ class UserCreateForm(UserCreationForm):
     email = forms.EmailField(required=True)
     first_name = forms.Field(required=True)
     last_name = forms.Field(required=True)
+    
 
     class Meta:
         model = User
