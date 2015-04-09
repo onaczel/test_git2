@@ -12,3 +12,24 @@
 		<p>No hay Proyectos</p>
 	{% endif %}
 {% endblock %}
+<p>Proyectos del Usuario</p>
+
+{% if proyectos %}
+	{% for p in proyectos %}
+		<a href="{% url 'apps:accionesproyecto' p.id %}">{{p.nombre}}</a><br />
+		{% for r in rol %}
+			{% if r.estado == True %}
+				<label>({{r.descripcion}})</label><br />
+			{% endif %}
+		{% endfor %}
+		<br />
+	{% endfor %}
+{% else %}
+	<p>El usuario no se encuentra en ningun proyecto</p>
+{% endif %}
+<br />
+{% if rol_id == 1 %}
+	<a href="/apps/user_private_admin">Volver</a><br />
+{% else %}
+	<a href="/apps/user_private_user">Volver</a><br />
+{% endif%}

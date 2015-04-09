@@ -707,9 +707,12 @@ def listproyectosdelusuario(request, usuario_id):
         proyectos.append(Proyectos.objects.get(id=equipo.proyecto_id))
     for equipo in equipos:
         rolesProyecto.append(Roles.objects.get(id = equipo.rol_id))
-    return render_to_response("apps/project_mod.html", {"proyectos":proyectos, "usuario":request.user, "rol_id":rolSistema.id})
+    return render_to_response("apps/project_mod.html", {"proyectos":proyectos, "usuario":request.user, "rol":rolesProyecto ,"rol_id":rolSistema.id})
 
 def listasigparticipante(request, proyecto_id):
+    """
+    Lista de usuarios que pueden participar en el proyecto
+    """
     usuarios = []
     proyecto = Proyectos.objects.get(id = proyecto_id)
     equipos = Equipo.objects.filter(proyecto_id = proyecto_id)
@@ -719,12 +722,23 @@ def listasigparticipante(request, proyecto_id):
             if equipo.usuario_id == usuario.id:
                 seEncuentra = True
                 break
-            if seEncuentra == False:
-                usuarios.append(usuario)
+        if seEncuentra == False:
+            if usuario.is_active == True:
+                yaListado = False
+                for u in usuarios:
+                    yaListado = False
+                    if u.id == usuario.id:
+                        yaListado = True
+                        break
+                if yaListado == False:
+                    usuarios.append(usuario)
                 
     return render_to_response("apps/project_asignar_participante.html", {"usuarios":usuarios, "proyecto":proyecto})
 
 def listelimparticipante(request, proyecto_id):
+    """
+    Lista de usuarios que pueden ser eliminados del proyecto
+    """
     usuarios = []
     proyecto = Proyectos.objects.get(id = proyecto_id)
     equipos = Equipo.objects.filter(proyecto_id = proyecto_id)
@@ -734,29 +748,45 @@ def listelimparticipante(request, proyecto_id):
             if equipo.usuario_id == usuario.id:
                 seEncuentra = True
                 break
-            if seEncuentra == True:
-                usuarios.append(usuario)
+        if seEncuentra == True:
+            usuarios.append(usuario)
 
     return render_to_response("apps/project_eliminar_participante.html", {"usuarios":usuarios, "proyecto":proyecto})
 
 def listasigparticipanterol(request, proyecto_id, usuario_id):
+    """
+    Lista de roles que se pueden asignar a los usuarios
+    """
     proyecto = Proyectos.objects.get(id = proyecto_id)
     usuario = User.objects.get(id = usuario_id)
-    roles = Roles.objects.all()
-    return render_to_response("apps/project_asignar_participante_rol.html", {"proyecto":proyecto, "usuario":usuario, "roles":roles})
+    roles = []
+    for rol in Roles.objects.all():
+        if rol.estado == True:
+            roles.append(rol)
+            
+    return render_to_response("apps/project_asignar_participante_rol.html", {"proyecto":proyecto, "usuario":usuario, "roles":roles}, context_instance=RequestContext(request))
 
 def accionesproyecto(request, proyecto_id):
+    """
+    Envia a la pagina desde donde se pueden ejecutar acciones por el proyecto
+    """
     proyecto = Proyectos.objects.get(id = proyecto_id)
     return render_to_response("apps/project_acciones.html", {"proyecto":proyecto, "usuario":request.user})
 
 def elimparticipante(request, proyecto_id, usuario_id):
+    """
+    Elimina al usuario del proyecto
+    """
     proyecto = Proyectos.objects.get(id = proyecto_id)  
     Equipo.objects.filter(usuario_id = usuario_id, proyecto_id = proyecto_id).delete()
-    return render_to_response("apps/project_eliminar_participante_eliminado.html", {"proyecto":proyecto})
+    return render_to_response("apps/project_eliminar_participante_eliminado.html", {"proyecto":proyecto, "usuario":request.user})
 
 def asigparticipanterol(request, proyecto_id, usuario_id):
+    """
+    Asigna al usuario al proyecto
+    """
     proyecto = Proyectos.objects.get(id = proyecto_id)
-    roles = request.POST.getlist(u'roles')
+    roles = request.POST.getlist(u'roles[]')
     for r in roles:
         try:
             rol = Roles.objects.get(pk=r)
@@ -767,4 +797,5 @@ def asigparticipanterol(request, proyecto_id, usuario_id):
         equipo.rol_id = rol.id
         equipo.proyecto_id = proyecto_id
         equipo.save()
-    return render_to_response('apps/project_asignar_participantes_rol_asignado.html', RequestContext(request), {"proyecto":proyecto})
+    
+    return render_to_response('apps/project_asignar_participante_rol_asignado.html', {"proyecto":proyecto} ,context_instance=RequestContext(request))
