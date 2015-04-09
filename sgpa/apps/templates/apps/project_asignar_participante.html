@@ -1,17 +1,15 @@
 {% block encabezado %}
-	<h1>Modulo Proyecto</h1>
+	<h1>Asignar Participantes</h1>
 {% endblock %}
-{% block contendido %}
-	<p>Se ecuentra en el modulo Proyecto</p>
-{% endblock %}
-<p>{{proyecto.nombre}}</p>
-<br />
+<h3>{{proyecto.nombre}}</h3>
 
 {% if usuarios %}
-	<p>Usuarios disponibles</p>
+	<h4>Usuarios disponibles</h4>
 	{% for u in usuarios %}
-		<label>{{u.id}} {{u.first_name}} {{u.last_name}}</label>
-		<a href="{% url 'apps:listasigparticipanterol' proyecto.id u.id %}">Asignar</a><br /><br />
+		{% if u.id != 1 %}
+			<label> {{u.first_name}} {{u.last_name}} ({{u.username}})</label>
+			<a href="{% url 'apps:listasigparticipanterol' proyecto.id u.id %}">Asignar</a><br /><br />
+		{% endif %}
 	{% endfor %}
 {% else %}
 	<p>No se encontro ningun usuario disponible</p>

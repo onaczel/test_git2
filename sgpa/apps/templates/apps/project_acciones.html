@@ -1,9 +1,3 @@
-{% block encabezado %}
-	<h1>Modulo Proyecto</h1>
-{% endblock %}
-{% block contendido %}
-	<p>Se ecuentra en el modulo Proyecto</p>
-{% endblock %}
 <h1><b>{{proyecto.nombre}}</b></h1>
 
 <br><a href="{% url 'apps:listasigparticipante' proyecto.id %}">Asignar Participante</a><br />

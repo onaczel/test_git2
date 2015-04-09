@@ -745,7 +745,7 @@ def listelimparticipante(request, proyecto_id):
     for usuario in User.objects.all():
         seEncuentra = False
         for equipo in equipos:
-            if equipo.usuario_id == usuario.id:
+            if equipo.usuario_id == usuario.id and equipo.rol_id !=3:
                 seEncuentra = True
                 break
         if seEncuentra == True:
@@ -771,7 +771,16 @@ def accionesproyecto(request, proyecto_id):
     Envia a la pagina desde donde se pueden ejecutar acciones por el proyecto
     """
     proyecto = Proyectos.objects.get(id = proyecto_id)
-    return render_to_response("apps/project_acciones.html", {"proyecto":proyecto, "usuario":request.user})
+    user_id = request.user
+    urp = Equipo.objects.filter(usuario_id=user_id, rol_id = 3, proyecto_id = proyecto_id)
+    #for u in urp:
+    
+    if urp:
+        #Si el usuario es Scrum Master en el Proyecto
+        return render_to_response("apps/project_acciones.html", {"proyecto":proyecto, "usuario":request.user})
+    else:
+        #Si el usuario no es Scrum Master
+        return render_to_response("apps/project_acciones_no_sm.html", {"proyecto":proyecto, "usuario":request.user})
 
 def elimparticipante(request, proyecto_id, usuario_id):
     """

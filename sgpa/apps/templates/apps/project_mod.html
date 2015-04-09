@@ -1,18 +1,7 @@
 {% block encabezado %}
 	<h1>Modulo Proyecto</h1>
 {% endblock %}
-{% block contendido %}
-	<p>Se ecuentra en el modulo Proyecto</p>
-	{% if listproyectos %}
-		{% for proj in listproyectos %}
-			<label>{{proj.nombre}}</label>
-			<a href="{% url 'apps:project' proj.id%}">Entrar</a><br />
-		{% endfor %}
-	{% else %}
-		<p>No hay Proyectos</p>
-	{% endif %}
-{% endblock %}
-<p>Proyectos del Usuario</p>
+<h4>Proyectos del Usuario</h4>
 
 {% if proyectos %}
 	{% for p in proyectos %}
