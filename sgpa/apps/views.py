@@ -685,3 +685,80 @@ def agregarPlantilla(request, proyecto_pk):
     proyecto = Proyectos.objects.get(id = proyecto_pk)
     return render_to_response('apps/plantilla_anadida.html',{'copyFlujo':copyFlujo,'proyecto':proyecto, 'scrum':scrumMaster},context_instance=RequestContext(request))
 
+def listproyectosdelusuario(request, usuario_id):
+    """
+    Retorna una lista con todos los proyectos del usuario
+    """
+    #'''Se compara con el registro en la tabla User_Roles'''
+    ur = Users_Roles.objects.get(user=usuario_id)
+    #'''De la tabla de Roles se trae el id del rol del usuario'''
+    rolSistema = Roles.objects.get(descripcion=ur.role)
+   
+    equipos = Equipo.objects.filter(usuario_id=usuario_id)
+    proyectos = []
+    rolesProyecto = []
+    for equipo in equipos:
+        proyectos.append(Proyectos.objects.get(id=equipo.proyecto_id))
+    for equipo in equipos:
+        rolesProyecto.append(Roles.objects.get(id = equipo.rol_id))
+    return render_to_response("apps/project_mod.html", {"proyectos":proyectos, "usuario":request.user, "rol_id":rolSistema.id})
+
+def listasigparticipante(request, proyecto_id):
+    usuarios = []
+    proyecto = Proyectos.objects.get(id = proyecto_id)
+    equipos = Equipo.objects.filter(proyecto_id = proyecto_id)
+    for usuario in User.objects.all():
+        seEncuentra = False
+        for equipo in equipos:
+            if equipo.usuario_id == usuario.id:
+                seEncuentra = True
+                break
+            if seEncuentra == False:
+                usuarios.append(usuario)
+                
+    return render_to_response("apps/project_asignar_participante.html", {"usuarios":usuarios, "proyecto":proyecto})
+
+def listelimparticipante(request, proyecto_id):
+    usuarios = []
+    proyecto = Proyectos.objects.get(id = proyecto_id)
+    equipos = Equipo.objects.filter(proyecto_id = proyecto_id)
+    for usuario in User.objects.all():
+        seEncuentra = False
+        for equipo in equipos:
+            if equipo.usuario_id == usuario.id:
+                seEncuentra = True
+                break
+            if seEncuentra == True:
+                usuarios.append(usuario)
+
+    return render_to_response("apps/project_eliminar_participante.html", {"usuarios":usuarios, "proyecto":proyecto})
+
+def listasigparticipanterol(request, proyecto_id, usuario_id):
+    proyecto = Proyectos.objects.get(id = proyecto_id)
+    usuario = User.objects.get(id = usuario_id)
+    roles = Roles.objects.all()
+    return render_to_response("apps/project_asignar_participante_rol.html", {"proyecto":proyecto, "usuario":usuario, "roles":roles})
+
+def accionesproyecto(request, proyecto_id):
+    proyecto = Proyectos.objects.get(id = proyecto_id)
+    return render_to_response("apps/project_acciones.html", {"proyecto":proyecto, "usuario":request.user})
+
+def elimparticipante(request, proyecto_id, usuario_id):
+    proyecto = Proyectos.objects.get(id = proyecto_id)  
+    Equipo.objects.filter(usuario_id = usuario_id, proyecto_id = proyecto_id).delete()
+    return render_to_response("apps/project_eliminar_participante_eliminado.html", {"proyecto":proyecto})
+
+def asigparticipanterol(request, proyecto_id, usuario_id):
+    proyecto = Proyectos.objects.get(id = proyecto_id)
+    roles = request.POST.getlist(u'roles')
+    for r in roles:
+        try:
+            rol = Roles.objects.get(pk=r)
+        except:
+            rol = None
+        equipo = Equipo()
+        equipo.usuario_id = usuario_id
+        equipo.rol_id = rol.id
+        equipo.proyecto_id = proyecto_id
+        equipo.save()
+    return render_to_response('apps/project_asignar_participantes_rol_asignado.html', RequestContext(request), {"proyecto":proyecto})
