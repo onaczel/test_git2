@@ -48,13 +48,12 @@ class IndexView(generic.DetailView):
 
 class UserCreateForm(UserCreationForm):
     email = forms.EmailField(required=True)
-    is_superuser = forms.BooleanField(required=False)
     first_name = forms.Field(required=True)
     last_name = forms.Field(required=True)
 
     class Meta:
         model = User
-        fields = ("first_name", "last_name", "username", "email", "password1", "password2", "is_superuser" )
+        fields = ("first_name", "last_name", "username", "email", "password1", "password2" )
 
     def save(self, commit=True):
         """
@@ -62,7 +61,6 @@ class UserCreateForm(UserCreationForm):
         """
         user = super(UserCreateForm, self).save(commit=False)
         user.email = self.cleaned_data["email"]
-        user.is_superuser = self.cleaned_data["is_superuser"]
         user.firs_name = self.cleaned_data["first_name"]
         user.last_name = self.cleaned_data["last_name"]
         if user.is_superuser == 'null':
@@ -73,7 +71,6 @@ class UserCreateForm(UserCreationForm):
 
 class UserModifyForm(UserCreationForm):
     email = forms.EmailField(required=True)
-    is_superuser = forms.BooleanField(required=False)
     first_name = forms.Field(required=True)
     last_name = forms.Field(required=True)
     
@@ -84,7 +81,7 @@ class UserModifyForm(UserCreationForm):
     class Meta:
         model = User
         
-        fields = ("first_name", "last_name",  "email", "password1", "password2", "is_superuser" )
+        fields = ("first_name", "last_name",  "email", "password1", "password2")
         
 
     def save(self, commit=True):
@@ -93,8 +90,7 @@ class UserModifyForm(UserCreationForm):
         """
         user = super(UserCreateForm, self).save(commit=False)
         user.email = self.cleaned_data["email"]
-        user.is_superuser = self.cleaned_data["is_superuser"]
-        user.firs_name = self.cleaned_data["first_name"]
+        user.first_name = self.cleaned_data["first_name"]
         user.last_name = self.cleaned_data["last_name"]
         if user.is_superuser == 'null':
             user.is_superuser='FALSE'
@@ -365,14 +361,13 @@ def muser(request, user_id):
             #user.save(update_field=['username'])
             user.set_password(form.cleaned_data['password1'])
             user.email = form.cleaned_data['email']
-            user.is_superuser = form.cleaned_data['is_superuser']
             user.first_name = form.cleaned_data['first_name']
             user.last_name = form.cleaned_data['last_name']
             user.save()
             #form.save()
             return render_to_response("apps/user_modified.html", RequestContext(request))
     else:
-        form = UserModifyForm(initial={ 'email':user.email, 'is_superuser':user.is_superuser, 'first_name':user.first_name, 'last_name':user.last_name})
+        form = UserModifyForm(initial={ 'email':user.email, 'first_name':user.first_name, 'last_name':user.last_name})
         
         
     args = {}
