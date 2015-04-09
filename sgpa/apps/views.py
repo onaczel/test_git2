@@ -175,6 +175,8 @@ def ingresar(request):
                         return HttpResponseRedirect('/apps/user_private_admin')
     #'''Si es usuario normal'''
                     else:
+                        
+                        #return render_to_response('apps/user_private_user.html', {'listproyectos':listproyectos}, RequestContext(request))
                         return HttpResponseRedirect('/apps/user_private_user')
                 else:
                     return render_to_response('apps/user_no_active.html', context_instance=RequestContext(request))
@@ -217,10 +219,20 @@ def recuperarContrasena(request):
     
 
 
+def listprojects(request, user_id):
+    listproyectos = []
+    equipo = Equipo.objects.filter(usuario_id=user_id)
+    proyectos = Proyectos.objects.all()
+    for eq in equipo:
+        for p in proyectos:
+            if eq.proyecto_id == p.id:
+                listproyectos.append(Proyectos(p.id, p.nombre))
+    return render_to_response('apps/project_mod.html', {'listproyectos':listproyectos})
 
 
-
-
+def project(request, project_id):
+    return render_to_response('apps/project_front_page.html')
+                     
 
 
 @login_required(login_url='apps/ingresar')
@@ -265,7 +277,7 @@ class modproyecto(generic.DetailView):
     template_name = 'apps/project_mod.html'
     def get(self, request, *args, **kwargs):
         return render(request, self.template_name)
-
+    
 class adminuser(generic.DetailView):
     template_name="apps/user_admin.html"
     def get(self, request, *args, **kwargs):

@@ -50,4 +50,7 @@ urlpatterns = patterns('',
     
     url(r'^modadmin/adminuser/asignarrol/$', views.listroleuser, name="listroleuser"),
     url(r'^(?P<user_id>\d+)/asignarrolusuario/$', views.asignarrolusuario, name="asignarrolusuario"),
+    
+    url(r'^(?P<user_id>\d+)/modproyecto/$', views.listprojects, name="listprojects"),
+    url(r'^(?P<project_id>\d+)/project/$', views.project, name="project"),
 )
