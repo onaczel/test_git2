@@ -875,7 +875,7 @@ def listproyectosdelusuario(request, usuario_id):
     @return: render a apps/project_mod.html con la lista de proyectos del usuario, el usuario, sus roles en cada proyecto y su rol de sistema
     """
     #'''Se compara con el registro en la tabla User_Roles'''
-    ur = Users_Roles.objects.get(user=usuario_id)
+    ur = Users_Roles.objects.get(user_id=usuario_id)
     #'''De la tabla de Roles se trae el id del rol del usuario'''
     rolSistema = Roles.objects.get(pk=ur.role_id)
    
