@@ -57,6 +57,9 @@ class UserCreateForm(UserCreationForm):
     def save(self, commit=True):
         """
         Obtiene los datos del formulario creacion de usuario y registra el usuario en el sistema
+        @param self:self
+        @param commit:commit = True
+        @return: User guardado  
         """
         user = super(UserCreateForm, self).save(commit=False)
         user.email = self.cleaned_data["email"]
@@ -86,6 +89,9 @@ class UserModifyForm(UserCreationForm):
     def save(self, commit=True):
         """
         Obtiene los datos del formulario de modificacion de usuario y registra los cambios en el sistema
+        @param self:self
+        @param commit:commit = True
+        @return: User guardado  
         """
         user = super(UserCreateForm, self).save(commit=False)
         user.email = self.cleaned_data["email"]
@@ -100,6 +106,8 @@ class UserModifyForm(UserCreationForm):
 def nuevo_usuario(request):
     """
     Verifica que el formulario es valido y almacena el nuevo usuario en la base de datos
+    @param request: Http request
+    @return: render a  apps/user_create.html, se le envia el formulario para registrar nuevo usuario y el contexto
     """
     if request.method=='POST':
         formulario = UserCreateForm(request.POST)
@@ -124,11 +132,22 @@ def nuevo_usuario(request):
     return render_to_response('apps/user_create.html', {'formulario':formulario}, context_instance=RequestContext(request))
 
 def listroleuser(request, user_id):
+    """
+    Devuelve una lista de roles del sistema
+    @param request: Http request
+    @param user_id: Id de un usuario registrado en el sistema
+    @return: render a  apps/user_assign_role.html, lista de roles, id del user, contexto
+    """
     roles = Roles.objects.all()
     return render_to_response('apps/user_assign_role.html',{'roles':roles, 'user_id':user_id}, context_instance=RequestContext(request))
 
 def asignarrolusuario(request, user_id):
-    #role = get_object_or_404(Roles, role_id)
+    """
+    Asigna un rol a un usuario registrado en el sistema
+    @param request: Http request
+    @param user_id: Id de un usuario registrado en el sistema
+    @return: render a  apps/user_created.html, contexto
+    """
     roles = request.POST.getlist(u'roles')
     for r in roles:
         try:
@@ -149,6 +168,9 @@ def ingresar(request):
     
     Verifica que el usuario este activo y lo redirige a su template correspondiente
     segun su rol en el sistema 
+    
+    @param request: Http request
+    @return: render a template correspondiente segun rol del usuario en el sistema, contexto
     """
     if request.method == 'POST':
         formulario = AuthenticationForm(request.POST)
@@ -185,6 +207,12 @@ def ingresar(request):
 
 
 def recuperarContrasena(request):
+        """
+        Genera una nueva contrasena para un usuario activo registado en el sistema
+        La nueva contrasena se envia via email al usuario en cuestion
+        @param request: Http request
+        @return: Si hay exito retorna render a apps/user_new_pwd.html y una instancia del contexto  
+        """
         if request.method == 'POST':
                      
                 usuario = request.POST['username']
@@ -215,6 +243,12 @@ def recuperarContrasena(request):
 
 
 def listprojects(request, user_id):
+    """
+    Genera una lista de proyectos asociados a un usuario
+    @param request: Http request
+    @param user_id: Id de un usuario registrado en el sistema
+    @return: render a  apps/project_mod.html, lista de proyetos asociados al usuario con id = user_id 
+    """
     listproyectos = []
     equipo = Equipo.objects.filter(usuario_id=user_id)
     proyectos = Proyectos.objects.all()
@@ -226,6 +260,12 @@ def listprojects(request, user_id):
 
 
 def project(request, project_id):
+    """
+    Retorna el render a apps/project_front_page.html
+    @param request: Http request
+    @param project_id: Id de un proyecto registrado en el sistema
+    @return: Retorna el render a apps/project_front_page
+    """
     return render_to_response('apps/project_front_page.html')
                      
 
@@ -234,6 +274,9 @@ def project(request, project_id):
 def privado(request):
     """
     Retorna el template correspondiente a un usuario con rol Administrador
+    @param request:Http request
+    @return: Retorna el template correspondiente a un usuario con rol Administrador
+    
     """
     usuario = request.user
     return render_to_response('apps/user_private_admin.html', {'usuario':usuario}, context_instance=RequestContext(request))
@@ -242,6 +285,8 @@ def privado(request):
 def privadoNoadmin(request):
     """
     Retorna el template correspondiente a un usuario con rol Usuario
+    @param request:Http request
+    @return: Retorna el template correspondiente a un usuario con rol Usuario
     """
     usuario = request.user
     return render_to_response('apps/user_private_user.html', {'usuario':usuario}, context_instance=RequestContext(request))
@@ -250,6 +295,8 @@ def privadoNoadmin(request):
 def cerrar(request):
     """
     Recibe un request y cierra la sesion correspondiente
+    @param request:Http request
+    @return: render al template de login /apps/ingresar/
     """
     logout(request)
     return HttpResponseRedirect('/apps/ingresar/')
@@ -302,40 +349,65 @@ Por supuesto, la funcion se debe encontrar en urls
 '''
 def listuser(request):
     """
-    Retorna una lista con todos los usuarios del sistema y lo envia al template
-    de modificacion de usuario
+    @param request: Http request
+    @return: Retorna una lista con todos los usuarios del sistema y lo envia al template
+    de modificacion de usuario  
     """
     users = User.objects.all()
     return render_to_response("apps/user_select_mod.html", {"users":users})
 
 def listuserdel(request):
     """
-    Retorna una lista con todos los usuarios del sistema y lo envia al template
+    @param request: Http request
+    @return: Retorna una lista con todos los usuarios del sistema y lo envia al template
     de eliminacion de usuario
     """
     users = User.objects.all()
     return render_to_response("apps/user_select_del.html", {"users":users})
 
 def listrolesmod(request):
+    """
+    @param request: Http request
+    @return: Retorna una lista con todos los roles del sistema y lo envia al template
+    de modificacion de roles
+    """
     roles = Roles.objects.all()
     return render_to_response("apps/role_modify.html", {"roles":roles})
 
 def listrolesdel(request):
+    """
+    @param request: Http request
+    @return: Retorna una lista con todos los roles del sistema y lo envia al template
+    de eliminacion de roles
+    """
     roles = Roles.objects.all()
     return render_to_response("apps/role_delete.html", {"roles":roles})
 
 def listflowmod(request):
+    """
+    @param request: Http request
+    @return: Retorna una lista con todas las plantillas de flujo activas y lo envia al template
+    de modificacion de plantilla de flujos
+    """
     flujos = Flujos.objects.filter(estado = True)
     return render_to_response("apps/flow_modify.html", {"flujos":flujos})
 
 def listflowdel(request):
+    """
+    @param request: Http request
+    @return: Retorna una lista con todas las plantillas de flujo activas y lo envia al template
+    de eliminacion de plantilla de flujos
+    """
     flujos = Flujos.objects.filter(estado = True)
     return render_to_response("apps/flow_delete.html", {"flujos":flujos})
 
 
 #Noreversematch es un error de configuracion de url
 def listpermisos(request):
-    
+    """
+    @param request: Http request
+    @return: render a apps/role_set_permisos.html, lista de permisos, y el id del rol que se creo recientemente
+    """
     if request.method == 'POST':
         form = RoleCreateForm(request.POST)
         if form.is_valid():
@@ -352,6 +424,9 @@ def listpermisos(request):
 def muser(request, user_id):
     """
     Metodo que obtiene los campos modificados del formulario de modificacion de usuario
+    @param request: Http request
+    @param user_id: Id de un usuario registrado en el sistema  
+    @return: render a apps/user_modified.html, contexto
     """
     user = get_object_or_404(User, pk=user_id)
     if request.POST:
@@ -377,9 +452,19 @@ def muser(request, user_id):
     return render_to_response('apps/user_form_mod.html', args)
 
 def eliminaruser(request):
+    """
+    @param request: Http request
+    @return: render a apps/user_select_del.html con el request  
+    """
     return render(request, 'apps/user_select_del.html')
 
 def deluser(request, id):
+    """
+    Pone como inactivo a un usuario registrado en el sistema
+    @param request: Http request
+    @param id: Id de un usuario registrado en el sistema
+    @return: render a apps/user_deleted.html con el contexto
+    """
     u = get_object_or_404(User, pk=id)
 
     u.is_active = False
@@ -395,6 +480,12 @@ class RoleCreateForm(forms.ModelForm):
 #MAnager isn't accesible via model isntances, no se pude acceder desde un modelo a 
 #una instancia de una clase
 def asignarrol(request, role_id):
+    """
+    Asocia una lista de permisos con un rol
+    @param request: Http request
+    @param role_id: Id de un rol registrado en el sistema
+    @return: render a  apps/role_created.html con el contexto 
+    """
     r = get_object_or_404(Roles, pk=role_id)
     
     lista = request.POST.getlist(u'permisos')
@@ -412,6 +503,12 @@ def asignarrol(request, role_id):
     return render_to_response("apps/role_created.html", RequestContext(request))
 
 def rolemodify(request, role_id):
+    """
+    Modifica un rol del sistema
+    @param request: Http request
+    @param role_id: Id de un rol registrado en el sistema
+    @return: render a apps/role_set_permisos_mod.html con una lista de permisos y el id del rol
+    """
     rol = get_object_or_404(Roles, pk=role_id)
     if request.method == 'POST':
         form = RoleCreateForm(request.POST)
@@ -434,6 +531,12 @@ def rolemodify(request, role_id):
     return render_to_response('apps/role_modify_form.html' ,{'form':form, "rol":rol }, context_instance=RequestContext(request))
     
 def asignarpermisosmod(request, role_id):
+    """
+    Asigna permisos a un rol
+    @param request: Http request
+    @param role_id: Id de un rol registrado en el sistema
+    @return: render a apps/role_modified.html 
+    """
     r = get_object_or_404(Roles, pk=role_id)
     #CONTROLAR!
     lista = request.POST.getlist(u'permisos')
@@ -455,11 +558,20 @@ def asignarpermisosmod(request, role_id):
     return render_to_response("apps/role_modified.html", context_instance=RequestContext(request))
     
 def inicializarPermisos():
+    """
+    Inicializa los permisos, poniendo los estados a False
+    """
     for p in Permisos.objects.all():
         p.estado = False
         p.save()
         
 def roledelete(request, role_id):
+    """
+    Establece el estado de un rol a False
+    @param request: Http request
+    @param role_id: Id de un rol registrado en el sistema
+    @return: render a apps/role_deleted.html
+    """
     r = get_object_or_404(Roles, pk=role_id)
     
     r.estado = False
@@ -479,6 +591,11 @@ class ActivityCreateForm(forms.ModelForm):
         
         
 def crearflujo(request):
+    """
+    Crea una plantilla de flujo
+    @param request: Http request    
+    @return: render a apps/flow_set_activities.html con el id del flujo creado
+    """
     if request.method == 'POST':
         form = FlowCreateForm(request.POST)
         if form.is_valid():
@@ -493,6 +610,12 @@ def crearflujo(request):
     return render_to_response('apps/flow_create.html', {'form':form}, context_instance=RequestContext(request))
     
 def setactividades(request, flow_id):
+    """
+    Agrega actividades a una plantilla de flujo
+    @param request: Http request    
+    @param flow_id: Id de una plantilla de flujo 
+    @return: render a apps/flow_created.html
+    """
     f = get_object_or_404(Flujos, pk=flow_id)
     if request.method == 'POST':
         form = ActivityCreateForm(request.POST)
@@ -516,6 +639,12 @@ def setactividades(request, flow_id):
 
 
 def editarflujos(request, flow_id):
+    """
+    Edita una plantilla de flujo
+    @param request: Http request    
+    @param flow_id: Id de una plantilla de flujo 
+    @return: render a apps/flow_set_activities_mod.html con una lista de actividades y el id del flujo
+    """
     flujo = get_object_or_404(Flujos, pk=flow_id)
     if request.method == 'POST':
         form = FlowCreateForm(request.POST)
@@ -533,10 +662,23 @@ def editarflujos(request, flow_id):
     return render_to_response('apps/flow_modify_form.html', {'form':form, 'flujo':flujo}, context_instance=RequestContext(request))
 
 def listactivitiesmod(request, flow_id):
+    """
+    Obtiene la lista de actividades de una plantilla de flujo
+    @param request: Http request
+    @param flow_id: Id de una plantilla de flujo
+    @return: render a apps/flow_set_activities_mod.html con la lista de actividades y el id del flujo
+    """
     actividades = Actividades.objects.filter(flujo_id=flow_id)
     return render_to_response("apps/flow_set_activities_mod.html", {"actividades":actividades, "flow_id":flow_id}, context_instance=RequestContext(request))
 
 def setactividadesmod(request, flow_id, actv_id):
+    """
+    Modifica las actividades de una plantilla de flujo
+    @param request: Http request
+    @param flow_id: Id de una plantilla de flujo
+    @param actv_id: Id de una actividad
+    @return: render a apps/flow_activitie_modified.html
+    """
     f = get_object_or_404(Flujos, pk=flow_id)
     a = get_object_or_404(Actividades, pk=actv_id)
     if request.method == 'POST':
@@ -554,6 +696,13 @@ def setactividadesmod(request, flow_id, actv_id):
 
 
 def setactividadesdel(request, flow_id, actv_id):
+    """
+    Establece el estado de una actividad a False
+    @param request: Http request
+    @param flow_id: Id de una plantilla de flujo
+    @param actv_id: Id de una actividad
+    @return: render a  apps/flow_activitie_eliminated.html  
+    """
     a = Actividades.objects.get(pk=actv_id)
     a.estado = False
     a.save()
@@ -561,6 +710,12 @@ def setactividadesdel(request, flow_id, actv_id):
 
 
 def flowdelete(request, flow_id):
+    """
+    Establece el estado de un flujo a False
+    @param request: Http request
+    @param flow_id: Id de una plantilla de flujo
+    @return: render a  apps/flow_eliminated.html 
+    """
     f = get_object_or_404(Flujos, pk=flow_id)
     f.estado = False
     f.save()
@@ -618,6 +773,11 @@ def asignarpermisosmod(request, role_id):
 
 
 def crearProyecto(request):
+        """
+        Crea un proyecto y lo registra en el sistema
+        @param request: Http request
+        @return:  render a apps/project_add_plantilla.html con un flujo, la lista de actividades del flujo y el id del proyecto creado
+        """
         
         if request.method == 'POST':
   
@@ -672,7 +832,11 @@ def crearProyecto(request):
 
 
 def agregarPlantilla(request, proyecto_pk):
-    
+    """
+    Asigna una plantilla a un proyecto creado
+    @param request: Http request
+    @return:  render a apps/plantilla_anadida.html
+    """
     flujo = Flujos.objects.get(id=request.POST['f'])
     
     copyFlujo = Flujos()
