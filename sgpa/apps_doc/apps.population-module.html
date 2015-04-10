@@ -3,7 +3,7 @@
           "DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-  <title>apps.models</title>
+  <title>apps.population</title>
   <link rel="stylesheet" href="epydoc.css" type="text/css" />
   <script type="text/javascript" src="epydoc.js"></script>
 </head>
@@ -38,7 +38,7 @@
     <td width="100%">
       <span class="breadcrumbs">
         <a href="apps-module.html">Package&nbsp;apps</a> ::
-        Module&nbsp;models
+        Module&nbsp;population
       </span>
     </td>
     <td>
@@ -48,25 +48,25 @@
     onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
         <tr><td align="right"><span class="options"
             >[<a href="frames.html" target="_top">frames</a
-            >]&nbsp;|&nbsp;<a href="apps.models-module.html"
+            >]&nbsp;|&nbsp;<a href="apps.population-module.html"
             target="_top">no&nbsp;frames</a>]</span></td></tr>
       </table>
     </td>
   </tr>
 </table>
 <!-- ==================== MODULE DESCRIPTION ==================== -->
-<h1 class="epydoc">Module models</h1><p class="nomargin-top"><span class="codelink"><a href="apps.models-pysrc.html">source&nbsp;code</a></span></p>
-<!-- ==================== CLASSES ==================== -->
-<a name="section-Classes"></a>
+<h1 class="epydoc">Module population</h1><p class="nomargin-top"><span class="codelink"><a href="apps.population-pysrc.html">source&nbsp;code</a></span></p>
+<!-- ==================== FUNCTIONS ==================== -->
+<a name="section-Functions"></a>
 <table class="summary" border="1" cellpadding="3"
        cellspacing="0" width="100%" bgcolor="white">
 <tr bgcolor="#70b0f0" class="table-header">
   <td colspan="2" class="table-header">
     <table border="0" cellpadding="0" cellspacing="0" width="100%">
       <tr valign="top">
-        <td align="left"><span class="table-header">Classes</span></td>
+        <td align="left"><span class="table-header">Functions</span></td>
         <td align="right" valign="top"
-         ><span class="options">[<a href="#section-Classes"
+         ><span class="options">[<a href="#section-Functions"
          class="privatelink" onclick="toggle_private();"
          >hide private</a>]</span></td>
       </tr>
@@ -77,80 +77,134 @@
     <td width="15%" align="right" valign="top" class="summary">
       <span class="summary-type">&nbsp;</span>
     </td><td class="summary">
-        <a href="apps.models.Roles-class.html" class="summary-name">Roles</a><br />
-      Modelo para almacenar los roles posibles.
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="populate"></a><span class="summary-sig-name">populate</span>()</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="apps.population-pysrc.html#populate">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
     </td>
   </tr>
 <tr>
     <td width="15%" align="right" valign="top" class="summary">
       <span class="summary-type">&nbsp;</span>
     </td><td class="summary">
-        <a href="apps.models.Users_Roles-class.html" class="summary-name">Users_Roles</a><br />
-      Modelo que asocia un usuario con un rol
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="add_roles"></a><span class="summary-sig-name">add_roles</span>(<span class="summary-sig-arg">descripcion</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="apps.population-pysrc.html#add_roles">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
     </td>
   </tr>
 <tr>
     <td width="15%" align="right" valign="top" class="summary">
       <span class="summary-type">&nbsp;</span>
     </td><td class="summary">
-        <a href="apps.models.Permisos-class.html" class="summary-name">Permisos</a><br />
-      Modelo para almacenar los permisos
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="add_user"></a><span class="summary-sig-name">add_user</span>(<span class="summary-sig-arg">username</span>,
+        <span class="summary-sig-arg">password</span>,
+        <span class="summary-sig-arg">email</span>,
+        <span class="summary-sig-arg">role</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="apps.population-pysrc.html#add_user">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
     </td>
   </tr>
 <tr>
     <td width="15%" align="right" valign="top" class="summary">
       <span class="summary-type">&nbsp;</span>
     </td><td class="summary">
-        <a href="apps.models.Permisos_Roles-class.html" class="summary-name">Permisos_Roles</a><br />
-      Modelo que asocia un rol con un permiso
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="add_users_roles"></a><span class="summary-sig-name">add_users_roles</span>(<span class="summary-sig-arg">user_id</span>,
+        <span class="summary-sig-arg">role_id</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="apps.population-pysrc.html#add_users_roles">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
     </td>
   </tr>
 <tr>
     <td width="15%" align="right" valign="top" class="summary">
       <span class="summary-type">&nbsp;</span>
     </td><td class="summary">
-        <a href="apps.models.Proyectos-class.html" class="summary-name">Proyectos</a><br />
-      Modelo para almacenar los datos de los proyectos
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="add_flujo"></a><span class="summary-sig-name">add_flujo</span>(<span class="summary-sig-arg">descripcion</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="apps.population-pysrc.html#add_flujo">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
     </td>
   </tr>
 <tr>
     <td width="15%" align="right" valign="top" class="summary">
       <span class="summary-type">&nbsp;</span>
     </td><td class="summary">
-        <a href="apps.models.Equipo-class.html" class="summary-name">Equipo</a><br />
-      Modelo que asocia Proyecto Usuario Rol
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="add_actividades"></a><span class="summary-sig-name">add_actividades</span>(<span class="summary-sig-arg">descripcion</span>,
+        <span class="summary-sig-arg">flujo_id</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="apps.population-pysrc.html#add_actividades">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
     </td>
   </tr>
 <tr>
     <td width="15%" align="right" valign="top" class="summary">
       <span class="summary-type">&nbsp;</span>
     </td><td class="summary">
-        <a href="apps.models.Flujos-class.html" class="summary-name">Flujos</a><br />
-      Modelo para almacenar los flujos
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="add_permisos"></a><span class="summary-sig-name">add_permisos</span>(<span class="summary-sig-arg">descripcion</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="apps.population-pysrc.html#add_permisos">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
     </td>
   </tr>
 <tr>
     <td width="15%" align="right" valign="top" class="summary">
       <span class="summary-type">&nbsp;</span>
     </td><td class="summary">
-        <a href="apps.models.Actividades-class.html" class="summary-name">Actividades</a><br />
-      Modelo para almacenar las actividades en un flujo
-    </td>
-  </tr>
-<tr>
-    <td width="15%" align="right" valign="top" class="summary">
-      <span class="summary-type">&nbsp;</span>
-    </td><td class="summary">
-        <a href="apps.models.Estados-class.html" class="summary-name">Estados</a><br />
-      Estados de las actividades
-    </td>
-  </tr>
-<tr>
-    <td width="15%" align="right" valign="top" class="summary">
-      <span class="summary-type">&nbsp;</span>
-    </td><td class="summary">
-        <a href="apps.models.Actividades_Estados-class.html" class="summary-name">Actividades_Estados</a><br />
-      Asociacion de estados con actividades
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="add_permisos_roles"></a><span class="summary-sig-name">add_permisos_roles</span>(<span class="summary-sig-arg">permiso_id</span>,
+        <span class="summary-sig-arg">rol_id</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="apps.population-pysrc.html#add_permisos_roles">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
     </td>
   </tr>
 </table>
