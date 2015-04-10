@@ -29,7 +29,20 @@
 				
 				<td><label>Scrum Master:</label></td>				 
 				<td>
-						<select name="sm"  style="width:190px">
+						<select name="sm"  style="width:190px" sort = true>
+							{% for user in listuser %}
+								<option>{{user.username}}</option>
+							{% endfor %} 
+							<option selected>{{user}}</option>
+						</select>				
+				</td>
+			</tr>
+			
+			<tr>
+				
+				<td><label>Cliente:</label></td>				 
+				<td>
+						<select name="cli"  style="width:190px" sort = "true">
 							{% for user in listuser %}
 								<option>{{user.username}}</option>
 							{% endfor %} 
