@@ -638,8 +638,17 @@ def crearProyecto(request):
                 equipo.proyecto = proyecto
                 equipo.rol = Roles.objects.get(descripcion = 'Scrum Master')
                 equipo.save()
-            
-                flujo = Flujos.objects.filter(plantilla = True)
+                
+                #Se asocia un proyecto con un usuario con el rol cliente
+                team = Equipo()
+                #se obtiene el usuario que se ha escogido
+                team.usuario = User.objects.get(username = request.POST['cli'])
+          
+                team.proyecto = proyecto
+                team.rol = Roles.objects.get(descripcion = 'Cliente')
+                team.save()
+                
+                flujo = Flujos.objects.filter(plantilla = True, estado = True)
                 actividades = Actividades.objects.filter(plantilla = True)
                 
                
@@ -664,7 +673,7 @@ def agregarPlantilla(request, proyecto_pk):
     copyFlujo.descripcion = flujo.descripcion
     copyFlujo.plantilla = False
     copyFlujo.estado = True
-    copyFlujo.proyeto_id = proyecto_pk
+    copyFlujo.proyecto_id = proyecto_pk
     copyFlujo.save()                 
     
     actividades = Actividades.objects.filter(flujo_id = request.POST['f'])    
@@ -679,9 +688,11 @@ def agregarPlantilla(request, proyecto_pk):
       
      
     us = Equipo.objects.get(proyecto_id= proyecto_pk, rol_id=3)
+    us2 = Equipo.objects.get(proyecto_id= proyecto_pk, rol_id=4)
     
     scrumMaster = User.objects.get(id = us.usuario_id)
-    
+    cliente = User.objects.get(id = us2.usuario_id)
     proyecto = Proyectos.objects.get(id = proyecto_pk)
-    return render_to_response('apps/plantilla_anadida.html',{'copyFlujo':copyFlujo,'proyecto':proyecto, 'scrum':scrumMaster},context_instance=RequestContext(request))
+    
+    return render_to_response('apps/plantilla_anadida.html',{'copyFlujo':copyFlujo,'proyecto':proyecto, 'scrum':scrumMaster,'cli':cliente},context_instance=RequestContext(request))
 
