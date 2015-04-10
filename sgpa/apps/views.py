@@ -389,7 +389,7 @@ def listflowmod(request):
     @return: Retorna una lista con todas las plantillas de flujo activas y lo envia al template
     de modificacion de plantilla de flujos
     """
-    flujos = Flujos.objects.filter(estado = True)
+    flujos = Flujos.objects.filter(estado = True, plantilla = True)
     return render_to_response("apps/flow_modify.html", {"flujos":flujos})
 
 def listflowdel(request):
@@ -398,7 +398,7 @@ def listflowdel(request):
     @return: Retorna una lista con todas las plantillas de flujo activas y lo envia al template
     de eliminacion de plantilla de flujos
     """
-    flujos = Flujos.objects.filter(estado = True)
+    flujos = Flujos.objects.filter(estado = True, plantilla = True)
     return render_to_response("apps/flow_delete.html", {"flujos":flujos})
 
 
