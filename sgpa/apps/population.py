@@ -6,7 +6,7 @@ import django
 django.setup()
 
 from django.contrib.auth.models import User
-from apps.models import Users_Roles, Flujos, Roles, Actividades
+from apps.models import Users_Roles, Flujos, Roles, Actividades, Permisos, Permisos_Roles
 
 def populate():
     add_roles('Administrador')
@@ -17,7 +17,26 @@ def populate():
     add_user('admin', 'a123', 'deserver123@gmail.com', 1)
     
     add_flujo('Plantilla Generica')
-
+    
+    permisos = ['Crear Usuario', 'Modificar Usuario', 'Eliminar Usuario', 'Crear Proyecto', 'Modificar Proyecto', 'Asignar Participantes a Proyecto', 'Eliminar Participantes de Proyecto', 'Crear User Stories', 'Modificar User Stories', 'Eliminar User Stories', 'Crear Plantilla de Flujos', 'Modificar Plantilla de Flujos', 'Eliminar Plantilla de Flujos', 'Planificar Sprints', 'Visualizar Proyectos', 'Crear Roles', 'Modificar Roles', 'Eliminar Roles']
+    c=1
+    for p in permisos:
+        add_permisos(p)
+        add_permisos_roles(c, 1)
+        c = c + 1
+    
+    permisos_usuario = [15]
+    permisos_scrum_master = [6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+    permisos_cliente = [15]
+    
+    for p in permisos_usuario:
+        add_permisos_roles(p, 2)
+    for p in permisos_scrum_master:
+        add_permisos_roles(p, 3)
+    for p in permisos_cliente:
+        add_permisos_roles(p, 4)
+        
+    
 def add_roles(descripcion):
     rol = Roles()
     rol.descripcion = descripcion
@@ -60,6 +79,21 @@ def add_actividades(descripcion, flujo_id):
     actividades.flujo_id = flujo_id
     actividades.save()
     return actividades
+
+def add_permisos(descripcion):
+    permisos = Permisos()
+    permisos.descripcion = descripcion
+    permisos.tag = 'tag'
+    permisos.estado = True
+    permisos.save()
+    return permisos
+
+def add_permisos_roles(permiso_id, rol_id):
+    permiso_rol = Permisos_Roles()
+    permiso_rol.roles_id = rol_id
+    permiso_rol.permisos_id = permiso_id
+    permiso_rol.save()
+    return permiso_rol
 
 if __name__ == '__main__':
     print "Starting population script..."
