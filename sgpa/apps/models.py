@@ -69,7 +69,7 @@ class Flujos(models.Model):
     """
     Modelo para almacenar los flujos
     """
-    proyeto = models.ForeignKey(Proyectos, null=True, blank=True)
+    proyecto = models.ForeignKey(Proyectos, null=True, blank=True)
     descripcion = models.CharField(max_length = 50)
     plantilla = models.BooleanField(default = True)    
     estado = models.BooleanField(default = True)
