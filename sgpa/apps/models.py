@@ -90,9 +90,15 @@ class Actividades(models.Model):
         return self.descripcion
     
 class Estados(models.Model):
+    """
+    Estados de las actividades
+    """
     descripcion = models.CharField(max_length = 50)
     
 class Actividades_Estados(models.Model):
+    """
+    Asociacion de estados con actividades
+    """
     actividad = models.ForeignKey(Actividades)
     estados = models.ForeignKey(Estados)
     
