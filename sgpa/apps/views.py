@@ -8,8 +8,7 @@ from django.utils import timezone
 
 from django.template import RequestContext, loader
 
-from apps.models import Roles, Users_Roles, Permisos, Permisos_Roles, Flujos, Actividades, Actividades_Estados,\
-    Proyectos, Equipo
+from apps.models import Roles, Users_Roles, Permisos, Permisos_Roles, Flujos, Actividades, Actividades_Estados, Proyectos, Equipo
 from django.contrib.auth.models import User
 
 
@@ -48,13 +47,12 @@ class IndexView(generic.DetailView):
 
 class UserCreateForm(UserCreationForm):
     email = forms.EmailField(required=True)
-    is_superuser = forms.BooleanField(required=False)
     first_name = forms.Field(required=True)
     last_name = forms.Field(required=True)
 
     class Meta:
         model = User
-        fields = ("first_name", "last_name", "username", "email", "password1", "password2", "is_superuser" )
+        fields = ("first_name", "last_name", "username", "email", "password1", "password2" )
 
     def save(self, commit=True):
         """
@@ -62,7 +60,6 @@ class UserCreateForm(UserCreationForm):
         """
         user = super(UserCreateForm, self).save(commit=False)
         user.email = self.cleaned_data["email"]
-        user.is_superuser = self.cleaned_data["is_superuser"]
         user.firs_name = self.cleaned_data["first_name"]
         user.last_name = self.cleaned_data["last_name"]
         if user.is_superuser == 'null':
@@ -73,7 +70,6 @@ class UserCreateForm(UserCreationForm):
 
 class UserModifyForm(UserCreationForm):
     email = forms.EmailField(required=True)
-    is_superuser = forms.BooleanField(required=False)
     first_name = forms.Field(required=True)
     last_name = forms.Field(required=True)
     
@@ -84,7 +80,7 @@ class UserModifyForm(UserCreationForm):
     class Meta:
         model = User
         
-        fields = ("first_name", "last_name",  "email", "password1", "password2", "is_superuser" )
+        fields = ("first_name", "last_name",  "email", "password1", "password2")
         
 
     def save(self, commit=True):
@@ -93,8 +89,7 @@ class UserModifyForm(UserCreationForm):
         """
         user = super(UserCreateForm, self).save(commit=False)
         user.email = self.cleaned_data["email"]
-        user.is_superuser = self.cleaned_data["is_superuser"]
-        user.firs_name = self.cleaned_data["first_name"]
+        user.first_name = self.cleaned_data["first_name"]
         user.last_name = self.cleaned_data["last_name"]
         if user.is_superuser == 'null':
             user.is_superuser='FALSE'
@@ -175,6 +170,8 @@ def ingresar(request):
                         return HttpResponseRedirect('/apps/user_private_admin')
     #'''Si es usuario normal'''
                     else:
+                        
+                        #return render_to_response('apps/user_private_user.html', {'listproyectos':listproyectos}, RequestContext(request))
                         return HttpResponseRedirect('/apps/user_private_user')
                 else:
                     return render_to_response('apps/user_no_active.html', context_instance=RequestContext(request))
@@ -217,10 +214,20 @@ def recuperarContrasena(request):
     
 
 
+def listprojects(request, user_id):
+    listproyectos = []
+    equipo = Equipo.objects.filter(usuario_id=user_id)
+    proyectos = Proyectos.objects.all()
+    for eq in equipo:
+        for p in proyectos:
+            if eq.proyecto_id == p.id:
+                listproyectos.append(Proyectos(p.id, p.nombre))
+    return render_to_response('apps/project_mod.html', {'listproyectos':listproyectos})
 
 
-
-
+def project(request, project_id):
+    return render_to_response('apps/project_front_page.html')
+                     
 
 
 @login_required(login_url='apps/ingresar')
@@ -265,7 +272,7 @@ class modproyecto(generic.DetailView):
     template_name = 'apps/project_mod.html'
     def get(self, request, *args, **kwargs):
         return render(request, self.template_name)
-
+    
 class adminuser(generic.DetailView):
     template_name="apps/user_admin.html"
     def get(self, request, *args, **kwargs):
@@ -353,14 +360,13 @@ def muser(request, user_id):
             #user.save(update_field=['username'])
             user.set_password(form.cleaned_data['password1'])
             user.email = form.cleaned_data['email']
-            user.is_superuser = form.cleaned_data['is_superuser']
             user.first_name = form.cleaned_data['first_name']
             user.last_name = form.cleaned_data['last_name']
             user.save()
             #form.save()
             return render_to_response("apps/user_modified.html", RequestContext(request))
     else:
-        form = UserModifyForm(initial={ 'email':user.email, 'is_superuser':user.is_superuser, 'first_name':user.first_name, 'last_name':user.last_name})
+        form = UserModifyForm(initial={ 'email':user.email, 'first_name':user.first_name, 'last_name':user.last_name})
         
         
     args = {}
@@ -696,3 +702,120 @@ def agregarPlantilla(request, proyecto_pk):
     
     return render_to_response('apps/plantilla_anadida.html',{'copyFlujo':copyFlujo,'proyecto':proyecto, 'scrum':scrumMaster,'cli':cliente},context_instance=RequestContext(request))
 
+def listproyectosdelusuario(request, usuario_id):
+    """
+    Retorna una lista con todos los proyectos del usuario
+    """
+    #'''Se compara con el registro en la tabla User_Roles'''
+    ur = Users_Roles.objects.get(user=usuario_id)
+    #'''De la tabla de Roles se trae el id del rol del usuario'''
+    rolSistema = Roles.objects.get(descripcion=ur.role)
+   
+    equipos = Equipo.objects.filter(usuario_id=usuario_id)
+    proyectos = []
+    rolesProyecto = []
+    for equipo in equipos:
+        proyectos.append(Proyectos.objects.get(id=equipo.proyecto_id))
+    for equipo in equipos:
+        rolesProyecto.append(Roles.objects.get(id = equipo.rol_id))
+    return render_to_response("apps/project_mod.html", {"proyectos":proyectos, "usuario":request.user, "rol":rolesProyecto ,"rol_id":rolSistema.id})
+
+def listasigparticipante(request, proyecto_id):
+    """
+    Lista de usuarios que pueden participar en el proyecto
+    """
+    usuarios = []
+    proyecto = Proyectos.objects.get(id = proyecto_id)
+    equipos = Equipo.objects.filter(proyecto_id = proyecto_id)
+    for usuario in User.objects.all():
+        seEncuentra = False
+        for equipo in equipos:
+            if equipo.usuario_id == usuario.id:
+                seEncuentra = True
+                break
+        if seEncuentra == False:
+            if usuario.is_active == True:
+                yaListado = False
+                for u in usuarios:
+                    yaListado = False
+                    if u.id == usuario.id:
+                        yaListado = True
+                        break
+                if yaListado == False:
+                    usuarios.append(usuario)
+                
+    return render_to_response("apps/project_asignar_participante.html", {"usuarios":usuarios, "proyecto":proyecto})
+
+def listelimparticipante(request, proyecto_id):
+    """
+    Lista de usuarios que pueden ser eliminados del proyecto
+    """
+    usuarios = []
+    proyecto = Proyectos.objects.get(id = proyecto_id)
+    equipos = Equipo.objects.filter(proyecto_id = proyecto_id)
+    for usuario in User.objects.all():
+        seEncuentra = False
+        for equipo in equipos:
+            if equipo.usuario_id == usuario.id and equipo.rol_id !=3:
+                seEncuentra = True
+                break
+        if seEncuentra == True:
+            usuarios.append(usuario)
+
+    return render_to_response("apps/project_eliminar_participante.html", {"usuarios":usuarios, "proyecto":proyecto})
+
+def listasigparticipanterol(request, proyecto_id, usuario_id):
+    """
+    Lista de roles que se pueden asignar a los usuarios
+    """
+    proyecto = Proyectos.objects.get(id = proyecto_id)
+    usuario = User.objects.get(id = usuario_id)
+    roles = []
+    for rol in Roles.objects.all():
+        if rol.estado == True:
+            roles.append(rol)
+            
+    return render_to_response("apps/project_asignar_participante_rol.html", {"proyecto":proyecto, "usuario":usuario, "roles":roles}, context_instance=RequestContext(request))
+
+def accionesproyecto(request, proyecto_id):
+    """
+    Envia a la pagina desde donde se pueden ejecutar acciones por el proyecto
+    """
+    proyecto = Proyectos.objects.get(id = proyecto_id)
+    user_id = request.user
+    urp = Equipo.objects.filter(usuario_id=user_id, rol_id = 3, proyecto_id = proyecto_id)
+    #for u in urp:
+    
+    if urp:
+        #Si el usuario es Scrum Master en el Proyecto
+        return render_to_response("apps/project_acciones.html", {"proyecto":proyecto, "usuario":request.user})
+    else:
+        #Si el usuario no es Scrum Master
+        return render_to_response("apps/project_acciones_no_sm.html", {"proyecto":proyecto, "usuario":request.user})
+
+def elimparticipante(request, proyecto_id, usuario_id):
+    """
+    Elimina al usuario del proyecto
+    """
+    proyecto = Proyectos.objects.get(id = proyecto_id)  
+    Equipo.objects.filter(usuario_id = usuario_id, proyecto_id = proyecto_id).delete()
+    return render_to_response("apps/project_eliminar_participante_eliminado.html", {"proyecto":proyecto, "usuario":request.user})
+
+def asigparticipanterol(request, proyecto_id, usuario_id):
+    """
+    Asigna al usuario al proyecto
+    """
+    proyecto = Proyectos.objects.get(id = proyecto_id)
+    roles = request.POST.getlist(u'roles[]')
+    for r in roles:
+        try:
+            rol = Roles.objects.get(pk=r)
+        except:
+            rol = None
+        equipo = Equipo()
+        equipo.usuario_id = usuario_id
+        equipo.rol_id = rol.id
+        equipo.proyecto_id = proyecto_id
+        equipo.save()
+    
+    return render_to_response('apps/project_asignar_participante_rol_asignado.html', {"proyecto":proyecto} ,context_instance=RequestContext(request))

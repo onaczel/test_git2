@@ -1,0 +1,18 @@
+{% block encabezado %}
+	<h1>Asignar Participantes</h1>
+{% endblock %}
+<h3>{{proyecto.nombre}}</h3>
+
+{% if usuarios %}
+	<h4>Usuarios disponibles</h4>
+	{% for u in usuarios %}
+		{% if u.id != 1 %}
+			<label> {{u.first_name}} {{u.last_name}} ({{u.username}})</label>
+			<a href="{% url 'apps:listasigparticipanterol' proyecto.id u.id %}">Asignar</a><br /><br />
+		{% endif %}
+	{% endfor %}
+{% else %}
+	<p>No se encontro ningun usuario disponible</p>
+{% endif %}
+<br />
+<a href="{% url 'apps:accionesproyecto' proyecto.id %}">Volver</a>

@@ -4,8 +4,10 @@
 {% if roles %}
 	{% for r in roles%}
 		<!-- <p>hola</p> -->
-		<input type="checkbox" name="roles" id="option{{r.id}}" value={{r.id}} />
-		<label for="option{{r.id}}"><b>{{r.descripcion}}</b></label><br />
+		{% if r.id == 1 or r.id == 2 %}
+			<input type="checkbox" name="roles" id="option{{r.id}}" value={{r.id}} />
+			<label for="option{{r.id}}"><b>{{r.descripcion}}</b></label><br />
+		{% endif %}
 	{% endfor %}
 {% else %}
  	<p>There are no elements in roles</p>

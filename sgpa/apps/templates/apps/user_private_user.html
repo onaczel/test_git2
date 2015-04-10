@@ -5,7 +5,7 @@
 {% block contenido %}
 	<p>Bienvenido {{usuario.username|upper}}, la ultima vez que te vimos por aqui fue el {{usuario.last_login}}.</p>
 	<p>Eres miembro desde el {{usuario.date_joined}}</p>
-	<a href="/apps/modproyecto">Modulo Proyecto</a>
+	<a href="{% url 'apps:listprojects' usuario.id %}">Modulo Proyecto</a>
 	<a href="/apps/cerrar">Salir</a>
 {% endblock %}
 

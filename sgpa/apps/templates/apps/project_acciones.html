@@ -1,0 +1,7 @@
+<h1><b>{{proyecto.nombre}}</b></h1>
+
+<br><a href="{% url 'apps:listasigparticipante' proyecto.id %}">Asignar Participante</a><br />
+<br><a href="{% url 'apps:listelimparticipante' proyecto.id %}">Eliminar Participante</a><br />
+
+<br />
+<a href="{% url 'apps:listproyectosdelusuario' usuario.id %}">Volver</a>

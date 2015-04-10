@@ -54,6 +54,8 @@ class Proyectos(models.Model):
     fecha_est_fin = models.DateField()
     descripcion = models.CharField(max_length = 400)
     observaciones = models.CharField(max_length = 400)
+    def __str__(self):
+        return self.nombre
 
     
 class Equipo(models.Model):
@@ -63,6 +65,8 @@ class Equipo(models.Model):
     proyecto = models.ForeignKey(Proyectos)
     usuario  = models.ForeignKey(User)
     rol      = models.ForeignKey(Roles)
+    def __str__(self):
+        return self.proyecto
     
     
 class Flujos(models.Model):

@@ -1,0 +1,20 @@
+{% block encabezado %}
+	<h1>Modulo Proyecto</h1>
+{% endblock %}
+<p>{{proyecto.nombre}}</p>
+<br />
+<h1>Seleccionar el rol a asignar al usuario</h1>
+
+<form action="{% url 'apps:asigparticipanterol' proyecto.id usuario.id %}" method="post">{% csrf_token %}
+{% if roles %}
+	{% for r in roles%}
+		<input type="checkbox" name="roles[]" id="option{{r.id}}" value={{r.id}} />
+		<label for="option{{r.id}}"><b>{{r.descripcion}}</b></label><br />
+	{% endfor %}
+{% else %}
+ 	<p>No hay roles disponibles</p>
+ {% endif %}
+ <input type="submit" name="Asignar" value="Asignar roles"/>
+ </form>
+<br />
+<a href="{% url 'apps:listasigparticipante' proyecto.id %}">Volver</a>

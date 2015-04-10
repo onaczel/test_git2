@@ -15,6 +15,15 @@ urlpatterns = patterns('',
     url(r'^modadmin/adminuser/$', views.adminuser.as_view(), name="adminuser"),
     url(r'^modadmin/adminuser/moduser/$', views.listuser, name='listuser'),    
    # url(r'^modadmin/adminuser/moduser/mod/$', views.moduser, name="moduser"),
+   
+    url(r'^(?P<usuario_id>\d+)/modproyecto/$', views.listproyectosdelusuario, name='listproyectosdelusuario'),
+    url(r'^(?P<proyecto_id>\d+)/modproyecto/accionesproyecto$', views.accionesproyecto, name='accionesproyecto'),
+    url(r'^(?P<proyecto_id>\d+)/modproyecto/accionesproyecto/asigparticipante$', views.listasigparticipante, name='listasigparticipante'),
+    url(r'^(?P<proyecto_id>\d+)/(?P<usuario_id>\d+)/modproyecto/accionesproyecto/listasigparticipanterol$', views.listasigparticipanterol, name='listasigparticipanterol'),
+    url(r'^(?P<proyecto_id>\d+)/(?P<usuario_id>\d+)/modproyecto/accionesproyecto/asigparticipanterol$', views.asigparticipanterol, name='asigparticipanterol'),
+    url(r'^(?P<proyecto_id>\d+)/modproyecto/accionesproyecto/listelimparticipante$', views.listelimparticipante, name='listelimparticipante'),
+    url(r'^(?P<proyecto_id>\d+)/(?P<usuario_id>\d+)/modproyecto/accionesproyecto/elimparticipante$', views.elimparticipante, name='elimparticipante'),
+   
     url(r'^(?P<user_id>\d+)/muser/$', views.muser, name="muser"),
     url(r'^modadmin/adminuser/eliminaruser/$', views.listuserdel, name="eliminaruser"),
     url(r'^(?P<id>\d+)/deluser/$', views.deluser, name="deluser"),
@@ -50,4 +59,7 @@ urlpatterns = patterns('',
     
     url(r'^modadmin/adminuser/asignarrol/$', views.listroleuser, name="listroleuser"),
     url(r'^(?P<user_id>\d+)/asignarrolusuario/$', views.asignarrolusuario, name="asignarrolusuario"),
+    
+    url(r'^(?P<user_id>\d+)/modproyecto/$', views.listprojects, name="listprojects"),
+    url(r'^(?P<project_id>\d+)/project/$', views.project, name="project"),
 )
