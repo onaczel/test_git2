@@ -186,7 +186,7 @@ def ingresar(request):
     #'''Se compara con el registro en la tabla User_Roles'''
                     ur = Users_Roles.objects.get(user=user.id)
     #'''De la tabla de Roles se trae el id del rol del usuario'''
-                    rol = Roles.objects.get(descripcion=ur.role)
+                    rol = Roles.objects.get(pk=ur.role_id)
     #'''Si el usuario es administrador'''
                     if rol.id == 1:
                         return HttpResponseRedirect('/apps/user_private_admin')
@@ -877,7 +877,7 @@ def listproyectosdelusuario(request, usuario_id):
     #'''Se compara con el registro en la tabla User_Roles'''
     ur = Users_Roles.objects.get(user=usuario_id)
     #'''De la tabla de Roles se trae el id del rol del usuario'''
-    rolSistema = Roles.objects.get(descripcion=ur.role)
+    rolSistema = Roles.objects.get(pk=ur.role_id)
    
     equipos = Equipo.objects.filter(usuario_id=usuario_id)
     proyectos = []
