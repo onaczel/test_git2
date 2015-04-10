@@ -869,6 +869,10 @@ def agregarPlantilla(request, proyecto_pk):
 def listproyectosdelusuario(request, usuario_id):
     """
     Retorna una lista con todos los proyectos del usuario
+    
+    @param request: Http request
+    @param usuario_id: id de un usuario
+    @return: render a apps/project_mod.html con la lista de proyectos del usuario, el usuario, sus roles en cada proyecto y su rol de sistema
     """
     #'''Se compara con el registro en la tabla User_Roles'''
     ur = Users_Roles.objects.get(user=usuario_id)
@@ -887,6 +891,10 @@ def listproyectosdelusuario(request, usuario_id):
 def listasigparticipante(request, proyecto_id):
     """
     Lista de usuarios que pueden participar en el proyecto
+    
+    @param request: Http request
+    @param proyecto_id: id de un proyecto
+    @return: render a apps/project_asignar_participante.html con la lista de usuarios que pueden ser asignados al proyecto y el proyecto en el cual se encuentra el usuario
     """
     usuarios = []
     proyecto = Proyectos.objects.get(id = proyecto_id)
@@ -913,6 +921,10 @@ def listasigparticipante(request, proyecto_id):
 def listelimparticipante(request, proyecto_id):
     """
     Lista de usuarios que pueden ser eliminados del proyecto
+    
+    @param request: Http request
+    @param proyecto_id: id de un proyecto
+    @return: render a apps/project_eliminar_participante.html con la lista de usuarios asignados al proyecto y el proyecto en el cual se encuentra
     """
     usuarios = []
     proyecto = Proyectos.objects.get(id = proyecto_id)
@@ -931,6 +943,11 @@ def listelimparticipante(request, proyecto_id):
 def listasigparticipanterol(request, proyecto_id, usuario_id):
     """
     Lista de roles que se pueden asignar a los usuarios
+    
+    @param request: Http request
+    @param proyecto_id: id de un proyecto
+    @param usuario_id: id de un usuario
+    @return: render a apps/project_asignar_participante_rol.html con el proyecto donde se encuentra el usuario, el usuario a quien pertenece los roles y los roles del mismo
     """
     proyecto = Proyectos.objects.get(id = proyecto_id)
     usuario = User.objects.get(id = usuario_id)
@@ -944,6 +961,11 @@ def listasigparticipanterol(request, proyecto_id, usuario_id):
 def accionesproyecto(request, proyecto_id):
     """
     Envia a la pagina desde donde se pueden ejecutar acciones por el proyecto
+    
+    @param request: Http request 
+    @param proyecto_id: id de un proyecto
+    @return: render a apps/project_acciones.html si el usuario es Scrum Master junto con el proyecto en el cual se encuentra y el usuario
+    @return: render a apps/project_acciones_no_sm.html si el usuario no es Scrum Master junto con el proyecto en el cual se encuentra y el usuario
     """
     proyecto = Proyectos.objects.get(id = proyecto_id)
     user_id = request.user
@@ -960,6 +982,11 @@ def accionesproyecto(request, proyecto_id):
 def elimparticipante(request, proyecto_id, usuario_id):
     """
     Elimina al usuario del proyecto
+    
+    @param request: Http request
+    @param proyecto_id: id de un proyecto
+    @param usuario_id: id de un usuario
+    @return: render a apps/project_eliminar_participante_eliminado.html con el proyecto en el cual se encuentra y el usuario
     """
     proyecto = Proyectos.objects.get(id = proyecto_id)  
     Equipo.objects.filter(usuario_id = usuario_id, proyecto_id = proyecto_id).delete()
@@ -967,7 +994,12 @@ def elimparticipante(request, proyecto_id, usuario_id):
 
 def asigparticipanterol(request, proyecto_id, usuario_id):
     """
-    Asigna al usuario al proyecto
+    Asigna el usuario al proyecto
+    
+    @param request: Http request
+    @param proyecto_id: id de un proyecto
+    @param usuario_id: id de un usuario
+    @return: render a apps/project_asignar_participante_rol_asignado.html con el proyecto en el cual se encuentra
     """
     proyecto = Proyectos.objects.get(id = proyecto_id)
     roles = request.POST.getlist(u'roles[]')
@@ -983,3 +1015,111 @@ def asigparticipanterol(request, proyecto_id, usuario_id):
         equipo.save()
     
     return render_to_response('apps/project_asignar_participante_rol_asignado.html', {"proyecto":proyecto} ,context_instance=RequestContext(request))
+
+def listflujosproyectos(request, proyecto_id):
+    """
+    Lista las plantillas de los flujos disponibles
+    
+    @param request: Http request
+    @param proyecto_id: id de un proyecto
+    @return: render a apps/project_crear_flujo.html con el proyecto en el cual se encuentra, los flujos del proyecto y las actividades de los flujos
+    """
+    proyecto = Proyectos.objects.get(id = proyecto_id)
+    flujos = Flujos.objects.filter(estado = True, plantilla = True)
+    actividades = Actividades.objects.filter(plantilla = True)
+    
+    return render_to_response('apps/project_crear_flujo.html', {"proyecto":proyecto, "flujos":flujos, "actividades":actividades}, context_instance=RequestContext(request))
+
+def agregarPlantillaProyecto(request, proyecto_id):
+    """
+    Asigna los nuevos flujos al proyecto
+    
+    @param request: Http request
+    @param proyecto_id: id de un proyecto
+    @return: render a apps/project_crear_flujo_creado.html con el proyecto donde se encuentra
+    """
+    proyecto = Proyectos.objects.get(id = proyecto_id)
+    flujos_id = request.POST.getlist(u'f[]')
+    for flujo_id in flujos_id:
+        flujo = Flujos.objects.get(id = flujo_id)
+        nuevoFlujo = Flujos()
+        nuevoFlujo.descripcion = flujo.descripcion
+        nuevoFlujo.plantilla = False
+        nuevoFlujo.estado = True
+        nuevoFlujo.proyeto_id = proyecto_id
+        nuevoFlujo.save()
+        actividades = Actividades.objects.filter(flujo_id = flujo_id)
+        for actividad in actividades:
+            nuevaActividad = Actividades()
+            nuevaActividad.descripcion = actividad.descripcion
+            nuevaActividad.estado = actividad.estado
+            nuevaActividad.plantilla = False
+            nuevaActividad.flujo_id = nuevoFlujo.id
+            nuevaActividad.save()
+        
+    return render_to_response('apps/project_crear_flujo_creado.html', {"proyecto":proyecto}, context_instance=RequestContext(request))
+
+def listflujosproyectosMod(request, proyecto_id):
+    """
+    lista los flujos del proyecto
+    
+    @param request: Http request
+    @param proyecto_id: id de un proyecto
+    @return: render a apps/project_modificar_listflujo.html con el proyecto donde se encuentra, los flujos del proyecto y las actividades de los flujos
+    """
+    proyecto = Proyectos.objects.get(id = proyecto_id)
+    flujos = Flujos.objects.filter(proyeto_id = proyecto_id)
+    actividades = Actividades.objects.filter(plantilla = False)
+    
+    return render_to_response("apps/project_modificar_listflujo.html", {"proyecto":proyecto , "flujos":flujos, "actividades":actividades})
+
+def flujosproyectosRequestMod(request, proyecto_id, flujo_id, actividad_id):
+    """
+    obtiene los datos de los flujos del proyecto para presentarlos al usuario, quien puede modificarlos
+    si se ha llamado este medotodo por el metodo POST, entonces actualiza los campos que debe actualizar
+    
+    @param request: Http request
+    @param proyecto_id: id de un proyecto
+    @param flujo_id: id de un flujo
+    @param actividad_id: id de una actividad
+    @return: render a apps/project_modificar_flujo.html con el formulario del flujo seleccionado, las actividades del flujo, el proyecto ene l cual se encuentra y el flujo mismo
+    """
+    flujo = get_object_or_404(Flujos, pk=flujo_id)
+    if request.method == 'POST':
+        if request.POST['cambio'] == "modificar flujo":
+            formulario = FlowCreateForm(request.POST)
+            if formulario.is_valid():
+                flujo.descripcion = formulario.cleaned_data['descripcion']
+                flujo.estado = formulario.cleaned_data['estado']
+                flujo.save()
+        elif request.POST['cambio'] == "modificar":
+            actividad = Actividades.objects.get(id = actividad_id)
+            formulario = ActivityCreateForm(request.POST)
+            if formulario.is_valid():
+                actividad.descripcion = formulario.cleaned_data['descripcion']
+                actividad.save()
+        elif request.POST['cambio'] == "eliminar":
+            actividad = Actividades.objects.get(id = actividad_id).delete()
+            
+    proyecto = Proyectos.objects.get(id = proyecto_id)
+    formFlujo = FlowCreateForm(initial={'descripcion':flujo.descripcion, 'estado':flujo.estado})
+    actividades = Actividades.objects.filter(flujo_id = flujo_id)
+        
+    return render_to_response('apps/project_modificar_flujo.html', {'formFlujo':formFlujo, "actividades":actividades, "proyecto":proyecto, "flujo":flujo}, context_instance=RequestContext(request))
+
+def flujosproyectosRequestModAct(request, proyecto_id, flujo_id, actividad_id):
+    """
+    obtiene los datos de la actividad seleccionada de un flujo en especifico para ser modificado o eliminado
+    
+    @param request: Http request
+    @param proyecto_id: id de un proyecto
+    @param flujo_id: id de un flujo
+    @param actividad_id: id de una actividad
+    @return: render a apps/project_modificar_flujo_actividad.html con el proyecto en el cual se encuentra el usuario, el flujo del cual se modifica/elimina su actividad, la actividad a ser modificada/eliminada y el formulario de la actividad
+    """
+    proyecto = Proyectos.objects.get(id = proyecto_id)
+    flujo = Flujos.objects.get(id = flujo_id)
+    actividad = Actividades.objects.get(id = actividad_id)
+    form = ActivityCreateForm(initial={'descripcion':actividad.descripcion})
+
+    return render_to_response('apps/project_modificar_flujo_actividad.html', {"proyecto":proyecto, "flujo":flujo, "actividad":actividad, "form":form}, context_instance=RequestContext(request) )

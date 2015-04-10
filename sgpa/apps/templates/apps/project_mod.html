@@ -8,7 +8,7 @@
 		<a href="{% url 'apps:accionesproyecto' p.id %}">{{p.nombre}}</a><br />
 		{% for r in rol %}
 			{% if r.estado == True %}
-				<label>({{r.descripcion}})</label><br />
+				<label>({{r.id}} {{r.descripcion}})</label><br />
 			{% endif %}
 		{% endfor %}
 		<br />
