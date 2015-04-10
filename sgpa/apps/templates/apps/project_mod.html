@@ -4,15 +4,22 @@
 <h4>Proyectos del Usuario</h4>
 
 {% if proyectos %}
-	{% for p in proyectos %}
-		<a href="{% url 'apps:accionesproyecto' p.id %}">{{p.nombre}}</a><br />
-		{% for r in rol %}
-			{% if r.estado == True %}
-				<label>({{r.id}} {{r.descripcion}})</label><br />
-			{% endif %}
-		{% endfor %}
-		<br />
-	{% endfor %}
+	<table border="1">
+		<tr>
+			{% for p in proyectos %}
+				<td colspan="3"><a href="{% url 'apps:accionesproyecto' p.id %}">{{p.nombre}}</a><br /></td>
+			{% endfor %}
+		</tr>
+		<tr>
+			{% for rol in roles %}
+				<td colspan="3">{{r}}
+					{% for r in rol %}
+						{{r}} ,
+					{% endfor %}
+				</td>
+			{% endfor %}
+		</tr>
+	</table>
 {% else %}
 	<p>El usuario no se encuentra en ningun proyecto</p>
 {% endif %}

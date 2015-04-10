@@ -880,13 +880,30 @@ def listproyectosdelusuario(request, usuario_id):
     rolSistema = Roles.objects.get(pk=ur.role_id)
    
     equipos = Equipo.objects.filter(usuario_id=usuario_id)
+    proyectos_id = []
+    for equipo in equipos:
+        esta = False
+        for proyecto_id in proyectos_id:
+            if proyecto_id == equipo.proyecto_id:
+                esta = True
+                break
+        if esta == False:
+            proyectos_id.append(equipo.proyecto_id)
+            
     proyectos = []
-    rolesProyecto = []
-    for equipo in equipos:
-        proyectos.append(Proyectos.objects.get(id=equipo.proyecto_id))
-    for equipo in equipos:
-        rolesProyecto.append(Roles.objects.get(id = equipo.rol_id))
-    return render_to_response("apps/project_mod.html", {"proyectos":proyectos, "usuario":request.user, "rol":rolesProyecto ,"rol_id":rolSistema.id})
+    for proyecto_id in proyectos_id:
+        proyectos.append(Proyectos.objects.get(id = proyecto_id))
+    
+    rolesProyectos = []
+    for proyecto_id in proyectos_id:
+        rolesProyecto = Equipo.objects.filter(proyecto_id = proyecto_id, usuario_id = usuario_id)
+        roles = []
+        for rolProyecto in rolesProyecto:
+            rol = Roles.objects.get(id = rolProyecto.rol_id)
+            roles.append(rol.descripcion)
+        rolesProyectos.append(roles)
+        
+    return render_to_response("apps/project_mod.html", {"proyectos":proyectos, "usuario":request.user, "roles":rolesProyectos ,"rol_id":rolSistema.id})
 
 def listasigparticipante(request, proyecto_id):
     """
