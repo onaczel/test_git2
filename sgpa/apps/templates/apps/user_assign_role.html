@@ -5,7 +5,7 @@
 	{% for r in roles%}
 		<!-- <p>hola</p> -->
 		{% if r.id == 1 or r.id == 2 %}
-			<input type="checkbox" name="roles" id="option{{r.id}}" value={{r.id}} />
+			<input type="radio" name="roles" id="option{{r.id}}" value={{r.id}} checked="checked"/>
 			<label for="option{{r.id}}"><b>{{r.descripcion}}</b></label><br />
 		{% endif %}
 	{% endfor %}
