@@ -7,8 +7,7 @@ from django.test.client import Client
 from django.test import TestCase, RequestFactory
 from django.contrib.auth import authenticate, login
 from django.core.urlresolvers import reverse
-from apps.views import ingresar, recuperarContrasena, crearProyecto,\
-    agregarPlantilla
+from apps.views import ingresar, recuperarContrasena, crearProyecto, agregarPlantilla
 
 
 class test_templates(TestCase):
