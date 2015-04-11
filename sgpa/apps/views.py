@@ -474,7 +474,7 @@ def deluser(request, id):
 class RoleCreateForm(forms.ModelForm):
     class Meta:
         model = Roles
-        fields = ("descripcion", "estado")
+        fields = ("descripcion",)
 
      
 #MAnager isn't accesible via model isntances, no se pude acceder desde un modelo a 
@@ -513,7 +513,8 @@ def rolemodify(request, role_id):
     if request.method == 'POST':
         form = RoleCreateForm(request.POST)
         if form.is_valid():
-            form.save()
+            rol.descripcion = form.cleaned_data['descripcion']
+            rol.save()
         #role = Roles.objects.get(descripcion=form.cleaned_data['descripcion'])
         role_id = rol.id
         permisos = Permisos.objects.all()
@@ -526,7 +527,7 @@ def rolemodify(request, role_id):
                     p.save()
         return render_to_response("apps/role_set_permisos_mod.html", {"permisos":permisos, "role_id":role_id}, context_instance=RequestContext(request))
     else:
-        form = RoleCreateForm(initial={'descripcion':rol.descripcion, 'estado':rol.estado})
+        form = RoleCreateForm(initial={'descripcion':rol.descripcion})
     
     return render_to_response('apps/role_modify_form.html' ,{'form':form, "rol":rol }, context_instance=RequestContext(request))
     

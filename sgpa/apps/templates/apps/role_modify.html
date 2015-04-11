@@ -4,8 +4,10 @@
 
 {% if roles %}
 	{% for r in roles %}
-		<label>{{r.descripcion}}</label>
-		<a href="{% url  'apps:rolemodify' r.id %}">Modificar</a><br />
+		{% if r.estado == True %}
+			<label>{{r.descripcion}}</label>
+			<a href="{% url  'apps:rolemodify' r.id %}">Modificar</a><br />
+		{% endif %}
 	{% endfor %}
 {% else %}
 	<p>There are no roles in db</p>
