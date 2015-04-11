@@ -247,7 +247,7 @@ def listprojects(request, user_id):
     Genera una lista de proyectos asociados a un usuario
     @param request: Http request
     @param user_id: Id de un usuario registrado en el sistema
-    @return: render a  apps/project_mod.html, lista de proyetos asociados al usuario con id = user_id 
+    @return: render a  apps/project_mod.html, lista de proyectos asociados al usuario con id = user_id 
     """
     listproyectos = []
     equipo = Equipo.objects.filter(usuario_id=user_id)
@@ -1063,7 +1063,7 @@ def agregarPlantillaProyecto(request, proyecto_id):
         nuevoFlujo.descripcion = flujo.descripcion
         nuevoFlujo.plantilla = False
         nuevoFlujo.estado = True
-        nuevoFlujo.proyeto_id = proyecto_id
+        nuevoFlujo.proyecto_id = proyecto_id
         nuevoFlujo.save()
         actividades = Actividades.objects.filter(flujo_id = flujo_id)
         for actividad in actividades:
@@ -1085,7 +1085,7 @@ def listflujosproyectosMod(request, proyecto_id):
     @return: render a apps/project_modificar_listflujo.html con el proyecto donde se encuentra, los flujos del proyecto y las actividades de los flujos
     """
     proyecto = Proyectos.objects.get(id = proyecto_id)
-    flujos = Flujos.objects.filter(proyeto_id = proyecto_id)
+    flujos = Flujos.objects.filter(proyecto_id = proyecto_id)
     actividades = Actividades.objects.filter(plantilla = False)
     
     return render_to_response("apps/project_modificar_listflujo.html", {"proyecto":proyecto , "flujos":flujos, "actividades":actividades})

@@ -12,8 +12,8 @@
 		<h3>Actividades del flujo</h3>
 		{% for actividad in actividades %}
 			<br />
-			<table>{{actividad.descripcion}}</table>
-			<a href="{% url 'apps:flujosproyectosRequestModAct' proyecto.id flujo.id actividad.id %}">modificar</a><br />
+			<label>{{actividad.descripcion}}</label>
+			<a href="{% url 'apps:flujosproyectosRequestModAct' proyecto.id flujo.id actividad.id %}">Modificar</a><br />
 		{% endfor %}
 	{% else %}
 		<h4>No hay actividades disponibles</h4>
