@@ -10,6 +10,7 @@ from django.core.urlresolvers import reverse
 from apps.views import ingresar, recuperarContrasena, crearProyecto, agregarPlantilla
 
 
+
 class test_templates(TestCase):
     
     def test_index(self):

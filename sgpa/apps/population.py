@@ -6,7 +6,8 @@ import django
 django.setup()
 
 from django.contrib.auth.models import User
-from apps.models import Users_Roles, Flujos, Roles, Actividades, Permisos, Permisos_Roles
+from apps.models import Users_Roles, Flujos, Roles, Actividades, Permisos, Permisos_Roles,\
+    Prioridad
 
 def populate():
     add_roles('Administrador')
@@ -35,6 +36,10 @@ def populate():
         add_permisos_roles(p, 3)
     for p in permisos_cliente:
         add_permisos_roles(p, 4)
+    
+    add_prioridad('Baja')
+    add_prioridad('Media')
+    add_prioridad('Alta')
         
     
 def add_roles(descripcion):
@@ -94,6 +99,11 @@ def add_permisos_roles(permiso_id, rol_id):
     permiso_rol.permisos_id = permiso_id
     permiso_rol.save()
     return permiso_rol
+
+def add_prioridad(descripcion):
+    prioridad = Prioridad()
+    prioridad.descripcion = descripcion
+    prioridad.save()
 
 if __name__ == '__main__':
     print "Starting population script..."

@@ -4,7 +4,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 from test.test_support import args_from_interpreter_flags
-from django.db.models.fields import CharField
+from django.db.models.fields import CharField, IntegerField
 from django.template.defaultfilters import default
 
     
@@ -101,6 +101,29 @@ class Actividades_Estados(models.Model):
     """
     actividad = models.ForeignKey(Actividades)
     estados = models.ForeignKey(Estados)
+
+class Prioridad(models.Model):
+    """
+    Describe la Prioridad del User Story
+    """
+    descripcion = models.CharField(max_length=30)
+    
+class UserStory(models.Model):
+    """
+    Modelo para almacenar los User Stories
+    """
+    descripcion = models.CharField(max_length = 50)
+    codigo = models.IntegerField()
+    valorNegocio = models.IntegerField()
+    valorTecnico = models.IntegerField()
+    prioridad = models.ForeignKey(Prioridad)
+    tiempoEstimado = models.IntegerField()
+    tiempoReal = models.IntegerField()
+    sprint = models.IntegerField()
+    usuarioAsignado = models.IntegerField()
+    flujo = models.IntegerField()
+    proyecto = models.ForeignKey(Proyectos)
+    
     
 
 
