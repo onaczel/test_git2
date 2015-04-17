@@ -20,9 +20,10 @@ def populate():
     add_flujo('Plantilla Generica')
     
     permisos = ['Crear Usuario', 'Modificar Usuario', 'Eliminar Usuario', 'Crear Proyecto', 'Modificar Proyecto', 'Asignar Participantes a Proyecto', 'Eliminar Participantes de Proyecto', 'Crear User Stories', 'Modificar User Stories', 'Eliminar User Stories', 'Crear Plantilla de Flujos', 'Modificar Plantilla de Flujos', 'Eliminar Plantilla de Flujos', 'Planificar Sprints', 'Visualizar Proyectos', 'Crear Roles', 'Modificar Roles', 'Eliminar Roles']
+    tags = ['CU', 'MU', 'EU', 'CP', 'MP', 'APP', 'EPP', 'CUS', 'MUS', 'EUS', 'CPF', 'MPF', 'EPF', 'PS', 'VP', 'CR', 'MR', 'ER']
     c=1
     for p in permisos:
-        add_permisos(p)
+        add_permisos(p, tags[c-1])
         add_permisos_roles(c, 1)
         c = c + 1
     
@@ -85,10 +86,10 @@ def add_actividades(descripcion, flujo_id):
     actividades.save()
     return actividades
 
-def add_permisos(descripcion):
+def add_permisos(descripcion, tag):
     permisos = Permisos()
     permisos.descripcion = descripcion
-    permisos.tag = 'tag'
+    permisos.tag = tag
     permisos.estado = True
     permisos.save()
     return permisos

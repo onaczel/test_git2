@@ -1,6 +1,7 @@
 <h1><b>{{proyecto.nombre}}</b></h1>
-
+{%if misPermisos.APP == True %}
 <br><a href="{% url 'apps:listasigparticipante' proyecto.id %}">Asignar Participante</a><br />
+{% endif %}
 <br><a href="{% url 'apps:listelimparticipante' proyecto.id %}">Eliminar Participante</a><br />
 <br><a href="{% url 'apps:listflujosproyectos' proyecto.id %}">Crear Flujo</a><br />
 <br><a href="{% url 'apps:listflujosproyectosMod' proyecto.id %}">Modificar Flujo</a><br />

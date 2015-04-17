@@ -903,7 +903,7 @@ def listproyectosdelusuario(request, usuario_id):
             rol = Roles.objects.get(id = rolProyecto.rol_id)
             roles.append(rol.descripcion)
         rolesProyectos.append(roles)
-        
+
     return render_to_response("apps/project_mod.html", {"proyectos":proyectos, "usuario":request.user, "roles":rolesProyectos ,"rol_id":rolSistema.id})
 
 def listasigparticipante(request, proyecto_id):
@@ -989,10 +989,10 @@ def accionesproyecto(request, proyecto_id):
     user_id = request.user
     urp = Equipo.objects.filter(usuario_id=user_id, rol_id = 3, proyecto_id = proyecto_id)
     #for u in urp:
-    
+    mispermisos = misPermisos(request.user.id, proyecto_id)
     if urp:
         #Si el usuario es Scrum Master en el Proyecto
-        return render_to_response("apps/project_acciones.html", {"proyecto":proyecto, "usuario":request.user})
+        return render_to_response("apps/project_acciones.html", {"proyecto":proyecto, "usuario":request.user, "misPermisos":mispermisos})
     else:
         #Si el usuario no es Scrum Master
         return render_to_response("apps/project_acciones_no_sm.html", {"proyecto":proyecto, "usuario":request.user})
@@ -1141,3 +1141,105 @@ def flujosproyectosRequestModAct(request, proyecto_id, flujo_id, actividad_id):
     form = ActivityCreateForm(initial={'descripcion':actividad.descripcion})
 
     return render_to_response('apps/project_modificar_flujo_actividad.html', {"proyecto":proyecto, "flujo":flujo, "actividad":actividad, "form":form}, context_instance=RequestContext(request) )
+
+class misPermisosClass():
+    """
+    disponibilidad de permisos del usuario
+    """
+    "Crear Usuario"
+    CU = False
+    "Modificar Usuario"
+    MU = False
+    "Eliminar Usuario"
+    EU = False
+    "Crear Proyecto"
+    CP = False
+    "Modificar Proyecto"
+    MP = False
+    "Asignar Participantes a Proyecto"
+    APP = False
+    "Eliminar Participantes de Proyecto"
+    EPP = False
+    "Crear User Stories"
+    CUS = False
+    "Modificar User Stories"
+    MUS = False
+    "Eliminar User Stories"
+    EUS = False
+    "Crear Plantilla de Flujos"
+    CPF = False
+    "Modificar Plantilla de Flujos"
+    MPF = False
+    "Eliminar Plantilla de Flujos"
+    EPF = False
+    "Planificar Sprints"
+    PS = False
+    "Visualizar Proyectos"
+    VP = False
+    "Crear Roles"
+    CR = False
+    "Modificar Roles"
+    MR = False
+    "Eliminar Roles"
+    ER = False
+
+def misPermisos(usuario_id, proyecto_id):
+    """
+    retorna la lista de permisos donde se indica con que permisos cuenta el ususario
+    
+    @param usuario_id: id de un ususario
+    @param proyecto_id: id de un proyecto; vale 0 si el usuario no se encuentra en ningun proyecto
+    @return: retorna una lista de permisos
+    """
+    user = User.objects.get(id = usuario_id)
+    roles_usuario = Users_Roles.objects.filter(user_id = user.id)
+    roles = []
+    for rol_usuario in roles_usuario:
+        roles.append(Roles.objects.get(id = rol_usuario.role_id))
+    if proyecto_id != 0:
+        roles_proyectos = Equipo.objects.filter(usuario_id = user.id, proyecto_id = proyecto_id)
+        for rol_proyecto in roles_proyectos:
+            roles.append(Roles.objects.get(id = rol_proyecto.rol_id))
+    misPermisos = misPermisosClass()
+    for rol in roles:
+        permisos_rol = Permisos_Roles.objects.filter(roles_id = rol.id)
+        for permiso_rol in permisos_rol:
+            permiso = Permisos.objects.get(id = permiso_rol.permisos_id)
+            if permiso.tag=="CU":
+                misPermisos.CU = True
+            elif permiso.tag=="MU":
+                misPermisos.MU = True
+            elif permiso.tag=="EU":
+                misPermisos.EU = True
+            elif permiso.tag=="CP":
+                misPermisos.CP = True
+            elif permiso.tag=="MP":
+                misPermisos.MP = True
+            elif permiso.tag=="APP":
+                misPermisos.APP = True
+            elif permiso.tag=="EPP":
+                misPermisos.EPP = True
+            elif permiso.tag=="CUS":
+                misPermisos.CUS = True
+            elif permiso.tag=="MUS":
+                misPermisos.MUS = True
+            elif permiso.tag=="EUS":
+                misPermisos.EUS = True
+            elif permiso.tag=="CPF":
+                misPermisos.CPF = True
+            elif permiso.tag=="MPF":
+                misPermisos.MPF = True
+            elif permiso.tag=="EPF":
+                misPermisos.EPF = True
+            elif permiso.tag=="PS":
+                misPermisos.PS = True
+            elif permiso.tag=="VP":
+                misPermisos.VP = True
+            elif permiso.tag=="CR":
+                misPermisos.CR = True
+            elif permiso.tag=="MR":
+                misPermisos.MR = True
+            elif permiso.tag=="ER":
+                misPermisos.ER = True
+
+    return (misPermisos)

@@ -88,6 +88,16 @@ class Migration(migrations.Migration):
             bases=(models.Model,),
         ),
         migrations.CreateModel(
+            name='Prioridad',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('descripcion', models.CharField(max_length=30)),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
             name='Proyectos',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
@@ -118,6 +128,26 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('role', models.ForeignKey(to='apps.Roles')),
                 ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='UserStory',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('descripcion', models.CharField(max_length=50)),
+                ('codigo', models.IntegerField()),
+                ('valorNegocio', models.IntegerField()),
+                ('valorTecnico', models.IntegerField()),
+                ('tiempoEstimado', models.IntegerField()),
+                ('tiempoReal', models.IntegerField()),
+                ('sprint', models.IntegerField()),
+                ('usuarioAsignado', models.IntegerField()),
+                ('flujo', models.IntegerField()),
+                ('prioridad', models.ForeignKey(to='apps.Prioridad')),
+                ('proyecto', models.ForeignKey(to='apps.Proyectos')),
             ],
             options={
             },
