@@ -1,0 +1,9 @@
+<h1>Crear User Story</h1>
+
+<form action="{% url 'apps:crearHu' proyecto_id %}" method="post">
+	{% csrf_token %}
+	<table>{{form}}</table>
+	
+	<input type="submit" value="Guardar" />
+
+</form>

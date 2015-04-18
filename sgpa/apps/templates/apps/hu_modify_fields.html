@@ -1,0 +1,13 @@
+<h1>{{hu_descripcion}}</h1>
+
+<h2>Modificar Campos</h2>
+
+<form action="{% url 'apps:editarHu' proyecto_id hu_id %}" method="post">
+	{% csrf_token %}
+	<table>{{form}}</table>
+	
+	<input type='submit' value='Guardar'/>
+
+
+</form>
+<a href="{% url 'apps:listhu' proyecto_id %}">Volver</a>

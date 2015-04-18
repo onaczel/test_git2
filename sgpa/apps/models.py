@@ -116,13 +116,14 @@ class UserStory(models.Model):
     codigo = models.IntegerField()
     valorNegocio = models.IntegerField()
     valorTecnico = models.IntegerField()
-    prioridad = models.ForeignKey(Prioridad)
+    prioridad = models.ForeignKey(Prioridad, null=True)
     tiempoEstimado = models.IntegerField()
-    tiempoReal = models.IntegerField()
-    sprint = models.IntegerField()
-    usuarioAsignado = models.IntegerField()
-    flujo = models.IntegerField()
-    proyecto = models.ForeignKey(Proyectos)
+    tiempoReal = models.IntegerField(null=True)
+    sprint = models.IntegerField(null = True)
+    usuarioAsignado = models.IntegerField(null = True)
+    flujo = models.IntegerField(null = True)
+    proyecto = models.ForeignKey(Proyectos, null = True)
+    estado = models.BooleanField(default = True)
     
     
 

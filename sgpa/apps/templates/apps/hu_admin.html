@@ -1,0 +1,16 @@
+<h1>Administrar User Stories</h1>
+
+<a href="{% url 'apps:crearHu' proyecto_id %}">Crear User Stories</a>
+<br />
+<br />	
+{% if hu %}
+	{% for h in hu %}
+		<label>{{h.descripcion}}</label>
+		<a href="{% url 'apps:modificarHu' proyecto_id h.id %}">Editar</a>
+		<a href="{% url 'apps:eliminarHu' proyecto_id h.id %}">Eliminar</a><br />
+	{% endfor %}
+{% else %}
+	<p>There are no user stories in db</p>
+{% endif %}
+<br />	
+<a href="{% url 'apps:accionesproyecto' proyecto_id %}">Volver</a>

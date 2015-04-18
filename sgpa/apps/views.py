@@ -8,7 +8,7 @@ from django.utils import timezone
 
 from django.template import RequestContext, loader
 
-from apps.models import Roles, Users_Roles, Permisos, Permisos_Roles, Flujos, Actividades, Actividades_Estados, Proyectos, Equipo
+from apps.models import Roles, Users_Roles, Permisos, Permisos_Roles, Flujos, Actividades, Actividades_Estados, Proyectos, Equipo, UserStory
 from django.contrib.auth.models import User
 
 
@@ -477,6 +477,7 @@ class RoleCreateForm(forms.ModelForm):
         fields = ("descripcion",)
 
      
+
 #MAnager isn't accesible via model isntances, no se pude acceder desde un modelo a 
 #una instancia de una clase
 def asignarrol(request, role_id):
@@ -1141,6 +1142,64 @@ def flujosproyectosRequestModAct(request, proyecto_id, flujo_id, actividad_id):
     form = ActivityCreateForm(initial={'descripcion':actividad.descripcion})
 
     return render_to_response('apps/project_modificar_flujo_actividad.html', {"proyecto":proyecto, "flujo":flujo, "actividad":actividad, "form":form}, context_instance=RequestContext(request) )
+
+def listhu(request, proyecto_id):
+    hu = UserStory.objects.filter(proyecto_id = proyecto_id, estado = True)
+    return render_to_response('apps/hu_admin.html', { 'hu':hu, 'proyecto_id':proyecto_id})
+
+class HuCreateForm(forms.ModelForm):
+    class Meta:
+        model = UserStory
+        fields = ("descripcion", "codigo", "valorNegocio", "valorTecnico", "tiempoEstimado",)
+        
+        
+def crearHu(request, proyecto_id):
+    if request.method == 'POST':
+        form = HuCreateForm(request.POST)
+        if form.is_valid():
+            form.save()
+            hu = UserStory.objects.get(descripcion  = form.cleaned_data['descripcion'])
+            hu.proyecto_id = proyecto_id
+            hu.save()
+            return render_to_response('apps/hu_creado.html',{"proyecto_id":proyecto_id},  context_instance = RequestContext(request))
+        else:
+            return render_to_response('apps/hu_form_no_valido.html', context_instance = RequestContext(request))
+    else:        
+        form = HuCreateForm()
+    
+    return render_to_response('apps/hu_create.html', {"form":form, "proyecto_id":proyecto_id}, context_instance = RequestContext(request))
+
+def editarHu(request, proyecto_id, hu_id):
+    hu = get_object_or_404(UserStory, pk=hu_id)
+    if request.method == 'POST':
+        form = HuCreateForm(request.POST)
+        if form.is_valid():
+            #form.save()
+            hu.descripcion = form.cleaned_data['descripcion']
+            hu.codigo = form.cleaned_data['codigo']
+            hu.valorNegocio = form.cleaned_data['valorNegocio']
+            hu.valorTecnico = form.cleaned_data['valorTecnico']
+            hu.tiempoEstimado = form.cleaned_data['tiempoEstimado']
+            hu.proyecto_id = proyecto_id
+            hu.save()
+            return render_to_response('apps/hu_creado.html',{"proyecto_id":proyecto_id},  context_instance = RequestContext(request))
+        else:
+            return render_to_response('apps/hu_form_no_valido.html', context_instance = RequestContext(request))
+    else:        
+        form = HuCreateForm(initial={'descripcion':hu.descripcion, 'codigo':hu.codigo, 'valorNegocio':hu.valorNegocio, 'valorTecnico':hu.valorTecnico, 'tiempoEstimado':hu.tiempoEstimado})
+    
+    return render_to_response('apps/hu_modify_fields.html', {"form":form, "proyecto_id":proyecto_id, "hu_id":hu_id, "hu_descripcion":hu.descripcion}, context_instance = RequestContext(request))
+
+def modificarHu(request, proyecto_id, hu_id):
+    hu = UserStory.objects.get(pk=hu_id)
+    hu_descripcion = hu.descripcion
+    return render_to_response('apps/hu_modify.html', {'proyecto_id':proyecto_id, 'hu_id':hu_id, 'hu_descripcion':hu_descripcion})
+
+def eliminarHu(request, proyecto_id, hu_id):
+    hu = get_object_or_404(UserStory, pk=hu_id)
+    hu.estado = False
+    hu.save()
+    return render_to_response('apps/hu_deleted.html',{'proyecto_id':proyecto_id}, RequestContext(request))
 
 class misPermisosClass():
     """
