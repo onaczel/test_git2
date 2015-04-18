@@ -1147,6 +1147,13 @@ def listhu(request, proyecto_id):
     hu = UserStory.objects.filter(proyecto_id = proyecto_id, estado = True)
     return render_to_response('apps/hu_admin.html', { 'hu':hu, 'proyecto_id':proyecto_id})
 
+def listhuflujo(request, proyecto_id, hu_id):
+    flujo = Flujos.objects.filter(estado = True, plantilla = True)
+    hu = UserStory.objects.get(pk=hu_id)
+    actividades = Actividades.objects.all()
+    return render_to_response('apps/hu_add_flujo.html', {'proyecto_id':proyecto_id, 'hu_id':hu_id, 'flujo':flujo, 'hu_descripcion':hu.descripcion, 'actividades':actividades}, RequestContext(request))
+    
+
 class HuCreateForm(forms.ModelForm):
     class Meta:
         model = UserStory
@@ -1200,6 +1207,14 @@ def eliminarHu(request, proyecto_id, hu_id):
     hu.estado = False
     hu.save()
     return render_to_response('apps/hu_deleted.html',{'proyecto_id':proyecto_id}, RequestContext(request))
+
+def asignarflujoHu(request, proyecto_id, hu_id):
+    hu = get_object_or_404(UserStory, pk = hu_id)
+    if request.POST:   
+        flujo = Flujos.objects.get(pk = request.POST['f'])
+        hu.flujo = flujo.id
+        hu.save()
+        return render_to_response('apps/hu_flow_set.html', {'hu_descripcion':hu.descripcion, 'proyecto_id':proyecto_id}, context_instance = RequestContext(request))
 
 class misPermisosClass():
     """
