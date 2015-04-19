@@ -1144,10 +1144,25 @@ def flujosproyectosRequestModAct(request, proyecto_id, flujo_id, actividad_id):
     return render_to_response('apps/project_modificar_flujo_actividad.html', {"proyecto":proyecto, "flujo":flujo, "actividad":actividad, "form":form}, context_instance=RequestContext(request) )
 
 def listhu(request, proyecto_id):
+    """
+    obtiene la lista de User Stories de un proyecto dado, para ser modificados o eliminados
+    
+    @param request: Http request
+    @param proyecto_id: id de un proyecto
+    @return: render a apps/hu_admin.html con el proyecto en el que se encuentra el usuario, y la lista de user stories
+    """
     hu = UserStory.objects.filter(proyecto_id = proyecto_id, estado = True)
     return render_to_response('apps/hu_admin.html', { 'hu':hu, 'proyecto_id':proyecto_id})
 
 def listhuflujo(request, proyecto_id, hu_id):
+    """
+    obtiene la lista de flujos para ser asignados a un user stoty de un proyecto
+    
+    @param request: Http request
+    @param proyecto_id: id de un proyecto
+    @param hu_id: id de un User Story
+    @return: render a hu_add_flujo.hml con el User Story, su descripcion y su proyecto respectivo, y la lista de flujos a ser seleccionados, como sus actividades
+    """
     flujo = Flujos.objects.filter(estado = True, plantilla = True)
     hu = UserStory.objects.get(pk=hu_id)
     actividades = Actividades.objects.all()
@@ -1155,12 +1170,24 @@ def listhuflujo(request, proyecto_id, hu_id):
     
 
 class HuCreateForm(forms.ModelForm):
+    """
+    formulario de crecion de User Story
+    """
     class Meta:
         model = UserStory
         fields = ("descripcion", "codigo", "valorNegocio", "valorTecnico", "tiempoEstimado",)
         
         
 def crearHu(request, proyecto_id):
+    """
+    crea un nuevo User Story
+    
+    @param request: Http
+    @param proyecto_id: id del proyecto en el que se creara el User Story
+    @return: render a hu_creado.html con el proyecto en el que se crea el User Story
+    @return: render a hu_form_no_valido.html
+    @return: render a hu_create.html con el id del proyecto en cuestion, y el formulario de creacion del User Story
+    """
     if request.method == 'POST':
         form = HuCreateForm(request.POST)
         if form.is_valid():
@@ -1177,6 +1204,16 @@ def crearHu(request, proyecto_id):
     return render_to_response('apps/hu_create.html', {"form":form, "proyecto_id":proyecto_id}, context_instance = RequestContext(request))
 
 def editarHu(request, proyecto_id, hu_id):
+    """
+    editar un User Story existente
+    
+    @param request: Http
+    @param proyecto_id: id del proyecto donde se encuentra el User Story a editar
+    @param hu_id: id del User Story a editar
+    @return: render a hu_modificado.html con el id del proyecto en el que se encuentra el user story
+    @return: render a hu_form_no_valido.html 
+    @return: hu_modify_fields.html con el id y la descripcion del User Story, el id del proyecto donde se encuentra y el formulario de edicion
+    """
     hu = get_object_or_404(UserStory, pk=hu_id)
     if request.method == 'POST':
         form = HuCreateForm(request.POST)
@@ -1189,7 +1226,7 @@ def editarHu(request, proyecto_id, hu_id):
             hu.tiempoEstimado = form.cleaned_data['tiempoEstimado']
             hu.proyecto_id = proyecto_id
             hu.save()
-            return render_to_response('apps/hu_creado.html',{"proyecto_id":proyecto_id},  context_instance = RequestContext(request))
+            return render_to_response('apps/hu_modificado.html',{"proyecto_id":proyecto_id},  context_instance = RequestContext(request))
         else:
             return render_to_response('apps/hu_form_no_valido.html', context_instance = RequestContext(request))
     else:        
@@ -1198,17 +1235,38 @@ def editarHu(request, proyecto_id, hu_id):
     return render_to_response('apps/hu_modify_fields.html', {"form":form, "proyecto_id":proyecto_id, "hu_id":hu_id, "hu_descripcion":hu.descripcion}, context_instance = RequestContext(request))
 
 def modificarHu(request, proyecto_id, hu_id):
+    """
+    obtiene los atributos del User Story a ser modificado
+    @param request: Http
+    @param proyecto_id: id del proyecto donde se encuentra el User Story
+    @param hu_id: id del User Story a ser modificado
+    @return: rener a hu_modify.html con el id y la descripcion del User Story, y el id del proyecto donde se encuentra
+    """
     hu = UserStory.objects.get(pk=hu_id)
     hu_descripcion = hu.descripcion
     return render_to_response('apps/hu_modify.html', {'proyecto_id':proyecto_id, 'hu_id':hu_id, 'hu_descripcion':hu_descripcion})
 
 def eliminarHu(request, proyecto_id, hu_id):
+    """
+    cambia el estado de un User Story a inactivo
+    @param request: Http
+    @param proyecto_id: el id del proyecto donde se encuentra el User Story
+    @param hu_id: el id del User Story a ser eliminado
+    @return: render a hu_deleted.html con el id del proyecto del User Story
+    """
     hu = get_object_or_404(UserStory, pk=hu_id)
     hu.estado = False
     hu.save()
     return render_to_response('apps/hu_deleted.html',{'proyecto_id':proyecto_id}, RequestContext(request))
 
 def asignarflujoHu(request, proyecto_id, hu_id):
+    """
+    asigna el User Story a un flujo
+    @param request: Http
+    @param proyecto_id: id del proyecto donde se encuentra el User Story
+    @param hu_id: id del User Story a ser asignado a un flujo
+    @return: render a hu_flow.html con la descripcion del User Story y el id del proyecto
+    """
     hu = get_object_or_404(UserStory, pk = hu_id)
     if request.POST:   
         flujo = Flujos.objects.get(pk = request.POST['f'])
