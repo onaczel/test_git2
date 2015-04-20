@@ -1,17 +1,19 @@
-{% block titulo %}Nuevo Usuario{% endblock %}
+{% extends 'base.html' %}
+{% block titulo %}
+<h1>Administrar Usuarios</h1>
+{% endblock %}
 {% block encabezado %}
-	<h1>Registra un nuevo usuario</h1>
+	<h1>Nuevo Usuario</h1>
 {% endblock %}
 {% block contenido %}
 	<form action="" method="post">
 {% csrf_token %}
 		<table>{{formulario}}</table>
-		<!--<h4> Rol en el sistema:</h4>
-		<pre style='display:inline'>&#09;&#09;&#09;&#09;</pre>
-		<input type="radio" name="role" value="1">Administrador<br>
-		<pre style='display:inline'>&#09;&#09;&#09;&#09;</pre>
-		<input type="radio" name="role" value="2">Usuario<br> -->
 		<p><input type='submit' value='Registrar' /></p> 
 		
 	</form>
 {% endblock %}
+{% block atras %}
+<a href="/apps/modadmin/adminuser/">Atras</a><br />
+{% endblock %}
+

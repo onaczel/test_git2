@@ -1,7 +1,10 @@
-
+{% extends 'base.html' %}
+{% block titulo %}
+<h1>Error de Acceso</h1>
+{% endblock %}
 {% block encabezado %}
 	<h1>Usuario incorrecto</h1>
 {% endblock %}
 {% block contenido %}
-	<p>El usuario que ha proporcionado no es válido</p>
+	<p>El usuario o contraseña no es válido</p>
 {% endblock %}

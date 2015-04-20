@@ -1,2 +1,14 @@
-<h1>Rol creado correctamente</h1>
-<a href="/apps/modadmin/">Volver a Administracion</a>
+{% extends 'base.html' %}
+{% block titulo %}
+<h1>Administrar Roles</h1>
+{% endblock %}
+{% block encabezado %}
+<h1>Nuevo Rol</h1>
+{% endblock %}
+{% block contenido %}
+Rol creado correctamente
+<a href="/apps/modadmin/adminrole/">Volver a Administracion</a>
+{% endblock %}
+{% block atras %}
+<a href="/apps/modadmin/adminrole/">Atras</a>
+{% endblock %}

@@ -1,10 +1,16 @@
-<p>Nuevo Rol</p>
+{% extends 'base.html' %}
+{% block titulo %}
+<h1>Administrar Roles</p>
+{% endblock %}
+{% block encabezado %}
 <h1>Registrar un nuevo Rol</h1>
-
+{% endblock %}
+{% block contenido %}
 <form action="{% url 'apps:listpermisos' %}" method="post">{% csrf_token %}
 	<table>{{ form }}</table>
 	<p><input type='submit' value='Registrar'/></p>
-	
-
-
 </form>
+{% endblock %}
+{% block atras %}
+<a href="/apps/modadmin/adminrole/">Atras</a>
+{% endblock %}

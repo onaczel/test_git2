@@ -1,13 +1,21 @@
-{% block encabezado %}
+{% extends 'base.html' %}
+{% block titulo %}
 	<h1>Modulo Administracion</h1>
 {% endblock %}
+{% block usuario %}
+	{{usuario.username}}
+{% endblock %}
 {% block contenido %}
-	<p>Se encuentra en el modulo administracion</p><br />
 	<a href="/apps/modadmin/adminuser/">Administrar Usuarios</a><br />
+	<br>
 	<a href="/apps/modadmin/adminrole/">Administrar Roles</a><br />
+	<br>
 	<a href="/apps/modadmin/adminproyecto/">Administrar Proyectos</a><br />
+	<br>
 	<a href="/apps/modadmin/adminflujo/">Administrar Flujos</a><br />
 	
 {% endblock %}
 <br />
-<a href="/apps/user_private_admin">Volver</a><br />
+{% block atras %}
+<a href="/apps/user_private_admin">Atras</a><br />
+{% endblock %}

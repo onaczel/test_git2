@@ -1,8 +1,22 @@
-{% block encabezado %}
+{% extends 'base.html' %}
+{% block titulo %}
 	<h1>Administrar Usuarios</h1>
 {% endblock %}
 {% block contenido %}
-	<a href="/apps/usuario/nuevo">Crear Usuario</a><br />
-	<a href="moduser/">Modificar Usuarios</a><br />
-	<a href="eliminaruser/">Eliminar Usuarios</a><br />
+	<a href="/apps/usuario/nuevo">Nuevo Usuario</a><br />
+	<br>
+	{% if users %}
+		{% for user in users %}
+			{% if user.is_active == True %}
+				<label><b>{{user.username}}</b></label>
+				<a href="{% url 'apps:muser' user.id %}">Modificar</a>
+				<a href="{% url 'apps:deluser' user.id %}">Eliminar</a><br />
+			{% endif %}
+		{% endfor %}
+	{% else %}
+		<p>There are no users in database</p>
+	{% endif %} 
+{% endblock %}
+{% block atras %}
+<a href="/apps/modadmin">Atras</a>
 {% endblock %}

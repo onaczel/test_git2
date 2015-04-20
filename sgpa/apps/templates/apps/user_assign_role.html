@@ -1,16 +1,23 @@
-<h1>Seleccionar el rol a asignar al usuario</h1>
-
-<form action="{% url 'apps:asignarrolusuario' user_id %}" method="post">{% csrf_token %}
-{% if roles %}
-	{% for r in roles%}
-		<!-- <p>hola</p> -->
-		{% if r.id == 1 or r.id == 2 %}
-			<input type="radio" name="roles" id="option{{r.id}}" value={{r.id}} checked="checked"/>
-			<label for="option{{r.id}}"><b>{{r.descripcion}}</b></label><br />
-		{% endif %}
-	{% endfor %}
-{% else %}
- 	<p>There are no elements in roles</p>
- {% endif %}
- <input type="submit" name="Asignar" value="Asignar roles"/>
- </form>
+{% extends 'base.html' %}
+{% block titulo %}
+	<h1>Nuevo Usuario</h1>
+{% endblock %}
+{% block encabezado %}
+	Seleccionar el rol a asignar al usuario
+{% endblock %}
+{% block contenido %}
+	<form action="{% url 'apps:asignarrolusuario' user_id %}" method="post">{% csrf_token %}
+	{% if roles %}
+		{% for r in roles%}
+			<!-- <p>hola</p> -->
+			{% if r.id == 1 or r.id == 2 %}
+				<input type="radio" name="roles" id="option{{r.id}}" value={{r.id}} checked="checked"/>
+				<label for="option{{r.id}}"><b>{{r.descripcion}}</b></label><br />
+			{% endif %}
+		{% endfor %}
+	{% else %}
+	 	<p>There are no elements in roles</p>
+	 {% endif %}
+	 <input type="submit" name="Asignar" value="Asignar roles"/>
+	 </form>
+{% endblock %}

@@ -1,8 +1,9 @@
-{% block titulo %}Usuario creado correctamente{% endblock %}
-{% block encabezado %}
-	<h1>Usuario creado correctamente</h1>
+{% extends 'base.html' %}
+
+{% block titulo %}
+	<h1>Nuevo Usuario</h1>
 {% endblock %}
 {% block contenido %}
-	<form method="link" action="http://127.0.0.1:8000/apps/ingresar/"><input type="submit" value="Ir a pagina de ingreso">
-	</form>
+	<p>Usuario creado correctamente</p>
+	<a href="/apps/modadmin">Volver a Administracion</a>
 {% endblock %}

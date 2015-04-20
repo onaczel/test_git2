@@ -1,7 +1,8 @@
-<center>
-{% block encabezado %}
-	<h1>Cambio de contraseña</h1>
+{% extends 'base.html' %}
+{% block titulo %}
+<h1>Recuperar Contraseña</h1>
 {% endblock %}
+<center>
 {% block contendido %}
 	<p>Se ha enviado la nueva contraseña del usuario <strong><i> {{username}} </i></strong>a su dirección email registada en el sistema</p>
 	<a href="/apps/ingresar" >Login</a>

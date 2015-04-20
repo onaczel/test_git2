@@ -354,7 +354,7 @@ def listuser(request):
     de modificacion de usuario  
     """
     users = User.objects.all()
-    return render_to_response("apps/user_select_mod.html", {"users":users})
+    return render_to_response("apps/user_admin.html", {"users":users})
 
 def listuserdel(request):
     """
@@ -372,7 +372,7 @@ def listrolesmod(request):
     de modificacion de roles
     """
     roles = Roles.objects.all()
-    return render_to_response("apps/role_modify.html", {"roles":roles})
+    return render_to_response("apps/role_admin.html", {"roles":roles})
 
 def listrolesdel(request):
     """

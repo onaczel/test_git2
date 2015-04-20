@@ -1,8 +1,24 @@
-{% block encabezado %}
+{% extends 'base.html' %}
+{% block titulo %}
 	<h1>Administrar Roles</h1>
 {% endblock %}
 {% block contenido %}
-	<a href="/apps/modadmin/adminrole/crearrole">Crear Roles</a><br />
-	<a href="/apps/modadmin/adminrole/modificarrol">Modificar Roles</a><br />
-	<a href="/apps/modadmin/adminrole/eliminarrol">Eliminar Roles</a><br />
+	<a href="/apps/modadmin/adminrole/crearrole">Nuevo Rol</a><br />
+	<br>
+	
+	{% if roles %}
+	{% for r in roles %}
+		{% if r.estado == True %}
+			<label>{{r.descripcion}}</label>
+			<a href="{% url  'apps:rolemodify' r.id %}">Modificar</a>
+			<a href="{% url 'apps:roledelete' r.id %}">Eliminar</a><br />
+		{% endif %}
+	{% endfor %}
+{% else %}
+	<p>There are no roles in db</p>
+{% endif %}
+	
+{% endblock %}
+{% block atras %}
+<a href="/apps/modadmin">Atras</a>
 {% endblock %}
