@@ -1,9 +1,16 @@
-<h1>Asignar actividades</h1>
-
+{% extends 'base.html' %}
+{% block titulo %}
+<h1>Administrar Flujos</h1>
+{% endblock %}
+{% block encabezado %}
+<h1>{{flow_descripcion}}</h1>
+<h3>Asignar actividades</h3>
+{% endblock %}
+{% block contenido %}
 <form action="{% url 'apps:setactividadesmod' flow_id actv_id %}" method='post'>{% csrf_token %}
 	<table>{{form}}</table>
 	<input type="hidden" name="action" value="submit">
 	<input type="submit" value="Guardar" name='submit'>
 	<a href="{% url 'apps:listactivitiesmod' flow_id %}">Volver</a> 
 </form>
-	
+{% endblock %}

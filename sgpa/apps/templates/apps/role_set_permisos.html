@@ -1,5 +1,13 @@
-<h1>Seleccione los permisos a asignar al rol</h1>
-
+{% extends 'base.html' %}
+{% block titulo %}
+<h1>Administrar Roles</h1>
+{% endblock %}
+{% block encabezado %}
+<h1>{{role_descripcion}}</h1>
+<h3>Seleccione los permisos a asignar al rol</h3>
+<br>
+{% endblock %}
+{% block contenido %}
 <form action="{% url 'apps:asignarrol' role_id %}" method="post">{% csrf_token %}
 {% if permisos %}
 	{% for p in permisos%}
@@ -12,3 +20,4 @@
  {% endif %}
  <input type="submit" name="Asignar" value="Asignar Permisos"/>
  </form>
+ {% endblock %}

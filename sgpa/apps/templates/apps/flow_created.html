@@ -1,3 +1,13 @@
-<h1>Flujo Creado con exito</h1>
-
+{% extends 'base.html' %}
+{% block titulo %}
+<h1>Administrar Flujos</h1>
+{% endblock %}
+{% block contenido %}
+<h1>{{flow_descripcion}}</h1>
+<p>Flujo Creado con exito<p>
+<br>
 <a href="/apps/modadmin/" >Volver a administracion</a>
+{% endblock %}
+{% block atras %}
+<a href="/apps/modadmin/" >Atras</a>
+{% endblock %}

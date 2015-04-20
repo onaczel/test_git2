@@ -1,8 +1,20 @@
-{% block encabezado %}
+{% extends 'base.html' %}
+{% block titulo %}
 	<h1>Administrar Flujos</h1>
 {% endblock %}
 {% block contenido %}
-	<a href="crearflujo/">Crear Plantilla de Flujos</a><br />
-	<a href="/apps/modadmin/adminflujo/editarflujo/">Editar Plantilla de Flujos</a><br />
-	<a href="/apps/modadmin/adminflujo/eliminarflujo/">Eliminar Plantilla de Flujos</a>
+	<a href="crearflujo/">Nueva Plantilla de Flujos</a><br />
+	<br>
+	{% if flujos %}
+		{% for f in flujos %}
+			<label>{{f.descripcion}}</label>
+			<a href="{% url 'apps:editarflujos' f.id %}">Modificar</a>
+			<a href="{% url 'apps:flowdelete' f.id %}">Eliminar</a><br />
+		{% endfor %}
+	{% else %}
+		<p>There are no flows in db</p>
+	{% endif %}
+{% endblock %}
+{% block atras %}
+<a href="/apps/modadmin">Atras</a>
 {% endblock %}

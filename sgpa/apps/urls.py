@@ -55,7 +55,7 @@ urlpatterns = patterns('',
     url(r'^modadmin/adminproyecto/createProject/$', views.crearProyecto, name="createProject"),
     url(r'^(?P<proyecto_pk>\d+)/agregarPlantilla/$', views.agregarPlantilla, name='agregarPlantilla'),
   #  url(r'^modadmin/adminproyecto/createProject/$', views.agregarPlantilla, name="agregarPlantilla"),
-    url(r'^modadmin/adminflujo/$', views.adminflow.as_view(), name="adminflujo"),
+    url(r'^modadmin/adminflujo/$', views.listflowmod, name="listflowmod"),
     
     url(r'^modadmin/adminflujo/crearflujo/$', views.crearflujo, name="crearflujo"),
     url(r'^(?P<flow_id>\d+)/setactividades/$', views.setactividades, name="setactividades"),

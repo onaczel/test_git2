@@ -1,3 +1,15 @@
+{% extends 'base.html' %}
+{% block titulo %}
+<h1>Administrar Flujos</h1>
+{% endblock %}
+{% block encabezado %}
+<h1>{{flow_descripcion}}</h1>
+{% endblock %}
+{% block contenido %}
 <h1>Actividad eliminada</h1>
 
-<a href="{% url 'apps:listactivitiesmod' flow_id %}">Volver</a>
+<a href="{% url 'apps:listactivitiesmod' flow_id %}">Volver a Administracion</a>
+{% endblock %}
+{% block atras %}
+<a href="{% url 'apps:listactivitiesmod' flow_id %}">Atras</a>
+{% endblock %}

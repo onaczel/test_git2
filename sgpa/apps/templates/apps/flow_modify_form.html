@@ -1,8 +1,19 @@
-<h1>Modificar Flujo</h1>
+{% extends 'base.html' %}
+{% block titulo %}
+<h1>Administrar Flujo</h1>
+{% endblock %}
+{% block encabezado %}
+<h1>{{flujo.descripcion}}</h1>
+<h3>Modificar Flujo</h3>
+{% endblock %}
 
+{% block contenido %}
 <form action="" method="post">{% csrf_token %}
-	<p>{{flujo.descripcion}}</p>
 	<table>{{form}}</table>
 	<input type="submit" value="Registrar" >
 	<a href="{% url 'apps:listactivitiesmod' flujo.id%}">Ir a edicion de actividades</a>
 </form>
+{% endblock %}
+{% block atras %}
+<a href="/apps/modadmin/adminflujo/">Atras</a>
+{% endblock %}

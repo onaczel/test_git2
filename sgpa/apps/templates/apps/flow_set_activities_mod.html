@@ -1,5 +1,13 @@
-<h1>Lista de Actividades</h1>
+{% extends 'base.html' %}
+{% block titulo %}
+<h1>Administrar Flujos</h1>
+{% endblock %}
+{% block encabezado %}
+<h1>{{flow_descripcion}}</h1>
+<h3>Lista de Actividades</h3>
+{% endblock %}
 
+{% block contenido %}
 {% if actividades%}
 	<form action="{% url 'apps:setactividades' flow_id  %}">{% csrf_token %}
 		{% for actv in actividades %}
@@ -15,3 +23,7 @@
 {% else %}
 	<p>No existen actividades en ese flujo</p>
 {% endif %}
+{% endblock %}
+{% block atras %}
+<a href="/apps/modadmin/adminflujo">Atras</a>
+{% endblock %}

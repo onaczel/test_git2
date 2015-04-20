@@ -1,7 +1,20 @@
-<h1>Modificar Rol</h1>
-
+{% extends 'base.html' %}
+{% block titulo %}
+<h1>Administrar Roles</h1>
+{% endblock %}
+{% block encabezado %}
+<h1>{{rol.descripcion}}</h1>
+<h3>Modificar Rol</h3>
+<br>
+{% endblock %}
+<br>
+{% block contenido %}
 <form action="" method="post">{% csrf_token %}
-	<p>{{rol.descripcion}}</p>
+	
 	<table>{{ form }}</table>
 	<input type="submit" value="Modificar">
 </form>
+{% endblock %}
+{% block atras %}
+<a href="/apps/modadmin/adminrole/" >Atras</a>
+{% endblock %}

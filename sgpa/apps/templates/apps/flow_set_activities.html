@@ -1,9 +1,16 @@
-<h1>Asignar actividades</h1>
-
+{% extends 'base.html'%}
+{% block titulo %}
+<h1>Administrar Flujo</h1>
+{% endblock %}
+{% block encabezado %}
+<h1>{{flow_descripcion}}</h1>
+<h3>Asignar actividades</h3>
+{% endblock %}
+{% block contenido %}
 <form action="{% url 'apps:setactividades' flow_id %}" method='post'>{% csrf_token %}
 	<table>{{formulario}}</table>
 	<input type="hidden" name="action" value="submit">
 	<input type="submit" value="Guardar y Agregar otra Actividad" name='submit'>
 	<input type="submit" value="Guardar y Salir" name='submit'>
 </form>
-	
+{% endblock %}

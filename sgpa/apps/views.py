@@ -390,7 +390,7 @@ def listflowmod(request):
     de modificacion de plantilla de flujos
     """
     flujos = Flujos.objects.filter(estado = True, plantilla = True)
-    return render_to_response("apps/flow_modify.html", {"flujos":flujos})
+    return render_to_response("apps/flow_admin.html", {"flujos":flujos})
 
 def listflowdel(request):
     """
@@ -406,7 +406,7 @@ def listflowdel(request):
 def listpermisos(request):
     """
     @param request: Http request
-    @return: render a apps/role_set_permisos.html, lista de permisos, y el id del rol que se creo recientemente
+    @return: render a apps/role_set_permisos.html, lista de permisos, el id y la descripcion del rol que se creo recientemente
     """
     if request.method == 'POST':
         form = RoleCreateForm(request.POST)
@@ -415,7 +415,7 @@ def listpermisos(request):
         role = Roles.objects.get(descripcion=form.cleaned_data['descripcion'])
         role_id = role.id
         permisos = Permisos.objects.all()
-        return render_to_response("apps/role_set_permisos.html", {"permisos":permisos, "role_id":role_id}, context_instance=RequestContext(request))
+        return render_to_response("apps/role_set_permisos.html", {"permisos":permisos, "role_id":role_id, "role_descripcion":role.descripcion}, context_instance=RequestContext(request))
     else:
         form = RoleCreateForm()
     
@@ -508,7 +508,7 @@ def rolemodify(request, role_id):
     Modifica un rol del sistema
     @param request: Http request
     @param role_id: Id de un rol registrado en el sistema
-    @return: render a apps/role_set_permisos_mod.html con una lista de permisos y el id del rol
+    @return: render a apps/role_set_permisos_mod.html con una lista de permisos, el id y la descripcion del rol
     """
     rol = get_object_or_404(Roles, pk=role_id)
     if request.method == 'POST':
@@ -526,7 +526,7 @@ def rolemodify(request, role_id):
                 if ur.roles_id == role_id and ur.permisos_id == p.id:
                     p.estado = True
                     p.save()
-        return render_to_response("apps/role_set_permisos_mod.html", {"permisos":permisos, "role_id":role_id}, context_instance=RequestContext(request))
+        return render_to_response("apps/role_set_permisos_mod.html", {"permisos":permisos, "role_id":role_id, "role_descripcion":rol.descripcion}, context_instance=RequestContext(request))
     else:
         form = RoleCreateForm(initial={'descripcion':rol.descripcion})
     
@@ -605,7 +605,7 @@ def crearflujo(request):
             flow = Flujos.objects.get(descripcion = form.cleaned_data['descripcion'])
             flow_id = flow.id
             formulario = ActivityCreateForm()
-        return render_to_response('apps/flow_set_activities.html', {'formulario':formulario, 'flow_id':flow_id}, context_instance=RequestContext(request))
+        return render_to_response('apps/flow_set_activities.html', {'formulario':formulario, 'flow_id':flow_id, 'flow_descripcion':flow.descripcion}, context_instance=RequestContext(request))
     else:
         form = FlowCreateForm()
     
@@ -629,15 +629,15 @@ def setactividades(request, flow_id):
             #form.save()
             if request.POST['submit'] == "Guardar y Agregar otra Actividad":
                 formulario = ActivityCreateForm()
-                return render_to_response('apps/flow_set_activities.html', {'formulario':formulario, 'flow_id':flow_id}, context_instance=RequestContext(request))
+                return render_to_response('apps/flow_set_activities.html', {'formulario':formulario, 'flow_id':flow_id, 'flow_descripcion':f.descripcion}, context_instance=RequestContext(request))
             elif request.POST['submit'] == "Guardar y Salir":
-                return render_to_response('apps/flow_created.html', context_instance = RequestContext(request))
+                return render_to_response('apps/flow_created.html', {'flow_descripcion':f.descripcion}, context_instance = RequestContext(request))
         else:
             return render_to_response('apps/flow_not_valid.html', context_instance=RequestContext(request))
     else:
         formulario = ActivityCreateForm()
     
-    return render_to_response('apps/flow_set_activities.html', {'formulario':formulario, 'flow_id':flow_id}, context_instance=RequestContext(request)) 
+    return render_to_response('apps/flow_set_activities.html', {'formulario':formulario, 'flow_id':flow_id, 'flow_descripcion':f.descripcion}, context_instance=RequestContext(request)) 
 
 
 def editarflujos(request, flow_id):
@@ -657,7 +657,7 @@ def editarflujos(request, flow_id):
             
             actividades = Actividades.objects.filter(flujo_id=flow_id)
             
-            return render_to_response("apps/flow_set_activities_mod.html", {"actividades":actividades, "flow_id":flow_id}, context_instance=RequestContext(request))
+            return render_to_response("apps/flow_set_activities_mod.html", {"actividades":actividades, "flow_id":flow_id, 'flow_descripcion':flujo.descripcion}, context_instance=RequestContext(request))
     else:
         form = FlowCreateForm(initial={'descripcion':flujo.descripcion, 'estado':flujo.estado})
     
@@ -668,10 +668,11 @@ def listactivitiesmod(request, flow_id):
     Obtiene la lista de actividades de una plantilla de flujo
     @param request: Http request
     @param flow_id: Id de una plantilla de flujo
-    @return: render a apps/flow_set_activities_mod.html con la lista de actividades y el id del flujo
+    @return: render a apps/flow_set_activities_mod.html con la lista de actividades, el id y la descripcion del flujo
     """
     actividades = Actividades.objects.filter(flujo_id=flow_id)
-    return render_to_response("apps/flow_set_activities_mod.html", {"actividades":actividades, "flow_id":flow_id}, context_instance=RequestContext(request))
+    flujo = get_object_or_404(Flujos, pk=flow_id)
+    return render_to_response("apps/flow_set_activities_mod.html", {"actividades":actividades, "flow_id":flow_id, 'flow_descripcion':flujo.descripcion}, context_instance=RequestContext(request))
 
 def setactividadesmod(request, flow_id, actv_id):
     """
@@ -688,7 +689,7 @@ def setactividadesmod(request, flow_id, actv_id):
         if form.is_valid():
             a.descripcion = form.cleaned_data['descripcion']
             a.save()
-            return render_to_response("apps/flow_activitie_modified.html", {'flow_id':flow_id}, context_instance=RequestContext(request))
+            return render_to_response("apps/flow_activitie_modified.html", {'flow_id':flow_id, 'flow_descripcion':f.descripcion}, context_instance=RequestContext(request))
         else:
             return render_to_response('apps/flow_not_valid.html', context_instance=RequestContext(request))
     else:
@@ -705,10 +706,11 @@ def setactividadesdel(request, flow_id, actv_id):
     @param actv_id: Id de una actividad
     @return: render a  apps/flow_activitie_eliminated.html  
     """
+    flujo = get_object_or_404(Flujos, pk = flow_id)
     a = Actividades.objects.get(pk=actv_id)
     a.estado = False
     a.save()
-    return render_to_response("apps/flow_activitie_eliminated.html", {"flow_id":flow_id}, context_instance=RequestContext(request))
+    return render_to_response("apps/flow_activitie_eliminated.html", {"flow_id":flow_id, 'flow_descripcion':flujo.descripcion}, context_instance=RequestContext(request))
 
 
 def flowdelete(request, flow_id):
