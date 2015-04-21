@@ -19,8 +19,8 @@ def populate():
     
     add_flujo('Plantilla Generica')
     
-    permisos = ['Crear Usuario', 'Modificar Usuario', 'Eliminar Usuario', 'Crear Proyecto', 'Modificar Proyecto', 'Asignar Participantes a Proyecto', 'Eliminar Participantes de Proyecto', 'Crear User Stories', 'Modificar User Stories', 'Eliminar User Stories', 'Crear Plantilla de Flujos', 'Modificar Plantilla de Flujos', 'Eliminar Plantilla de Flujos', 'Planificar Sprints', 'Visualizar Proyectos', 'Crear Roles', 'Modificar Roles', 'Eliminar Roles']
-    tags = ['CU', 'MU', 'EU', 'CP', 'MP', 'APP', 'EPP', 'CUS', 'MUS', 'EUS', 'CPF', 'MPF', 'EPF', 'PS', 'VP', 'CR', 'MR', 'ER']
+    permisos = ['Crear Usuario', 'Modificar Usuario', 'Eliminar Usuario', 'Crear Roles', 'Modificar Roles', 'Eliminar Roles','Crear Proyecto', 'Modificar Proyecto', 'Crear Plantilla de Flujos', 'Modificar Plantilla de Flujos', 'Eliminar Plantilla de Flujos', 'Asignar Participantes a Proyecto', 'Eliminar Participantes de Proyecto', 'Crear User Stories', 'Modificar User Stories', 'Eliminar User Stories', 'Planificar Sprints', 'Visualizar Proyectos']
+    tags = ['CU', 'MU', 'EU', 'CR', 'MR', 'ER', 'CP', 'MP','CPF', 'MPF', 'EPF', 'APP', 'EPP', 'CUS', 'MUS', 'EUS', 'PS', 'VP']
     c=1
     for p in permisos:
         add_permisos(p, tags[c-1])
