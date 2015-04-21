@@ -524,24 +524,31 @@ def rolemodify(request, role_id):
         if form.is_valid():
             rol.descripcion = form.cleaned_data['descripcion']
             rol.save()
-        #role = Roles.objects.get(descripcion=form.cleaned_data['descripcion'])
-        role_id = rol.id
-        permisos = Permisos.objects.all()
-        proles = Permisos_Roles.objects.all()
-        inicializarPermisos()
-        for p in permisos:
-            for ur in proles:
-                if ur.roles_id == role_id and ur.permisos_id == p.id:
-                    p.estado = True
-                    p.save()
-        return render_to_response("apps/role_set_permisos_mod.html", {"permisos":permisos, "role_id":role_id, "role_descripcion":rol.descripcion}, context_instance=RequestContext(request))
+        #return render_to_response("apps/role_set_permisos_mod.html", {"role_id":rol.id, "role_descripcion":rol.descripcion}, context_instance=RequestContext(request))
+        return rolemodifypermisos(request, rol.id)
     else:
         form = RoleModifyForm(initial={'descripcion':rol.descripcion})
     
     return render_to_response('apps/role_modify_form.html' ,{'form':form, "rol":rol }, context_instance=RequestContext(request))
     
-#def rolemodifypermisos(request, role_id):
-    
+def rolemodifypermisos(request, role_id):
+    rol = get_object_or_404(Roles, pk=role_id)
+   
+    permisos = Permisos.objects.all()
+    proles = Permisos_Roles.objects.all()
+    inicializarPermisos()
+    for p in permisos:
+        for ur in proles:
+            if ur.roles_id == rol.id and ur.permisos_id == p.id:
+                p.estado = True
+                p.save()
+                
+    if rol.sistema == True:
+        permisos = Permisos.objects.filter(sistema=True)
+    else:
+        permisos = Permisos.objects.filter(sistema=False)
+    return render_to_response("apps/role_set_permisos_mod.html", {"permisos":permisos, "role_id":role_id, "role_descripcion":rol.descripcion}, context_instance=RequestContext(request))
+           
 def asignarpermisosmod(request, role_id):
     """
     Asigna permisos a un rol

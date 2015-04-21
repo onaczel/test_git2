@@ -14,7 +14,7 @@
 	<table>{{ form }}</table>
 	<input type="submit" value="Modificar">
 </form>
-<a href="{% url 'apps:asignarpermisosmod' rol.id %}">Ir a Modificar Permisos</a>
+<a href="{% url 'apps:rolemodifypermisos' rol.id %}">Ir a Modificar Permisos</a>
 {% endblock %}
 {% block atras %}
 <a href="/apps/modadmin/adminrole/" >Atras</a>
