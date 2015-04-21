@@ -10,10 +10,10 @@ from apps.models import Users_Roles, Flujos, Roles, Actividades, Permisos, Permi
     Prioridad
 
 def populate():
-    add_roles('Administrador')
-    add_roles('Usuario')
-    add_roles('Scrum Master')
-    add_roles('Cliente')
+    add_roles('Administrador', True)
+    add_roles('Usuario', True)
+    add_roles('Scrum Master', False)
+    add_roles('Cliente', False)
     
     add_user('admin', 'a123', 'deserver123@gmail.com', 1)
     
@@ -21,9 +21,10 @@ def populate():
     
     permisos = ['Crear Usuario', 'Modificar Usuario', 'Eliminar Usuario', 'Crear Roles', 'Modificar Roles', 'Eliminar Roles','Crear Proyecto', 'Modificar Proyecto', 'Crear Plantilla de Flujos', 'Modificar Plantilla de Flujos', 'Eliminar Plantilla de Flujos', 'Asignar Participantes a Proyecto', 'Eliminar Participantes de Proyecto', 'Crear User Stories', 'Modificar User Stories', 'Eliminar User Stories', 'Planificar Sprints', 'Visualizar Proyectos']
     tags = ['CU', 'MU', 'EU', 'CR', 'MR', 'ER', 'CP', 'MP','CPF', 'MPF', 'EPF', 'APP', 'EPP', 'CUS', 'MUS', 'EUS', 'PS', 'VP']
+    sistema = [True, True, True, True, True, True, True, True, True, True, True, False, False, False, False, False, False, False]
     c=1
     for p in permisos:
-        add_permisos(p, tags[c-1])
+        add_permisos(p, tags[c-1], sistema[c-1])
         add_permisos_roles(c, 1)
         c = c + 1
     
@@ -43,10 +44,11 @@ def populate():
     add_prioridad('Alta')
         
     
-def add_roles(descripcion):
+def add_roles(descripcion, sistema):
     rol = Roles()
     rol.descripcion = descripcion
     rol.estado = True
+    rol.sistema = sistema
     rol.save()
     return rol
 
@@ -86,11 +88,12 @@ def add_actividades(descripcion, flujo_id):
     actividades.save()
     return actividades
 
-def add_permisos(descripcion, tag):
+def add_permisos(descripcion, tag, sistema):
     permisos = Permisos()
     permisos.descripcion = descripcion
     permisos.tag = tag
     permisos.estado = True
+    permisos.sistema = sistema
     permisos.save()
     return permisos
 

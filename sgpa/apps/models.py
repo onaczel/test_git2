@@ -4,7 +4,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 from test.test_support import args_from_interpreter_flags
-from django.db.models.fields import CharField, IntegerField
+from django.db.models.fields import CharField, IntegerField, BooleanField
 from django.template.defaultfilters import default
 
     
@@ -14,6 +14,7 @@ class Roles(models.Model):
     """
     descripcion = models.CharField(max_length=200, unique=True)
     estado = models.BooleanField(default = 1)
+    sistema = BooleanField(default = False)
     def __str__(self):
         return self.descripcion
 
@@ -33,6 +34,7 @@ class Permisos(models.Model):
     descripcion = models.CharField(max_length=50)
     tag = models.CharField(max_length=50)
     estado = models.BooleanField(default = False)
+    sistema = BooleanField(default = False)
     def __str__(self):
         return self.descripcion
 

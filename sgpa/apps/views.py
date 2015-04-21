@@ -414,7 +414,11 @@ def listpermisos(request):
             form.save()
         role = Roles.objects.get(descripcion=form.cleaned_data['descripcion'])
         role_id = role.id
-        permisos = Permisos.objects.all()
+        permisos = []
+        if role.sistema == True:
+            permisos = Permisos.objects.filter(sistema = True)
+        else:
+            permisos = Permisos.objects.filter(sistema = False)
         return render_to_response("apps/role_set_permisos.html", {"permisos":permisos, "role_id":role_id, "role_descripcion":role.descripcion}, context_instance=RequestContext(request))
     else:
         form = RoleCreateForm()
@@ -474,8 +478,12 @@ def deluser(request, id):
 class RoleCreateForm(forms.ModelForm):
     class Meta:
         model = Roles
-        fields = ("descripcion",)
+        fields = ("descripcion", "sistema")
 
+class RoleModifyForm(forms.ModelForm):
+    class Meta:
+        model = Roles
+        fields = ("descripcion",)
      
 
 #MAnager isn't accesible via model isntances, no se pude acceder desde un modelo a 
@@ -512,7 +520,7 @@ def rolemodify(request, role_id):
     """
     rol = get_object_or_404(Roles, pk=role_id)
     if request.method == 'POST':
-        form = RoleCreateForm(request.POST)
+        form = RoleModifyForm(request.POST)
         if form.is_valid():
             rol.descripcion = form.cleaned_data['descripcion']
             rol.save()
@@ -528,9 +536,11 @@ def rolemodify(request, role_id):
                     p.save()
         return render_to_response("apps/role_set_permisos_mod.html", {"permisos":permisos, "role_id":role_id, "role_descripcion":rol.descripcion}, context_instance=RequestContext(request))
     else:
-        form = RoleCreateForm(initial={'descripcion':rol.descripcion})
+        form = RoleModifyForm(initial={'descripcion':rol.descripcion})
     
     return render_to_response('apps/role_modify_form.html' ,{'form':form, "rol":rol }, context_instance=RequestContext(request))
+    
+#def rolemodifypermisos(request, role_id):
     
 def asignarpermisosmod(request, role_id):
     """
