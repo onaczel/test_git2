@@ -11,7 +11,11 @@
 {%if misPermisos.MP == True %}
 <br><a href="{% url 'apps:listflujosproyectosMod' proyecto.id %}">Modificar Flujo</a><br />
 {% endif %}
-
+<br>
 <a href="{% url 'apps:listhu' proyecto.id %}">Administrar User Stories</a>
-<br />
+<br>
+<br>
+<a href="{% url 'apps:listrolesproj' proyecto.id %}">Administrar Roles</a>
+<br>
+<br>
 <a href="{% url 'apps:listproyectosdelusuario' usuario.id %}">Volver</a>

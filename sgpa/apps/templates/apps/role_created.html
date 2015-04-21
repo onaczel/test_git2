@@ -9,7 +9,11 @@
 Rol creado correctamente
 <br>
 <br>
+{% if sistema == True %}
 <a href="/apps/modadmin/adminrole/">Volver a Administracion</a>
+{% else %}
+<a href="/apps/user_private_admin/">Volver a Administracion</a>
+{% endif %}
 {% endblock %}
 {% block atras %}
 <a href="/apps/modadmin/adminrole/">Atras</a>

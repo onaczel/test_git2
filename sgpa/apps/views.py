@@ -188,13 +188,14 @@ def ingresar(request):
     #'''De la tabla de Roles se trae el id del rol del usuario'''
                     rol = Roles.objects.get(pk=ur.role_id)
     #'''Si el usuario es administrador'''
-                    if rol.id == 1:
-                        return HttpResponseRedirect('/apps/user_private_admin')
+                    #if rol.id == 1:
+                        #return HttpResponseRedirect('/apps/user_private_admin')
+                    return render_to_response('apps/user_private_admin.html', {'usuario':user, 'rol_id':rol.id}, context_instance=RequestContext(request))
     #'''Si es usuario normal'''
-                    else:
+                    #else:
                         
                         #return render_to_response('apps/user_private_user.html', {'listproyectos':listproyectos}, RequestContext(request))
-                        return HttpResponseRedirect('/apps/user_private_user')
+                     #   return HttpResponseRedirect('/apps/user_private_user')
                 else:
                     return render_to_response('apps/user_no_active.html', context_instance=RequestContext(request))
             else:
@@ -368,11 +369,20 @@ def listuserdel(request):
 def listrolesmod(request):
     """
     @param request: Http request
-    @return: Retorna una lista con todos los roles del sistema y lo envia al template
+    @ret14urn: Retorna una lista con todos los roles del sistema y lo envia al template
     de modificacion de roles
     """
     roles = Roles.objects.all()
     return render_to_response("apps/role_admin.html", {"roles":roles})
+
+def listrolesproj(request, proyecto_id):
+    """
+    @param request: Http request
+    @return: Retorna una lista con todos los roles de proyectos y lo envia al template
+    de modificacion de roles
+    """
+    roles = Roles.objects.filter(sistema=False)
+    return render_to_response("apps/role_admin_project.html", {"roles":roles, 'proyecto_id':proyecto_id})
 
 def listrolesdel(request):
     """
@@ -425,6 +435,25 @@ def listpermisos(request):
     
     return render_to_response('apps/role_create.html' ,{'form':form}, context_instance=RequestContext(request))
 
+def rolecreateproj(request, proyecto_id):
+    """
+    @param request: Http request
+    @return: render a apps/role_set_permisos.html, lista de permisos, el id y la descripcion del rol que se creo recientemente
+    """
+    if request.method == 'POST':
+        form = RoleModifyForm(request.POST)
+        if form.is_valid():
+            form.save()
+        role = Roles.objects.get(descripcion=form.cleaned_data['descripcion'])
+        role.sistema = False
+        role.save()
+        role_id = role.id
+        permisos = Permisos.objects.filter(sistema = False)
+        return render_to_response("apps/role_set_permisos.html", {"permisos":permisos, "role_id":role_id, "role_descripcion":role.descripcion}, context_instance=RequestContext(request))
+    else:
+        form = RoleModifyForm()
+    
+    return render_to_response('apps/role_create.html' ,{'form':form, 'proyecto_id':proyecto_id}, context_instance=RequestContext(request))
 def muser(request, user_id):
     """
     Metodo que obtiene los campos modificados del formulario de modificacion de usuario
@@ -496,7 +525,7 @@ def asignarrol(request, role_id):
     @return: render a  apps/role_created.html con el contexto 
     """
     r = get_object_or_404(Roles, pk=role_id)
-    
+    sistema = r.sistema
     lista = request.POST.getlist(u'permisos')
     for p in lista:
         try:
@@ -509,7 +538,7 @@ def asignarrol(request, role_id):
         permrol.permisos_id = permiso.id
         permrol.save()
         
-    return render_to_response("apps/role_created.html", RequestContext(request))
+    return render_to_response("apps/role_created.html", {'sistema':sistema}, context_instance = RequestContext(request))
 
 def rolemodify(request, role_id):
     """

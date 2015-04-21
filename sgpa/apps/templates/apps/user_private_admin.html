@@ -31,9 +31,14 @@
 		</div>
 		<h3>Opciones</h3>
 		<table border="5">
-			<td><strong><a href="/apps/modadmin">Modulo Administracion</a></strong></td>
-			<td><strong><a href="{% url 'apps:listproyectosdelusuario' usuario.id %}">Modulo Proyecto</a></strong></td>
-			<td><strong><a href="/apps/cerrar">Salir</a></strong></td>
+			{% if rol_id == 1 %}
+				<td><strong><a href="/apps/modadmin">Modulo Administracion</a></strong></td>
+				<td><strong><a href="{% url 'apps:listproyectosdelusuario' usuario.id %}">Modulo Proyecto</a></strong></td>
+				<td><strong><a href="/apps/cerrar">Salir</a></strong></td>
+			{% else %}
+				<td><strong><a href="{% url 'apps:listproyectosdelusuario' usuario.id %}">Modulo Proyecto</a></strong></td>
+				<td><strong><a href="/apps/cerrar">Salir</a></strong></td>
+			{% endif %}
 		</table>
 	</center>
 
