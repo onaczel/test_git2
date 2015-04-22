@@ -36,6 +36,7 @@ urlpatterns = patterns('',
     url(r'^(?P<proyecto_id>\d+)/modproyecto/accionesproyecto/listflujosproyectos/agregarPlantillaProyectoMod$', views.listflujosproyectosMod, name='listflujosproyectosMod'),
     url(r'^(?P<proyecto_id>\d+)/(?P<flujo_id>\d+)/(?P<actividad_id>\d+)/modproyecto/accionesproyecto/listflujosproyectos/modificarFlujoProyectoMod$', views.flujosproyectosRequestMod, name='flujosproyectosRequestMod'),
     url(r'^(?P<proyecto_id>\d+)/(?P<flujo_id>\d+)/(?P<actividad_id>\d+)/modproyecto/accionesproyecto/listflujosproyectos/modificarFlujoProyectoModAct$', views.flujosproyectosRequestModAct, name='flujosproyectosRequestModAct'),
+    url(r'^(?P<proyecto_id>\d+)/(?P<sprint_id>\d+)/(?P<dia_sprint>\d+)/modproyecto/accionesproyecto/sprints$', views.sprints, name='sprints'),
    
     url(r'^(?P<user_id>\d+)/muser/$', views.muser, name="muser"),
     url(r'^modadmin/adminuser/eliminaruser/$', views.listuserdel, name="eliminaruser"),

@@ -8,7 +8,7 @@ from django.utils import timezone
 
 from django.template import RequestContext, loader
 
-from apps.models import Roles, Users_Roles, Permisos, Permisos_Roles, Flujos, Actividades, Actividades_Estados, Proyectos, Equipo, UserStory
+from apps.models import Roles, Users_Roles, Permisos, Permisos_Roles, Flujos, Actividades, Actividades_Estados, Proyectos, Equipo, UserStory, Sprint, Dia_Sprint
 from django.contrib.auth.models import User
 
 
@@ -1423,3 +1423,45 @@ def misPermisos(usuario_id, proyecto_id):
                 misPermisos.ER = True
 
     return (misPermisos)
+
+class dia_sprintCreateForm(forms.ModelForm):
+    class Meta:
+        model = Dia_Sprint
+        fields = ("tiempo_estimado",)
+
+def sprints(request, proyecto_id, sprint_id, dia_sprint):
+    """
+    retorna los sprints de cada proyecto
+    
+    @param request: Http
+    @param proyecto_id: id de un proyecto
+    @return: render a project_sprints.html 
+    """
+    proyecto = Proyectos.objects.get(id = proyecto_id)
+    sprint = Sprint()
+    formularios = []
+    tiempos_reales = []
+    if request.method == 'POST':
+        if request.POST['cambio'] == "Mostrar":
+            sprint = Sprint.objects.get(id = sprint_id)
+            dias_sprint = Dia_Sprint.objects.filter(sprint_id = sprint_id)
+            for d_sprint in dias_sprint:
+                formulario = dia_sprintCreateForm(initial={'tiempo_estimado':d_sprint.tiempo_estimado})      
+                formularios.append(formulario)
+                tiempos_reales.append(d_sprint)
+        elif request.POST['cambio'] == "Modificar":
+            sprint = Sprint.objects.get(id = sprint_id)
+            dia = Dia_Sprint.objects.get(sprint_id = sprint_id, dia = dia_sprint)
+            formulario = dia_sprintCreateForm(request.POST)
+            if formulario.is_valid():
+                dia.tiempo_estimado = formulario.cleaned_data['tiempo_estimado']
+                dia.save()
+            dias_sprint = Dia_Sprint.objects.filter(sprint_id = sprint_id)
+            for d_sprint in dias_sprint:
+                formulario = dia_sprintCreateForm(initial={'tiempo_estimado':d_sprint.tiempo_estimado, 'tiempo_real':d_sprint.tiempo_real})
+                formularios.append(formulario)
+                tiempos_reales.append(d_sprint)
+                
+    sprints = Sprint.objects.filter(proyecto_id = proyecto_id)
+    
+    return render_to_response('apps/project_sprints.html', {"proyecto":proyecto, "sprint":sprint, "sprints":sprints, "formularios":formularios, "tiempos_reales":tiempos_reales}, context_instance = RequestContext(request))

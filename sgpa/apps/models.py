@@ -127,7 +127,21 @@ class UserStory(models.Model):
     proyecto = models.ForeignKey(Proyectos, null = True)
     estado = models.BooleanField(default = True)
     
+class Sprint(models.Model):
+    """
+    Modelo para almacenar los Sprints
+    """
+    proyecto = models.ForeignKey(Proyectos, null=True, blank=True)
+    nro_sprint = models.IntegerField()
     
+class Dia_Sprint(models.Model):
+    """
+    Modelo para almacenar los datos de los dias de cada Sprint
+    """
+    sprint = models.ForeignKey(Sprint, null=True, blank=True)
+    tiempo_estimado = models.IntegerField()
+    tiempo_real = models.IntegerField()
+    dia = models.IntegerField(null=True)
 
 
     
