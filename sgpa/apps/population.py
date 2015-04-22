@@ -29,7 +29,7 @@ def populate():
         c = c + 1
     
     permisos_usuario = [15]
-    permisos_scrum_master = [6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+    permisos_scrum_master = [12, 13, 14, 15, 16, 17, 18 ]
     permisos_cliente = [15]
     
     for p in permisos_usuario:

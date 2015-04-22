@@ -24,8 +24,4 @@
 	<p>El usuario no se encuentra en ningun proyecto</p>
 {% endif %}
 <br />
-{% if rol_id == 1 %}
-	<a href="/apps/user_private_admin">Volver</a><br />
-{% else %}
-	<a href="/apps/user_private_user">Volver</a><br />
-{% endif%}
+<a href="{% url 'apps:inicio' user_id rol_id %}">Volver</a><br />

@@ -190,7 +190,7 @@ def ingresar(request):
     #'''Si el usuario es administrador'''
                     #if rol.id == 1:
                         #return HttpResponseRedirect('/apps/user_private_admin')
-                    return render_to_response('apps/user_private_admin.html', {'usuario':user, 'rol_id':rol.id}, context_instance=RequestContext(request))
+                    return render_to_response('apps/user_private_admin.html', {'usuario':user, 'rol_sistema':rol.sistema, 'rol_id':rol.id}, context_instance=RequestContext(request))
     #'''Si es usuario normal'''
                     #else:
                         
@@ -205,7 +205,10 @@ def ingresar(request):
     return render_to_response('apps/ingresar.html', {'formulario':formulario}, context_instance=RequestContext(request))
 
 
-
+def inicio(request, user_id, role_id):
+    rol = get_object_or_404(Roles, pk=role_id)
+    user = get_object_or_404(User, pk=user_id)
+    return render_to_response('apps/user_private_admin.html', {'usuario':user, 'rol_sistema':rol.sistema, 'rol_id':rol.id}, context_instance=RequestContext(request))
 
 def recuperarContrasena(request):
         """
@@ -257,7 +260,11 @@ def listprojects(request, user_id):
         for p in proyectos:
             if eq.proyecto_id == p.id:
                 listproyectos.append(Proyectos(p.id, p.nombre))
-    return render_to_response('apps/project_mod.html', {'listproyectos':listproyectos})
+    #para que funcione el boton atras
+    user= get_object_or_404(User, pk=user_id)
+    rol_usuario = Users_Roles.objects.get(user_id = user.id)
+    rol = get_object_or_404(Roles, pk=rol_usuario.role_id)
+    return render_to_response('apps/project_mod.html', {'listproyectos':listproyectos, 'user_id':user.id, 'rol_id':rol.id})
 
 
 def project(request, project_id):
@@ -953,7 +960,8 @@ def listproyectosdelusuario(request, usuario_id):
             roles.append(rol.descripcion)
         rolesProyectos.append(roles)
 
-    return render_to_response("apps/project_mod.html", {"proyectos":proyectos, "usuario":request.user, "roles":rolesProyectos ,"rol_id":rolSistema.id})
+    
+    return render_to_response("apps/project_mod.html", {"proyectos":proyectos, "usuario":request.user, "roles":rolesProyectos ,"rol_id":rolSistema.id, 'user_id':usuario_id})
 
 def listasigparticipante(request, proyecto_id):
     """
