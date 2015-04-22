@@ -5,5 +5,5 @@
 {% endblock %}
 {% block contenido %}
 	<p>Usuario creado correctamente</p>
-	<a href="/apps/modadmin">Volver a Administracion</a>
+	<a href="{% url 'apps:listuser' user_logged %}">Volver a Administracion</a><br />
 {% endblock %}

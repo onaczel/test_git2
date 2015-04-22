@@ -5,8 +5,8 @@
 {% block contenido %}
 <h1>Usuario eliminado</h1>
 
-<a href="/apps/modadmin/adminuser/">Volver a Administracion</a>
+<a href="{% url 'apps:listuser' user_logged %}">Volver a Administracion</a><br />
 {% endblock %}
 {% block atras %}
-<a href="/apps/modadmin/adminuser/">Atras</a>
+<a href="{% url 'apps:listuser' user_logged %}">Atras</a><br />
 {% endblock %}

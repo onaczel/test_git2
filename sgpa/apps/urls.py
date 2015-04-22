@@ -4,17 +4,26 @@ from apps import views
 
 urlpatterns = patterns('',
     url(r'^$', views.IndexView.as_view(), name='index'),
-    url(r'^usuario/nuevo', views.nuevo_usuario, name='nuevousuario'),
+    
     url(r'^ingresar/$', views.ingresar, name='ingresar'),
     url(r'^inicio/(?P<user_id>\d+)/(?P<role_id>\d+)/$', views.inicio, name='inicio'),        
     url(r'^ingresar/recuperarContrasena/$', views.recuperarContrasena, name='recuperar_contrasena'),
     url(r'^user_private_admin/$', views.privado, name='user_private_admin'),
     url(r'^user_private_user/$', views.privadoNoadmin, name='privadoNoadmin'),
     url(r'^cerrar/$', views.cerrar, name='cerrar'),
-    url(r'^modadmin/$', views.modadmin.as_view(), name='modadmin'),
+    #url(r'^modadmin/$', views.modadmin.as_view(), name='modadmin'),
+    
+    url(r'^modadmin/(?P<user_id>\d+)/$', views.adminmod, name='adminmod'),
+    url(r'^modadmin/(?P<user_logged>\d+)/adminuser/$', views.listuser, name="listuser"),
+    url(r'^modadmin/(?P<user_logged>\d+)/adminuser/nuevo', views.nuevo_usuario, name='nuevo_usuario'),
+    url(r'^modadmin/(?P<user_logged>\d+)/adminuser/modificar/(?P<user_id>\d+)/$', views.muser, name="muser"),
+    url(r'^modadmin/(?P<user_logged>\d+)/adminuser/eliminar/(?P<user_id>\d+)/$', views.deluser, name="deluser"),
+    
     url(r'^modproyecto/$', views.modproyecto.as_view(), name='modproyecto'),
-    url(r'^modadmin/adminuser/$', views.listuser, name="listuser"),
-    url(r'^modadmin/adminuser/moduser/$', views.listuser, name='listuser'),    
+    
+    
+    
+    #url(r'^modadmin/adminuser/moduser/$', views.listuser, name='listuser'),    
    # url(r'^modadmin/adminuser/moduser/mod/$', views.moduser, name="moduser"),
    
     url(r'^(?P<usuario_id>\d+)/modproyecto/$', views.listproyectosdelusuario, name='listproyectosdelusuario'),
@@ -39,10 +48,12 @@ urlpatterns = patterns('',
     url(r'^(?P<proyecto_id>\d+)/(?P<flujo_id>\d+)/(?P<actividad_id>\d+)/modproyecto/accionesproyecto/listflujosproyectos/modificarFlujoProyectoModAct$', views.flujosproyectosRequestModAct, name='flujosproyectosRequestModAct'),
     url(r'^(?P<proyecto_id>\d+)/(?P<sprint_id>\d+)/(?P<dia_sprint>\d+)/modproyecto/accionesproyecto/sprints$', views.sprints, name='sprints'),
    
-    url(r'^(?P<user_id>\d+)/muser/$', views.muser, name="muser"),
-    url(r'^modadmin/adminuser/eliminaruser/$', views.listuserdel, name="eliminaruser"),
-    url(r'^(?P<id>\d+)/deluser/$', views.deluser, name="deluser"),
-    url(r'^modadmin/adminuser/eliminaruser/del/$', views.eliminaruser),
+    
+    #url(r'^modadmin/adminuser/eliminaruser/$', views.listuserdel, name="eliminaruser"),
+    
+    
+    
+    #url(r'^modadmin/adminuser/eliminaruser/del/$', views.eliminaruser),
     url(r'^modadmin/adminrole/$', views.listrolesmod, name="listrolesmod"),
     url(r'^modadmin/adminrole/crearrole/$', views.listpermisos, name="crearrol"),
     url(r'^modadmin/adminproyecto/(?P<proyecto_id>\d+)/crearrolproj/$', views.rolecreateproj, name="rolecreateproj"),
@@ -77,7 +88,7 @@ urlpatterns = patterns('',
     url(r'^(?P<flow_id>\d+)/flowdelete', views.flowdelete, name="flowdelete"),
     
     url(r'^modadmin/adminuser/asignarrol/$', views.listroleuser, name="listroleuser"),
-    url(r'^(?P<user_id>\d+)/asignarrolusuario/$', views.asignarrolusuario, name="asignarrolusuario"),
+    url(r'^modadmin/(?P<user_logged>\d+)/nuevo/(?P<user_id>\d+)/asignarrolusuario/$', views.asignarrolusuario, name="asignarrolusuario"),
     
     url(r'^(?P<user_id>\d+)/modproyecto/$', views.listprojects, name="listprojects"),
     url(r'^(?P<project_id>\d+)/project/$', views.project, name="project"),

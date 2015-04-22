@@ -7,8 +7,8 @@
 {% endblock %}
 {% block contenido %}
 Usuario Modificado Correctamente
-<a href="/apps/modadmin/" >Volver a Administracion</a>
+<a href="{% url 'apps:listuser' user_logged %}">Volver a Administracion</a><br />
 {% endblock %}
 {% block atras %}
-<a href="/apps/modadmin/" >Volver atras</a>
+<a href="{% url 'apps:listuser' user_logged %}">Atras</a>
 {% endblock %}

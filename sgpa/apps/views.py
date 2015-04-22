@@ -103,7 +103,7 @@ class UserModifyForm(UserCreationForm):
             user.save()
         return user 
     
-def nuevo_usuario(request):
+def nuevo_usuario(request, user_logged):
     """
     Verifica que el formulario es valido y almacena el nuevo usuario en la base de datos
     @param request: Http request
@@ -125,11 +125,11 @@ def nuevo_usuario(request):
             user_id = user.id 
             #ur.save()
             roles = Roles.objects.all()
-            return render_to_response('apps/user_assign_role.html',{'roles':roles, 'user_id':user_id}, context_instance=RequestContext(request))
+            return render_to_response('apps/user_assign_role.html',{'roles':roles, 'user_logged':user_logged, 'user_id':user_id,}, context_instance=RequestContext(request))
     else:
         formulario = UserCreateForm(initial={'email':'example@mail.com'})
 
-    return render_to_response('apps/user_create.html', {'formulario':formulario}, context_instance=RequestContext(request))
+    return render_to_response('apps/user_create.html', {'formulario':formulario, 'user_logged':user_logged}, context_instance=RequestContext(request))
 
 def listroleuser(request, user_id):
     """
@@ -141,7 +141,7 @@ def listroleuser(request, user_id):
     roles = Roles.objects.all()
     return render_to_response('apps/user_assign_role.html',{'roles':roles, 'user_id':user_id}, context_instance=RequestContext(request))
 
-def asignarrolusuario(request, user_id):
+def asignarrolusuario(request, user_logged, user_id):
     """
     Asigna un rol a un usuario registrado en el sistema
     @param request: Http request
@@ -159,7 +159,7 @@ def asignarrolusuario(request, user_id):
         ur.role_id = rol.id
         ur.save()
     
-    return render_to_response('apps/user_created.html', RequestContext(request))
+    return render_to_response('apps/user_created.html',{'user_logged':user_logged}, RequestContext(request))
   
     
 def ingresar(request):
@@ -206,6 +206,12 @@ def ingresar(request):
 
 
 def inicio(request, user_id, role_id):
+    """
+    @param request: Http request
+    @param user_id: id del Usuario dentro del Sistema
+    @param role_id: id del Rol del Usuario
+    @return: render a user_private_admin.html con el Usuario, el id y la condicion de sistema de su rol
+    """
     rol = get_object_or_404(Roles, pk=role_id)
     user = get_object_or_404(User, pk=user_id)
     return render_to_response('apps/user_private_admin.html', {'usuario':user, 'rol_sistema':rol.sistema, 'rol_id':rol.id}, context_instance=RequestContext(request))
@@ -244,8 +250,60 @@ def recuperarContrasena(request):
  
         return render_to_response('apps/user_new_pwd.html', context_instance=RequestContext(request)) 
     
+'''
+Cada vista debe tener una clase, o funcion
+y un render que llame al template
+'''
+class newProject(generic.DetailView):
+    template_name = 'apps/project_admin_new.html'
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name)
+    
+class modadmin(generic.DetailView):
+    template_name = 'apps/admin_mod.html'
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name)
 
+class modproyecto(generic.DetailView):
+    template_name = 'apps/project_mod.html'
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name)
+'''
+class adminuser(generic.DetailView):
+    template_name="apps/user_admin.html"
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name)
+'''
+class adminrole(generic.DetailView):
+    template_name ='apps/role_admin.html'
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name)
 
+class adminproject(generic.DetailView):
+    template_name = 'apps/project_admin.html'
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name)
+    
+class adminflow(generic.DetailView):
+    template_name = 'apps/flow_admin.html'
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name)
+    
+    
+######################################################################################################################
+
+def adminmod(request, user_id):
+    permisos = misPermisos(user_id, 0)
+    rol_permiso = Users_Roles.objects.get(user_id = user_id)
+    rol = Roles.objects.get(pk=rol_permiso.role_id)
+    return render_to_response('apps/admin_mod.html', {'misPermisos':permisos, 'user_id':user_id, 'rol_id':rol.id})
+'''
+def adminuser(request, user_id):
+    permisos = misPermisos(user_id, 0)
+    rol_permiso = Users_Roles.objects.get(user_id = user_id)
+    rol = Roles.objects.get(pk=rol_permiso.role_id)
+    return render_to_response('apps/user_admin.html', {'misPermisos':permisos, 'user_id':user_id, 'rol_id':rol.id})
+'''
 def listprojects(request, user_id):
     """
     Genera una lista de proyectos asociados a un usuario
@@ -310,59 +368,27 @@ def cerrar(request):
     return HttpResponseRedirect('/apps/ingresar/')
 
 '''
-Cada vista debe tener una clase, o funcion
-y un render que llame al template
-'''
-class newProject(generic.DetailView):
-    template_name = 'apps/project_admin_new.html'
-    def get(self, request, *args, **kwargs):
-        return render(request, self.template_name)
-    
-class modadmin(generic.DetailView):
-    template_name = 'apps/admin_mod.html'
-    def get(self, request, *args, **kwargs):
-        return render(request, self.template_name)
-
-class modproyecto(generic.DetailView):
-    template_name = 'apps/project_mod.html'
-    def get(self, request, *args, **kwargs):
-        return render(request, self.template_name)
-    
-class adminuser(generic.DetailView):
-    template_name="apps/user_admin.html"
-    def get(self, request, *args, **kwargs):
-        return render(request, self.template_name)
-
-class adminrole(generic.DetailView):
-    template_name ='apps/role_admin.html'
-    def get(self, request, *args, **kwargs):
-        return render(request, self.template_name)
-
-class adminproject(generic.DetailView):
-    template_name = 'apps/project_admin.html'
-    def get(self, request, *args, **kwargs):
-        return render(request, self.template_name)
-    
-class adminflow(generic.DetailView):
-    template_name = 'apps/flow_admin.html'
-    def get(self, request, *args, **kwargs):
-        return render(request, self.template_name)
-    
-
-'''
 Se debe crear una funcion que tome una request, y guarde en una variable
 la lista de objetos en cuestion, luego enviar esa lista en un render to response
 al html que trabajara con el.
 Por supuesto, la funcion se debe encontrar en urls
 '''
-def listuser(request):
+def listuser(request, user_logged):
     """
     @param request: Http request
+    @param user_id: id del Usuario logueado
     @return: Retorna una lista con todos los usuarios del sistema y lo envia al template
     de modificacion de usuario  
     """
+    permisos = misPermisos(user_logged, 0)
+    rol_permiso = Users_Roles.objects.get(user_id = user_logged)
+    rol = Roles.objects.get(pk=rol_permiso.role_id)
+    
+    user_logged =User.objects.get(pk=user_logged)
+    
     users = User.objects.all()
-    return render_to_response("apps/user_admin.html", {"users":users})
+    #return render_to_response("apps/user_admin.html", {"users":users})
+    return render_to_response('apps/user_admin.html', {'misPermisos':permisos, 'user_logged':user_logged, 'rol_id':rol.id, 'users':users})
 
 def listuserdel(request):
     """
@@ -461,7 +487,8 @@ def rolecreateproj(request, proyecto_id):
         form = RoleModifyForm()
     
     return render_to_response('apps/role_create.html' ,{'form':form, 'proyecto_id':proyecto_id}, context_instance=RequestContext(request))
-def muser(request, user_id):
+
+def muser(request, user_logged, user_id):
     """
     Metodo que obtiene los campos modificados del formulario de modificacion de usuario
     @param request: Http request
@@ -479,7 +506,7 @@ def muser(request, user_id):
             user.last_name = form.cleaned_data['last_name']
             user.save()
             #form.save()
-            return render_to_response("apps/user_modified.html", RequestContext(request))
+            return render_to_response("apps/user_modified.html", {'user_logged':user_logged},RequestContext(request))
     else:
         form = UserModifyForm(initial={ 'email':user.email, 'first_name':user.first_name, 'last_name':user.last_name})
         
@@ -489,7 +516,10 @@ def muser(request, user_id):
     
     args['form'] = form
     
-    return render_to_response('apps/user_form_mod.html', args)
+    user_logged_name = request.user
+    user_logged = User.objects.get(username = user_logged_name)
+    
+    return render_to_response('apps/user_form_mod.html', {'form':form, 'user_logged':user_logged.id}, context_instance=RequestContext(request))
 
 def eliminaruser(request):
     """
@@ -498,18 +528,19 @@ def eliminaruser(request):
     """
     return render(request, 'apps/user_select_del.html')
 
-def deluser(request, id):
+def deluser(request, user_logged, user_id):
     """
     Pone como inactivo a un usuario registrado en el sistema
     @param request: Http request
     @param id: Id de un usuario registrado en el sistema
     @return: render a apps/user_deleted.html con el contexto
     """
-    u = get_object_or_404(User, pk=id)
+    u = get_object_or_404(User, pk=user_id)
 
     u.is_active = False
     u.save()
-    return render_to_response("apps/user_deleted.html", RequestContext(request))
+    
+    return render_to_response("apps/user_deleted.html",{'user_logged':user_logged}, RequestContext(request))
 
 class RoleCreateForm(forms.ModelForm):
     class Meta:
@@ -1047,12 +1078,12 @@ def accionesproyecto(request, proyecto_id):
     urp = Equipo.objects.filter(usuario_id=user_id, rol_id = 3, proyecto_id = proyecto_id)
     #for u in urp:
     mispermisos = misPermisos(request.user.id, proyecto_id)
-    if urp:
+    #if urp:
         #Si el usuario es Scrum Master en el Proyecto
-        return render_to_response("apps/project_acciones.html", {"proyecto":proyecto, "usuario":request.user, "misPermisos":mispermisos})
-    else:
+    return render_to_response("apps/project_acciones.html", {"proyecto":proyecto, "usuario":request.user, "misPermisos":mispermisos})
+    #else:
         #Si el usuario no es Scrum Master
-        return render_to_response("apps/project_acciones_no_sm.html", {"proyecto":proyecto, "usuario":request.user})
+    #    return render_to_response("apps/project_acciones_no_sm.html", {"proyecto":proyecto, "usuario":request.user})
 
 def elimparticipante(request, proyecto_id, usuario_id):
     """

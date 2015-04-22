@@ -6,16 +6,24 @@
 	{{usuario.username}}
 {% endblock %}
 {% block contenido %}
-	<a href="/apps/modadmin/adminuser/">Administrar Usuarios</a><br />
+	{% if misPermisos.CU or misPermisos.MU or misPermisos.EU %}
+		<a href="{% url 'apps:listuser' user_id %}">Administrar Usuarios</a><br />
+	{% endif %}
 	<br>
-	<a href="/apps/modadmin/adminrole/">Administrar Roles</a><br />
+	{% if misPermisos.CR or misPermisos.MR or misPermisos.ER %}
+		<a href="/apps/modadmin/adminrole/">Administrar Roles</a><br />
+	{% endif %}
 	<br>
-	<a href="/apps/modadmin/adminproyecto/">Administrar Proyectos</a><br />
+	{% if misPermisos.CP or misPermisos.MP or misPermisos.EP %}
+		<a href="/apps/modadmin/adminproyecto/">Administrar Proyectos</a><br />
+	{% endif %}
 	<br>
-	<a href="/apps/modadmin/adminflujo/">Administrar Flujos</a><br />
+	{% if misPermisos.CPF or misPermisos.MPF or misPermisos.EPF %}
+		<a href="/apps/modadmin/adminflujo/">Administrar Flujos</a><br />
+	{% endif %}
 	
 {% endblock %}
 <br />
 {% block atras %}
-<a href="/apps/user_private_admin">Atras</a><br />
+<a href="{% url 'apps:inicio' user_id rol_id %}">Volver</a><br />
 {% endblock %}

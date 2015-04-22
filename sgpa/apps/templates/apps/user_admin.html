@@ -3,14 +3,21 @@
 	<h1>Administrar Usuarios</h1>
 {% endblock %}
 {% block contenido %}
-	<a href="/apps/usuario/nuevo">Nuevo Usuario</a><br />
+	{% if misPermisos.CU %}
+		<a href="{% url 'apps:nuevo_usuario' user_logged.id %}">Nuevo Usuario</a><br />
+	{% endif %}
 	<br>
 	{% if users %}
 		{% for user in users %}
-			{% if user.is_active == True %}
+			{% if user.is_active == True and user.id != user_logged.id %}
 				<label><b>{{user.username}}</b></label>
-				<a href="{% url 'apps:muser' user.id %}">Modificar</a>
-				<a href="{% url 'apps:deluser' user.id %}">Eliminar</a><br />
+				{% if misPermisos.MU %}
+					<a href="{% url 'apps:muser' user_logged.id user.id %}">Modificar</a>
+				{% endif %}
+				{% if misPermisos.EU %}
+					<a href="{% url 'apps:deluser' user_logged.id user.id %}">Eliminar</a>
+				{% endif %}
+				<br>
 			{% endif %}
 		{% endfor %}
 	{% else %}
@@ -18,5 +25,5 @@
 	{% endif %} 
 {% endblock %}
 {% block atras %}
-<a href="/apps/modadmin">Atras</a>
+<a href="{% url 'apps:adminmod' user_logged.id %}">Atras</a>
 {% endblock %}
