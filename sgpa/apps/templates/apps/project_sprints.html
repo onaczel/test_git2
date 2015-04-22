@@ -1,13 +1,22 @@
 <h1><b>{{proyecto.nombre}}</b></h1>
 <h2><b>Sprints</b></h2><br />
-<h3><b>Sprint actual: Sprint Numero {{proyecto.sprint}}</b></h3><br />
+{% if proyecto.nro_sprint > 0%} 
+	<form action="{% url 'apps:sprints' proyecto.id 0 0 %}" method="post">{% csrf_token %}
+		<h3><b>Sprint actual: Sprint Numero {{proyecto.nro_sprint}}&emsp;&emsp;<font size=2>siguiente Sprint</font><input type="submit", name="cambio", value="-->"></b></h3><br />
+	</form>
+{% else %}
+	<!--<form action="{% url 'apps:sprints' proyecto.id 0 0 %}" method="post">{% csrf_token %}
+		<h3><b>Sprint actual: Sprint Numero {{proyecto.nro_sprint}}&emsp;&emsp;<font size=2>siguiente Sprint</font><input type="submit", name="cambio", value="\-\-\>"></b></h3><br />
+	</form>-->
+	<h2><b>Finalizado</b></h2><br />
+{% endif %}
 {% if sprints %}
 	{% for s in sprints %}
 		<div style="clear:both">
 			<form action="{% url 'apps:sprints' proyecto.id s.id 0 %}" method="post">{% csrf_token %}
 				<br><label>Sprint Numero {{s.nro_sprint}}</label>&emsp;<input type="submit", name="cambio", value="Mostrar">&emsp;<input type="submit", name="cambio", value="Ocultar">
 			</form>
-			{% if sprint.id == s.nro_sprint %}
+			{% if sprint.nro_sprint == s.nro_sprint %}
 				{% if formularios %}
 					<div style="float:left">
 						<ul>
@@ -15,13 +24,13 @@
 								{% if formulario.tiempo_estimado.value == 0 %}
 									<li>
 										<form action="{% url 'apps:sprints' proyecto.id s.id forloop.counter %}" method="post">{% csrf_token %}
-											<label>{{formulario}}</label><input type="submit", name="cambio", value="Modificar">
+											<label>Dia {{forloop.counter}}:&emsp;{{formulario}}</label><input type="submit", name="cambio", value="Modificar">
 										</form>
 									</li>
 								{% else %}
 									<li>
 										<form action="{% url 'apps:sprints' proyecto.id s.id forloop.counter %}" method="post">{% csrf_token %}
-											<label><h4>Tiempo estimado:&emsp;&emsp;{{formulario.tiempo_estimado.value}} horas</h4></label>
+											<label><h4>Dia {{forloop.counter}}:&emsp;Tiempo estimado:&emsp;&emsp;{{formulario.tiempo_estimado.value}} horas</h4></label>
 										</form>
 									</li>
 								{% endif %}

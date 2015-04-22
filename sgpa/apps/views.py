@@ -37,12 +37,12 @@ from django.core.mail import send_mail
 from django.http import HttpResponse
 from django.db.models.base import Model
 
-
+from datetime import timedelta, date
 
 class IndexView(generic.DetailView):
     template_name='apps/index.html'
     def get(self, request, *args, **kwargs):
-        return render(request, self.template_name)
+        return render_to_response(request, self.template_name)
 
 
 class UserCreateForm(UserCreationForm):
@@ -952,6 +952,8 @@ def agregarPlantilla(request, proyecto_pk):
     cliente = User.objects.get(id = us2.usuario_id)
     proyecto = Proyectos.objects.get(id = proyecto_pk)
     
+    crearSprints(proyecto_pk)
+    
     return render_to_response('apps/plantilla_anadida.html',{'copyFlujo':copyFlujo,'proyecto':proyecto, 'scrum':scrumMaster,'cli':cliente},context_instance=RequestContext(request))
 
 def listproyectosdelusuario(request, usuario_id):
@@ -1504,3 +1506,42 @@ def sprints(request, proyecto_id, sprint_id, dia_sprint):
     sprints = Sprint.objects.filter(proyecto_id = proyecto_id)
     
     return render_to_response('apps/project_sprints.html', {"proyecto":proyecto, "sprint":sprint, "sprints":sprints, "formularios":formularios, "tiempos_reales":tiempos_reales}, context_instance = RequestContext(request))
+
+def crearSprints(proyecto_id):
+    """
+    Genera automaticamente los sprints y sus dias
+    @param proyecto_id: id de un proyecto
+    @return: no retorna
+    """
+    proyecto = Proyectos.objects.get(id = proyecto_id)
+    
+    d1 = proyecto.fecha_ini#date(2008, 8, 15)
+    d2 = proyecto.fecha_est_fin#date(2008, 9, 15)
+
+    delta = d2 - d1
+    
+    sprint = (delta.days +1)/(7*3)
+    resto = (delta.days +1)%(7*3)
+    if resto>0:
+        sprint = sprint + 1
+    
+    for i in range(1, sprint+1):
+        nuevo_sprint = Sprint()
+        nuevo_sprint.nro_sprint = i
+        nuevo_sprint.proyecto_id = proyecto_id
+        nuevo_sprint.save()
+    
+    sprint = 1
+    dia = 1
+    for i in range(delta.days + 1):
+        nuevo_dia_sprint = Dia_Sprint()
+        nuevo_dia_sprint.tiempo_estimado = 0
+        nuevo_dia_sprint.tiempo_real = 0
+        nuevo_dia_sprint.dia = dia
+        nuevo_dia_sprint.sprint_id = Sprint.objects.get(nro_sprint = sprint, proyecto_id = proyecto_id).id
+        dia = dia + 1
+        if(dia > 7*3):
+            dia = 1
+            sprint = sprint + 1
+        nuevo_dia_sprint.fecha = d1 + timedelta(days=i)
+        nuevo_dia_sprint.save()
