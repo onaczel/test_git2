@@ -1,10 +1,17 @@
+{% extends 'base.html' %}
+{% block titulo %}
 <h1>Modulo Proyecto</h1>
-
+{% endblock %}
 
 {% block contenido %}
+{% if misPermisos.CP %}
+	<a href="{% url 'apps:crearProyecto' user_logged %}">Crear Proyecto</a><br />
+{% endif %}
+<a href="{% url 'apps:adminmod' user_logged %}">Pagina principal de Admin</a><br />
 
-<a href="createProject/">Crear Proyecto</a><br />
-<a href="/apps/modadmin/">Pagina principal de Admin</a><br />
 
+{% endblock %}
 
+{% block atras %}
+	<td><a href="{% url 'apps:adminmod' user_logged %}">Atras</a></td>
 {% endblock %}

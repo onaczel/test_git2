@@ -7,15 +7,15 @@
 {% endblock %}
 {% block contenido %}
 	{% if misPermisos.CU or misPermisos.MU or misPermisos.EU %}
-		<a href="{% url 'apps:listuser' user_id %}">Administrar Usuarios</a><br />
+		<a href="{% url 'apps:listuser' user_logged %}">Administrar Usuarios</a><br />
 	{% endif %}
 	<br>
 	{% if misPermisos.CR or misPermisos.MR or misPermisos.ER %}
-		<a href="{% url 'apps:listrolesmod' user_id %}">Administrar Roles</a><br />
+		<a href="{% url 'apps:listrolesmod' user_logged %}">Administrar Roles</a><br />
 	{% endif %}
 	<br>
 	{% if misPermisos.CP or misPermisos.MP or misPermisos.EP %}
-		<a href="/apps/modadmin/adminproyecto/">Administrar Proyectos</a><br />
+		<a href="{% url 'apps:adminproject' user_logged %}">Administrar Proyectos</a><br />
 	{% endif %}
 	<br>
 	{% if misPermisos.CPF or misPermisos.MPF or misPermisos.EPF %}
@@ -25,5 +25,5 @@
 {% endblock %}
 <br />
 {% block atras %}
-<a href="{% url 'apps:inicio' user_id rol_id %}">Volver</a><br />
+<a href="{% url 'apps:inicio' user_logged rol_id %}">Atras</a><br />
 {% endblock %}

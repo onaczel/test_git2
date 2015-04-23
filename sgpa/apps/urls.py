@@ -13,23 +13,27 @@ urlpatterns = patterns('',
     url(r'^cerrar/$', views.cerrar, name='cerrar'),
     #url(r'^modadmin/$', views.modadmin.as_view(), name='modadmin'),
     
-    url(r'^modadmin/(?P<user_id>\d+)/$', views.adminmod, name='adminmod'),
-    url(r'^modadmin/(?P<user_logged>\d+)/adminuser/$', views.listuser, name="listuser"),
-    url(r'^modadmin/(?P<user_logged>\d+)/adminuser/nuevo', views.nuevo_usuario, name='nuevo_usuario'),
-    url(r'^modadmin/(?P<user_logged>\d+)/adminuser/(?P<user_id>\d+)/modificaruser/$', views.muser, name="muser"),
-    url(r'^modadmin/(?P<user_logged>\d+)/adminuser/(?P<user_id>\d+)/eliminaruser/$', views.deluser, name="deluser"),
+    url(r'^(?P<user_logged>\d+)/modadmin/$', views.adminmod, name='adminmod'),
+    url(r'^(?P<user_logged>\d+)/modadmin/adminuser/$', views.listuser, name="listuser"),
+    url(r'^(?P<user_logged>\d+)/modadmin/adminuser/nuevo', views.nuevo_usuario, name='nuevo_usuario'),
+    url(r'^(?P<user_logged>\d+)/modadmin/adminuser/(?P<user_id>\d+)/modificaruser/$', views.muser, name="muser"),
+    url(r'^(?P<user_logged>\d+)/modadmin/adminuser/(?P<user_id>\d+)/eliminaruser/$', views.deluser, name="deluser"),
     
-    url(r'^modadmin/(?P<user_logged>\d+)/adminrole/$', views.listrolesmod, name="listrolesmod"),
-    url(r'^modadmin/(?P<user_logged>\d+)/adminrole/crearrole/$', views.listpermisos, name="listpermisos"),
-    url(r'^modadmin/(?P<user_logged>\d+)/adminrole/(?P<role_id>\d+)/modificarrol/$', views.rolemodify, name="rolemodify"),
-    url(r'^modadmin/(?P<user_logged>\d+)/adminrole/(?P<role_id>\d+)/modificarrol/rolesetp$', views.rolemodifypermisos, name="rolemodifypermisos"),
-    url(r'^modadmin/(?P<user_logged>\d+)/adminrole/(?P<role_id>\d+)/modificarrol/rolesetp/asignarpermisosmod/$', views.asignarpermisosmod, name="asignarpermisosmod"),
-    url(r'^modadmin/(?P<user_logged>\d+)/adminrole/(?P<role_id>\d+)/eliminarrole/$', views.roledelete, name="roledelete"),
-    url(r'^modadmin/(?P<user_logged>\d+)/adminrole/(?P<role_id>\d+)/asignarrol/$', views.asignarrol, name="asignarrol"),
+    url(r'^(?P<user_logged>\d+)/modadmin/adminrole/$', views.listrolesmod, name="listrolesmod"),
+    url(r'^(?P<user_logged>\d+)/modadmin/adminrole/crearrole/$', views.listpermisos, name="listpermisos"),
+    url(r'^(?P<user_logged>\d+)/modadmin/adminrole/(?P<role_id>\d+)/modificarrol/$', views.rolemodify, name="rolemodify"),
+    url(r'^(?P<user_logged>\d+)/modadmin/adminrole/(?P<role_id>\d+)/modificarrol/rolesetp$', views.rolemodifypermisos, name="rolemodifypermisos"),
+    url(r'^(?P<user_logged>\d+)/modadmin/adminrole/(?P<role_id>\d+)/modificarrol/rolesetp/asignarpermisosmod/$', views.asignarpermisosmod, name="asignarpermisosmod"),
+    url(r'^(?P<user_logged>\d+)/modadmin/adminrole/(?P<role_id>\d+)/eliminarrole/$', views.roledelete, name="roledelete"),
+    url(r'^(?P<user_logged>\d+)/modadmin/adminrole/(?P<role_id>\d+)/asignarrol/$', views.asignarrol, name="asignarrol"),
+    
+    url(r'^(?P<user_logged>\d+)/modadmin/adminproyecto/$', views.adminproject, name="adminproject"),
+    url(r'^(?P<user_logged>\d+)/modadmin/adminproyecto/crearproyecto/$', views.crearProyecto, name="crearProyecto"),
+    url(r'^(?P<user_logged>\d+)/modadmin/adminproyecto/crearproyecto/(?P<proyecto_pk>\d+)/agregarPlantilla/$', views.agregarPlantilla, name='agregarPlantilla'),
     
     
+    #url(r'^modproyecto/$', views.modproyecto.as_view(), name='modproyecto'),
     url(r'^modproyecto/$', views.modproyecto.as_view(), name='modproyecto'),
-    
     
     
     #url(r'^modadmin/adminuser/moduser/$', views.listuser, name='listuser'),    
@@ -68,18 +72,17 @@ urlpatterns = patterns('',
     url(r'^modadmin/adminproyecto/(?P<proyecto_id>\d+)/crearrolproj/$', views.rolecreateproj, name="rolecreateproj"),
     #url(r'^asigpermisos/$', views.listpermisos, name="listpermisos"),
     
-    url(r'^modadmin/adminrole/modificarrol/$', views.listrolesmod, name="listrolesmod"),
     
     url(r'^modadmin/adminproyecto/(?P<proyecto_id>\d+)/modificarrolproj/$', views.listrolesproj, name="listrolesproj"),
     
     
     #url(r'^modadmin/adminrole/selectrolmod/$', views.selectrolmod, name="selectrolmod"),
     
-    url(r'^modadmin/adminrole/eliminarrol/$', views.listrolesdel, name="eliminarrol"),
     
-    url(r'^modadmin/adminproyecto/$', views.adminproject.as_view(), name="adminproyecto"),
-    url(r'^modadmin/adminproyecto/createProject/$', views.crearProyecto, name="createProject"),
-    url(r'^(?P<proyecto_pk>\d+)/agregarPlantilla/$', views.agregarPlantilla, name='agregarPlantilla'),
+    
+    
+    
+    
   #  url(r'^modadmin/adminproyecto/createProject/$', views.agregarPlantilla, name="agregarPlantilla"),
     url(r'^modadmin/adminflujo/$', views.listflowmod, name="listflowmod"),
     

@@ -1,3 +1,7 @@
+{% extends 'base.html' %}
+{% block titulo %}
+<h1>{{proyecto.nombre}}</h1>
+{% endblock %}
 {% block contenido %}
 
 <center>
@@ -42,8 +46,11 @@
 	
 	
 	<br></br>
-	<a href="/apps/modadmin/adminproyecto/">Volver al menú</a><br />
+	<a href="{% url 'apps:adminproject' user_logged %}">Volver al Menu</a><br />
 
 </center>
 
+{% endblock %}
+{% block atras %}
+<a href="{% url 'apps:adminproject' user_logged %}">Atras</a>
 {% endblock %}

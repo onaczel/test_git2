@@ -42,6 +42,10 @@ from __builtin__ import int, str
 from twisted.protocols.telnet import NULL
 from django.core.exceptions import ObjectDoesNotExist
 
+######################################################################################################################################################
+
+#####################################################################################################################################################
+
 class IndexView(generic.DetailView):
     template_name='apps/index.html'
     def get(self, request, *args, **kwargs):
@@ -194,6 +198,7 @@ def ingresar(request):
                     #if rol.id == 1:
                         #return HttpResponseRedirect('/apps/user_private_admin')
                     return render_to_response('apps/user_private_admin.html', {'usuario':user, 'rol_sistema':rol.sistema, 'rol_id':rol.id}, context_instance=RequestContext(request))
+                    #return inicio(request, user.id, rol.id)
     #'''Si es usuario normal'''
                     #else:
                         
@@ -281,25 +286,30 @@ class adminrole(generic.DetailView):
     template_name ='apps/role_admin.html'
     def get(self, request, *args, **kwargs):
         return render(request, self.template_name)
-
+'''
 class adminproject(generic.DetailView):
     template_name = 'apps/project_admin.html'
     def get(self, request, *args, **kwargs):
         return render(request, self.template_name)
-    
+'''
 class adminflow(generic.DetailView):
     template_name = 'apps/flow_admin.html'
     def get(self, request, *args, **kwargs):
         return render(request, self.template_name)
     
-    
-######################################################################################################################
 
-def adminmod(request, user_id):
-    permisos = misPermisos(user_id, 0)
-    rol_permiso = Users_Roles.objects.get(user_id = user_id)
+
+    
+    
+##############################################################################################################################################
+
+##############################################################################################################################################
+
+def adminmod(request, user_logged):
+    permisos = misPermisos(user_logged, 0)
+    rol_permiso = Users_Roles.objects.get(user_id = user_logged)
     rol = Roles.objects.get(pk=rol_permiso.role_id)
-    return render_to_response('apps/admin_mod.html', {'misPermisos':permisos, 'user_id':user_id, 'rol_id':rol.id})
+    return render_to_response('apps/admin_mod.html', {'misPermisos':permisos, 'user_logged':user_logged, 'rol_id':rol.id})
 '''
 def adminuser(request, user_id):
     permisos = misPermisos(user_id, 0)
@@ -420,7 +430,7 @@ def listrolesproj(request, proyecto_id):
     """
     roles = Roles.objects.filter(sistema=False)
     return render_to_response("apps/role_admin_project.html", {"roles":roles, 'proyecto_id':proyecto_id})
-
+'''
 def listrolesdel(request):
     """
     @param request: Http request
@@ -429,7 +439,7 @@ def listrolesdel(request):
     """
     roles = Roles.objects.all()
     return render_to_response("apps/role_delete.html", {"roles":roles})
-
+'''
 def listflowmod(request):
     """
     @param request: Http request
@@ -536,7 +546,9 @@ class RoleModifyForm(forms.ModelForm):
         fields = ("descripcion",)
      
 #########################################################################################################################################################
-######################################################################
+
+#######################################################################################################################################################
+
 #Noreversematch es un error de configuracion de url
 def listpermisos(request, user_logged):
     """
@@ -675,7 +687,9 @@ def roledelete(request, user_logged, role_id):
     
     return render_to_response("apps/role_deleted.html",{'user_logged':user_logged}, RequestContext(request))
 
-###############################################################################################################################
+###################################################################################################################################################
+
+###################################################################################################################################################
 class FlowCreateForm(forms.ModelForm):
     class Meta:
         model = Flujos
@@ -820,11 +834,17 @@ def flowdelete(request, flow_id):
     f.save()
     return render_to_response("apps/flow_eliminated.html", context_instance=RequestContext(request))
  
-###############################creacion de proyecto###############################
+###############################creacion de proyecto#################################################################################################
+
+def adminproject(request, user_logged):
+    permisos = misPermisos(user_logged, 0)
+    rol_permiso = Users_Roles.objects.get(user_id = user_logged)
+    rol = Roles.objects.get(pk=rol_permiso.role_id)
+    return render_to_response('apps/project_admin.html', {'misPermisos':permisos, 'user_logged':user_logged, 'rol_id':rol.id})
+    
 
 
-
-def crearProyecto(request):
+def crearProyecto(request, user_logged):
         """
         Crea un proyecto y lo registra en el sistema
         @param request: Http request
@@ -836,7 +856,7 @@ def crearProyecto(request):
             if  request.POST.get('fechaFin', False) < request.POST.get('fechaInicio', False):
                 listUser = User.objects.filter(is_active = True)
                 msg = 'La fecha estimada de finalizacion debe ser mayor a la de inicio'
-                return render_to_response('apps/project_admin_new.html', {'listuser':listUser, 'user':request.user, 'msg':msg},context_instance=RequestContext(request)) 
+                return render_to_response('apps/project_admin_new.html', {'listuser':listUser, 'user':request.user, 'msg':msg, 'user_logged':user_logged},context_instance=RequestContext(request)) 
             else:
                 
                 #Creacion de proyecto   
@@ -871,19 +891,19 @@ def crearProyecto(request):
                 
                
             
-            return render_to_response('apps/project_add_plantilla.html', {'flujo':flujo,'actividades':actividades,'idp':proyecto.id},context_instance=RequestContext(request))
+            return render_to_response('apps/project_add_plantilla.html', {'flujo':flujo,'actividades':actividades, 'p_descripcion':proyecto.descripcion, 'idp':proyecto.id, 'user_logged':user_logged},context_instance=RequestContext(request))
             
             
         else:
             
             listUser = User.objects.filter(is_active = True)
-            return render_to_response('apps/project_admin_new.html', {'listuser':listUser, 'user':request.user},context_instance=RequestContext(request)) 
+            return render_to_response('apps/project_admin_new.html', {'listuser':listUser, 'user':request.user, 'user_logged':user_logged},context_instance=RequestContext(request)) 
 
             
         
 
 
-def agregarPlantilla(request, proyecto_pk):
+def agregarPlantilla(request, user_logged, proyecto_pk):
     """
     Asigna una plantilla a un proyecto creado
     @param request: Http request
@@ -918,7 +938,11 @@ def agregarPlantilla(request, proyecto_pk):
     
     crearSprints(proyecto_pk)
     
-    return render_to_response('apps/plantilla_anadida.html',{'copyFlujo':copyFlujo,'proyecto':proyecto, 'scrum':scrumMaster,'cli':cliente},context_instance=RequestContext(request))
+    return render_to_response('apps/plantilla_anadida.html',{'copyFlujo':copyFlujo,'proyecto':proyecto, 'scrum':scrumMaster,'cli':cliente, 'user_logged':user_logged},context_instance=RequestContext(request))
+
+#################################################################################################################################################
+
+#################################################################################################################################################
 
 def listproyectosdelusuario(request, usuario_id):
     """

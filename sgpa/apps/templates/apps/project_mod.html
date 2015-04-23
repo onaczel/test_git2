@@ -1,6 +1,8 @@
+{% extends 'base.html' %}
 {% block encabezado %}
 	<h1>Modulo Proyecto</h1>
 {% endblock %}
+{% block contenido %}
 <h4>Proyectos del Usuario</h4>
 
 {% if proyectos %}
@@ -24,4 +26,7 @@
 	<p>El usuario no se encuentra en ningun proyecto</p>
 {% endif %}
 <br />
-<a href="{% url 'apps:inicio' user_id rol_id %}">Volver</a><br />
+{% endblock %}
+{% block atras %}
+<a href="{% url 'apps:inicio' user_id rol_id %}">Atras</a><br />
+{% endblock %}
