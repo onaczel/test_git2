@@ -37,7 +37,10 @@ from django.core.mail import send_mail
 from django.http import HttpResponse
 from django.db.models.base import Model
 
-from datetime import timedelta, date
+from datetime import timedelta, date, datetime
+from __builtin__ import int, str
+from twisted.protocols.telnet import NULL
+from django.core.exceptions import ObjectDoesNotExist
 
 class IndexView(generic.DetailView):
     template_name='apps/index.html'
@@ -1500,6 +1503,36 @@ def sprints(request, proyecto_id, sprint_id, dia_sprint):
                 formulario = dia_sprintCreateForm(initial={'tiempo_estimado':d_sprint.tiempo_estimado, 'tiempo_real':d_sprint.tiempo_real})
                 formularios.append(formulario)
                 tiempos_reales.append(d_sprint)
+        elif request.POST['cambio'] == "-->":
+            try:
+                sprint_actual = Sprint.objects.get(nro_sprint = proyecto.nro_sprint, proyecto_id = proyecto.id)
+                dias_sprint_actual = Dia_Sprint.objects.filter(sprint_id = sprint_actual.id)
+                mayor = dias_sprint_actual.first()
+                for dia_sprint_actual in dias_sprint_actual:
+                    if int(mayor.fecha.year) < int(dia_sprint_actual.fecha.year):
+                        mayor = dia_sprint_actual
+                    elif (int(mayor.fecha.year) == int(dia_sprint_actual.fecha.year)) and (int(mayor.fecha.month) < int(dia_sprint_actual.fecha.month)):
+                        mayor = dia_sprint_actual
+                    elif (int(mayor.fecha.year) == int(dia_sprint_actual.fecha.year)) and (int(mayor.fecha.month) == int(dia_sprint_actual.fecha.month)) and (int(mayor.fecha.day) < int(dia_sprint_actual.fecha.day)):
+                        mayor = dia_sprint_actual
+                        
+                if int(mayor.fecha.year) < int(datetime.today().strftime("%Y")):
+                    siguiente_sprint = Sprint.objects.get(nro_sprint = (proyecto.nro_sprint + 1), proyecto_id = proyecto_id)
+                    proyecto.nro_sprint = proyecto.nro_sprint + 1
+                    proyecto.save()
+                elif (int(mayor.fecha.year) == int(datetime.today().strftime("%Y"))) and (int(mayor.fecha.month) < int(datetime.today().strftime("%m"))):
+                    siguiente_sprint = Sprint.objects.get(nro_sprint = (proyecto.nro_sprint + 1), proyecto_id = proyecto_id)
+                    proyecto.nro_sprint = proyecto.nro_sprint + 1
+                    proyecto.save()
+                elif (int(mayor.fecha.year) == int(datetime.today().strftime("%Y"))) and (int(mayor.fecha.month) == int(datetime.today().strftime("%m"))) and (int(mayor.fecha.day) < int(datetime.today().strftime("%d"))):
+                    siguiente_sprint = Sprint.objects.get(nro_sprint = (proyecto.nro_sprint + 1), proyecto_id = proyecto_id)
+                    proyecto.nro_sprint = proyecto.nro_sprint + 1
+                    proyecto.save()
+                    
+            except:
+                proyecto.nro_sprint = 0
+                proyecto.save()
+                
                 
     sprints = Sprint.objects.filter(proyecto_id = proyecto_id)
     
@@ -1513,8 +1546,8 @@ def crearSprints(proyecto_id):
     """
     proyecto = Proyectos.objects.get(id = proyecto_id)
     
-    d1 = proyecto.fecha_ini#date(2008, 8, 15)
-    d2 = proyecto.fecha_est_fin#date(2008, 9, 15)
+    d1 = proyecto.fecha_ini
+    d2 = proyecto.fecha_est_fin
 
     delta = d2 - d1
     
