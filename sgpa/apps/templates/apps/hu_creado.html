@@ -1,3 +1,12 @@
-<h1>User Story creado correctamente</h1>
+{% extends 'base.html' %}
+{% block titulo %}
+<h1>Administrar User Stories</h1>
+{% endblock %}
+{% block contenido %}
+<h3>User Story creado correctamente</h3>
+<a href="{% url 'apps:listhu' proyecto_id %}">Volver a Administracion</a>
+{% endblock %}
 
-<a href="{% url 'apps:listhu' proyecto_id %}">Volver</a>
+{% block atras %}
+<a href="{% url 'apps:listhu' proyecto_id %}">Atras</a>
+{% endblock %}

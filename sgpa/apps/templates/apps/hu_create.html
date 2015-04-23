@@ -1,5 +1,11 @@
+{% extends 'base.html' %}
+{% block titulo %}
+<h1>Administrar User Stories</h1>
+{% endblock %}
+{% block encabezado %}
 <h1>Crear User Story</h1>
-
+{% endblock %}
+{% block contenido %}
 <form action="{% url 'apps:crearHu' proyecto_id %}" method="post">
 	{% csrf_token %}
 	<table>{{form}}</table>
@@ -7,3 +13,7 @@
 	<input type="submit" value="Guardar" />
 
 </form>
+{% endblock %}
+{% block atras %}
+	<a href="{% url 'apps:listhu' proyecto_id %}">Volver</a>
+{% endblock %}

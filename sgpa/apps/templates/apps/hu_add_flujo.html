@@ -1,4 +1,8 @@
-<h1>{{hu_descripcion}}</h1>
+{% extends 'base.html' %}
+{% block encabezado %}
+	<h1>{{hu_descripcion}}</h1>
+{% endblock %}
+
 {% block contenido %}
 <center>
 <h2>Seleccione un flujo</h2>
@@ -44,5 +48,7 @@
 </form>
 </center>
 {% endblock %}
-
+{% block atras %}
+<a href="{% url 'apps:editarHu' proyecto_id hu_id %}">Atras</a>
+{% endblock %}
 

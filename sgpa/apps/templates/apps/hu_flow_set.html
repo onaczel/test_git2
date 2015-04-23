@@ -1,5 +1,10 @@
 {% extends 'base.html' %}
 
+{% block contenido %}
 <h3>Flujo Asignado Correctamente</h3>
-
+<br>
 <a href="{% url 'apps:listhu' proyecto_id %}">Volver</a>
+{% endblock %}
+{% block atras %}
+<a href="{% url 'apps:listhu' proyecto_id %}">Volver</a>
+{% endblock %}

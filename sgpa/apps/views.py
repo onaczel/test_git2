@@ -1281,7 +1281,7 @@ def crearHu(request, proyecto_id):
         form = HuCreateForm(request.POST)
         if form.is_valid():
             form.save()
-            hu = UserStory.objects.get(descripcion  = form.cleaned_data['descripcion'])
+            hu = UserStory.objects.get(codigo  = form.cleaned_data['codigo'])
             hu.proyecto_id = proyecto_id
             hu.save()
             return render_to_response('apps/hu_creado.html',{"proyecto_id":proyecto_id},  context_instance = RequestContext(request))
@@ -1313,7 +1313,7 @@ def editarHu(request, proyecto_id, hu_id):
             hu.tiempoEstimado = form.cleaned_data['tiempo_Estimado']
             hu.proyecto_id = proyecto_id
             hu.save()
-            return render_to_response('apps/hu_modificado.html',{"proyecto_id":proyecto_id},  context_instance = RequestContext(request))
+            return render_to_response('apps/hu_modificado.html',{"proyecto_id":proyecto_id, 'hu_id':hu_id},  context_instance = RequestContext(request))
         else:
             return render_to_response('apps/hu_form_no_valido.html', context_instance = RequestContext(request))
     else:        

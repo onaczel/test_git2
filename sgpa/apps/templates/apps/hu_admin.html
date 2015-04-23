@@ -1,16 +1,23 @@
+{% extends 'base.html' %}
+{% block titulo %}
 <h1>Administrar User Stories</h1>
-
-<a href="{% url 'apps:crearHu' proyecto_id %}">Crear User Stories</a>
+{% endblock %}
+{% block contenido %}
+<a href="{% url 'apps:crearHu' proyecto_id %}">Nuevo User Story</a>
 <br />
 <br />	
 {% if hu %}
 	{% for h in hu %}
 		<!-- <label>{{h.descripcion}}</label> -->
-		<a href="{% url 'apps:editarHu' proyecto_id hu_id %}">{{h.descripcion}}</a>
-		<a href="{% url 'apps:eliminarHu' proyecto_id h.id %}">Eliminar</a><br />
+		<a href="{% url 'apps:editarHu' proyecto_id h.id %}">{{h.descripcion}}</a>
+		<!-- </html><a href="{% url 'apps:eliminarHu' proyecto_id h.id %}">Eliminar</a><br /> -->
+		<br>
 	{% endfor %}
 {% else %}
 	<p>There are no user stories in db</p>
 {% endif %}
 <br />	
-<a href="{% url 'apps:accionesproyecto' proyecto_id %}">Volver</a>
+{% endblock %}
+{% block atras %}
+<a href="{% url 'apps:accionesproyecto' proyecto_id %}">Atras</a>
+{% endblock %}
