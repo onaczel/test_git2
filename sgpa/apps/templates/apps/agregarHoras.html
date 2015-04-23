@@ -1,0 +1,27 @@
+<h1><b>Asignar Horas de Trabajo</b></h1>
+<h2><b>Usuario: {{user}}</b></h2><br />
+
+{% if proyectos %}
+	{% if user_stories %}
+		{% for p in proyectos %}
+			<br><label>{{p.nombre}}</label>
+			{% for hu in user_stories %}
+				<ul>
+					{% if hu.proyecto_id == p.id %}
+						<li>
+							<form action="{% url 'apps:horas' hu.id %}" method="post">{% csrf_token %}
+								<label><font size="4">User Story {{hu.id}}</font>:&emsp;<font size="3">{{hu.descripcion}}</font><font size="2">&emsp;{{formulario}}</label>Horas&emsp;<input type="submit", name="{{hu.id}}", value="Sumar Horas"></font>&emsp;{{mensaje}}
+							</form>
+						</li>
+					{% endif %}
+				</ul>
+			{% endfor %}
+		{% endfor %}
+	{% else %}
+		<h2>No tiene asignado ningun User Story</h2><br />
+	{% endif %}
+{% else %}
+	<h2>No se encuentra en ningun proyecto</h2><br />
+{% endif %}
+<br />
+<a href="#">Volver al menu principal</a>

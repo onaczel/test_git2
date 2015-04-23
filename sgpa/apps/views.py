@@ -41,6 +41,7 @@ from datetime import timedelta, date, datetime
 from __builtin__ import int, str
 from twisted.protocols.telnet import NULL
 from django.core.exceptions import ObjectDoesNotExist
+from _ast import Str
 
 ######################################################################################################################################################
 
@@ -1467,6 +1468,11 @@ class dia_sprintCreateForm(forms.ModelForm):
         model = Dia_Sprint
         fields = ("tiempo_estimado",)
 
+class dia_sprintCreateForm2(forms.ModelForm):
+    class Meta:
+        model = Dia_Sprint
+        fields = ("tiempo_real",)
+
 def sprints(request, proyecto_id, sprint_id, dia_sprint):
     """
     retorna los sprints de cada proyecto
@@ -1575,3 +1581,47 @@ def crearSprints(proyecto_id):
             sprint = sprint + 1
         nuevo_dia_sprint.fecha = d1 + timedelta(days=i)
         nuevo_dia_sprint.save()
+
+def horas(request, hu_id):
+    """
+    Asigna horas trabajadas por user story a los dias de cada sprint
+    @param request: Http
+    @param hu_id: id de un user story
+    @return: render a agregarHoras.html con una lista de user stories, lista de proyectos del usuario, el usuario, el formulario del tiempo real de los dias por sprint y un mensaje de error
+    """
+    
+    mensaje = ""
+    
+    if request.POST:
+        if request.POST[hu_id] == "Sumar Horas":
+            formulario = dia_sprintCreateForm2(request.POST)
+            if formulario.is_valid():
+                hu = UserStory.objects.get(id = hu_id)
+                #Str(datetime.today().strftime("%Y-%m-%d"))
+                try:
+                    dia_sprint = Dia_Sprint.objects.get(fecha = datetime.today().strftime("%Y-%m-%d"), sprint_id = hu.sprint)
+                    dia_sprint.tiempo_real = int(dia_sprint.tiempo_real) + int(formulario.cleaned_data['tiempo_real'])
+                    dia_sprint.save()
+                except:
+                    mensaje = "Error: No se sumaron las horas, Probablemente el User Story ya haya terminado"
+            
+    user_stories = UserStory.objects.filter(usuario_Asignado = request.user.id, estado = True)
+    
+    equipos = Equipo.objects.filter(usuario_id=request.user.id)
+    proyectos_id = []
+    for equipo in equipos:
+        esta = False
+        for proyecto_id in proyectos_id:
+            if proyecto_id == equipo.proyecto_id:
+                esta = True
+                break
+        if esta == False:
+            proyectos_id.append(equipo.proyecto_id)
+            
+    proyectos = []
+    for proyecto_id in proyectos_id:
+        proyectos.append(Proyectos.objects.get(id = proyecto_id))
+
+    formulario = dia_sprintCreateForm2()
+    
+    return render_to_response('apps/agregarHoras.html', {"user_stories":user_stories, "proyectos":proyectos, "user":request.user, "formulario":formulario, "mensaje":mensaje}, context_instance = RequestContext(request))
