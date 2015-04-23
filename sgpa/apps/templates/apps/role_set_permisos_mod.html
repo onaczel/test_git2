@@ -7,7 +7,7 @@
 {% endblock %}
 {% block contenido %}
 <h4>Seleccione los permisos a asignar al rol</h4>
-<form action="{% url 'apps:asignarpermisosmod' role_id %}" method="post">{% csrf_token %}
+<form action="{% url 'apps:asignarpermisosmod' user_logged role_id %}" method="post">{% csrf_token %}
 {% if permisos %}
 	{% for p in permisos%}
 		<!-- <p>hola</p> -->
@@ -26,5 +26,5 @@
  </form>
 {% endblock %}
 {% block atras %}
-
+	<a href="{% url  'apps:rolemodify' user_logged role_id %}">Atras</a>
 {% endblock %}

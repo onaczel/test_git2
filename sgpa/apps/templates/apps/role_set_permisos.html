@@ -8,7 +8,7 @@
 <br>
 {% endblock %}
 {% block contenido %}
-<form action="{% url 'apps:asignarrol' role_id %}" method="post">{% csrf_token %}
+<form action="{% url 'apps:asignarrol' user_logged role_id%}" method="post">{% csrf_token %}
 {% if permisos %}
 	{% for p in permisos%}
 		<!-- <p>hola</p> -->
@@ -20,4 +20,7 @@
  {% endif %}
  <input type="submit" name="Asignar" value="Asignar Permisos"/>
  </form>
+ {% endblock %}
+ {% block atras %}
+ <a href="{% url 'apps:listrolesmod' user_logged %}">Atras</a><br />
  {% endblock %}

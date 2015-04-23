@@ -11,7 +11,7 @@
 	{% endif %}
 	<br>
 	{% if misPermisos.CR or misPermisos.MR or misPermisos.ER %}
-		<a href="/apps/modadmin/adminrole/">Administrar Roles</a><br />
+		<a href="{% url 'apps:listrolesmod' user_id %}">Administrar Roles</a><br />
 	{% endif %}
 	<br>
 	{% if misPermisos.CP or misPermisos.MP or misPermisos.EP %}

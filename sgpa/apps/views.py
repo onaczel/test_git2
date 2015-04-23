@@ -399,14 +399,15 @@ def listuserdel(request):
     users = User.objects.all()
     return render_to_response("apps/user_select_del.html", {"users":users})
 
-def listrolesmod(request):
+def listrolesmod(request, user_logged):
     """
     @param request: Http request
     @ret14urn: Retorna una lista con todos los roles del sistema y lo envia al template
     de modificacion de roles
     """
     roles = Roles.objects.all()
-    return render_to_response("apps/role_admin.html", {"roles":roles})
+    permisos = misPermisos(user_logged, 0)
+    return render_to_response("apps/role_admin.html", {"roles":roles, 'user_logged':user_logged, 'misPermisos':permisos})
 
 def listrolesproj(request, proyecto_id):
     """
@@ -445,28 +446,7 @@ def listflowdel(request):
     return render_to_response("apps/flow_delete.html", {"flujos":flujos})
 
 
-#Noreversematch es un error de configuracion de url
-def listpermisos(request):
-    """
-    @param request: Http request
-    @return: render a apps/role_set_permisos.html, lista de permisos, el id y la descripcion del rol que se creo recientemente
-    """
-    if request.method == 'POST':
-        form = RoleCreateForm(request.POST)
-        if form.is_valid():
-            form.save()
-        role = Roles.objects.get(descripcion=form.cleaned_data['descripcion'])
-        role_id = role.id
-        permisos = []
-        if role.sistema == True:
-            permisos = Permisos.objects.filter(sistema = True)
-        else:
-            permisos = Permisos.objects.filter(sistema = False)
-        return render_to_response("apps/role_set_permisos.html", {"permisos":permisos, "role_id":role_id, "role_descripcion":role.descripcion}, context_instance=RequestContext(request))
-    else:
-        form = RoleCreateForm()
-    
-    return render_to_response('apps/role_create.html' ,{'form':form}, context_instance=RequestContext(request))
+
 
 def rolecreateproj(request, proyecto_id):
     """
@@ -552,13 +532,40 @@ class RoleModifyForm(forms.ModelForm):
         model = Roles
         fields = ("descripcion",)
      
-
+#########################################################################################################################################################
+######################################################################
+#Noreversematch es un error de configuracion de url
+def listpermisos(request, user_logged):
+    """
+    @param request: Http request
+    @param user_logged: id del Usuario logueado en el sistema
+    @return: render a apps/role_set_permisos.html, lista de permisos, el id y la descripcion del rol que se creo recientemente
+    """
+    if request.method == 'POST':
+        form = RoleCreateForm(request.POST)
+        if form.is_valid():
+            form.save()
+        role = Roles.objects.get(descripcion=form.cleaned_data['descripcion'])
+        role_id = role.id
+        permisos = []
+        if role.sistema == True:
+            permisos = Permisos.objects.filter(sistema = True)
+        else:
+            permisos = Permisos.objects.filter(sistema = False)
+        return render_to_response("apps/role_set_permisos.html", {"permisos":permisos, "role_id":role_id, "role_descripcion":role.descripcion, 'user_logged':user_logged}, context_instance=RequestContext(request))
+    else:
+        form = RoleCreateForm()
+    
+    #permisos = misPermisos(user_logged, 0)
+     
+    return render_to_response('apps/role_create.html' ,{'form':form, 'user_logged':user_logged}, context_instance=RequestContext(request))
 #MAnager isn't accesible via model isntances, no se pude acceder desde un modelo a 
 #una instancia de una clase
-def asignarrol(request, role_id):
+def asignarrol(request, user_logged, role_id):
     """
     Asocia una lista de permisos con un rol
     @param request: Http request
+    @param user_logged: id del Usuario logueado en el sistema
     @param role_id: Id de un rol registrado en el sistema
     @return: render a  apps/role_created.html con el contexto 
     """
@@ -576,9 +583,9 @@ def asignarrol(request, role_id):
         permrol.permisos_id = permiso.id
         permrol.save()
         
-    return render_to_response("apps/role_created.html", {'sistema':sistema}, context_instance = RequestContext(request))
+    return render_to_response("apps/role_created.html", {'sistema':sistema, 'user_logged':user_logged}, context_instance = RequestContext(request))
 
-def rolemodify(request, role_id):
+def rolemodify(request, user_logged, role_id):
     """
     Modifica un rol del sistema
     @param request: Http request
@@ -592,13 +599,13 @@ def rolemodify(request, role_id):
             rol.descripcion = form.cleaned_data['descripcion']
             rol.save()
         #return render_to_response("apps/role_set_permisos_mod.html", {"role_id":rol.id, "role_descripcion":rol.descripcion}, context_instance=RequestContext(request))
-        return rolemodifypermisos(request, rol.id)
+        return rolemodifypermisos(request, user_logged, rol.id)
     else:
         form = RoleModifyForm(initial={'descripcion':rol.descripcion})
     
-    return render_to_response('apps/role_modify_form.html' ,{'form':form, "rol":rol }, context_instance=RequestContext(request))
+    return render_to_response('apps/role_modify_form.html' ,{'form':form, "rol":rol , 'user_logged':user_logged}, context_instance=RequestContext(request))
     
-def rolemodifypermisos(request, role_id):
+def rolemodifypermisos(request, user_logged,  role_id):
     rol = get_object_or_404(Roles, pk=role_id)
    
     permisos = Permisos.objects.all()
@@ -614,9 +621,9 @@ def rolemodifypermisos(request, role_id):
         permisos = Permisos.objects.filter(sistema=True)
     else:
         permisos = Permisos.objects.filter(sistema=False)
-    return render_to_response("apps/role_set_permisos_mod.html", {"permisos":permisos, "role_id":role_id, "role_descripcion":rol.descripcion}, context_instance=RequestContext(request))
+    return render_to_response("apps/role_set_permisos_mod.html", {"permisos":permisos, "role_id":role_id, "role_descripcion":rol.descripcion, 'user_logged':user_logged}, context_instance=RequestContext(request))
            
-def asignarpermisosmod(request, role_id):
+def asignarpermisosmod(request, user_logged, role_id):
     """
     Asigna permisos a un rol
     @param request: Http request
@@ -641,7 +648,7 @@ def asignarpermisosmod(request, role_id):
         permrol.permisos_id = permiso.id
         permrol.save()
 
-    return render_to_response("apps/role_modified.html", context_instance=RequestContext(request))
+    return render_to_response("apps/role_modified.html",{'user_logged':user_logged}, context_instance=RequestContext(request))
     
 def inicializarPermisos():
     """
@@ -651,7 +658,7 @@ def inicializarPermisos():
         p.estado = False
         p.save()
         
-def roledelete(request, role_id):
+def roledelete(request, user_logged, role_id):
     """
     Establece el estado de un rol a False
     @param request: Http request
@@ -663,8 +670,9 @@ def roledelete(request, role_id):
     r.estado = False
     r.save()
     
-    return render_to_response("apps/role_deleted.html", RequestContext(request))
+    return render_to_response("apps/role_deleted.html",{'user_logged':user_logged}, RequestContext(request))
 
+###############################################################################################################################
 class FlowCreateForm(forms.ModelForm):
     class Meta:
         model = Flujos
@@ -808,54 +816,7 @@ def flowdelete(request, flow_id):
     f.estado = False
     f.save()
     return render_to_response("apps/flow_eliminated.html", context_instance=RequestContext(request))
-     
-'''
-def selectrolmod(request):
-    try:
-        r = Roles.objects.get(pk=request.POST['r'])
-    except Roles.DoesNotExist:
-        r = None
-    
-    role_id = r.id
-    
-    modificarrol(request, role_id)
-    
-    return render_to_response("apps/index.html", context_instance=RequestContext(request))
-    
-def modificarrol(request, role_id):
-    r = get_object_or_404(Roles, pk=role_id)
-    if request.method == 'POST':
-        form = RoleCreateForm(request.POST)
-        if form.is_valid():
-            form.save()
-        #role = Roles.objects.get(descripcion=form.cleaned_data['descripcion'])
-        role_id = r.id
-        permisos = Permisos.objects.all()
-        return render_to_response("apps/role_set_permisos_mod.html", {"permisos":permisos, "role_id":role_id}, context_instance=RequestContext(request))
-    else:
-        form = RoleCreateForm(intial={'descripcion':r.descripcion, 'estado':r.estado})
-    
-    return render_to_response('apps/role_modify_form.html' ,{'form':form, "role_id":role_id}, context_instance=RequestContext(request))
-
-
-    
-def asignarpermisosmod(request, role_id):
-    r = get_object_or_404(Roles, pk=role_id)
-    
-    lista = request.POST.getlist(u'permisos')
-    for p in lista:
-        try:
-            #permiso = Permisos.objects.get(descripcion=p)
-            permiso = Permisos.objects.get(pk=p)
-        except Permisos.DoesNotExist:
-            permiso = None
-        permrol = Permisos_Roles()
-        permrol.roles_id = r.id
-        permrol.permisos_id = permiso.id
-        permrol.save()
-        
-    return render_to_response("apps/role_modified.html", context_instance=RequestContext(request))'''
-        
+ 
 ###############################creacion de proyecto###############################
 
 

@@ -3,15 +3,22 @@
 	<h1>Administrar Roles</h1>
 {% endblock %}
 {% block contenido %}
-	<a href="/apps/modadmin/adminrole/crearrole">Nuevo Rol</a><br />
+	{% if misPermisos.CR %}
+		<a href="{% url  'apps:listpermisos' user_logged %}">Nuevo Rol</a><br />
+	{% endif %}
 	<br>
 	
 	{% if roles %}
 	{% for r in roles %}
 		{% if r.estado == True %}
-			<label>{{r.descripcion}}</label>
-			<a href="{% url  'apps:rolemodify' r.id %}">Modificar</a>
-			<a href="{% url 'apps:roledelete' r.id %}">Eliminar</a><br />
+			<label><b>{{r.descripcion}}</label></b>
+			{% if misPermisos.MR %}
+				<a href="{% url  'apps:rolemodify' user_logged r.id %}">Modificar</a>
+			{% endif %}
+			{% if misPermisos.ER %}
+				<a href="{% url 'apps:roledelete'  user_logged r.id %}">Eliminar</a>
+			{% endif %}
+			<br>
 		{% endif %}
 	{% endfor %}
 {% else %}
@@ -20,5 +27,5 @@
 	
 {% endblock %}
 {% block atras %}
-<a href="/apps/modadmin">Atras</a>
+<a href="{% url 'apps:adminmod' user_logged %}">Atras</a>
 {% endblock %}

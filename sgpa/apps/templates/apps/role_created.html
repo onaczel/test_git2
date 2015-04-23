@@ -9,12 +9,8 @@
 Rol creado correctamente
 <br>
 <br>
-{% if sistema == True %}
-<a href="/apps/modadmin/adminrole/">Volver a Administracion</a>
-{% else %}
-<a href="/apps/user_private_admin/">Volver a Administracion</a>
-{% endif %}
+<a href="{% url 'apps:listrolesmod' user_logged %}">Volver a Administracion</a><br />
 {% endblock %}
 {% block atras %}
-<a href="/apps/modadmin/adminrole/">Atras</a>
+<a href="{% url 'apps:listrolesmod' user_logged %}">Atras</a><br />
 {% endblock %}

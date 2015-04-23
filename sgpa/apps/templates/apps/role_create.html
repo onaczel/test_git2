@@ -6,11 +6,11 @@
 <h1>Registrar un nuevo Rol</h1>
 {% endblock %}
 {% block contenido %}
-<form action="{% url 'apps:listpermisos' %}" method="post">{% csrf_token %}
+<form action="{% url 'apps:listpermisos' user_logged %}" method="post">{% csrf_token %}
 	<table>{{ form }}</table>
 	<p><input type='submit' value='Registrar'/></p>
 </form>
 {% endblock %}
 {% block atras %}
-<a href="/apps/modadmin/adminrole/">Atras</a>
+<a href="{% url 'apps:listrolesmod' user_logged %}">Atras</a><br />
 {% endblock %}

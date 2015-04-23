@@ -3,11 +3,14 @@
 <h1>Administrar Roles</h1>
 {% endblock %}
 {% block encabezado %}
-<h1>Modificar Roles</h1>
+<h1>Nuevo Rol</h1>
 {% endblock %}
 {% block contenido %}
-Rol Modificado Correctamente
+Rol Modificado correctamente
 <br>
 <br>
-<a href="/apps/modadmin/adminrole/" >Volver a Administracion</a>
+<a href="{% url 'apps:listrolesmod' user_logged %}">Volver a Administracion</a><br />
+{% endblock %}
+{% block atras %}
+<a href="{% url 'apps:listrolesmod' user_logged %}">Atras</a><br />
 {% endblock %}
