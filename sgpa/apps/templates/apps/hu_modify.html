@@ -1,10 +1,27 @@
-<h1>{{hu_descripcion}}</h1>
+{% extends 'base.html' %}
+{% block encabezado %}
+	<h1>{{hu_descripcion}}</h1>
+{% endblock %}
 <h3>Editar HU</h3>
-
-<a href="{% url 'apps:editarHu' proyecto_id hu_id %}">Modificar Campos</a><br/>
-<a href='assignUser/'>Asignar Usuarios</a><br/>
-<a href="{% url 'apps:listhuflujo' proyecto_id hu_id %}">Asignar Flujo</a><br />
-<a href='assignSprint'>Asignar Sprint</a><br />
-<a href='assignPriority'>Asignar Prioridad</a><br/>
+{% block index %}
+	<a href="{% url 'apps:editarHu' proyecto_id hu_id %}">Modificar Campos</a><br/>
+	<a href='assignUser/'>Asignar Usuarios</a><br/>
+	<a href="{% url 'apps:listhuflujo' proyecto_id hu_id %}">Asignar Flujo</a><br />
+	<a href='assignSprint'>Asignar Sprint</a><br />
+	<a href='assignPriority'>Asignar Prioridad</a><br/>
+{% endblock %}
 <br/>
-<a href="{% url 'apps:listhu' proyecto_id %}">Volver</a>
+
+{% block contenido %}
+	<form action="{% url 'apps:editarHu' proyecto_id hu_id %}" method="post">
+		{% csrf_token %}
+		<table>{{form}}</table>
+		
+		<input type='submit' value='Guardar'/>
+	
+	
+	</form>
+{% endblock %}
+{% block atras %}
+	<a href="{% url 'apps:listhu' proyecto_id %}">Volver</a>
+{% endblock %}

@@ -1264,7 +1264,7 @@ class HuCreateForm(forms.ModelForm):
     """
     class Meta:
         model = UserStory
-        fields = ("descripcion", "codigo", "valorNegocio", "valorTecnico", "tiempoEstimado",)
+        fields = ("descripcion", "codigo", "tiempo_Estimado",)
         
         
 def crearHu(request, proyecto_id):
@@ -1310,16 +1310,14 @@ def editarHu(request, proyecto_id, hu_id):
             #form.save()
             hu.descripcion = form.cleaned_data['descripcion']
             hu.codigo = form.cleaned_data['codigo']
-            hu.valorNegocio = form.cleaned_data['valorNegocio']
-            hu.valorTecnico = form.cleaned_data['valorTecnico']
-            hu.tiempoEstimado = form.cleaned_data['tiempoEstimado']
+            hu.tiempoEstimado = form.cleaned_data['tiempo_Estimado']
             hu.proyecto_id = proyecto_id
             hu.save()
             return render_to_response('apps/hu_modificado.html',{"proyecto_id":proyecto_id},  context_instance = RequestContext(request))
         else:
             return render_to_response('apps/hu_form_no_valido.html', context_instance = RequestContext(request))
     else:        
-        form = HuCreateForm(initial={'descripcion':hu.descripcion, 'codigo':hu.codigo, 'valorNegocio':hu.valorNegocio, 'valorTecnico':hu.valorTecnico, 'tiempoEstimado':hu.tiempoEstimado})
+        form = HuCreateForm(initial={'descripcion':hu.descripcion, 'codigo':hu.codigo, 'tiempo_Estimado':hu.tiempo_Estimado})
     
     return render_to_response('apps/hu_modify_fields.html', {"form":form, "proyecto_id":proyecto_id, "hu_id":hu_id, "hu_descripcion":hu.descripcion}, context_instance = RequestContext(request))
 

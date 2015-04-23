@@ -5,8 +5,8 @@
 <br />	
 {% if hu %}
 	{% for h in hu %}
-		<label>{{h.descripcion}}</label>
-		<a href="{% url 'apps:modificarHu' proyecto_id h.id %}">Editar</a>
+		<!-- <label>{{h.descripcion}}</label> -->
+		<a href="{% url 'apps:editarHu' proyecto_id hu_id %}">{{h.descripcion}}</a>
 		<a href="{% url 'apps:eliminarHu' proyecto_id h.id %}">Eliminar</a><br />
 	{% endfor %}
 {% else %}
