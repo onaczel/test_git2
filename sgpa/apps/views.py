@@ -1475,6 +1475,7 @@ def sprints(request, proyecto_id, sprint_id, dia_sprint):
     @param proyecto_id: id de un proyecto
     @return: render a project_sprints.html 
     """
+    mensaje = ""
     proyecto = Proyectos.objects.get(id = proyecto_id)
     sprint = Sprint()
     formularios = []
@@ -1524,6 +1525,8 @@ def sprints(request, proyecto_id, sprint_id, dia_sprint):
                     siguiente_sprint = Sprint.objects.get(nro_sprint = (proyecto.nro_sprint + 1), proyecto_id = proyecto_id)
                     proyecto.nro_sprint = proyecto.nro_sprint + 1
                     proyecto.save()
+                else:
+                    mensaje = "aun quedan dias por trabajar en este sprint!"
                     
             except:
                 proyecto.nro_sprint = 0
@@ -1532,7 +1535,7 @@ def sprints(request, proyecto_id, sprint_id, dia_sprint):
                 
     sprints = Sprint.objects.filter(proyecto_id = proyecto_id)
     
-    return render_to_response('apps/project_sprints.html', {"proyecto":proyecto, "sprint":sprint, "sprints":sprints, "formularios":formularios, "tiempos_reales":tiempos_reales}, context_instance = RequestContext(request))
+    return render_to_response('apps/project_sprints.html', {"proyecto":proyecto, "sprint":sprint, "sprints":sprints, "formularios":formularios, "tiempos_reales":tiempos_reales, "mensaje":mensaje}, context_instance = RequestContext(request))
 
 def crearSprints(proyecto_id):
     """
