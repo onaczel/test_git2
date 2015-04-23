@@ -6,10 +6,10 @@
 <h1>Eliminar Flujo</h1>
 {% endblock %} 
 {% block contenido %}
-<h1>Flujo Eliminado correctamente</h1>
+<h3>Flujo Eliminado correctamente</h3>
 
-<a href="/apps/modadmin">Volver a administracion</a>
+<a href="{% url 'apps:listflowmod' user_logged %}">Volver a administracion</a>
 {% endblock %}
 {% block atras %}
-<a href="/apps/modadmin">Atras</a>
+<a href="{% url 'apps:listflowmod' user_logged %}">Atras</a>
 {% endblock %}

@@ -7,7 +7,7 @@
 <h3>Asignar actividades</h3>
 {% endblock %}
 {% block contenido %}
-<form action="{% url 'apps:setactividades' flow_id %}" method='post'>{% csrf_token %}
+<form action="{% url 'apps:setactividades' user_logged flow_id %}" method='post'>{% csrf_token %}
 	<table>{{formulario}}</table>
 	<input type="hidden" name="action" value="submit">
 	<input type="submit" value="Guardar y Agregar otra Actividad" name='submit'>

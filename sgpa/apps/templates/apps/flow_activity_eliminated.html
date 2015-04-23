@@ -8,8 +8,9 @@
 {% block contenido %}
 <h1>Actividad eliminada</h1>
 
-<a href="{% url 'apps:listactivitiesmod' flow_id %}">Volver a Administracion</a>
+<a href="{% url 'apps:listactivitiesmod' user_logged flow_id %}">Volver</a>
+<br>
 {% endblock %}
 {% block atras %}
-<a href="{% url 'apps:listactivitiesmod' flow_id %}">Atras</a>
+<a href="{% url 'apps:listactivitiesmod' user_logged flow_id %}">Atras</a>
 {% endblock %}

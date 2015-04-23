@@ -31,6 +31,15 @@ urlpatterns = patterns('',
     url(r'^(?P<user_logged>\d+)/modadmin/adminproyecto/crearproyecto/$', views.crearProyecto, name="crearProyecto"),
     url(r'^(?P<user_logged>\d+)/modadmin/adminproyecto/crearproyecto/(?P<proyecto_pk>\d+)/agregarPlantilla/$', views.agregarPlantilla, name='agregarPlantilla'),
     
+    url(r'^(?P<user_logged>\d+)/modadmin/adminflujo/$', views.listflowmod, name="listflowmod"),
+    url(r'^(?P<user_logged>\d+)/modadmin/adminflujo/crearflujo/$', views.crearflujo, name="crearflujo"),
+    url(r'^(?P<user_logged>\d+)/modadmin/adminflujo/crearflujo/(?P<flow_id>\d+)/setactividades/$', views.setactividades, name="setactividades"),
+    url(r'^(?P<user_logged>\d+)/modadmin/adminflujo/(?P<flow_id>\d+)/modificarflujo/$', views.editarflujos, name="editarflujos"),
+    url(r'^(?P<user_logged>\d+)/modadmin/adminflujo/(?P<flow_id>\d+)/modificarflujo/setactividades/$', views.listactivitiesmod, name="listactivitiesmod"),
+    url(r'^(?P<user_logged>\d+)/modadmin/adminflujo/(?P<flow_id>\d+)/setactividadesmod/(?P<actv_id>\d+)/', views.setactividadesmod, name="setactividadesmod"),
+    url(r'^(?P<user_logged>\d+)/modadmin/adminflujo/(?P<flow_id>\d+)/eliminarflujo/$', views.flowdelete, name="flowdelete"),
+    url(r'^(?P<user_logged>\d+)/modadmin/adminflujo/(?P<flow_id>\d+)/setactividadesdel/(?P<actv_id>\d+)/', views.setactividadesdel, name="setactividadesdel"),
+    
     
     #url(r'^modproyecto/$', views.modproyecto.as_view(), name='modproyecto'),
     url(r'^modproyecto/$', views.modproyecto.as_view(), name='modproyecto'),
@@ -84,20 +93,20 @@ urlpatterns = patterns('',
     
     
   #  url(r'^modadmin/adminproyecto/createProject/$', views.agregarPlantilla, name="agregarPlantilla"),
-    url(r'^modadmin/adminflujo/$', views.listflowmod, name="listflowmod"),
     
-    url(r'^modadmin/adminflujo/crearflujo/$', views.crearflujo, name="crearflujo"),
-    url(r'^(?P<flow_id>\d+)/setactividades/$', views.setactividades, name="setactividades"),
     
-    url(r'^modadmin/adminflujo/editarflujo/$', views.listflowmod, name="listflowmod"),
-    url(r'^(?P<flow_id>\d+)/modificarflujo', views.editarflujos, name="editarflujos"),
-    url(r'^(?P<flow_id>\d+)/listactivitiesmod', views.listactivitiesmod, name="listactivitiesmod"),
-    url(r'^(?P<flow_id>\d+)/(?P<actv_id>\d+)/setactividadesmod', views.setactividadesmod, name="setactividadesmod"),
     
-    url(r'^(?P<flow_id>\d+)/(?P<actv_id>\d+)/setactividadesdel', views.setactividadesdel, name="setactividadesdel"),
+    
+    
+    
+    
+    
+    
+    
+    
     
     url(r'^modadmin/adminflujo/eliminarflujo/$', views.listflowdel, name="listflowdel"),
-    url(r'^(?P<flow_id>\d+)/flowdelete', views.flowdelete, name="flowdelete"),
+    
     
     url(r'^modadmin/adminuser/asignarrol/$', views.listroleuser, name="listroleuser"),
     url(r'^modadmin/(?P<user_logged>\d+)/nuevo/(?P<user_id>\d+)/asignarrolusuario/$', views.asignarrolusuario, name="asignarrolusuario"),

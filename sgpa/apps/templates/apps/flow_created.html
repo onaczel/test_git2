@@ -6,8 +6,8 @@
 <h1>{{flow_descripcion}}</h1>
 <p>Flujo Creado con exito<p>
 <br>
-<a href="/apps/modadmin/" >Volver a administracion</a>
+<a href="{% url 'apps:listactivitiesmod' user_logged flow_id %}">Volver a Administracion</a><br />
 {% endblock %}
 {% block atras %}
-<a href="/apps/modadmin/" >Atras</a>
+<a href="{% url 'apps:listactivitiesmod' user_logged flow_id %}">Atras</a><br />
 {% endblock %}

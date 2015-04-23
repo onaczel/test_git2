@@ -412,16 +412,6 @@ def listuserdel(request):
     users = User.objects.all()
     return render_to_response("apps/user_select_del.html", {"users":users})
 
-def listrolesmod(request, user_logged):
-    """
-    @param request: Http request
-    @ret14urn: Retorna una lista con todos los roles del sistema y lo envia al template
-    de modificacion de roles
-    """
-    roles = Roles.objects.all()
-    permisos = misPermisos(user_logged, 0)
-    return render_to_response("apps/role_admin.html", {"roles":roles, 'user_logged':user_logged, 'misPermisos':permisos})
-
 def listrolesproj(request, proyecto_id):
     """
     @param request: Http request
@@ -440,23 +430,7 @@ def listrolesdel(request):
     roles = Roles.objects.all()
     return render_to_response("apps/role_delete.html", {"roles":roles})
 '''
-def listflowmod(request):
-    """
-    @param request: Http request
-    @return: Retorna una lista con todas las plantillas de flujo activas y lo envia al template
-    de modificacion de plantilla de flujos
-    """
-    flujos = Flujos.objects.filter(estado = True, plantilla = True)
-    return render_to_response("apps/flow_admin.html", {"flujos":flujos})
 
-def listflowdel(request):
-    """
-    @param request: Http request
-    @return: Retorna una lista con todas las plantillas de flujo activas y lo envia al template
-    de eliminacion de plantilla de flujos
-    """
-    flujos = Flujos.objects.filter(estado = True, plantilla = True)
-    return render_to_response("apps/flow_delete.html", {"flujos":flujos})
 
 
 
@@ -535,6 +509,11 @@ def deluser(request, user_logged, user_id):
     
     return render_to_response("apps/user_deleted.html",{'user_logged':user_logged}, RequestContext(request))
 
+
+     
+#########################################################################################################################################################
+
+#######################################################################################################################################################
 class RoleCreateForm(forms.ModelForm):
     class Meta:
         model = Roles
@@ -544,11 +523,7 @@ class RoleModifyForm(forms.ModelForm):
     class Meta:
         model = Roles
         fields = ("descripcion",)
-     
-#########################################################################################################################################################
-
-#######################################################################################################################################################
-
+        
 #Noreversematch es un error de configuracion de url
 def listpermisos(request, user_logged):
     """
@@ -599,6 +574,17 @@ def asignarrol(request, user_logged, role_id):
         permrol.save()
         
     return render_to_response("apps/role_created.html", {'sistema':sistema, 'user_logged':user_logged}, context_instance = RequestContext(request))
+
+
+def listrolesmod(request, user_logged):
+    """
+    @param request: Http request
+    @ret14urn: Retorna una lista con todos los roles del sistema y lo envia al template
+    de modificacion de roles
+    """
+    roles = Roles.objects.all()
+    permisos = misPermisos(user_logged, 0)
+    return render_to_response("apps/role_admin.html", {"roles":roles, 'user_logged':user_logged, 'misPermisos':permisos})
 
 def rolemodify(request, user_logged, role_id):
     """
@@ -690,18 +676,30 @@ def roledelete(request, user_logged, role_id):
 ###################################################################################################################################################
 
 ###################################################################################################################################################
+
 class FlowCreateForm(forms.ModelForm):
     class Meta:
         model = Flujos
-        fields = ("descripcion", "estado") 
+        fields = ("descripcion",) 
         
 class ActivityCreateForm(forms.ModelForm):
     class Meta:
         model = Actividades
         fields = ("descripcion",)
         
+def listflowmod(request, user_logged):
+    """
+    @param request: Http request
+    @return: Retorna una lista con todas las plantillas de flujo activas y lo envia al template
+    de modificacion de plantilla de flujos
+    """
+    permisos = misPermisos(user_logged, 0)
+    rol_permiso = Users_Roles.objects.get(user_id = user_logged)
+    rol = Roles.objects.get(pk=rol_permiso.role_id)
+    flujos = Flujos.objects.filter(estado = True, plantilla = True)
+    return render_to_response("apps/flow_admin.html",{'misPermisos':permisos, 'user_logged':user_logged, 'rol_id':rol.id, "flujos":flujos})
         
-def crearflujo(request):
+def crearflujo(request, user_logged):
     """
     Crea una plantilla de flujo
     @param request: Http request    
@@ -714,13 +712,13 @@ def crearflujo(request):
             flow = Flujos.objects.get(descripcion = form.cleaned_data['descripcion'])
             flow_id = flow.id
             formulario = ActivityCreateForm()
-        return render_to_response('apps/flow_set_activities.html', {'formulario':formulario, 'flow_id':flow_id, 'flow_descripcion':flow.descripcion}, context_instance=RequestContext(request))
+        return render_to_response('apps/flow_set_activities.html', {'formulario':formulario, 'flow_id':flow_id, 'flow_descripcion':flow.descripcion, 'user_logged':user_logged}, context_instance=RequestContext(request))
     else:
         form = FlowCreateForm()
     
-    return render_to_response('apps/flow_create.html', {'form':form}, context_instance=RequestContext(request))
+    return render_to_response('apps/flow_create.html', {'form':form, 'user_logged':user_logged}, context_instance=RequestContext(request))
     
-def setactividades(request, flow_id):
+def setactividades(request, user_logged, flow_id):
     """
     Agrega actividades a una plantilla de flujo
     @param request: Http request    
@@ -738,18 +736,19 @@ def setactividades(request, flow_id):
             #form.save()
             if request.POST['submit'] == "Guardar y Agregar otra Actividad":
                 formulario = ActivityCreateForm()
-                return render_to_response('apps/flow_set_activities.html', {'formulario':formulario, 'flow_id':flow_id, 'flow_descripcion':f.descripcion}, context_instance=RequestContext(request))
+                return render_to_response('apps/flow_set_activities.html', {'formulario':formulario, 'flow_id':flow_id, 'flow_descripcion':f.descripcion, 'user_logged':user_logged}, context_instance=RequestContext(request))
             elif request.POST['submit'] == "Guardar y Salir":
-                return render_to_response('apps/flow_created.html', {'flow_descripcion':f.descripcion}, context_instance = RequestContext(request))
+                return render_to_response('apps/flow_created.html', {'flow_id':flow_id, 'flow_descripcion':f.descripcion, 'user_logged':user_logged}, context_instance = RequestContext(request))
         else:
-            return render_to_response('apps/flow_not_valid.html', context_instance=RequestContext(request))
+            return render_to_response('apps/flow_not_valid.html', {"user_logged":user_logged}, context_instance=RequestContext(request))
     else:
         formulario = ActivityCreateForm()
     
-    return render_to_response('apps/flow_set_activities.html', {'formulario':formulario, 'flow_id':flow_id, 'flow_descripcion':f.descripcion}, context_instance=RequestContext(request)) 
+    return render_to_response('apps/flow_set_activities.html', {'formulario':formulario, 'flow_id':flow_id, 'flow_descripcion':f.descripcion, 'user_logged':user_logged}, context_instance=RequestContext(request)) 
 
 
-def editarflujos(request, flow_id):
+
+def editarflujos(request, user_logged, flow_id):
     """
     Edita una plantilla de flujo
     @param request: Http request    
@@ -757,6 +756,7 @@ def editarflujos(request, flow_id):
     @return: render a apps/flow_set_activities_mod.html con una lista de actividades y el id del flujo
     """
     flujo = get_object_or_404(Flujos, pk=flow_id)
+    
     if request.method == 'POST':
         form = FlowCreateForm(request.POST)
         if form.is_valid():
@@ -766,13 +766,15 @@ def editarflujos(request, flow_id):
             
             actividades = Actividades.objects.filter(flujo_id=flow_id)
             
-            return render_to_response("apps/flow_set_activities_mod.html", {"actividades":actividades, "flow_id":flow_id, 'flow_descripcion':flujo.descripcion}, context_instance=RequestContext(request))
+            #return render_to_response("apps/flow_set_activities_mod.html", {"actividades":actividades, "flow_id":flow_id, 'flow_descripcion':flujo.descripcion, 'user_logged':user_logged}, context_instance=RequestContext(request))
+            return listactivitiesmod(request, user_logged, flow_id)
     else:
         form = FlowCreateForm(initial={'descripcion':flujo.descripcion, 'estado':flujo.estado})
     
-    return render_to_response('apps/flow_modify_form.html', {'form':form, 'flujo':flujo}, context_instance=RequestContext(request))
+    
+    return render_to_response('apps/flow_modify_form.html', {'form':form, 'flujo':flujo, 'flow_id':flujo.id, 'user_logged':user_logged}, context_instance=RequestContext(request))
 
-def listactivitiesmod(request, flow_id):
+def listactivitiesmod(request, user_logged,  flow_id):
     """
     Obtiene la lista de actividades de una plantilla de flujo
     @param request: Http request
@@ -781,15 +783,16 @@ def listactivitiesmod(request, flow_id):
     """
     actividades = Actividades.objects.filter(flujo_id=flow_id)
     flujo = get_object_or_404(Flujos, pk=flow_id)
-    return render_to_response("apps/flow_set_activities_mod.html", {"actividades":actividades, "flow_id":flow_id, 'flow_descripcion':flujo.descripcion}, context_instance=RequestContext(request))
+    #return render_to_response("apps/flow_set_activities_mod.html", {"actividades":actividades, "flow_id":flow_id, 'flow_descripcion':flujo.descripcion, 'user_logged':user_logged}, context_instance=RequestContext(request))
+    return render_to_response("apps/flow_set_activities_mod.html", {"actividades":actividades, "flow_id":flow_id, 'flow_descripcion':flujo.descripcion, 'user_logged':user_logged}, context_instance=RequestContext(request))
 
-def setactividadesmod(request, flow_id, actv_id):
+def setactividadesmod(request, user_logged, flow_id, actv_id):
     """
     Modifica las actividades de una plantilla de flujo
     @param request: Http request
     @param flow_id: Id de una plantilla de flujo
     @param actv_id: Id de una actividad
-    @return: render a apps/flow_activitie_modified.html
+    @return: render a apps/flow_activity_modified.html
     """
     f = get_object_or_404(Flujos, pk=flow_id)
     a = get_object_or_404(Actividades, pk=actv_id)
@@ -798,31 +801,37 @@ def setactividadesmod(request, flow_id, actv_id):
         if form.is_valid():
             a.descripcion = form.cleaned_data['descripcion']
             a.save()
-            return render_to_response("apps/flow_activitie_modified.html", {'flow_id':flow_id, 'flow_descripcion':f.descripcion}, context_instance=RequestContext(request))
-        else:
-            return render_to_response('apps/flow_not_valid.html', context_instance=RequestContext(request))
+            return render_to_response("apps/flow_activity_modified.html", {'flow_id':flow_id, 'flow_descripcion':f.descripcion, 'user_logged':user_logged}, context_instance=RequestContext(request))
     else:
         form = ActivityCreateForm(initial={'descripcion':a.descripcion})
     
-    return render_to_response('apps/flow_set_activities_mod_form.html', {'form':form, 'flow_id':flow_id, 'actv_id':actv_id}, context_instance=RequestContext(request))
+    return render_to_response('apps/flow_set_activities_mod_form.html', {'form':form, 'flow_id':flow_id, 'actv_id':actv_id, 'user_logged':user_logged}, context_instance=RequestContext(request))
 
 
-def setactividadesdel(request, flow_id, actv_id):
+def setactividadesdel(request, user_logged, flow_id, actv_id):
     """
     Establece el estado de una actividad a False
     @param request: Http request
     @param flow_id: Id de una plantilla de flujo
     @param actv_id: Id de una actividad
-    @return: render a  apps/flow_activitie_eliminated.html  
+    @return: render a  apps/flow_activity_eliminated.html  
     """
     flujo = get_object_or_404(Flujos, pk = flow_id)
     a = Actividades.objects.get(pk=actv_id)
     a.estado = False
     a.save()
-    return render_to_response("apps/flow_activitie_eliminated.html", {"flow_id":flow_id, 'flow_descripcion':flujo.descripcion}, context_instance=RequestContext(request))
+    return render_to_response("apps/flow_activity_eliminated.html", {"flow_id":flow_id, 'flow_descripcion':flujo.descripcion, 'user_logged':user_logged}, context_instance=RequestContext(request))
 
+def listflowdel(request):
+    """
+    @param request: Http request
+    @return: Retorna una lista con todas las plantillas de flujo activas y lo envia al template
+    de eliminacion de plantilla de flujos
+    """
+    flujos = Flujos.objects.filter(estado = True, plantilla = True)
+    return render_to_response("apps/flow_delete.html", {"flujos":flujos})
 
-def flowdelete(request, flow_id):
+def flowdelete(request, user_logged,  flow_id):
     """
     Establece el estado de un flujo a False
     @param request: Http request
@@ -832,9 +841,11 @@ def flowdelete(request, flow_id):
     f = get_object_or_404(Flujos, pk=flow_id)
     f.estado = False
     f.save()
-    return render_to_response("apps/flow_eliminated.html", context_instance=RequestContext(request))
+    return render_to_response("apps/flow_eliminated.html",{'user_logged':user_logged}, context_instance=RequestContext(request))
  
 ###############################creacion de proyecto#################################################################################################
+
+#####################################################################################################################################################
 
 def adminproject(request, user_logged):
     permisos = misPermisos(user_logged, 0)

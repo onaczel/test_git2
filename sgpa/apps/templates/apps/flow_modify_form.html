@@ -11,9 +11,9 @@
 <form action="" method="post">{% csrf_token %}
 	<table>{{form}}</table>
 	<input type="submit" value="Registrar" >
-	<a href="{% url 'apps:listactivitiesmod' flujo.id%}">Ir a edicion de actividades</a>
 </form>
+<a href="{% url 'apps:listactivitiesmod' user_logged flow_id %}">Ir a edicion de actividades</a>
 {% endblock %}
 {% block atras %}
-<a href="/apps/modadmin/adminflujo/">Atras</a>
+<a href="{% url 'apps:listflowmod' user_logged %}">Atras</a><br />
 {% endblock %}

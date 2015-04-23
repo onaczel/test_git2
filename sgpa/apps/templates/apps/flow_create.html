@@ -6,11 +6,11 @@
 <h1>Nuevo Flujo</h1>
 {% endblock %}
 {% block contenido %}
-<form action="{% url 'apps:crearflujo' %}" method='post'>{% csrf_token %}
+<form action="{% url 'apps:crearflujo' user_logged %}" method='post'>{% csrf_token %}
 	<table>{{ form }}</table>
 	<input type="submit" value="Registrar">
 </form>
 {% endblock %}
 {% block atras %}
-<a href="/apps/modadmin/adminflujo/">Atras</a>
+<a href="{% url 'apps:listflowmod' user_logged %}">Atras</a>
 {% endblock %}

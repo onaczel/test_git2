@@ -7,10 +7,10 @@
 <h3>Asignar actividades</h3>
 {% endblock %}
 {% block contenido %}
-<form action="{% url 'apps:setactividadesmod' flow_id actv_id %}" method='post'>{% csrf_token %}
+<form action="{% url 'apps:setactividadesmod' user_logged flow_id actv_id %}" method='post'>{% csrf_token %}
 	<table>{{form}}</table>
 	<input type="hidden" name="action" value="submit">
 	<input type="submit" value="Guardar" name='submit'>
-	<a href="{% url 'apps:listactivitiesmod' flow_id %}">Volver</a> 
+	<a href="{% url 'apps:listactivitiesmod' user_logged flow_id %}">Volver</a> 
 </form>
 {% endblock %}

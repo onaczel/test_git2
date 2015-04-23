@@ -19,7 +19,7 @@
 	{% endif %}
 	<br>
 	{% if misPermisos.CPF or misPermisos.MPF or misPermisos.EPF %}
-		<a href="/apps/modadmin/adminflujo/">Administrar Flujos</a><br />
+		<a href="{% url 'apps:listflowmod' user_logged %}">Administrar Flujos</a><br />
 	{% endif %}
 	
 {% endblock %}
