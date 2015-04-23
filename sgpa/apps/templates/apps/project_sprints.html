@@ -2,7 +2,7 @@
 <h2><b>Sprints</b></h2><br />
 {% if proyecto.nro_sprint > 0%} 
 	<form action="{% url 'apps:sprints' proyecto.id 0 0 %}" method="post">{% csrf_token %}
-		<h3><b>Sprint actual: Sprint Numero {{proyecto.nro_sprint}}&emsp;&emsp;<font size=2>siguiente Sprint</font><input type="submit", name="cambio", value="-->"></b></h3><br />
+		<h3><b>Sprint actual: Sprint Numero {{proyecto.nro_sprint}}&emsp;&emsp;<font size=2>siguiente Sprint</font><input type="submit", name="cambio", value="-->"><font size="3">&emsp;{{mensaje}}</font></b></h3><br />
 	</form>
 {% else %}
 	<!--<form action="{% url 'apps:sprints' proyecto.id 0 0 %}" method="post">{% csrf_token %}
