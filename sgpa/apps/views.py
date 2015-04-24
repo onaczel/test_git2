@@ -1342,7 +1342,8 @@ def userToHU(request, proyecto_id, hu_id):
     @param hu_id: id del User Story a ser modificado
     @return: render a hu_modificado.html con el id y el id del User Story
     """
-    
+    user_logged = User.objects.get(username = request.user)
+    permisos = misPermisos(user_logged.id, proyecto_id)
     hu = UserStory.objects.get(id = hu_id)
     
     idusers = Equipo.objects.filter(proyecto_id = proyecto_id)
@@ -1363,12 +1364,24 @@ def userToHU(request, proyecto_id, hu_id):
         return render_to_response('apps/hu_modificado.html', {'proyecto_id':proyecto_id, 'hu_id':hu.id})
    
     
-    return render_to_response('apps/hu_modify_asigUser.html', {'users':users, 'proyecto_id':proyecto_id, 'hu_id': hu_id, 'hu_descripcion':hu.descripcion},context_instance = RequestContext(request))
+    return render_to_response('apps/hu_modify_asigUser.html', {'users':users, 'proyecto_id':proyecto_id, 'hu_id': hu_id, 'hu_descripcion':hu.descripcion, 'permisos':permisos},context_instance = RequestContext(request))
 
 
+def verCliente(request, proyecto_id):
+        """
+        Permite visualizar los clientes de un proyecto
+        @param request: Http
+        @param proyecto_id: id del proyecto donde se encuentra el usuario
+        @return: render a project_verCliente.html con la lista de clientes(users), la descripcion del proyecto y su id
+        """
+        team = Equipo.objects.filter(proyecto_id = proyecto_id, rol_id = 4)
+        users = []
+        for t in team:
+            users.append(User.objects.get(id = t.usuario_id))
+        proyecto = Proyectos.objects.get(id = proyecto_id, )
+        
+        return render_to_response('apps/project_verCliente.html', {'users':users, 'proyecto':proyecto.descripcion,'proyecto_id':proyecto_id},context_instance = RequestContext(request))
 
-    
-    
     
 def eliminarHu(request, proyecto_id, hu_id):
     """

@@ -20,21 +20,21 @@
 <br/>
 
 {% block contenido %}
-	
-	<form  id="formulario3"  method="post">
-	{% csrf_token %}
-		<label>Usuario: </label>
-		<select name="us"  style="width:190px" sort = true>
+	{% if not permisos.MUS %}
+		<form  id="formulario3"  method="post">
+		{% csrf_token %}
+			<label>Usuario: </label>
+			<select name="us"  style="width:190px" sort = true>
 							{% for user in users %}
 								<option >{{user.username}}</option>
 							{% endfor %} 
 							
 							
-		</select><br>
-		<br><input id="campo5" name="crear" type="submit" value="Asignar usuario" />
+			</select><br>
+			<br><input id="campo5" name="crear" type="submit" value="Asignar usuario" />
 		
-	</form>
-	
+		</form>
+	{% endif %}
 {% endblock %}
 {% block atras %}
 	<a href="{% url 'apps:listhu' proyecto_id %}">Volver</a>

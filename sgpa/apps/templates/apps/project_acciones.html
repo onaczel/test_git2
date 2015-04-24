@@ -20,5 +20,8 @@
 {%if misPermisos.PS == True %}
 <br><a href="{% url 'apps:sprints' proyecto.id 0 0 %}">Sprints</a><br />
 {% endif %}
+{%if misPermisos.VP %}
+<br><a href="{% url 'apps:verCliente' proyecto.id%}">Ver cliente</a><br />
+{% endif %}
 <br>
 <a href="{% url 'apps:listproyectosdelusuario' usuario.id %}">Volver</a>
