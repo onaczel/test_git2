@@ -1327,7 +1327,7 @@ def modificarHu(request, proyecto_id, hu_id):
     @param request: Http
     @param proyecto_id: id del proyecto donde se encuentra el User Story
     @param hu_id: id del User Story a ser modificado
-    @return: rener a hu_modify.html con el id y la descripcion del User Story, y el id del proyecto donde se encuentra
+    @return: render a hu_modify.html con el id y la descripcion del User Story, y el id del proyecto donde se encuentra
     """
     hu = UserStory.objects.get(pk=hu_id)
     hu_descripcion = hu.descripcion
@@ -1335,6 +1335,14 @@ def modificarHu(request, proyecto_id, hu_id):
 
 
 def userToHU(request, proyecto_id, hu_id):
+    """
+    Asignar un usuario a un user story. El usuario debe pertenecer al mismo proyecto que el user story
+    @param request: Http
+    @param proyecto_id: id del proyecto donde se encuentra el User Story
+    @param hu_id: id del User Story a ser modificado
+    @return: render a hu_modificado.html con el id y el id del User Story
+    """
+    
     hu = UserStory.objects.get(id = hu_id)
     
     idusers = Equipo.objects.filter(proyecto_id = proyecto_id)
