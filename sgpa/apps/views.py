@@ -1240,8 +1240,12 @@ def listhu(request, proyecto_id):
     @param proyecto_id: id de un proyecto
     @return: render a apps/hu_admin.html con el proyecto en el que se encuentra el usuario, y la lista de user stories
     """
+    
+    mispermisos = misPermisos(request.user.id, proyecto_id)
+    
     hu = UserStory.objects.filter(proyecto_id = proyecto_id, estado = True)
-    return render_to_response('apps/hu_admin.html', { 'hu':hu, 'proyecto_id':proyecto_id})
+    
+    return render_to_response('apps/hu_admin.html', { 'hu':hu, 'proyecto_id':proyecto_id, 'misPermisos':mispermisos})
 
 def listhuflujo(request, proyecto_id, hu_id):
     """
@@ -1303,6 +1307,7 @@ def editarHu(request, proyecto_id, hu_id):
     @return: render a hu_form_no_valido.html 
     @return: hu_modify_fields.html con el id y la descripcion del User Story, el id del proyecto donde se encuentra y el formulario de edicion
     """
+    mispermisos = misPermisos(request.user.id, proyecto_id)
     hu = get_object_or_404(UserStory, pk=hu_id)
     if request.method == 'POST':
         form = HuCreateForm(request.POST)
@@ -1319,7 +1324,7 @@ def editarHu(request, proyecto_id, hu_id):
     else:        
         form = HuCreateForm(initial={'descripcion':hu.descripcion, 'codigo':hu.codigo, 'tiempo_Estimado':hu.tiempo_Estimado})
     
-    return render_to_response('apps/hu_modify_fields.html', {"form":form, "proyecto_id":proyecto_id, "hu_id":hu_id, "hu_descripcion":hu.descripcion}, context_instance = RequestContext(request))
+    return render_to_response('apps/hu_modify_fields.html', {"form":form, "proyecto_id":proyecto_id, "hu_id":hu_id, "hu_descripcion":hu.descripcion, 'misPermisos':mispermisos}, context_instance = RequestContext(request))
 
 def modificarHu(request, proyecto_id, hu_id):
     """

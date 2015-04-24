@@ -16,7 +16,9 @@
 <br><a href="{% url 'apps:listflujosproyectosMod' proyecto.id %}">Modificar Flujo</a><br />
 {% endif %}
 <br>
+{% if misPermisos.CUS or misPermisos.MUS or misPermisos.EUS %}
 <a href="{% url 'apps:listhu' proyecto.id %}">Administrar User Stories</a>
+{% endif %}
 <!-- <br>
 <a href="{% url 'apps:listrolesproj' proyecto.id %}">Administrar Roles</a>
 -->

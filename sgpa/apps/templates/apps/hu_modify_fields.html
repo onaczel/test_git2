@@ -6,27 +6,33 @@
 {% block index %}
 	<!-- <a href="{% url 'apps:editarHu' proyecto_id hu_id %}">Modificar Campos</a><br/> -->
 	<h3>{{hu_descripcion}}</h3>
-	<a href="{% url 'apps:userToHU' proyecto_id hu_id %}">Asignar Usuario</a><br/>
-	<a href="{% url 'apps:listhuflujo' proyecto_id hu_id %}">Asignar Flujo</a><br />
+	{% if misPermisos.MUS %}
+		<a href="{% url 'apps:userToHU' proyecto_id hu_id %}">Asignar Usuario</a><br/>
+		<a href="{% url 'apps:listhuflujo' proyecto_id hu_id %}">Asignar Flujo</a><br />
+	{% endif %}
 	<!--<a href='assignSprint'>Asignar Sprint</a><br />
 	  a href='assignPriority'>Asignar Prioridad</a><br/>
 	<a href="">Asignar Valor Tecnico</a><br>
 	<a href="">Asignar Valor de Negocio</a><br> -->
 	<br>
-	<a href="{% url 'apps:eliminarHu' proyecto_id hu_id %}">Eliminar User Story</a><br />
+	{% if misPermisos.EUS %}
+		<a href="{% url 'apps:eliminarHu' proyecto_id hu_id %}">Eliminar User Story</a><br />
+	{% endif %}
 	
 {% endblock %}
 <br/>
 
 {% block contenido %}
-	<form action="{% url 'apps:editarHu' proyecto_id hu_id %}" method="post">
-		{% csrf_token %}
-		<table>{{form}}</table>
+	{% if misPermisos.MUS %}
+		<form action="{% url 'apps:editarHu' proyecto_id hu_id %}" method="post">
+			{% csrf_token %}
+			<table>{{form}}</table>
+			
+			<input type='submit' value='Guardar'/>
 		
-		<input type='submit' value='Guardar'/>
-	
-	
-	</form>
+		
+		</form>
+	{% endif %}
 {% endblock %}
 {% block atras %}
 	<a href="{% url 'apps:listhu' proyecto_id %}">Volver</a>

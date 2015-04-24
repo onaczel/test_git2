@@ -20,7 +20,7 @@
 <br/>
 
 {% block contenido %}
-	{% if not permisos.MUS %}
+	
 		<form  id="formulario3"  method="post">
 		{% csrf_token %}
 			<label>Usuario: </label>
@@ -34,7 +34,7 @@
 			<br><input id="campo5" name="crear" type="submit" value="Asignar usuario" />
 		
 		</form>
-	{% endif %}
+	
 {% endblock %}
 {% block atras %}
 	<a href="{% url 'apps:listhu' proyecto_id %}">Volver</a>
