@@ -1553,7 +1553,7 @@ def sprints(request, proyecto_id, sprint_id, dia_sprint):
                 dia.save()
             dias_sprint = Dia_Sprint.objects.filter(sprint_id = sprint_id)
             for d_sprint in dias_sprint:
-                formulario = dia_sprintCreateForm(initial={'tiempo_estimado':d_sprint.tiempo_estimado, 'tiempo_real':d_sprint.tiempo_real})
+                formulario = dia_sprintCreateForm(initial={'tiempo_estimado':d_sprint.tiempo_estimado})
                 formularios.append(formulario)
                 tiempos_reales.append(d_sprint)
         elif request.POST['cambio'] == "-->":
