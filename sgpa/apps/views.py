@@ -877,7 +877,8 @@ def crearProyecto(request, user_logged):
                 proyecto.descripcion = request.POST.get('descripcion', False)
                 proyecto.observaciones = request.POST.get('observaciones', False)
                 proyecto.fecha_ini = request.POST.get('fechaInicio', False)
-                proyecto.fecha_est_fin = request.POST.get('fechaFin', False)             
+                proyecto.fecha_est_fin = request.POST.get('fechaFin', False)
+                proyecto.nro_sprint = 1
                 proyecto.save()
                 
                 #Creacion de equipo
