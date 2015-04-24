@@ -1333,6 +1333,35 @@ def modificarHu(request, proyecto_id, hu_id):
     hu_descripcion = hu.descripcion
     return render_to_response('apps/hu_modify.html', {'proyecto_id':proyecto_id, 'hu_id':hu_id, 'hu_descripcion':hu_descripcion})
 
+
+def userToHU(request, proyecto_id, hu_id):
+    hu = UserStory.objects.get(id = hu_id)
+    
+    idusers = Equipo.objects.filter(proyecto_id = proyecto_id)
+    
+    users = []
+    
+    for us in idusers:
+        users.append(User.objects.get(id = us.usuario_id))
+        hu = UserStory.objects.get(id = hu_id)
+    
+    if request.method == 'POST':        
+        print(request.POST['us'])
+        user = User.objects.get(username = request.POST['us']) 
+        print (user.id) 
+        hu.usuario_Asignado =  user.id
+        hu.save()
+        
+        return render_to_response('apps/hu_modificado.html', {'proyecto_id':proyecto_id, 'hu_id':hu.id})
+   
+    
+    return render_to_response('apps/hu_modify_asigUser.html', {'users':users, 'proyecto_id':proyecto_id, 'hu_id': hu_id, 'hu_descripcion':hu.descripcion},context_instance = RequestContext(request))
+
+
+
+    
+    
+    
 def eliminarHu(request, proyecto_id, hu_id):
     """
     cambia el estado de un User Story a inactivo
