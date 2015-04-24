@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block titulo %}
+<h1>Asignar Usuario</h1>
+{% endblock %}
+
+{% block index %}
+	<!-- <a href="{% url 'apps:editarHu' proyecto_id hu_id %}">Modificar Campos</a><br/> -->
+	<h3>{{hu_descripcion}}</h3>
+	<p>>Asignar Usuario</p>
+	<a href="{% url 'apps:listhuflujo' proyecto_id hu_id %}">Asignar Flujo</a><br />
+	<a href='assignSprint'>Asignar Sprint</a><br />
+	<a href='assignPriority'>Asignar Prioridad</a><br/>
+	<a href="">Asignar Valor Tecnico</a><br>
+	<a href="">Asignar Valor de Negocio</a><br>
+	
+	<a href="{% url 'apps:eliminarHu' proyecto_id hu_id %}">Eliminar User Story</a><br />
+	
+{% endblock %}
+<br/>
+
+{% block contenido %}
+	
+	<form  id="formulario3"  method="post">
+	{% csrf_token %}
+		<label>Usuario: </label>
+		<select name="us"  style="width:190px" sort = true>
+							{% for user in users %}
+								<option >{{user.username}}</option>
+							{% endfor %} 
+							
+							
+		</select><br>
+		<br><input id="campo5" name="crear" type="submit" value="Asignar usuario" />
+		
+	</form>
+	
+{% endblock %}
+{% block atras %}
+	<a href="{% url 'apps:listhu' proyecto_id %}">Volver</a>
+	
+{% endblock %}
