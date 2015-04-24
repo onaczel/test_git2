@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block titulo %}
+<h1>Proyecto: {{proyecto}}</h1>
+{% endblock %}
+
+{% block index %}
+	
+	
+{% endblock %}
+<br/>
+
+{% block contenido %}
+	<h2>Clientes:</h2>
+	{% for u in users %}
+		<h3>{{u.username}}</h3>
+	{% endfor %}
+{% endblock %}
+{% block atras %}
+	<a href="{% url 'apps:accionesproyecto' proyecto_id %}">Volver</a>
+	
+{% endblock %}
