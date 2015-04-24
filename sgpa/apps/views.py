@@ -877,7 +877,8 @@ def crearProyecto(request, user_logged):
                 proyecto.descripcion = request.POST.get('descripcion', False)
                 proyecto.observaciones = request.POST.get('observaciones', False)
                 proyecto.fecha_ini = request.POST.get('fechaInicio', False)
-                proyecto.fecha_est_fin = request.POST.get('fechaFin', False)             
+                proyecto.fecha_est_fin = request.POST.get('fechaFin', False)
+                proyecto.nro_sprint = 1
                 proyecto.save()
                 
                 #Creacion de equipo
@@ -1240,8 +1241,12 @@ def listhu(request, proyecto_id):
     @param proyecto_id: id de un proyecto
     @return: render a apps/hu_admin.html con el proyecto en el que se encuentra el usuario, y la lista de user stories
     """
+    
+    mispermisos = misPermisos(request.user.id, proyecto_id)
+    
     hu = UserStory.objects.filter(proyecto_id = proyecto_id, estado = True)
-    return render_to_response('apps/hu_admin.html', { 'hu':hu, 'proyecto_id':proyecto_id})
+    
+    return render_to_response('apps/hu_admin.html', { 'hu':hu, 'proyecto_id':proyecto_id, 'misPermisos':mispermisos})
 
 def listhuflujo(request, proyecto_id, hu_id):
     """
@@ -1303,6 +1308,7 @@ def editarHu(request, proyecto_id, hu_id):
     @return: render a hu_form_no_valido.html 
     @return: hu_modify_fields.html con el id y la descripcion del User Story, el id del proyecto donde se encuentra y el formulario de edicion
     """
+    mispermisos = misPermisos(request.user.id, proyecto_id)
     hu = get_object_or_404(UserStory, pk=hu_id)
     if request.method == 'POST':
         form = HuCreateForm(request.POST)
@@ -1319,7 +1325,7 @@ def editarHu(request, proyecto_id, hu_id):
     else:        
         form = HuCreateForm(initial={'descripcion':hu.descripcion, 'codigo':hu.codigo, 'tiempo_Estimado':hu.tiempo_Estimado})
     
-    return render_to_response('apps/hu_modify_fields.html', {"form":form, "proyecto_id":proyecto_id, "hu_id":hu_id, "hu_descripcion":hu.descripcion}, context_instance = RequestContext(request))
+    return render_to_response('apps/hu_modify_fields.html', {"form":form, "proyecto_id":proyecto_id, "hu_id":hu_id, "hu_descripcion":hu.descripcion, 'misPermisos':mispermisos}, context_instance = RequestContext(request))
 
 def modificarHu(request, proyecto_id, hu_id):
     """
@@ -1553,7 +1559,7 @@ def sprints(request, proyecto_id, sprint_id, dia_sprint):
                 dia.save()
             dias_sprint = Dia_Sprint.objects.filter(sprint_id = sprint_id)
             for d_sprint in dias_sprint:
-                formulario = dia_sprintCreateForm(initial={'tiempo_estimado':d_sprint.tiempo_estimado, 'tiempo_real':d_sprint.tiempo_real})
+                formulario = dia_sprintCreateForm(initial={'tiempo_estimado':d_sprint.tiempo_estimado})
                 formularios.append(formulario)
                 tiempos_reales.append(d_sprint)
         elif request.POST['cambio'] == "-->":
@@ -1674,4 +1680,8 @@ def horas(request, hu_id):
 
     formulario = dia_sprintCreateForm2()
     
-    return render_to_response('apps/agregarHoras.html', {"user_stories":user_stories, "proyectos":proyectos, "user":request.user, "formulario":formulario, "mensaje":mensaje}, context_instance = RequestContext(request))
+    user = request.user
+    u_rol = Users_Roles.objects.get(user_id=user.id)
+    rol = Roles.objects.get(pk = u_rol.role_id)
+    
+    return render_to_response('apps/agregarHoras.html', {"user_stories":user_stories, "proyectos":proyectos, 'rol_id':u_rol.role_id, "user":request.user, "formulario":formulario, "mensaje":mensaje}, context_instance = RequestContext(request))

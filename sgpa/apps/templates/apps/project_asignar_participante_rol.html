@@ -1,9 +1,14 @@
-{% block encabezado %}
+{% extends 'base.html' %}
+
+{% block titulo %}
 	<h1>Modulo Proyecto</h1>
 {% endblock %}
-<p>{{proyecto.nombre}}</p>
+{% block encabezado %}
+<h1>{{proyecto.nombre}}</h1>
+{% endblock %}
+{% block contenido %}
 <br />
-<h1>Seleccionar el rol a asignar al usuario</h1>
+<h3>Seleccionar el rol a asignar al usuario</h3>
 
 <form action="{% url 'apps:asigparticipanterol' proyecto.id usuario.id %}" method="post">{% csrf_token %}
 {% if roles %}
@@ -17,4 +22,5 @@
  <input type="submit" name="Asignar" value="Asignar roles"/>
  </form>
 <br />
-<a href="{% url 'apps:listasigparticipante' proyecto.id %}">Volver</a>
+{% endblock %}
+<a href="{% url 'apps:listasigparticipante' proyecto.id %}">Atras</a>

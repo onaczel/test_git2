@@ -3,7 +3,9 @@
 <h1>Administrar User Stories</h1>
 {% endblock %}
 {% block contenido %}
+{% if misPermisos.CUS %}
 <a href="{% url 'apps:crearHu' proyecto_id %}">Nuevo User Story</a>
+{% endif %}
 <br />
 <br />	
 {% if hu %}
@@ -14,7 +16,7 @@
 		<br>
 	{% endfor %}
 {% else %}
-	<p>There are no user stories in db</p>
+	<p>No existe ningun User Story en la Base de Datos</p>
 {% endif %}
 <br />	
 {% endblock %}

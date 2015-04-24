@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User, AnonymousUser
-from apps.models import Proyectos, Roles, Equipo, Flujos, Actividades
+from apps.models import Proyectos, Roles, Equipo, Flujos, Actividades, UserStory
 from django.core import mail
 from random import choice
 from django.contrib.auth.hashers import make_password, check_password
@@ -87,10 +87,17 @@ class test_templates(TestCase):
         """
         Prueba de acceso a la pagina de creacion de proyecto
         """
+        us = User()
+        us.username = "ariel"
+        us.password = "ariel"
+        us.email = "ariel@lastdeo.com"
+        us.is_active = True
+        us.save()
+    
         self.factory = RequestFactory()
         req= self.factory.get('apps/project_admin_new.html')
         req.user = AnonymousUser()
-        resp = crearProyecto(req)        
+        resp = crearProyecto(req, us.id)        
         self.assertEqual(resp.status_code, 200)
     
     
@@ -418,3 +425,148 @@ class test_equipo(TestCase):
         equipo.save()
         
         self.assertTrue(Equipo.objects.filter(proyecto = proyecto, usuario= us, rol = rol).exists(), "El equipo no se ha creado correctamente")   
+        
+class test_user_story(TestCase):
+    
+    def test_crearHU(self):
+        """
+        Prueba de creacion de un User Story
+        """
+        # Se crea un proyecto para la prueba
+        proyecto = Proyectos()
+        proyecto.nombre = 'test'
+        proyecto.fecha_ini= '2015-01-01'
+        proyecto.fecha_est_fin = '2015-01-02'
+        proyecto.descripcion = 'una prueba de proyecto'
+        proyecto.observaciones = 'ninguna'
+        proyecto.save()
+        
+        us = UserStory()
+        us.descripcion = 'test user story'
+        us.codigo = 'us1_p1'
+        us.tiempo_Estimado = 50
+        us.proyecto_id = proyecto.id
+        us.save()
+        
+        #Se comprueba que el proyecto se haya creado con exito
+        self.assertTrue(Proyectos.objects.filter(pk = proyecto.id).exists(), "El Proyecto no se ha creado correctamente")
+        
+        #Se comprueba que el User Story se haya creado con exito
+        self.assertTrue(UserStory.objects.filter(descripcion = 'test user story', codigo = 'us1_p1', tiempo_Estimado=50, proyecto_id = proyecto.id).exists(), "El User Story no se ha creado correctamente")
+        
+    def test_modificarHU(self):
+        """
+        Prueba de modificacion de User Story
+        """
+        # Se crea un proyecto para la prueba
+        proyecto = Proyectos()
+        proyecto.nombre = 'test'
+        proyecto.fecha_ini= '2015-01-01'
+        proyecto.fecha_est_fin = '2015-01-02'
+        proyecto.descripcion = 'una prueba de proyecto'
+        proyecto.observaciones = 'ninguna'
+        proyecto.save()
+        
+        us = UserStory()
+        us.descripcion = 'test user story'
+        us.codigo = 'us1_p1'
+        us.tiempo_Estimado = 50
+        us.proyecto_id = proyecto.id
+        us.save()
+    
+        us.descripcion = 'test 2 user story'
+        us.codigo = 'us1_p1 2'
+        us.tiempo_Estimado = 51
+        us.save()
+        
+        #Se prueba que exista un User Story con los nuevos campos
+        self.assertTrue(UserStory.objects.filter(descripcion = 'test 2 user story', codigo = 'us1_p1 2', tiempo_Estimado = 51, proyecto_id = proyecto.id).exists(), "El User Story no se ha modificado correctamente")
+        
+        #Se comprueba que efectivamente se hayan modificado los campos, y la combinacion de campos ya modificados, no exista
+        self.assertFalse(UserStory.objects.filter(descripcion = 'test user story', codigo = 'us1_p1', tiempo_Estimado=50, proyecto_id = proyecto.id).exists(), "El User Story no se ha modificado correctamente")
+        
+    def test_campos_obligatorios(self):
+        """
+        Prueba para confirmar que los campos obligatorios se han guardado correctamente
+        """
+        # Se crea un proyecto para la prueba
+        proyecto = Proyectos()
+        proyecto.nombre = 'test'
+        proyecto.fecha_ini= '2015-01-01'
+        proyecto.fecha_est_fin = '2015-01-02'
+        proyecto.descripcion = 'una prueba de proyecto'
+        proyecto.observaciones = 'ninguna'
+        proyecto.save()
+        
+        us = UserStory()
+        us.descripcion = 'test user story'
+        us.codigo = 'us1_p1'
+        us.tiempo_Estimado = 50
+        us.proyecto_id = proyecto.id
+        us.save()
+        
+        #Controlar que el campo descripcion se ha guardado correctamente
+        self.assertEqual(us.descripcion, 'test user story', "La descripcion no se ha guardado correctamente")
+        #Controlar que el campo de codigo se ha guardado correctamente
+        self.assertEqual(us.codigo, 'us1_p1', "El codigo no se ha guardado correctamente")
+        #Controlar que el campo de tiempo Estimado se ha guardado correctamente
+        self.assertEqual(us.tiempo_Estimado, 50, "El tiempo Estimado no se ha guardado correctamente")
+        #Controlar que el campo del proyecto se ha guardado correctamente
+        self.assertEqual(us.proyecto_id, proyecto.id, "El id del proyecto no se ha guardado correctamente")
+        
+    def test_eliminarHU(self):
+        """
+        Prueba de que un User Story haya cambiado su estado a Inactivo
+        """
+        # Se crea un proyecto para la prueba
+        proyecto = Proyectos()
+        proyecto.nombre = 'test'
+        proyecto.fecha_ini= '2015-01-01'
+        proyecto.fecha_est_fin = '2015-01-02'
+        proyecto.descripcion = 'una prueba de proyecto'
+        proyecto.observaciones = 'ninguna'
+        proyecto.save()
+        
+        us = UserStory()
+        us.descripcion = 'test user story'
+        us.codigo = 'us1_p1'
+        us.tiempo_Estimado = 50
+        us.proyecto_id = proyecto.id
+        us.save()
+        
+        us.estado = False
+        us.save()
+        
+        #Se comprueba de que efectivamente se haya cambiado el estado del User Story
+        self.assertTrue(UserStory.objects.filter(descripcion = 'test user story', codigo = 'us1_p1', tiempo_Estimado=50, proyecto_id = proyecto.id, estado=False).exists(), "El User Story no se ha eliminado correctamente")
+        
+    def test_asignar_flujo(self):
+        """
+        Prueba de asignar un Flujo a un User Story
+        """
+        # Se crea un proyecto para la prueba
+        proyecto = Proyectos()
+        proyecto.nombre = 'test'
+        proyecto.fecha_ini= '2015-01-01'
+        proyecto.fecha_est_fin = '2015-01-02'
+        proyecto.descripcion = 'una prueba de proyecto'
+        proyecto.observaciones = 'ninguna'
+        proyecto.save()
+        #creacion del flujo de prueba 
+        flow = Flujos()
+        flow.proyecto = proyecto
+        flow.descripcion='Desarrollo de software'
+        flow.estado = True
+        flow.plantilla = False
+        flow.save()
+        
+        us = UserStory()
+        us.descripcion = 'test user story'
+        us.codigo = 'us1_p1'
+        us.tiempo_Estimado = 50
+        us.proyecto_id = proyecto.id
+        us.flujo = flow.id
+        us.save()
+        
+        self.assertTrue(UserStory.objects.filter(descripcion = 'test user story', codigo = 'us1_p1', tiempo_Estimado=50, proyecto_id = proyecto.id, flujo=flow.id).exists(), "El User Story no se ha creado correctamente")
+        

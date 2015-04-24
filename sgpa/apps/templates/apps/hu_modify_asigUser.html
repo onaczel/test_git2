@@ -9,18 +9,18 @@
 	<h3>{{hu_descripcion}}</h3>
 	<p>>Asignar Usuario</p>
 	<a href="{% url 'apps:listhuflujo' proyecto_id hu_id %}">Asignar Flujo</a><br />
-	<a href='assignSprint'>Asignar Sprint</a><br />
+	<!-- <a href='assignSprint'>Asignar Sprint</a><br />
 	<a href='assignPriority'>Asignar Prioridad</a><br/>
 	<a href="">Asignar Valor Tecnico</a><br>
-	<a href="">Asignar Valor de Negocio</a><br>
-	
+	<a href="">Asignar Valor de Negocio</a><br> -->
+	<br>
 	<a href="{% url 'apps:eliminarHu' proyecto_id hu_id %}">Eliminar User Story</a><br />
 	
 {% endblock %}
 <br/>
 
 {% block contenido %}
-	{% if not permisos.MUS %}
+	
 		<form  id="formulario3"  method="post">
 		{% csrf_token %}
 			<label>Usuario: </label>
@@ -34,7 +34,7 @@
 			<br><input id="campo5" name="crear" type="submit" value="Asignar usuario" />
 		
 		</form>
-	{% endif %}
+	
 {% endblock %}
 {% block atras %}
 	<a href="{% url 'apps:listhu' proyecto_id %}">Volver</a>

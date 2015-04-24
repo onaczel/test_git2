@@ -1,3 +1,7 @@
+{% extends 'base.html' %}
+{% block titulo %}
+<h1>Crear Flujo</h1>
+{% endblock %}
 {% block contenido %}
 <center>
 <h2>Seleccione una plantilla</h2>
@@ -33,4 +37,7 @@
 <br><input id="usar" name="usar" type="submit" value="Usar Plantilla" /></br>
 </form>
 </center>
+{% endblock %}
+{% block atras %}
+<a href="{% url 'apps:accionesproyecto' proyecto.id %}">Volver</a>
 {% endblock %}

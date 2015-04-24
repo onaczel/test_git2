@@ -1,4 +1,8 @@
+{% extends 'base.html' %}
+{% block titulo %}
 <h1><b>{{proyecto.nombre}}</b></h1>
+{% endblock %}
+{% block index %}
 {%if misPermisos.APP == True %}
 <br><a href="{% url 'apps:listasigparticipante' proyecto.id %}">Asignar Participante</a><br />
 {% endif %}
@@ -12,11 +16,13 @@
 <br><a href="{% url 'apps:listflujosproyectosMod' proyecto.id %}">Modificar Flujo</a><br />
 {% endif %}
 <br>
+{% if misPermisos.CUS or misPermisos.MUS or misPermisos.EUS %}
 <a href="{% url 'apps:listhu' proyecto.id %}">Administrar User Stories</a>
-<br>
-<br>
+{% endif %}
+<!-- <br>
 <a href="{% url 'apps:listrolesproj' proyecto.id %}">Administrar Roles</a>
-<br>
+-->
+<br> 
 {%if misPermisos.PS == True %}
 <br><a href="{% url 'apps:sprints' proyecto.id 0 0 %}">Sprints</a><br />
 {% endif %}
@@ -24,4 +30,9 @@
 <br><a href="{% url 'apps:verCliente' proyecto.id%}">Ver cliente</a><br />
 {% endif %}
 <br>
+{% endblock %}
+{% block contenido %}
+{% endblock %}
+{% block atras %}
 <a href="{% url 'apps:listproyectosdelusuario' usuario.id %}">Volver</a>
+{% endblock %}

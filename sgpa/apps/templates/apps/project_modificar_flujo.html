@@ -1,4 +1,8 @@
+{% extends 'base.html' %}
+{% block titulo %}
 <h1>Modificar Flujo del Proyecto</h1>
+{% endblock %}
+{% block contenido %}
 <br><h1><b>{{proyecto.nombre}}</b></h1><br />
 
 <h3>Flujo</h3>
@@ -21,4 +25,7 @@
 {% else %}
 	<h3>Formulario no disponible</h3>
 {% endif %}
-<br><a href="{% url 'apps:listflujosproyectosMod' proyecto.id %}">Volver</a><br />
+{% endblock %}
+{% block atras %}
+<a href="{% url 'apps:listflujosproyectosMod' proyecto.id %}">Volver</a>
+{% endblock %}

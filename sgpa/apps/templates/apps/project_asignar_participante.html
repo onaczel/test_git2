@@ -1,7 +1,12 @@
-{% block encabezado %}
-	<h1>Asignar Participantes</h1>
+{% extends 'base.html' %}
+{% block titulo %}
+<h1>Modulo Proyecto</h1>
 {% endblock %}
-<h3>{{proyecto.nombre}}</h3>
+{% block encabezado %}
+	<h1>{{proyecto.nombre}}</h1>
+{% endblock %}
+{% block contenido %}
+<h2>Asignar Participantes</h2>
 
 {% if usuarios %}
 	<h4>Usuarios disponibles</h4>
@@ -14,5 +19,8 @@
 {% else %}
 	<p>No se encontro ningun usuario disponible</p>
 {% endif %}
+{% endblock %}
 <br />
-<a href="{% url 'apps:accionesproyecto' proyecto.id %}">Volver</a>
+{% block atras %}
+<a href="{% url 'apps:accionesproyecto' proyecto.id %}">Atras</a>
+{% endblock %}

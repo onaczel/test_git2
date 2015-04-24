@@ -1,10 +1,14 @@
+{% extends 'base.html' %}
+{% block titulo %}
 <h1><b>Asignar Horas de Trabajo</b></h1>
-<h2><b>Usuario: {{user}}</b></h2><br />
+{% endblock %}
+{% block contenido %}
+<h3><b>Usuario: {{user}}</b></h3><br />
 
 {% if proyectos %}
 	{% if user_stories %}
 		{% for p in proyectos %}
-			<br><label>{{p.nombre}}</label>
+			<br><h3><label>{{p.nombre}}</label></h3>
 			{% for hu in user_stories %}
 				<ul>
 					{% if hu.proyecto_id == p.id %}
@@ -24,4 +28,7 @@
 	<h2>No se encuentra en ningun proyecto</h2><br />
 {% endif %}
 <br />
-<a href="#">Volver al menu principal</a>
+{% endblock %}
+{% block atras %}
+<a href="{% url 'apps:inicio' user.id rol_id %}">Atras</a>
+{% endblock %}

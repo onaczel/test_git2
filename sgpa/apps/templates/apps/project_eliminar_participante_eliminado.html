@@ -1,3 +1,10 @@
+{% extends 'base.html' %}
+{% block titulo %}
+<h1>Modulo Proyecto</h1>
+{% endblock %}
+{% block contenido %}
 <h1>Usuario eliminado del proyecto</h1>
-
+{% endblock %}
+{% block atras %}
 <a href="{% url 'apps:listelimparticipante' proyecto.id %}">Volver</a>
+{% endblock %}
