@@ -1,6 +1,8 @@
-{% block encabezado %}
+{% extends 'base.html' %}
+{% block titulo %}
 	<h1>Modulo Proyecto</h1>
 {% endblock %}
+{% block contenido %}
 <h4>{{proyecto.nombre}}</h4>
 
 
@@ -13,5 +15,8 @@
 {% else %}
 	<p>No se encontro ningun usuario</p>
 {% endif %}
+{% endblock %}
 <br />
+{% block atras %}
 <a href="{% url 'apps:accionesproyecto' proyecto.id %}">Volver</a>
+{% endblock %}

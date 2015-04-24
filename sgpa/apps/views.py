@@ -1661,4 +1661,8 @@ def horas(request, hu_id):
 
     formulario = dia_sprintCreateForm2()
     
-    return render_to_response('apps/agregarHoras.html', {"user_stories":user_stories, "proyectos":proyectos, "user":request.user, "formulario":formulario, "mensaje":mensaje}, context_instance = RequestContext(request))
+    user = request.user
+    u_rol = Users_Roles.objects.get(user_id=user.id)
+    rol = Roles.objects.get(pk = u_rol.role_id)
+    
+    return render_to_response('apps/agregarHoras.html', {"user_stories":user_stories, "proyectos":proyectos, 'rol_id':u_rol.role_id, "user":request.user, "formulario":formulario, "mensaje":mensaje}, context_instance = RequestContext(request))

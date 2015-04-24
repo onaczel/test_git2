@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block titulo %}
+	<h1>Administrar Roles</h1>
+{% endblock %}
+{% block contenido %}
+	<a href="{% url 'apps:rolecreateproj' proyecto_id %}">Nuevo Rol</a><br />
+	<br>
+	
+	{% if roles %}
+	{% for r in roles %}
+		{% if r.estado == True %}
+			<label>{{r.descripcion}}</label>
+			<a href="{% url  'apps:rolemodify' user_logged r.id %}">Modificar</a>
+			<a href="{% url 'apps:roledelete' user_logged r.id %}">Eliminar</a><br />
+		{% endif %}
+	{% endfor %}
+{% else %}
+	<p>There are no roles in db</p>
+{% endif %}
+	
+{% endblock %}
+{% block atras %}
+<a href="{% url 'apps:accionesproyecto' user_logged proyecto_id %}">Atras</a>
+{% endblock %}

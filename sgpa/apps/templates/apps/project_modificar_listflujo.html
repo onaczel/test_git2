@@ -1,3 +1,7 @@
+{% extends 'base.html' %}
+{% block titulo %}
+<h1>Modificar Flujo</h1>
+{% endblock %}
 {% block contenido %}
 <center>
 <h2>Seleccione una plantilla</h2>
@@ -30,6 +34,9 @@
 		</tr>
 	{% endfor %} 
 	<br><br />
-	<a href="{% url 'apps:accionesproyecto' proyecto.id %}">Volver</a>
+	
 </table>
+{% endblock %}
+{% block atras %}
+<a href="{% url 'apps:accionesproyecto' proyecto.id %}">Volver</a>
 {% endblock %}
