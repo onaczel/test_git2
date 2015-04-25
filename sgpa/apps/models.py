@@ -1,5 +1,5 @@
 import datetime
-
+import reversion
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
@@ -128,6 +128,25 @@ class UserStory(models.Model):
     flujo = models.IntegerField(null = True)
     proyecto = models.ForeignKey(Proyectos, null = True)
     estado = models.BooleanField(default = True)
+
+class UserStoryVersiones(models.Model):
+    """
+    Model para almacenar las versiones de los User Stories
+    """
+    idv = models.IntegerField()
+    descripcion = models.CharField(max_length = 50)
+    codigo = models.CharField(max_length = 30)
+    valor_Negocio = models.IntegerField(null = True)
+    valor_Tecnico = models.IntegerField(null = True)
+    prioridad = models.ForeignKey(Prioridad, null=True)
+    tiempo_Estimado = models.IntegerField()
+    tiempo_Real = models.IntegerField(null=True)
+    sprint = models.IntegerField(null = True)
+    usuario_Asignado = models.IntegerField(null = True)
+    flujo = models.IntegerField(null = True)
+    proyecto = models.ForeignKey(Proyectos, null = True)
+    estado = models.BooleanField(default = True)
+    fechahora = models.DateTimeField(null = True)
     
 class Sprint(models.Model):
     """
@@ -147,6 +166,3 @@ class Dia_Sprint(models.Model):
     fecha = models.DateField(null=True)
 
 
-    
-    
-#User.add_to_class('roles', models.ForeignKey(Users_Roles))

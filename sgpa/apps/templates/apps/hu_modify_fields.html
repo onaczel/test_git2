@@ -9,6 +9,7 @@
 	{% if misPermisos.MUS %}
 		<a href="{% url 'apps:userToHU' proyecto_id hu_id %}">Asignar Usuario</a><br/>
 		<a href="{% url 'apps:listhuflujo' proyecto_id hu_id %}">Asignar Flujo</a><br />
+		<a href="{% url 'apps:listhuversiones' proyecto_id hu_id  %}">Historial</a><br />
 	{% endif %}
 	<!--<a href='assignSprint'>Asignar Sprint</a><br />
 	  a href='assignPriority'>Asignar Prioridad</a><br/>

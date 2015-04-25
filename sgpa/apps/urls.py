@@ -57,6 +57,8 @@ urlpatterns = patterns('',
     url(r'^(?P<proyecto_id>\d+)/modproyecto/accionesproyecto/adminhu/(?P<hu_id>\d+)/eliminar/$', views.eliminarHu, name="eliminarHu"),
     url(r'^(?P<proyecto_id>\d+)/modproyecto/accionesproyecto/adminhu/(?P<hu_id>\d+)/setflujo/$', views.listhuflujo, name='listhuflujo'),
     url(r'^(?P<proyecto_id>\d+)/modproyecto/accionesproyecto/adminhu/(?P<hu_id>\d+)/asignarflujo/$', views.asignarflujoHu, name='asignarflujoHu'),
+    url(r'^(?P<proyecto_id>\d+)/modproyecto/accionesproyecto/adminhu/(?P<hu_id>\d+)/versiones/$', views.listhuversiones, name='listhuversiones'),
+    url(r'^(?P<proyecto_id>\d+)/modproyecto/accionesproyecto/adminhu/(?P<hu_id>\d+)/versiones/(?P<huv_id>\d+)/cambios/$', views.huvcambios, name='huvcambios'),
     
     url(r'^(?P<proyecto_id>\d+)/modproyecto/accionesproyecto/asigparticipante$', views.listasigparticipante, name='listasigparticipante'),
     url(r'^(?P<proyecto_id>\d+)/(?P<usuario_id>\d+)/modproyecto/accionesproyecto/listasigparticipanterol$', views.listasigparticipanterol, name='listasigparticipanterol'),

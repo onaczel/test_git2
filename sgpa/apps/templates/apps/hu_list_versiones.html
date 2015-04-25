@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block titulo %}
+	<h1>Historial User Story</h1>
+{% endblock %}
+{% block encabezado %}
+	<h1>{{hu_descripcion}}</h1>
+{% endblock %}
+{% block contenido %}
+	{% if hu_versiones %}
+		{% for h in hu_versiones %}
+			<ul>
+				{% if hu.estado == False %}
+					<p>Se ha eliminado el User Story el {{h.fechahora}}</p><a href="{% url 'apps:huvcambios' proyecto_id hu_id h.id %}">Ver cambios</a>	
+				{% else %}
+					<p>Se ha modificado el User Story el {{h.fechahora}}</p><a href="{% url 'apps:huvcambios' proyecto_id hu_id h.id %}">Ver cambios</a>
+				{% endif %}
+			</ul>
+		{% endfor %}
+	{% endif %}
+{% endblock %}
+{% block atras %}
+<a href="{% url 'apps:editarHu' proyecto_id hu_id %}">Atras</a>
+{% endblock %}

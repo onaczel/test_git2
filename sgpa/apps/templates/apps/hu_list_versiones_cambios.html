@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block titulo %}
+	<h1>Historial User Story</h1>
+{% endblock %}
+{% block encabezado %}
+	<h1>{{hu.descripcion}}</h1>
+{% endblock %}
+{% block contenido %}
+	<center>
+		<table border=1 width=500>
+				<tr><td></td><td align=center><b>Estado Actual</b><td align=center><b>Estado Anterior</b></td></tr>
+				<tr><td><b>Descripcion</b></td><td align=center><p><b>{{hu.descripcion}}</b> </p></td><td align=center><p> {{huv.descripcion}}</p></td></tr>
+				<tr><td><b>Codigo</b></td><td align=center><p><b>{{hu.codigo}}</b> </p></td><td align=center><p> {{huv.codigo}}</p></td></tr>
+				<tr><td><b>Valor Negocio</b></td><td align=center><p><b>{{hu.valor_Negocio}}</b> </p></td><td align=center><p> {{huv.valor_Negocio}}</p></td></tr>
+				<tr><td><b>Valor Tecnico</b></td><td align=center><p><b>{{hu.valor_Tecnico}}</b> </p></td><td align=center><p> {{huv.valor_Tecnico}}</p></td></tr>
+				<tr><td><b>Prioridad</b></td><td align=center><p><b>{{hu.prioridad}}</b> </p></td><td align=center><p> {{huv.prioridad}}</p></td></tr>
+				<tr><td><b>Tiempo Estimado</b></td><td align=center><p><b>{{hu.tiempo_Estimado}}</b> </p></td><td align=center><p> {{huv.tiempo_Estimado}}</p></td></tr>
+				<tr><td><b>Tiempo Real</b></td><td align=center><p><b>{{hu.tiempo_Real}}</b> </p></td><td align=center><p> {{huv.tiempo_Real}}</p></td></tr>
+				<tr><td><b>Sprint</b></td><td align=center><p><b>{{hu.sprint}}</b> </p></td><td align=center><p> {{huv.sprint}}</p></td></tr>
+				<tr><td><b>Usuario Asignado</b></td><td align=center><p><b>{{hu.usuario_Asignado}}</b> </p></td><td align=center><p> {{huv.usuario_Asignado}}</p></td></tr>
+				<tr><td><b>Flujo</b></td><td align=center><p><b>{{hu.flujo}}</b> </p></td><td align=center><p> {{huv.flujo}}</p></td></tr>
+				<tr><td><b>Proyecto</b></td><td align=center><p><b>{{hu.proyecto}}</b> </p></td><td align=center><p> {{huv.proyecto}}</p></td></tr>
+			
+		</table>
+	</center>
+{% endblock %}
+{% block atras %}
+<a href="{% url 'apps:listhuversiones' proyecto_id hu.id %}">Atras</a>
+{% endblock %}
