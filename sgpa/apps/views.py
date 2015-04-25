@@ -1078,8 +1078,8 @@ def accionesproyecto(request, proyecto_id):
     @return: render a apps/project_acciones_no_sm.html si el usuario no es Scrum Master junto con el proyecto en el cual se encuentra y el usuario
     """
     proyecto = Proyectos.objects.get(id = proyecto_id)
-    user_id = request.user
-    urp = Equipo.objects.filter(usuario_id=user_id, rol_id = 3, proyecto_id = proyecto_id)
+    #user_id = request.user
+    #urp = Equipo.objects.filter(usuario_id=user_id, rol_id = 3, proyecto_id = proyecto_id)
     #for u in urp:
     mispermisos = misPermisos(request.user.id, proyecto_id)
     #if urp:
