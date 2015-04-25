@@ -570,6 +570,48 @@ class test_user_story(TestCase):
         
         self.assertTrue(UserStory.objects.filter(descripcion = 'test user story', codigo = 'us1_p1', tiempo_Estimado=50, proyecto_id = proyecto.id, flujo=flow.id).exists(), "El User Story no se ha creado correctamente")
 
+    def test_asignar_usuario(self):
+        """
+        Prueba de asignar un usuario a un User Story
+        """
+        # Se crea un proyecto para la prueba
+        proyecto = Proyectos()
+        proyecto.nombre = 'test'
+        proyecto.fecha_ini= '2015-01-01'
+        proyecto.fecha_est_fin = '2015-01-02'
+        proyecto.descripcion = 'una prueba de proyecto'
+        proyecto.observaciones = 'ninguna'
+        proyecto.save()
+        #Se crea un usuario para la prueba
+        user = User()
+        user.username = "ariel"
+        user.password = "ariel"
+        user.email = "ariel@lastdeo.com"
+        user.is_active = True
+        user.save() 
+        #Se crea un rol para la prueba        
+        rol = Roles()
+        rol.descripcion = "Scrum Master"
+        rol.estado = True
+        rol.save()        
+        #Se crea el Equipo        
+        equipo = Equipo()
+        equipo.proyecto = proyecto
+        equipo.usuario = user
+        equipo.rol = rol
+        equipo.save()
+        
+        #Se crea el User Story
+        us = UserStory()
+        us.descripcion = 'test user story'
+        us.codigo = 'us1_p1'
+        us.tiempo_Estimado = 50
+        us.proyecto_id = proyecto.id
+        us.usuario_Asignado = user.id
+        us.save()
+        
+        self.assertTrue(UserStory.objects.filter(descripcion = 'test user story', codigo = 'us1_p1', tiempo_Estimado=50, proyecto_id = proyecto.id, usuario_Asignado=user.id).exists(), "El User Story no se ha creado correctamente")
+        
 class test_sprint(TestCase):
     
     def test_crear_sprints(self):
