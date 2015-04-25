@@ -8,6 +8,7 @@ from django.test import TestCase, RequestFactory
 from django.contrib.auth import authenticate, login
 from django.core.urlresolvers import reverse
 from apps.views import ingresar, recuperarContrasena, crearProyecto, agregarPlantilla, crearSprints
+from datetime import timedelta, date, datetime
 
 
 
@@ -618,6 +619,7 @@ class test_sprint(TestCase):
         """
         prueba que los sprints de un proyecto nuevo se hayan creado
         """
+        #se crea un proyecto para la prueba
         proyecto = Proyectos()
         proyecto.nombre = 'test'
         proyecto.fecha_ini= '2015-01-01'
@@ -633,3 +635,66 @@ class test_sprint(TestCase):
         
         self.assertTrue(Sprint.objects.filter(nro_sprint = 1, proyecto_id = p.id).exists(), "El sprint 1 no fue creado")
         self.assertTrue(Sprint.objects.filter(nro_sprint = 2, proyecto_id = p.id).exists(), "El sprint 2 no fue creado")
+    
+    def test_crear_dia_sprint(self):
+        """
+        prueba si crea los dias del sprint
+        """
+        # Se crea un proyecto para la prueba
+        proyecto = Proyectos()
+        proyecto.nombre = 'test'
+        proyecto.fecha_ini= datetime.today().strftime("%Y-%m-%d")
+        proyecto.fecha_est_fin = datetime.today().strftime("%Y-%m-%d")
+        proyecto.descripcion = 'una prueba de dias sprint'
+        proyecto.observaciones = 'ninguna'
+        proyecto.nro_sprint = 1
+        proyecto.save()
+        
+        sprint = Sprint.objects.get(proyecto_id = proyecto.id, nro_sprint = proyecto.nro_sprint)
+        
+        us = UserStory()
+        us.descripcion = 'test user story'
+        us.codigo = 'us1_p1'
+        us.tiempo_Estimado = 50
+        us.proyecto_id = proyecto.id
+        us.sprint = sprint.id
+        us.save()
+        
+        dia_sprint = Dia_Sprint.objects.get(fecha = datetime.today().strftime("%Y-%m-%d"), sprint_id = us.sprint)
+        self.assertTrue(dia_sprint.exists(), "No se crearon los dias del sprint")
+        
+    def test_agregar_horas(self):
+        """
+        prueba si las horas se suman en un dia
+        """
+        # Se crea un proyecto para la prueba
+        proyecto = Proyectos()
+        proyecto.nombre = 'test'
+        proyecto.fecha_ini= datetime.today().strftime("%Y-%m-%d")
+        proyecto.fecha_est_fin = datetime.today().strftime("%Y-%m-%d")
+        proyecto.descripcion = 'una prueba de hora trabajada'
+        proyecto.observaciones = 'ninguna'
+        proyecto.nro_sprint = 1
+        proyecto.save()
+        
+        sprint = Sprint.objects.get(proyecto_id = proyecto.id, nro_sprint = proyecto.nro_sprint)
+        
+        us = UserStory()
+        us.descripcion = 'test user story'
+        us.codigo = 'us1_p1'
+        us.tiempo_Estimado = 50
+        us.proyecto_id = proyecto.id
+        us.sprint = sprint.id
+        us.save()
+        
+        dia_sprint = Dia_Sprint.objects.get(fecha = datetime.today().strftime("%Y-%m-%d"), sprint_id = us.sprint)
+        
+        dia_sprint.tiempo_real = int(dia_sprint.tiempo_real) + 10
+        dia_sprint.save()
+        
+        self.assertTrue(Dia_Sprint.objects.get(id = dia_sprint.id, tiempo_real = 10).exists() , "No se sumaron las horas")
+        
+        dia_sprint.tiempo_real = int(dia_sprint.tiempo_real) + 10
+        dia_sprint.save()
+        
+        self.assertTrue(Dia_Sprint.objects.get(id = dia_sprint.id, tiempo_real = 20).exists() , "No se sumaron las horas")
