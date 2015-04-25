@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User, AnonymousUser
-from apps.models import Proyectos, Roles, Equipo, Flujos, Actividades, UserStory
+from apps.models import Proyectos, Roles, Equipo, Flujos, Actividades, UserStory, Sprint, Dia_Sprint
 from django.core import mail
 from random import choice
 from django.contrib.auth.hashers import make_password, check_password
@@ -7,7 +7,7 @@ from django.test.client import Client
 from django.test import TestCase, RequestFactory
 from django.contrib.auth import authenticate, login
 from django.core.urlresolvers import reverse
-from apps.views import ingresar, recuperarContrasena, crearProyecto, agregarPlantilla
+from apps.views import ingresar, recuperarContrasena, crearProyecto, agregarPlantilla, crearSprints
 
 
 
@@ -569,4 +569,25 @@ class test_user_story(TestCase):
         us.save()
         
         self.assertTrue(UserStory.objects.filter(descripcion = 'test user story', codigo = 'us1_p1', tiempo_Estimado=50, proyecto_id = proyecto.id, flujo=flow.id).exists(), "El User Story no se ha creado correctamente")
+
+class test_sprint(TestCase):
+    
+    def test_crear_sprints(self):
+        """
+        prueba que los sprints de un proyecto nuevo se hayan creado
+        """
+        proyecto = Proyectos()
+        proyecto.nombre = 'test'
+        proyecto.fecha_ini= '2015-01-01'
+        proyecto.fecha_est_fin = '2015-02-01'
+        proyecto.descripcion = 'una prueba de sprint'
+        proyecto.observaciones = 'ninguna'
+        proyecto.nro_sprint = 1
+        proyecto.save()
         
+        proy = Proyectos.objects.filter(nombre = 'test', descropcion = "una prueba de sprint")
+        p = proy.first()
+        crearSprints(p.id)
+        
+        self.assertTrue(Sprint.objects.filter(nro_sprint = 1, proyecto_id = p.id).exists(), "El sprint 1 no fue creado")
+        self.assertTrue(Sprint.objects.filter(nro_sprint = 2, proyecto_id = p.id).exists(), "El sprint 2 no fue creado")

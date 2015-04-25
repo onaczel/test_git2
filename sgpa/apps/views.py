@@ -5,7 +5,6 @@ from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.views import generic
 from django.utils import timezone
-import reversion
 from django.template import RequestContext, loader
 import time
 
@@ -1290,7 +1289,6 @@ def crearHu(request, proyecto_id):
             hu = UserStory.objects.get(codigo  = form.cleaned_data['codigo'])
             hu.proyecto_id = proyecto_id
             hu.save()
-            reversion.create_revision()
             return render_to_response('apps/hu_creado.html',{"proyecto_id":proyecto_id},  context_instance = RequestContext(request))
         else:
             return render_to_response('apps/hu_form_no_valido.html', context_instance = RequestContext(request))
