@@ -585,7 +585,7 @@ class test_sprint(TestCase):
         proyecto.nro_sprint = 1
         proyecto.save()
         
-        proy = Proyectos.objects.filter(nombre = 'test', descropcion = "una prueba de sprint")
+        proy = Proyectos.objects.filter(nombre = 'test', descripcion = "una prueba de sprint")
         p = proy.first()
         crearSprints(p.id)
         
