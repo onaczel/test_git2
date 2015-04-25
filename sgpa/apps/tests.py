@@ -13,6 +13,19 @@ from apps.views import ingresar, recuperarContrasena, crearProyecto, agregarPlan
 
 class test_templates(TestCase):
     
+    def setUp(self):
+        self.client = Client()
+       
+    def test_ver_index(self):
+        """
+        Prueba de visualizacion del template de ingreso
+        """
+        self.factory = RequestFactory()
+        resp= self.factory.get('/apps/ingresar')
+        
+        self.assertTemplateUsed(resp, 'ingresar.html')
+        
+    
     def test_index(self):
         """
         Prueba de acceso a la pagina de ingreso
@@ -20,6 +33,16 @@ class test_templates(TestCase):
         resp = self.client.get('/apps/ingresar/')
         resp.user = AnonymousUser()
         self.assertEqual(resp.status_code, 200)
+        
+    def test_ver_adminPage(self):
+        """
+        Prueba de visualizacion del template de Pagina Admin
+        """
+        self.factory = RequestFactory()
+        resp= self.factory.get('/apps/user_private_admin')
+    
+        self.assertTemplateUsed(resp, 'user_private_admin.html')
+        
     
     def test_adminPage(self):
         """
@@ -30,6 +53,15 @@ class test_templates(TestCase):
         req.user = AnonymousUser()
         resp = ingresar(req)
         self.assertEqual(resp.status_code, 200)
+        
+    def test_ver_noAdminPage(self):
+        """
+        Prueba de visualizacion del template de Pagina no Admin
+        """
+        self.factory = RequestFactory()
+        resp= self.factory.get('/apps/user_private_user')
+
+        self.assertTemplateUsed(resp, 'user_private_user.html')
     
     def test_noAdminPage(self):
         """
@@ -41,7 +73,15 @@ class test_templates(TestCase):
         resp = ingresar(req)        
         self.assertEqual(resp.status_code, 200) 
     
+    def test_ver_UsuarioNoActivo(self):
+        """
+        Prueba de visualizacion del template que notifica que el usuario no esta activo
+        """
+        self.factory = RequestFactory()
+        resp= self.factory.get('/apps/user_no_active')
     
+        self.assertTemplateUsed(resp, 'user_no_active.html')
+        
     def test_UsuarioNoActivo(self):
         """
         Prueba de acceso a la pagina que notifica que el usuario no esta activo
@@ -51,6 +91,15 @@ class test_templates(TestCase):
         req.user = AnonymousUser()
         resp = ingresar(req)
         self.assertEqual(resp.status_code, 200) 
+        
+    def test_ver_UsuarioNoExiste(self):
+        """
+        Prueba de visualizacion del template que notifica que el usuario no existe
+        """
+        self.factory = RequestFactory()
+        resp= self.factory.get('/apps/user_no_exists')
+    
+        self.assertTemplateUsed(resp, 'user_no_exists.html')
         
     def test_UsuarioNoExiste(self):
         """
@@ -99,8 +148,60 @@ class test_templates(TestCase):
         req.user = AnonymousUser()
         resp = crearProyecto(req, us.id)        
         self.assertEqual(resp.status_code, 200)
+        
+    def test_ver_adminFlow(self):
+        """
+        Prueba de visualizacion del template flow_admin
+        """
+        self.factory = RequestFactory()
+        resp= self.factory.get('/apps/flow_admin')
     
+        self.assertTemplateUsed(resp, 'flow_admin.html')
+        
+    def test_ver_adminRole(self):
+        """
+        Prueba de visualizacion del template role_admin
+        """
+        self.factory = RequestFactory()
+        resp= self.factory.get('/apps/role_admin')
     
+        self.assertTemplateUsed(resp, 'role_admin.html')
+    
+    def test_ver_huAdmin(self):
+        """
+        Prueba de visualizacion del template hu_admin
+        """
+        self.factory = RequestFactory()
+        resp= self.factory.get('/apps/hu_admin')
+    
+        self.assertTemplateUsed(resp, 'hu_admin.html')
+        
+    def test_ver_huVersiones(self):
+        """
+        Prueba de visualizacion del template hu_list_versiones
+        """
+        self.factory = RequestFactory()
+        resp= self.factory.get('/apps/hu_list_versiones')
+    
+        self.assertTemplateUsed(resp, 'hu_list_versiones.html')
+        
+    def test_ver_verCliente(self):
+        """
+        Prueba de visualizacion del template project_verCliente
+        """
+        self.factory = RequestFactory()
+        resp= self.factory.get('/apps/project_verCliente')
+    
+        self.assertTemplateUsed(resp, 'project_verCliente.html')
+    
+    def test_ver_asigarUsuarioHU(self):
+        """
+        Prueba de visualizacion del template hu_modify_asigUser
+        """
+        self.factory = RequestFactory()
+        resp= self.factory.get('/apps/hu_modify_asigUser')
+    
+        self.assertTemplateUsed(resp, 'hu_modify_asigUser.html')
     
 
 class test_login(TestCase):
