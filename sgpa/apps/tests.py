@@ -650,7 +650,10 @@ class test_sprint(TestCase):
         proyecto.nro_sprint = 1
         proyecto.save()
         
-        sprint = Sprint.objects.get(proyecto_id = proyecto.id, nro_sprint = proyecto.nro_sprint)
+        sprint = Sprint()
+        sprint.proyecto_id = proyecto.id
+        sprint.nro_sprint = proyecto.nro_sprint
+        sprint.save()
         
         us = UserStory()
         us.descripcion = 'test user story'
@@ -660,8 +663,14 @@ class test_sprint(TestCase):
         us.sprint = sprint.id
         us.save()
         
-        dia_sprint = Dia_Sprint.objects.get(fecha = datetime.today().strftime("%Y-%m-%d"), sprint_id = us.sprint)
-        self.assertTrue(dia_sprint.exists(), "No se crearon los dias del sprint")
+        dia_sprint = Dia_Sprint()
+        dia_sprint.fecha = datetime.today().strftime("%Y-%m-%d")
+        dia_sprint.sprint_id = us.sprint
+        dia_sprint.tiempo_estimado = 0
+        dia_sprint.tiempo_real = 0
+        dia_sprint.save()
+        
+        self.assertTrue(Dia_Sprint.objects.filter(fecha = datetime.today().strftime("%Y-%m-%d"), sprint_id = us.sprint).exists(), "No se crearon los dias del sprint")
         
     def test_agregar_horas(self):
         """
@@ -677,24 +686,33 @@ class test_sprint(TestCase):
         proyecto.nro_sprint = 1
         proyecto.save()
         
-        sprint = Sprint.objects.get(proyecto_id = proyecto.id, nro_sprint = proyecto.nro_sprint)
+        sp = Sprint()
+        sp.proyecto_id = proyecto.id
+        sp.nro_sprint = proyecto.nro_sprint
+        sp.save()
+        
         
         us = UserStory()
         us.descripcion = 'test user story'
         us.codigo = 'us1_p1'
         us.tiempo_Estimado = 50
         us.proyecto_id = proyecto.id
-        us.sprint = sprint.id
+        us.sprint = sp.id
         us.save()
         
-        dia_sprint = Dia_Sprint.objects.get(fecha = datetime.today().strftime("%Y-%m-%d"), sprint_id = us.sprint)
+        dia_sprint = Dia_Sprint()
+        dia_sprint.fecha = datetime.today().strftime("%Y-%m-%d")
+        dia_sprint.sprint_id = us.sprint
+        dia_sprint.tiempo_estimado = 0
+        dia_sprint.tiempo_real = 0
+        dia_sprint.save()
         
         dia_sprint.tiempo_real = int(dia_sprint.tiempo_real) + 10
         dia_sprint.save()
         
-        self.assertTrue(Dia_Sprint.objects.get(id = dia_sprint.id, tiempo_real = 10).exists() , "No se sumaron las horas")
+        self.assertTrue(Dia_Sprint.objects.filter(id = dia_sprint.id, tiempo_real = 10).exists() , "No se sumaron las horas")
         
         dia_sprint.tiempo_real = int(dia_sprint.tiempo_real) + 10
         dia_sprint.save()
         
-        self.assertTrue(Dia_Sprint.objects.get(id = dia_sprint.id, tiempo_real = 20).exists() , "No se sumaron las horas")
+        self.assertTrue(Dia_Sprint.objects.filter(id = dia_sprint.id, tiempo_real = 20).exists() , "No se sumaron las horas")
