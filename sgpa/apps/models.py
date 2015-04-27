@@ -129,12 +129,19 @@ class UserStory(models.Model):
     usuario_Asignado = models.IntegerField(null = True)
     flujo = models.IntegerField(null = True)
     proyecto = models.ForeignKey(Proyectos, null = True)
+    #indica si el hu esta activo o inactivo
     estado = models.BooleanField(default = True)
+    #fecha en que se crea el hu
     fecha_creacion = models.DateField(null = True)
+    #fecha en el que un hu asignado a un flujo y sprint inicia su actividad
     fecha_inicio = models.DateField(null = True)
+    #fecha de ultima modificacion del hu
     fecha_modificacion = models.DateField(null = True)
+    #nro de la actividad de flujo en el que se encuentra el hu (ex: Desarrollo de Flujo 1)
     f_actividad = models.IntegerField(default = 1)
+    #nro del estado de la actividad de flujo en que se encuentra el hu (ex: Doing de Desarrollo de Flujo 1)
     f_a_estado = models.IntegerField(default = 1 )
+    #posicion exacta en la que se encuentra un hu dentro de un flujo
     flujo_posicion = models.IntegerField(null = True)
 
 class UserStoryVersiones(models.Model):

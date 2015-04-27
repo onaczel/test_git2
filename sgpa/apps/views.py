@@ -734,11 +734,20 @@ def setactividades(request, user_logged, flow_id):
             actv.flujo_id = f.id
             actv.descripcion = form.cleaned_data['descripcion']
             actv.save()
+            
             #form.save()
             if request.POST['submit'] == "Guardar y Agregar otra Actividad":
                 formulario = ActivityCreateForm()
                 return render_to_response('apps/flow_set_activities.html', {'formulario':formulario, 'flow_id':flow_id, 'flow_descripcion':f.descripcion, 'user_logged':user_logged}, context_instance=RequestContext(request))
             elif request.POST['submit'] == "Guardar y Salir":
+                actividades = Actividades.objects.filter(flujo_id = f.id)
+                print f.descripcion
+                f.tamano = 0
+                print f.tamano
+                for a in actividades:
+                    print "hola"
+                    f.tamano = f.tamano + 3
+                f.save()
                 return render_to_response('apps/flow_created.html', {'flow_id':flow_id, 'flow_descripcion':f.descripcion, 'user_logged':user_logged}, context_instance = RequestContext(request))
         else:
             return render_to_response('apps/flow_not_valid.html', {"user_logged":user_logged}, context_instance=RequestContext(request))
@@ -1386,6 +1395,7 @@ def copiarHU(hu, huv, user):
     
     @param hu: objeto User Story a copiar
     @param huv: objeto User Story de destino
+    @param user: objeto del Usuario que realiza una modificacion en el HU
     """
     huv.idv = hu.id
     huv.descripcion = hu.descripcion
@@ -1457,7 +1467,8 @@ def userToHU(request, proyecto_id, hu_id):
         hu = UserStory.objects.get(id = hu_id)
     
     if request.method == 'POST': 
-        copiarHU(hu, huv)       
+        user_logged = User.objects.get(descripcion = request.user)
+        copiarHU(hu, huv, user_logged)       
         print(request.POST['us'])
         user = User.objects.get(username = request.POST['us']) 
         print (user.id) 
@@ -1497,7 +1508,8 @@ def eliminarHu(request, proyecto_id, hu_id):
     huv=UserStoryVersiones()
     hu = get_object_or_404(UserStory, pk=hu_id)
     hu.estado = False
-    copiarHU(hu, huv)
+    user_logged = User.objects.get(username = request.user)
+    copiarHU(hu, huv, user_logged)
     hu.save()
     return render_to_response('apps/hu_deleted.html',{'proyecto_id':proyecto_id}, RequestContext(request))
 
@@ -1512,7 +1524,8 @@ def asignarflujoHu(request, proyecto_id, hu_id):
     huv=UserStoryVersiones()
     hu = get_object_or_404(UserStory, pk = hu_id)
     if request.POST:   
-        copiarHU(hu, huv)
+        user_logged = User.objects.get(descripcion = request.user)
+        copiarHU(hu, huv, user_logged)
         flujo = Flujos.objects.get(pk = request.POST['f'])
         hu.flujo = flujo.id
         hu.save()
