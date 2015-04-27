@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block titulo %}
-<h1>Administrar User Stories</h1>
+<h1>{{proyecto_nombre}}</h1>
 {% endblock %}
 {% block encabezado %}
 <h1>Crear User Story</h1>
@@ -9,7 +9,24 @@
 <form action="{% url 'apps:crearHu' proyecto_id %}" method="post">
 	{% csrf_token %}
 	<table>{{form}}</table>
-	
+	<b>Usuario Asignado:</b>
+	<select name="us"  style="width:190px" sort = true>
+			{% for user in users %}
+				<option >{{user.username}}</option>
+			{% endfor %} 
+	</select><br>
+	<b>Flujo Asignado</b>&emsp;&emsp;
+	<select name="flujo"  style="width:190px" sort = true>
+			{% for f in flujos %}
+				<option >{{f.descripcion}}</option>
+			{% endfor %} 
+	</select><br>
+	<b>Prioridad</b>&emsp;&emsp;&emsp;&emsp;&emsp;
+	<select name="pri"  style="width:190px" sort = true>
+			{% for pr in prioridades %}
+				<option >{{pr.descripcion}}</option>
+			{% endfor %} 
+	</select><br>
 	<input type="submit" value="Guardar" />
 
 </form>

@@ -1,38 +1,140 @@
-{% extends 'base.html' %}
+{% extends 'base_proj.html' %}
 {% block titulo %}
-<h1><b>{{proyecto.nombre}}</b></h1>
+	<h1><b>{{proyecto.nombre}}</b></h1>
 {% endblock %}
 {% block index %}
-{%if misPermisos.APP == True %}
-<br><a href="{% url 'apps:listasigparticipante' proyecto.id %}">Asignar Participante</a><br />
-{% endif %}
-{%if misPermisos.EPP == True %}
-<br><a href="{% url 'apps:listelimparticipante' proyecto.id %}">Eliminar Participante</a><br />
-{% endif %}
-{%if misPermisos.MP == True %}
-<br><a href="{% url 'apps:listflujosproyectos' proyecto.id %}">Crear Flujo</a><br />
-{% endif %}
-{%if misPermisos.MP == True %}
-<br><a href="{% url 'apps:listflujosproyectosMod' proyecto.id %}">Modificar Flujo</a><br />
-{% endif %}
-<br>
-{% if misPermisos.CUS or misPermisos.MUS or misPermisos.EUS %}
-<a href="{% url 'apps:listhu' proyecto.id %}">Administrar User Stories</a>
-{% endif %}
-<!-- <br>
-<a href="{% url 'apps:listrolesproj' proyecto.id %}">Administrar Roles</a>
--->
-<br> 
-{%if misPermisos.PS == True %}
-<br><a href="{% url 'apps:sprints' proyecto.id 0 0 %}">Sprints</a><br />
-{% endif %}
-{%if misPermisos.VP %}
-<br><a href="{% url 'apps:verCliente' proyecto.id%}">Ver cliente</a><br />
-{% endif %}
-<br>
+	{%if misPermisos.APP == True %}
+		<!-- <br><a href="{% url 'apps:listasigparticipante' proyecto.id %}">Asignar Participante</a><br /> -->
+	{% endif %}
+	{%if misPermisos.EPP == True %}
+		<!-- <br><a href="{% url 'apps:listelimparticipante' proyecto.id %}">Eliminar Participante</a><br /> -->
+	{% endif %}
+	{%if misPermisos.MP == True %}
+		<br><a href="{% url 'apps:listflujosproyectos' proyecto.id %}">Crear Flujo</a><br />
+	{% endif %}
+	{%if misPermisos.MP == True %}
+		<br><a href="{% url 'apps:listflujosproyectosMod' proyecto.id %}">Modificar Flujo</a><br />
+	{% endif %}
+		<br>
+	{% if misPermisos.CUS or misPermisos.MUS or misPermisos.EUS %}
+		<a href="{% url 'apps:listhu' proyecto.id %}">Administrar User Stories</a>
+	{% endif %}
+		<!-- <br>
+		<a href="{% url 'apps:listrolesproj' proyecto.id %}">Administrar Roles</a>
+		-->
+		<br> 
+	{%if misPermisos.PS == True %}
+		<br><a href="{% url 'apps:sprints' proyecto.id 0 0 %}">Sprints</a><br />
+	{% endif %}
+	{%if misPermisos.VP %}
+		<br><a href="{% url 'apps:verCliente' proyecto.id%}">Ver cliente</a><br />
+	{% endif %}
+	<br>
 {% endblock %}
+
+
 {% block contenido %}
+
+<table border="1" frame="lhs" cellspacing=1 cellpadding=20>	
+	<center>
+
+	{% for f in flujo %}
+		
+		<tr>
+			<td>
+				<table border=1 cellspacing=0 cellpadding=2 bordercolor="666633">
+					<tr>
+						<strong>{{f.descripcion}}</strong>
+					</tr>
+				</center>
+					<tr>
+						{% for actividad in actividades %}
+							{% if actividad.flujo_id == f.id%}
+								<td colspan="3">{{actividad.descripcion}}</td>
+							
+							{% endif %}
+						{% endfor %} 
+					<tr>		
+				
+					<tr>
+						{% for actividad in actividades %}
+					 		{% if actividad.flujo_id == f.id%}
+								<td>To Do </td><td>Doing</td><td>Done</td>
+							{% endif %}
+						{% endfor %} 
+					</tr>
+
+					{% for h in hus %}
+						<tr>
+							{% for actividad in actividades %}
+								{% if  h.flujo == f.id and forloop.counter <= f.tamano %}
+									{% if forloop.counter == h.flujo_posicion  %}
+										<td>{{h.descripcion}}</td>
+										
+									{% else %}
+										<td></td>
+									{% endif %}
+								{% endif %}
+							{% endfor %}
+						<tr>
+					{% endfor %}
+				
+				</table>
+			</td>
+		</tr>
+	{% endfor %} 
+	
+</table>
+{% endblock %}
+
+{% block equipo %}
+	{% if misPermisos.APP or misPermisos.EPP %}
+		<table height=1> 
+			<tr><td><h4>Participantes:</h4></td>
+			{% if misPermisos.APP %}
+				<td><a href="{% url 'apps:listasigparticipante' proyecto.id %}">Agregar</a></td>
+			{% endif %}
+			{% if misPermisos.EPP %}
+				<td><a href="{% url 'apps:listelimparticipante' proyecto.id %}">Eliminar</a></td></tr>
+			{% endif %}
+		</table>
+	{% endif %}
+	<table width=100%	 height=100>
+		<td width=33%>
+			<table border=1px width=100%>
+				<tr>
+					<td><b>Usuario</b></td>
+				</tr>
+				{% if users %}
+					{% for us in users %}
+						<tr><td>{{us.username}}</td></tr>
+					{% endfor %}
+				{% endif %}
+			</table>
+		</td>
+		<td width = 33%>
+			<table border=1px width=100%>
+				<tr><td><b>Rol</b></td></tr>
+				{% if roles %}
+					{% for ro in roles %}
+						<tr><td>{{ro.descripcion}}</td></tr>		
+					{% endfor %}
+				{% endif %} 
+			</table>
+		</td>
+		<td width = 33%>
+			<table border=1px width=100%>
+				<tr><td><b>Ultima Conexion</b></td></tr>
+				{% if users %}
+					{% for us in users %}
+						<tr><td>{{us.last_login}}</td></tr>		
+					{% endfor %}
+				{% endif %} 
+			</table>
+		</td>
+	</table>
+
 {% endblock %}
 {% block atras %}
-<a href="{% url 'apps:listproyectosdelusuario' usuario.id %}">Volver</a>
+	<a href="{% url 'apps:listproyectosdelusuario' usuario.id %}">Volver</a>
 {% endblock %}

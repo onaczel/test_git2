@@ -8,7 +8,7 @@ from django.utils import timezone
 from django.template import RequestContext, loader
 import time
 
-from apps.models import Roles, Users_Roles, Permisos, Permisos_Roles, Flujos, Actividades, Actividades_Estados, Proyectos, Equipo, UserStory, Sprint, Dia_Sprint, UserStoryVersiones
+from apps.models import Roles, Users_Roles, Permisos, Permisos_Roles, Flujos, Actividades, Actividades_Estados, Proyectos, Equipo, UserStory, Sprint, Dia_Sprint, UserStoryVersiones, Prioridad
 from django.contrib.auth.models import User
 
 
@@ -1083,10 +1083,24 @@ def accionesproyecto(request, proyecto_id):
     mispermisos = misPermisos(request.user.id, proyecto_id)
     #if urp:
         #Si el usuario es Scrum Master en el Proyecto
-    return render_to_response("apps/project_acciones.html", {"proyecto":proyecto, "usuario":request.user, "misPermisos":mispermisos})
-    #else:
-        #Si el usuario no es Scrum Master
-    #    return render_to_response("apps/project_acciones_no_sm.html", {"proyecto":proyecto, "usuario":request.user})
+    uroles = Equipo.objects.filter(proyecto_id = proyecto_id)
+    users = []
+    roles = []    
+    for ur in uroles:
+        users.append(User.objects.get(pk = ur.usuario_id))
+        roles.append(Roles.objects.get(pk = ur.rol_id))
+
+    flujo = Flujos.objects.filter(proyecto_id = proyecto_id)
+    
+    actividades = Actividades.objects.all()
+    hus = UserStory.objects.filter(proyecto_id = proyecto_id)
+
+    for hu in hus:
+        hu.flujo_posicion = ((hu.f_actividad - 1)*3) + hu.f_a_estado
+    c = 15
+
+        
+    return render_to_response("apps/project_acciones.html", {"proyecto":proyecto, "usuario":request.user, "misPermisos":mispermisos, 'users':users, 'roles':roles, 'flujo':flujo, 'actividades':actividades, 'hus':hus, 'c':c})
 
 def elimparticipante(request, proyecto_id, usuario_id):
     """
@@ -1243,10 +1257,15 @@ def listhu(request, proyecto_id):
     """
     
     mispermisos = misPermisos(request.user.id, proyecto_id)
-    
+    proyecto = Proyectos.objects.get(pk=proyecto_id)
     hu = UserStory.objects.filter(proyecto_id = proyecto_id, estado = True)
-    
-    return render_to_response('apps/hu_admin.html', { 'hu':hu, 'proyecto_id':proyecto_id, 'misPermisos':mispermisos})
+    print proyecto.nombre
+    return render_to_response('apps/hu_admin.html', { 'hu':hu, 'proyecto_id':proyecto_id, 'proyecto_descripcion':proyecto.nombre, 'misPermisos':mispermisos})
+
+def resumenHu(request, proyecto_id, hu_id):
+    hu = UserStory.objects.get(pk=hu_id)
+    proyecto = Proyectos.objects.get(pk=proyecto_id)
+    return render_to_response('apps/hu_resumen.html', {'proyecto_id':proyecto_id, 'hu':hu, 'proyecto_nombre':proyecto.nombre})
 
 def listhuflujo(request, proyecto_id, hu_id):
     """
@@ -1269,7 +1288,7 @@ class HuCreateForm(forms.ModelForm):
     """
     class Meta:
         model = UserStory
-        fields = ("descripcion", "codigo", "tiempo_Estimado",)
+        fields = ("descripcion", "codigo", "tiempo_Estimado", "valor_Negocio", "valor_Tecnico")
         
         
 def crearHu(request, proyecto_id):
@@ -1282,12 +1301,24 @@ def crearHu(request, proyecto_id):
     @return: render a hu_form_no_valido.html
     @return: render a hu_create.html con el id del proyecto en cuestion, y el formulario de creacion del User Story
     """
+    users = User.objects.all()
+    flujos = Flujos.objects.filter(proyecto_id = proyecto_id)
+    prioridades = Prioridad.objects.all()
+    proyecto = Proyectos.objects.get(pk = proyecto_id)
     if request.method == 'POST':
         form = HuCreateForm(request.POST)
         if form.is_valid():
             form.save()
             hu = UserStory.objects.get(codigo  = form.cleaned_data['codigo'])
             hu.proyecto_id = proyecto_id
+            hu.fecha_creacion = time.strftime("%Y-%m-%d")
+            user = User.objects.get(username = request.POST['us']) 
+            hu.usuario_Asignado =  user.id
+            flujolist = Flujos.objects.filter(descripcion = request.POST['flujo'], proyecto_id = proyecto_id)
+            oflujo = flujolist.get(descripcion = request.POST['flujo'])
+            hu.flujo = oflujo.id
+            prioridad = Prioridad.objects.get(descripcion = request.POST['pri'])
+            hu.prioridad = prioridad
             hu.save()
             return render_to_response('apps/hu_creado.html',{"proyecto_id":proyecto_id},  context_instance = RequestContext(request))
         else:
@@ -1295,7 +1326,7 @@ def crearHu(request, proyecto_id):
     else:        
         form = HuCreateForm()
     
-    return render_to_response('apps/hu_create.html', {"form":form, "proyecto_id":proyecto_id}, context_instance = RequestContext(request))
+    return render_to_response('apps/hu_create.html', {"form":form, "proyecto_id":proyecto_id, 'proyecto_nombre':proyecto.nombre, 'users':users, 'flujos':flujos, 'prioridades':prioridades}, context_instance = RequestContext(request))
 
 def editarHu(request, proyecto_id, hu_id):
     """
@@ -1308,28 +1339,48 @@ def editarHu(request, proyecto_id, hu_id):
     @return: render a hu_form_no_valido.html 
     @return: hu_modify_fields.html con el id y la descripcion del User Story, el id del proyecto donde se encuentra y el formulario de edicion
     """
+    proyecto = Proyectos.objects.get(pk = proyecto_id)
     mispermisos = misPermisos(request.user.id, proyecto_id)
     hu = get_object_or_404(UserStory, pk=hu_id)
     huv = UserStoryVersiones()
+    users = []
+
+    eq = Equipo.objects.filter(proyecto_id = proyecto_id)
+    for e in eq:
+        users.append(User.objects.get(pk=e.usuario_id))
+
+    flujos = Flujos.objects.filter(proyecto_id = proyecto_id)
+    prioridades = Prioridad.objects.all()
+    user_logged = User.objects.get(username = request.user)
     if request.method == 'POST':
         form = HuCreateForm(request.POST)
         if form.is_valid():
             #form.save()
-            copiarHU(hu, huv)
+            copiarHU(hu, huv, user_logged)
             hu.descripcion = form.cleaned_data['descripcion']
             hu.codigo = form.cleaned_data['codigo']
             hu.tiempo_Estimado = form.cleaned_data['tiempo_Estimado']
+            hu.valor_Negocio = form.cleaned_data['valor_Negocio']
+            hu.valor_Tecnico = form.cleaned_data['valor_Tecnico']
             hu.proyecto_id = proyecto_id
+            user = User.objects.get(username = request.POST['us']) 
+            hu.usuario_Asignado =  user.id
+            flujolist = Flujos.objects.filter(descripcion = request.POST['flujo'], proyecto_id = proyecto_id)
+            oflujo = flujolist.get(descripcion = request.POST['flujo'])
+            hu.flujo = oflujo.id
+            prioridad = Prioridad.objects.get(descripcion = request.POST['pri'])
+            hu.prioridad = prioridad
+            hu.fecha_modificacion = time.strftime("%Y-%m-%d")
             hu.save()
             return render_to_response('apps/hu_modificado.html',{"proyecto_id":proyecto_id, 'hu_id':hu_id},  context_instance = RequestContext(request))
         else:
             return render_to_response('apps/hu_form_no_valido.html', context_instance = RequestContext(request))
     else:        
-        form = HuCreateForm(initial={'descripcion':hu.descripcion, 'codigo':hu.codigo, 'tiempo_Estimado':hu.tiempo_Estimado})
+        form = HuCreateForm(initial={'descripcion':hu.descripcion, 'codigo':hu.codigo, 'tiempo_Estimado':hu.tiempo_Estimado, 'valor_Tecnico':hu.valor_Tecnico, 'valor_Negocio':hu.valor_Negocio})
     
-    return render_to_response('apps/hu_modify_fields.html', {"form":form, "proyecto_id":proyecto_id, "hu_id":hu_id, "hu_descripcion":hu.descripcion, 'misPermisos':mispermisos}, context_instance = RequestContext(request))
+    return render_to_response('apps/hu_modify_fields.html', {"form":form, "proyecto_id":proyecto_id, "hu_id":hu_id, "hu_descripcion":hu.descripcion, 'misPermisos':mispermisos, 'users':users, 'flujos':flujos, 'proyecto_nombre':proyecto.nombre, 'prioridades':prioridades}, context_instance = RequestContext(request))
 
-def copiarHU(hu, huv):
+def copiarHU(hu, huv, user):
     """
     Funcion que hace una copia de todos los campos de un User Story a otro
     
@@ -1349,6 +1400,7 @@ def copiarHU(hu, huv):
     huv.sprint = hu.sprint
     huv.estado = hu.estado
     huv.fechahora = time.strftime("%Y-%m-%d %H:%M")
+    huv.usercambio = user
     huv.save()
 
 def listhuversiones(request, proyecto_id, hu_id):
@@ -1362,7 +1414,8 @@ def listhuversiones(request, proyecto_id, hu_id):
     """
     hu = UserStory.objects.get(pk = hu_id)
     huversiones = UserStoryVersiones.objects.filter(idv = hu_id)
-    return render_to_response('apps/hu_list_versiones.html', {'proyecto_id':proyecto_id, 'hu_id':hu_id,'hu':hu, 'hu_descripcion':hu.descripcion, 'hu_versiones':huversiones})
+    user_logged = request.user
+    return render_to_response('apps/hu_list_versiones.html', {'proyecto_id':proyecto_id, 'hu_id':hu_id,'hu':hu, 'hu_descripcion':hu.descripcion, 'hu_versiones':huversiones, 'user_logged':user_logged})
     
 def huvcambios(request, proyecto_id, hu_id, huv_id):
     huv = UserStoryVersiones.objects.get(pk=huv_id)

@@ -4,9 +4,9 @@
 {% endblock %}
 {% block contenido %}
 <h3>User Story modificado correctamente</h3>
-<a href="{% url 'apps:listhu' proyecto_id %}">Volver a Administracion</a>
+<a href="{% url 'apps:editarHu' proyecto_id hu_id %}">Volver a Administracion</a>
 {% endblock %}
 
 {% block atras %}
-<a href="{% url 'apps:editarHu' proyecto_id hu_id %}">{{h.descripcion}}</a>
+<a href="{% url 'apps:editarHu' proyecto_id hu_id %}">Atras</a>
 {% endblock %}

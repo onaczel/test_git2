@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block titulo %}
+	<h1>{{proyecto_nombre}}</h1>
+{% endblock %}
+{% block encabezado %}
+	<h1>{{hu.descripcion}}</h1>
+{% endblock %}
+{% block contenido %}
+	<h3>Resumen</h3>
+	<a href="{%url 'apps:editarHu' proyecto_id hu.id %}">Editar</a>
+	<center>
+		<table width=500 border=10 cellspacing=1 cellpadding=15 bordercolor="green">
+				<tr><td height=10><b>Descripcion</b></td><td><p>{{hu.descripcion}}</b> </p></td></tr>
+				<tr><td><b>Codigo</b></td><td ><p>{{hu.codigo}}</b> </p></td></tr>
+				<tr><td><b>Valor Negocio</b></td><td ><p>{{hu.valor_Negocio}}</b> </p></td></tr>
+				<tr><td><b>Valor Tecnico</b></td><td ><p>{{hu.valor_Tecnico}}</b> </p></td></tr>
+				<tr><td><b>Prioridad</b></td><td ><p>{{hu.prioridad}}</b> </p></td></tr>
+				<tr><td><b>Tiempo Estimado</b></td><td ><p>{{hu.tiempo_Estimado}}</b> </p></td></tr>
+				<tr><td><b>Tiempo Real</b></td><td ><p>{{hu.tiempo_Real}}</b> </p></td></tr>
+				<tr><td><b>Sprint</b></td><td ><p>{{hu.sprint}}</b> </p></td></tr>
+				<tr><td><b>Usuario Asignado</b></td><td ><p>{{hu.usuario_Asignado}}</b> </p></td></tr>
+				<tr><td><b>Flujo</b></td><td><p>{{hu.flujo}}</b> </p></td></tr>
+				<tr><td><b>Proyecto</b></td><td ><p>{{hu.proyecto}}</b> </p></td></tr>
+				
+				
+			
+		</table>
+	</center>
+	
+{% endblock %}
+{% block atras %}
+<a href="{% url 'apps:listhu' proyecto_id %}">Atras</a>
+{% endblock %}

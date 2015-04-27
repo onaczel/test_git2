@@ -7,17 +7,25 @@
 {% endblock %}
 {% block contenido %}
 	{% if hu_versiones %}
-		{% for h in hu_versiones %}
-			<ul>
+		<table border=1px width=750px>
+					<tr><td>Fecha</td><td>Usuario</td><td>Accion</td></tr>
+					{% for h in hu_versiones %}
+						<tr><td>{{h.fechahora}}</td><td>{{h.usercambio}}</td>
+							<td><p>Se ha modificado <a href="{% url 'apps:huvcambios' proyecto_id hu_id h.id %}">Ver cambios</a></p></td>
+						</tr>
+					{% endfor %}
+		</table>
+	{% endif %}
+{% endblock %}
+{% block atras %}
+<a href="{% url 'apps:editarHu' proyecto_id hu_id %}">Atras</a>
+{% endblock %}
+<ul>
+				
+				</table>
 				{% if hu.estado == False %}
 					<p>Se ha eliminado el User Story el {{h.fechahora}}</p><a href="{% url 'apps:huvcambios' proyecto_id hu_id h.id %}">Ver cambios</a>	
 				{% else %}
 					<p>Se ha modificado el User Story el {{h.fechahora}}</p><a href="{% url 'apps:huvcambios' proyecto_id hu_id h.id %}">Ver cambios</a>
 				{% endif %}
 			</ul>
-		{% endfor %}
-	{% endif %}
-{% endblock %}
-{% block atras %}
-<a href="{% url 'apps:editarHu' proyecto_id hu_id %}">Atras</a>
-{% endblock %}

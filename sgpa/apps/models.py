@@ -80,6 +80,7 @@ class Flujos(models.Model):
     descripcion = models.CharField(max_length = 50)
     plantilla = models.BooleanField(default = True)    
     estado = models.BooleanField(default = True)
+    tamano = models.IntegerField(null = True)
 
 class Actividades(models.Model):
     """
@@ -110,6 +111,8 @@ class Prioridad(models.Model):
     Describe la Prioridad del User Story
     """
     descripcion = models.CharField(max_length=30)
+    def __str__(self):
+        return self.descripcion
     
 class UserStory(models.Model):
     """
@@ -127,6 +130,12 @@ class UserStory(models.Model):
     flujo = models.IntegerField(null = True)
     proyecto = models.ForeignKey(Proyectos, null = True)
     estado = models.BooleanField(default = True)
+    fecha_creacion = models.DateField(null = True)
+    fecha_inicio = models.DateField(null = True)
+    fecha_modificacion = models.DateField(null = True)
+    f_actividad = models.IntegerField(default = 1)
+    f_a_estado = models.IntegerField(default = 1 )
+    flujo_posicion = models.IntegerField(null = True)
 
 class UserStoryVersiones(models.Model):
     """
@@ -146,6 +155,9 @@ class UserStoryVersiones(models.Model):
     proyecto = models.ForeignKey(Proyectos, null = True)
     estado = models.BooleanField(default = True)
     fechahora = models.DateTimeField(null = True)
+    usercambio = models.ForeignKey(User, null = True)
+    f_actividad = models.IntegerField(default = 1)
+    f_a_estado = models.IntegerField(default = 1)
     
 class Sprint(models.Model):
     """
