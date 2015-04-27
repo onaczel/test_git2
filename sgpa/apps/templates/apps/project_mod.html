@@ -6,22 +6,20 @@
 <h4>Proyectos del Usuario</h4>
 
 {% if proyectos %}
-	<table border="1">
-		<tr>
+	<div style="float:left">
 			{% for p in proyectos %}
-				<td colspan="3"><a href="{% url 'apps:accionesproyecto' p.id %}">{{p.nombre}}</a><br /></td>
+				<a href="{% url 'apps:accionesproyecto' p.id %}">{{p.nombre}}</a>&emsp;&emsp;<br />
 			{% endfor %}
-		</tr>
-		<tr>
+	</div>
+	<div style="float:left">
 			{% for rol in roles %}
-				<td colspan="3">{{r}}
-					{% for r in rol %}
-						{{r}} ,
-					{% endfor %}
-				</td>
+			
+					({% for r in rol %}
+						{{r}}, 
+					{% endfor %})
+					<br />
 			{% endfor %}
-		</tr>
-	</table>
+	</div>
 {% else %}
 	<p>El usuario no se encuentra en ningun proyecto</p>
 {% endif %}
