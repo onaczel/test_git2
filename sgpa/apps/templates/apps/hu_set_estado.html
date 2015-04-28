@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block titulo %}
+	<h1>{{proyecto.nombre}}</h1>
+{% endblock %}
+{% block encabezado %}
+	<h1>{{hu.descripcion}}</h1>
+{% endblock %}
+<h3>Editar HU</h3>
+
+<br/>
+{% block index %}
+<a href="{% url 'apps:accionesproyecto' proyecto.id %}">Proyecto</a>
+{% endblock %}
+{% block contenido %}
+
+	{% if misPermisos.MUS %}
+		<form action="{% url 'apps:setEstadoHu' proyecto.id hu.id %}" method="post">
+			{% csrf_token %}
+			<b>Flujo Asignado</b>&emsp;&emsp;
+			<p>{{flujo_descripcion}}</p><br><br>
+			<b>Actividad Actual</b>
+			<select name="act"  style="width:190px" sort = true>
+					{% for actividad in actividades %}
+						{% if hu.f_actividad == forloop.counter %}
+							<option selected="selected">{{actividad.descripcion}}</option>
+						{% else %}
+							<option>{{actividad.descripcion}}</option>
+						{% endif %}
+					{% endfor %} 
+			</select><br>
+
+			<b>Estado:</b>&emsp;&emsp;&emsp;&emsp;&emsp;
+			<select name="est"  style="width:190px" sort = true>
+					{% for e in estados %}
+						{% if e.id == hu.f_a_estado %}
+							<option selected="selected">{{e.descripcion}}</option>
+						{% else %}
+							<option >{{e.descripcion}}</option>
+						{% endif %}
+					{% endfor %} 
+			</select><br>
+			
+			<input type='submit' value='Guardar'/>
+		
+		
+		</form>
+		{% if modificado %}
+			<p>Los cambios se han guardado correctamente</p>
+		{% endif %}
+	{% endif %}
+{% endblock %}
+{% block atras %}
+	<a href="{% url 'apps:listhu' proyecto.id %}">Volver</a>
+{% endblock %}

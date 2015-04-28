@@ -8,7 +8,8 @@ from django.utils import timezone
 from django.template import RequestContext, loader
 import time
 
-from apps.models import Roles, Users_Roles, Permisos, Permisos_Roles, Flujos, Actividades, Actividades_Estados, Proyectos, Equipo, UserStory, Sprint, Dia_Sprint, UserStoryVersiones, Prioridad
+from apps.models import Roles, Users_Roles, Permisos, Permisos_Roles, Flujos, Actividades, Actividades_Estados, Proyectos, Equipo, UserStory, Sprint, Dia_Sprint, UserStoryVersiones, Prioridad,\
+    Estados
 from django.contrib.auth.models import User
 
 
@@ -1102,14 +1103,14 @@ def accionesproyecto(request, proyecto_id):
     flujo = Flujos.objects.filter(proyecto_id = proyecto_id)
     
     actividades = Actividades.objects.all()
-    hus = UserStory.objects.filter(proyecto_id = proyecto_id)
+    hus = UserStory.objects.filter(proyecto_id = proyecto_id, estado=True)
 
     for hu in hus:
         hu.flujo_posicion = ((hu.f_actividad - 1)*3) + hu.f_a_estado
-    c = 15
+
 
         
-    return render_to_response("apps/project_acciones.html", {"proyecto":proyecto, "usuario":request.user, "misPermisos":mispermisos, 'users':users, 'roles':roles, 'flujo':flujo, 'actividades':actividades, 'hus':hus, 'c':c})
+    return render_to_response("apps/project_acciones.html", {"proyecto":proyecto, "usuario":request.user, "misPermisos":mispermisos, 'users':users, 'roles':roles, 'flujo':flujo, 'actividades':actividades, 'hus':hus})
 
 def elimparticipante(request, proyecto_id, usuario_id):
     """
@@ -1267,9 +1268,18 @@ def listhu(request, proyecto_id):
     
     mispermisos = misPermisos(request.user.id, proyecto_id)
     proyecto = Proyectos.objects.get(pk=proyecto_id)
-    hu = UserStory.objects.filter(proyecto_id = proyecto_id, estado = True)
+    hu = UserStory.objects.filter(proyecto_id = proyecto_id)
+    hu_activos = UserStory.objects.filter(proyecto_id = proyecto_id, estado = True, sprint = proyecto.nro_sprint, finalizado = False) 
+    hu_plan = UserStory.objects.filter(proyecto_id = proyecto_id, estado = True, finalizado = False)
+    hu_planificados = []
+    for i in hu_plan:
+        if i.sprint > proyecto.nro_sprint:
+            hu_planificados.append(i)
+    hu_terminados = UserStory.objects.filter(proyecto_id = proyecto_id, estado = True, finalizado = True)
+    hu_descartados = UserStory.objects.filter(proyecto_id = proyecto_id, estado = False)
+    hu_no_planificados = UserStory.objects.filter(proyecto_id = proyecto_id, estado = True, sprint = 0)
     print proyecto.nombre
-    return render_to_response('apps/hu_admin.html', { 'hu':hu, 'proyecto_id':proyecto_id, 'proyecto_descripcion':proyecto.nombre, 'misPermisos':mispermisos})
+    return render_to_response('apps/hu_admin.html', { 'hu':hu, 'proyecto':proyecto, 'proyecto_descripcion':proyecto.nombre, 'misPermisos':mispermisos, 'hu_activos':hu_activos, 'hu_planificados':hu_planificados, 'hu_terminados':hu_terminados, 'hu_descartados':hu_descartados, 'hu_noplanificados':hu_no_planificados})
 
 def resumenHu(request, proyecto_id, hu_id):
     hu = UserStory.objects.get(pk=hu_id)
@@ -1310,7 +1320,11 @@ def crearHu(request, proyecto_id):
     @return: render a hu_form_no_valido.html
     @return: render a hu_create.html con el id del proyecto en cuestion, y el formulario de creacion del User Story
     """
-    users = User.objects.all()
+    users = []
+
+    eq = Equipo.objects.filter(proyecto_id = proyecto_id)
+    for e in eq:
+        users.append(User.objects.get(pk=e.usuario_id))
     flujos = Flujos.objects.filter(proyecto_id = proyecto_id)
     prioridades = Prioridad.objects.all()
     proyecto = Proyectos.objects.get(pk = proyecto_id)
@@ -1381,13 +1395,13 @@ def editarHu(request, proyecto_id, hu_id):
             hu.prioridad = prioridad
             hu.fecha_modificacion = time.strftime("%Y-%m-%d")
             hu.save()
-            return render_to_response('apps/hu_modificado.html',{"proyecto_id":proyecto_id, 'hu_id':hu_id},  context_instance = RequestContext(request))
+            return render_to_response('apps/hu_modificado.html',{"proyecto_id":proyecto_id, 'hu_id':hu_id, 'hu':hu},  context_instance = RequestContext(request))
         else:
             return render_to_response('apps/hu_form_no_valido.html', context_instance = RequestContext(request))
     else:        
         form = HuCreateForm(initial={'descripcion':hu.descripcion, 'codigo':hu.codigo, 'tiempo_Estimado':hu.tiempo_Estimado, 'valor_Tecnico':hu.valor_Tecnico, 'valor_Negocio':hu.valor_Negocio})
-    
-    return render_to_response('apps/hu_modify_fields.html', {"form":form, "proyecto_id":proyecto_id, "hu_id":hu_id, "hu_descripcion":hu.descripcion, 'misPermisos':mispermisos, 'users':users, 'flujos':flujos, 'proyecto_nombre':proyecto.nombre, 'prioridades':prioridades}, context_instance = RequestContext(request))
+
+    return render_to_response('apps/hu_modify_fields.html', {"form":form, "proyecto_id":proyecto_id, "hu_id":hu_id, "hu_descripcion":hu.descripcion, 'misPermisos':mispermisos, 'users':users, 'flujos':flujos, 'proyecto_nombre':proyecto.nombre, 'prioridades':prioridades, 'hu':hu}, context_instance = RequestContext(request))
 
 def copiarHU(hu, huv, user):
     """
@@ -1444,6 +1458,45 @@ def modificarHu(request, proyecto_id, hu_id):
     hu_descripcion = hu.descripcion
     return render_to_response('apps/hu_modify.html', {'proyecto_id':proyecto_id, 'hu_id':hu_id, 'hu_descripcion':hu_descripcion})
 
+def setEstadoHu(request, proyecto_id, hu_id):
+    """
+    Cambia el estado de un User Storie
+    
+    @param request: Http
+    @param proyecto_id: id del proyecto del User Story
+    @param hu_id: id del User Story
+    @param actividades: lista de actividades en el flujo
+    @param estados: lista de estados en las actividades
+    @return: render a apps/hu_set_estado con el id del proyecto, y del User Story
+    """
+    proyecto = get_object_or_404(Proyectos, pk = proyecto_id)
+    hu = get_object_or_404(UserStory, pk = hu_id)
+    flujo = Flujos.objects.get(pk = hu.flujo)
+    actividades = Actividades.objects.filter(flujo_id = hu.flujo)
+    estados = Estados.objects.all()
+    mispermisos = misPermisos(request.user.id, proyecto_id)
+    modificado = False
+    if request.method == 'POST':
+        #actlist = Actividades.objects.filter(descripcion = request.POST['act'], flujo_id = hu.flujo)
+        
+        actividadeslist = Actividades.objects.filter(flujo_id = hu.flujo)
+        count = 0
+        for a in actividadeslist:
+            count = count + 1
+            if a.descripcion == request.POST['act']:
+                ordenact = count
+                break
+                
+        hu.f_actividad = ordenact
+        #hu.f_actividad = actlist.get(descripcion = request.POST['act']).id
+        
+        hu.f_a_estado = Estados.objects.get(descripcion = request.POST['est']).id
+        hu.save()
+        modificado = True
+        return render_to_response('apps/hu_set_estado.html', {'proyecto':proyecto, 'hu':hu, 'actividades':actividades, 'estados':estados, 'flujo_descripcion':flujo.descripcion, 'misPermisos':mispermisos, 'modificado':modificado}, context_instance = RequestContext(request))
+    
+    #return render_to_response('apps/hu_modify_fields.html', {"form":form, "proyecto_id":proyecto_id, "hu_id":hu_id, "hu_descripcion":hu.descripcion, 'misPermisos':mispermisos, 'users':users, 'flujos':flujos, 'proyecto_nombre':proyecto.nombre, 'prioridades':prioridades, 'hu':hu}, context_instance = RequestContext(request))
+    return render_to_response('apps/hu_set_estado.html', {'proyecto':proyecto, 'hu':hu, 'actividades':actividades, 'estados':estados, 'flujo_descripcion':flujo.descripcion, 'misPermisos':mispermisos}, context_instance = RequestContext(request))
 
 def userToHU(request, proyecto_id, hu_id):
     """

@@ -10,8 +10,12 @@
 	<!-- <a href="{% url 'apps:editarHu' proyecto_id hu_id %}">Modificar Campos</a><br/> -->
 	<h3>{{hu_descripcion}}</h3>
 	{% if misPermisos.MUS %}
-		<a href="{% url 'apps:userToHU' proyecto_id hu_id %}">Asignar Usuario</a><br/>
-		<a href="{% url 'apps:listhuflujo' proyecto_id hu_id %}">Asignar Flujo</a><br />
+		<!-- <a href="{% url 'apps:userToHU' proyecto_id hu_id %}">Asignar Usuario</a><br/> -->
+		<!-- <a href="{% url 'apps:listhuflujo' proyecto_id hu_id %}">Asignar Flujo</a><br /> -->
+		{% if hu.estado == True %}
+			<a href="{% url 'apps:setEstadoHu' proyecto_id hu_id  %}">Cambiar Estado</a><br />
+		{% endif %}
+		<br>
 		<a href="{% url 'apps:listhuversiones' proyecto_id hu_id  %}">Historial</a><br />
 	{% endif %}
 	<!--<a href='assignSprint'>Asignar Sprint</a><br />
@@ -19,7 +23,7 @@
 	<a href="">Asignar Valor Tecnico</a><br>
 	<a href="">Asignar Valor de Negocio</a><br> -->
 	<br>
-	{% if misPermisos.EUS %}
+	{% if misPermisos.EUS and hu.estado == True %}
 		<a href="{% url 'apps:eliminarHu' proyecto_id hu_id %}">Eliminar User Story</a><br />
 	{% endif %}
 	
@@ -34,23 +38,37 @@
 			<b>Usuario Asignado:</b>
 			<select name="us"  style="width:190px" sort = true>
 					{% for user in users %}
-						<option >{{user.username}}</option>
+						{% if user.id == hu.usuario_Asignado %}
+							<option selected="selected">{{user.username}}</option>
+						{% else %}
+							 <option>{{user.username}}</option>
+							
+						{% endif %}
 					{% endfor %} 
 			</select><br>
 			<b>Flujo Asignado</b>&emsp;&emsp;
 			<select name="flujo"  style="width:190px" sort = true>
 					{% for f in flujos %}
-						<option >{{f.descripcion}}</option>
+						{% if f.id == hu.flujo %}
+							<option selected="selected">{{f.descripcion}}</option>
+						{% else %}
+							<option >{{f.descripcion}}</option>
+						{% endif %}
 					{% endfor %} 
 			</select><br>
 			<b>Prioridad</b>&emsp;&emsp;&emsp;&emsp;&emsp;
 			<select name="pri"  style="width:190px" sort = true>
 					{% for pr in prioridades %}
-						<option >{{pr.descripcion}}</option>
+						{% if pr.id == hu.prioridad_id %}
+							<option selected="selected">{{pr.descripcion}}</option>
+						{% else %}
+							<option >{{pr.descripcion}}</option>
+						{% endif %}
 					{% endfor %} 
 			</select><br>
-			
-			<input type='submit' value='Guardar'/>
+			{% if hu.estado == True %}
+				<input type='submit' value='Guardar'/>
+			{% endif %}
 		
 		
 		</form>

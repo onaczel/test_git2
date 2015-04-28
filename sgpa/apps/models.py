@@ -125,7 +125,7 @@ class UserStory(models.Model):
     prioridad = models.ForeignKey(Prioridad, null=True)
     tiempo_Estimado = models.IntegerField()
     tiempo_Real = models.IntegerField(null=True)
-    sprint = models.IntegerField(null = True)
+    sprint = models.IntegerField(default = 0)
     usuario_Asignado = models.IntegerField(null = True)
     flujo = models.IntegerField(null = True)
     proyecto = models.ForeignKey(Proyectos, null = True)
@@ -143,6 +143,8 @@ class UserStory(models.Model):
     f_a_estado = models.IntegerField(default = 1 )
     #posicion exacta en la que se encuentra un hu dentro de un flujo
     flujo_posicion = models.IntegerField(null = True)
+    #indica si el User Story se ha finalizado 
+    finalizado = models.BooleanField(default = False)
 
 class UserStoryVersiones(models.Model):
     """

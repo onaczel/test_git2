@@ -7,7 +7,7 @@ django.setup()
 
 from django.contrib.auth.models import User
 from apps.models import Users_Roles, Flujos, Roles, Actividades, Permisos, Permisos_Roles,\
-    Prioridad
+    Prioridad, Estados
 
 def populate():
     add_roles('Administrador', True)
@@ -42,6 +42,10 @@ def populate():
     add_prioridad('Baja')
     add_prioridad('Media')
     add_prioridad('Alta')
+    
+    add_estado('To Do')
+    add_estado('Doing')
+    add_estado('Done')
         
     
 def add_roles(descripcion, sistema):
@@ -108,6 +112,11 @@ def add_prioridad(descripcion):
     prioridad = Prioridad()
     prioridad.descripcion = descripcion
     prioridad.save()
+    
+def add_estado(descripcion):
+    estado = Estados()
+    estado.descripcion(descripcion)
+    estado.save()
 
 if __name__ == '__main__':
     print "Starting population script..."

@@ -2,24 +2,105 @@
 {% block titulo %}
 <h1>{{proyecto_descripcion}}</h1>
 {% endblock %}
+
+
 {% block contenido %}
 {% if misPermisos.CUS %}
-<a href="{% url 'apps:crearHu' proyecto_id %}">Nuevo User Story</a>
+<a href="{% url 'apps:crearHu' proyecto.id %}">Nuevo User Story</a>
 {% endif %}
 <br />
-<br />	
-{% if hu %}
-	{% for h in hu %}
-		<!-- <label>{{h.descripcion}}</label> -->
-		<a href="{% url 'apps:editarHu' proyecto_id h.id %}">{{h.descripcion}}</a>
-		<!-- </html><a href="{% url 'apps:eliminarHu' proyecto_id h.id %}">Eliminar</a><br /> -->
-		<br>
-	{% endfor %}
-{% else %}
+<br />
+	<!-- ################################################################################################## 
+	{% if hu %}
+		{% for h in hu %}
+			
+			<a href="{% url 'apps:editarHu' proyecto.id h.id %}">{{h.descripcion}}</a>
+			
+			<br>
+		{% endfor %}
+	{% else %}
 	<p>No existe ningun User Story en la Base de Datos</p>
-{% endif %}
+	{% endif %}
+	 -->
+	 <!-- ##################################################################################################
+	 <hr>
+	<h4>User Stories Activos</h4>
+	{% if hu_activos %}
+		{% for h in hu_activos %}
+			<a href="{% url 'apps:editarHu' proyecto.id h.id %}">{{h.descripcion}}</a><br>
+		{% endfor %}
+	{% else %}
+		<p>No existen User Stories Activos actualmente en el Proyecto</p>
+	{% endif %}
+	<hr>
+	<h4>User Stories Planificados</h4>
+	{% if hu_planificados %}
+		{% for h in hu_planificados %}
+			<a href="{% url 'apps:editarHu' proyecto.id h.id %}">{{h.descripcion}}</a><br>
+		{% endfor %}
+	{% else %}
+		<p>No existen User Stories Planificados actualmente en el Proyecto</p> 
+	{% endif %}
+	<hr>
+	<h4>User Stories No Planificados</h4>
+	{% if hu_noplanificados %}
+		{% for h in hu_noplanificados %}
+			<a href="{% url 'apps:editarHu' proyecto.id h.id %}">{{h.descripcion}}</a><br>
+		{% endfor %}
+	{% else %}
+		<p>No existen User Stories que no han sido Planificados en el Proyecto</p> 
+	{% endif %}
+	<hr>
+	<h4>User Stories Terminados</h4>
+	{% if hu_terminados %}
+		{% for h in hu_terminados %}
+			<a href="{% url 'apps:editarHu' proyecto.id h.id %}">{{h.descripcion}}</a><br>
+		{% endfor %}
+	{% else %}
+		<p>No existen User Stories Terminados en el Proyecto</p>
+	{% endif %}
+	<hr>
+	<h4>User Stories Descartados</h4>
+	{% if hu_descartados %}
+		{% for h in hu_descartados %}
+			<a href="{% url 'apps:editarHu' proyecto.id h.id %}">{{h.descripcion}}</a><br>
+		{% endfor %}
+	{% else %}
+		<p>No existen User Stories Descartados en el Proyecto</p>
+	{% endif %}
+	 -->
+	 
+	 <table width=100%>
+		 <tr>
+		 	<td><b>Nombre</b></td><td><b>Estado</b></td><td><b>Fecha Creacion</b></td>
+		 </tr>
+		 
+		 {% for h in hu %}
+		 	<tr>
+		 		<td><a href="{% url 'apps:editarHu' proyecto.id h.id %}">{{h.descripcion}}</a><br></td>
+		 		{% if h.sprint == proyecto.nro_sprint and h.estado == True and h.finalizado == False %}
+		 			<td>Activo</td>
+		 		{% elif h.sprint > proyecto.nro_sprint and h.estado == True %}
+		 			<td>Planificado</td>
+		 		{% elif h.sprint == 0 %}
+		 			<td>No Planificado</td>
+		 		{% elif h.estado == False %}
+		 			<td>Eliminado</td>
+		 		{% elif h.finalizado == True %}
+		 			<td>Finalizado</td>
+		 		{% else %}
+		 			<td>No anda</td>
+		 		{% endif %}
+		 		<td>{{h.fecha_creacion}}</td>
+		 	</tr>
+		 {% endfor %}
+		 
+	 
+	 
+	 </table>
+	
 <br />	
 {% endblock %}
 {% block atras %}
-<a href="{% url 'apps:accionesproyecto' proyecto_id %}">Atras</a>
+<a href="{% url 'apps:accionesproyecto' proyecto.id %}">Atras</a>
 {% endblock %}

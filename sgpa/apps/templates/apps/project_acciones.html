@@ -32,9 +32,14 @@
 	<br>
 {% endblock %}
 
+{% block encabezado %}
+
+{% endblock %}
+
 
 {% block contenido %}
-
+<h1>Sprint {{proyecto.nro_sprint}}</h1>
+<br>
 <table border="1" frame="lhs" cellspacing=1 cellpadding=20>	
 	<center>
 
@@ -69,7 +74,7 @@
 							{% for actividad in actividades %}
 								{% if  h.flujo == f.id and forloop.counter <= f.tamano %}
 									{% if forloop.counter == h.flujo_posicion  %}
-										<td>{{h.descripcion}}</td>
+										<td><a href="{% url 'apps:setEstadoHu' proyecto.id h.id %}">{{h.descripcion}}</a></td>
 										
 									{% else %}
 										<td></td>
