@@ -1277,10 +1277,14 @@ def listhu(request, proyecto_id):
             hu_planificados.append(i)
     hu_terminados = UserStory.objects.filter(proyecto_id = proyecto_id, estado = True, finalizado = True)
     hu_descartados = UserStory.objects.filter(proyecto_id = proyecto_id, estado = False)
+    hu = sorted(hu, key=gethuid, reverse=True)
     hu_no_planificados = UserStory.objects.filter(proyecto_id = proyecto_id, estado = True, sprint = 0)
     print proyecto.nombre
     return render_to_response('apps/hu_admin.html', { 'hu':hu, 'proyecto':proyecto, 'proyecto_descripcion':proyecto.nombre, 'misPermisos':mispermisos, 'hu_activos':hu_activos, 'hu_planificados':hu_planificados, 'hu_terminados':hu_terminados, 'hu_descartados':hu_descartados, 'hu_noplanificados':hu_no_planificados})
 
+def gethuid(hu):
+    return hu.fecha_creacion
+    
 def resumenHu(request, proyecto_id, hu_id):
     hu = UserStory.objects.get(pk=hu_id)
     proyecto = Proyectos.objects.get(pk=proyecto_id)

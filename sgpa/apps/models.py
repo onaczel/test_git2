@@ -138,9 +138,9 @@ class UserStory(models.Model):
     #fecha de ultima modificacion del hu
     fecha_modificacion = models.DateField(null = True)
     #nro de la actividad de flujo en el que se encuentra el hu (ex: Desarrollo de Flujo 1)
-    f_actividad = models.IntegerField(default = 1)
+    f_actividad = models.IntegerField(default = 0)
     #nro del estado de la actividad de flujo en que se encuentra el hu (ex: Doing de Desarrollo de Flujo 1)
-    f_a_estado = models.IntegerField(default = 1 )
+    f_a_estado = models.IntegerField(default = 0)
     #posicion exacta en la que se encuentra un hu dentro de un flujo
     flujo_posicion = models.IntegerField(null = True)
     #indica si el User Story se ha finalizado 

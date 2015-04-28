@@ -70,18 +70,20 @@
 					</tr>
 
 					{% for h in hus %}
-						<tr>
-							{% for actividad in actividades %}
-								{% if  h.flujo == f.id and forloop.counter <= f.tamano %}
-									{% if forloop.counter == h.flujo_posicion  %}
-										<td><a href="{% url 'apps:setEstadoHu' proyecto.id h.id %}">{{h.descripcion}}</a></td>
-										
-									{% else %}
-										<td></td>
+						{% if h.f_actividad != 0 %}
+							<tr>
+								{% for actividad in actividades %}
+									{% if  h.flujo == f.id and forloop.counter <= f.tamano %}
+										{% if forloop.counter == h.flujo_posicion  %}
+											<td><a href="{% url 'apps:setEstadoHu' proyecto.id h.id %}">{{h.descripcion}}</a></td>
+											
+										{% else %}
+											<td></td>
+										{% endif %}
 									{% endif %}
-								{% endif %}
-							{% endfor %}
-						<tr>
+								{% endfor %}
+							<tr>
+						{% endif %}
 					{% endfor %}
 				
 				</table>
