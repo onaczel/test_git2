@@ -174,6 +174,11 @@ class Sprint(models.Model):
     """
     proyecto = models.ForeignKey(Proyectos, null=True, blank=True)
     nro_sprint = models.IntegerField()
+    #estados:
+    #0 = todavia no empieza
+    #1 = esta en progreso
+    #2 = finalizado
+    estado = models.IntegerField()
     
 class Dia_Sprint(models.Model):
     """
