@@ -72,9 +72,10 @@ urlpatterns = patterns('',
     url(r'^(?P<proyecto_id>\d+)/modproyecto/accionesproyecto/listflujosproyectos/agregarPlantillaProyectoMod$', views.listflujosproyectosMod, name='listflujosproyectosMod'),
     url(r'^(?P<proyecto_id>\d+)/(?P<flujo_id>\d+)/(?P<actividad_id>\d+)/modproyecto/accionesproyecto/listflujosproyectos/modificarFlujoProyectoMod$', views.flujosproyectosRequestMod, name='flujosproyectosRequestMod'),
     url(r'^(?P<proyecto_id>\d+)/(?P<flujo_id>\d+)/(?P<actividad_id>\d+)/modproyecto/accionesproyecto/listflujosproyectos/modificarFlujoProyectoModAct$', views.flujosproyectosRequestModAct, name='flujosproyectosRequestModAct'),
-    url(r'^(?P<proyecto_id>\d+)/(?P<sprint_id>\d+)/(?P<dia_sprint>\d+)/modproyecto/accionesproyecto/sprints$', views.sprints, name='sprints'),
+    url(r'^(?P<proyecto_id>\d+)/(?P<sprint_id>\d+)/(?P<hu_id>\d+)/modproyecto/accionesproyecto/sprints$', views.sprints, name='sprints'),
     url(r'^(?P<proyecto_id>\d+)/(?P<hu_id>\d+)/modproyecto/accionesproyecto/adminhu/editar/assignUser$', views.userToHU, name='userToHU'),
     url(r'^(?P<proyecto_id>\d+)/modproyecto/accionesproyecto/verCliente$', views.verCliente, name='verCliente'),
+    url(r'^(?P<proyecto_id>\d+)/(?P<hu_id>\d+)/sprint/analizarHu$', views.analizarhus, name='analizarhus'),
   
 
     url(r'^(?P<hu_id>\d+)/AgregarHoras/$', views.horas, name='horas'),

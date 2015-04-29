@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% block encabezado %}
+	<h1>{{proyecto.nombre}}</h1>
+	<h2>Planificacion del Sprint {{sprint.nro_sprint}}</h2>
+{% endblock %}
+<br />
+{% block contenido %}
+	<div>
+		<center>
+			<h3>User Stories del Sprint {{sprint.nro_sprint}}</h3>
+		</center>
+		{% if hus %}
+			<ul>
+				{% for hu in hus %}
+					{% if hu.sprint == sprint.nro_sprint %}	
+						<li>
+							<form action="{% url 'apps:sprints' proyecto.id sprint.id hu.id %}" method="post">{% csrf_token %}
+								<b><input type="submit", name="cambio", value="x"><font size="2">&emsp;HU {{hu.codigo}}</font>&emsp;<font size="1">Detalles</font><input type="submit", name="cambio", value=" + "><input type="submit", name="cambio", value=" - "></b><br />
+							</form>
+							{% if userStory.id == hu.id %}
+								<form action="{% url 'apps:sprints' proyecto.id sprint.id hu.id %}" method="post">{% csrf_token %}
+									<table>
+										<font size="2"><b>Descripcion:</b></font>&emsp;{{detalles.descripcion.value}}<br />
+										<font size="2"><b>Codigo:</b></font>&emsp;{{detalles.codigo.value}}<br />
+										<font size="2"><b>Tiempo Estimado:</b></font>&emsp;{{detalles.tiempo_Estimado.value}}<br />
+										<font size="2"><b>Valor Negocio:</b></font>&emsp;{{detalles.valor_Negocio.value}}<br />
+										<font size="2"><b>Valor Tecnico:</b></font>&emsp;{{detalles.valor_Tecnico.value}}<br />
+									</table>
+									<b><font size="2">Usuario Asignado:</font></b>
+									<select name="us"  style="width:190px" sort = true>
+										<option>{{usuario.username}}</option>
+										{% for user in users %}
+											{% if usuario.id != user.id %}
+												<option >{{user.username}}</option>
+											{% endif %}
+										{% endfor %} 
+									</select><br>
+									<b><font size="2">Flujo Asignado</font></b>&emsp;&emsp;
+									<select name="flujo"  style="width:190px" sort = true>
+										<option>{{flujo.descripcion}}</option>
+										{% for f in flujos %}
+											{% if flujo.id != f.id %}
+												<option >{{f.descripcion}}</option>
+											{% endif %}
+										{% endfor %} 
+									</select><br>
+									<b><font size="2">Prioridad</font></b>&emsp;&emsp;&emsp;&emsp;&emsp;
+									<select name="pri"  style="width:190px" sort = true>
+										<option>{{prioridad.descripcion}}</option>
+										{% for pr in prioridades %}
+											{% if prioridad.id != pr.id %}
+												<option >{{pr.descripcion}}</option>
+											{% endif %}
+										{% endfor %} 
+									</select><br>
+									<input type="submit" name="cambio" value="Modificar " />
+								</form>
+							{% endif %}
+						</li>
+					{% endif %}
+				{% endfor %}
+			</ul>
+		{% endif %}
+	</div>
+<form action="{% url 'apps:sprints' proyecto.id sprint.id 0%}" method="post">{% csrf_token %}
+	<div style="float: left;">
+		{% if hus %}
+			<h4>User Stories de otros Sprints</h4>
+			<ul>
+				{% for s in sprints %}
+					{% if s.id != sprint.id %}
+						<br><label>Sprint Numero {{s.nro_sprint}}</label>
+						{% for hu in hus %}
+							{% if hu.sprint == s.nro_sprint %}
+								<li>
+									<input type="checkbox" name="hus[]" id="option{{hu.id}}" value={{hu.id}} />
+									<label for="option{{hu.id}}"><b>{{hu.codigo}}</b></label><br />
+								</li>
+							{% endif %}
+						{% endfor %}
+					{% endif %}
+				{% endfor %}
+			</ul>
+		{% endif %}
+	</div>
+	<div style="float: right;">
+		{% if hus %}
+			<h4>User Stories sin Sprints</h4>
+			<ul><br><label>user stories</label>
+				{% for hu in hus %}
+					{% if hu.sprint == 0 %}
+						<li>
+							<input type="checkbox" name="hus[]" id="option{{hu.id}}" value={{hu.id}} />
+							<label for="option{{hu.id}}"><b>{{hu.codigo}}</b></label><br />
+						</li>
+					{% endif %}
+				{% endfor %}
+			</ul>
+		{% endif %}
+	</div>
+	<center>
+		<div style="clear: both;">
+			<input type="submit" name="cambio" value="Asignar User Stories"/>
+		</div>
+	</center>
+</form>
+{% endblock %}
+{% block atras %}
+	<a href="{% url 'apps:sprints' proyecto.id 0 0 %}">Volver</a>
+{% endblock %}
