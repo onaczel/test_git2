@@ -77,6 +77,7 @@ def add_flujo(descripcion):
     flujo.descripcion = descripcion
     flujo.plantilla = True
     flujo.estado = True
+    flujo.tamano = 15
     flujo.save()
     actividades = ['Analisis', 'Diseno', 'Programacion', 'Testing', 'Despliegue']
     for act in actividades:

@@ -9,15 +9,20 @@
 	{%if misPermisos.EPP == True %}
 		<!-- <br><a href="{% url 'apps:listelimparticipante' proyecto.id %}">Eliminar Participante</a><br /> -->
 	{% endif %}
+	<!-- 
 	{%if misPermisos.MP == True %}
 		<br><a href="{% url 'apps:listflujosproyectos' proyecto.id %}">Crear Flujo</a><br />
 	{% endif %}
 	{%if misPermisos.MP == True %}
 		<br><a href="{% url 'apps:listflujosproyectosMod' proyecto.id %}">Modificar Flujo</a><br />
 	{% endif %}
+	-->
+	{% if misPermisos.MP == True %}
+		<br><a href="{% url 'apps:listflujosproyectosMod' proyecto.id %}">Flujos</a><br />
+	{% endif %}
 		<br>
 	{% if misPermisos.CUS or misPermisos.MUS or misPermisos.EUS %}
-		<a href="{% url 'apps:listhu' proyecto.id %}">Administrar User Stories</a>
+		<a href="{% url 'apps:listhu' proyecto.id %}">User Stories</a>
 	{% endif %}
 		<!-- <br>
 		<a href="{% url 'apps:listrolesproj' proyecto.id %}">Administrar Roles</a>
@@ -69,14 +74,17 @@
 						{% endfor %} 
 					</tr>
 
+
+					
+					
+					
 					{% for h in hus %}
 						{% if h.f_actividad != 0 %}
 							<tr>
-								{% for actividad in actividades %}
+								{% for i in "x"|ljust:f.tamano %}
 									{% if  h.flujo == f.id and forloop.counter <= f.tamano %}
 										{% if forloop.counter == h.flujo_posicion  %}
 											<td><a href="{% url 'apps:setEstadoHu' proyecto.id h.id %}">{{h.descripcion}}</a></td>
-											
 										{% else %}
 											<td></td>
 										{% endif %}

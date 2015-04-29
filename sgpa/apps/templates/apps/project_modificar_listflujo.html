@@ -1,12 +1,17 @@
 {% extends 'base.html' %}
 {% block titulo %}
-<h1>Modificar Flujo</h1>
+<h1>{{proyecto.nombre}}</h1>
 {% endblock %}
 {% block contenido %}
-<center>
-<h2>Seleccione una plantilla</h2>
 
-	
+{% if eliminado == True %}
+	<table border="1" bordercolor="green" width=100% align="center" >
+		<tr><td align="center"><p><font color="green">Mensaje: El flujo se ha eliminado con exito</font></p></td></tr>
+	</table>
+{% endif %}
+
+<br><a href="{% url 'apps:listflujosproyectos' proyecto.id %}">Asignar Nuevo Flujo</a><br />
+
 <table border="10" frame="lhs" borderstyle= "doble" cellspacing=2 cellpadding=20 bordercolor="green">	
 	{% for f in flujos %}
 		<tr>
@@ -30,6 +35,9 @@
 			</td>
 			<td>
 				<br><h5><a href="{% url 'apps:flujosproyectosRequestMod' proyecto.id f.id 0 %}">Modificar</a></h5><br />
+			</td>
+			<td>
+				<br><h5><a href="{% url 'apps:flowdeleteproj' proyecto.id f.id %}">Eliminar</a></h5><br />
 			</td>
 		</tr>
 	{% endfor %} 

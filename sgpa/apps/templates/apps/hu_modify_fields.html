@@ -32,6 +32,17 @@
 
 {% block contenido %}
 	{% if misPermisos.MUS %}
+		{% if hu.sprint == 0 %}
+			<table>
+				<tr>
+				<td><h4>Sprint:</h4></td>
+				<td>El User Story aun no se ha planificado</td>
+				</tr>
+			</table>
+			
+		{% else %}
+			<h4> Sprint: {{hu.sprint}}</h4>
+		{% endif %}
 		<form action="{% url 'apps:editarHu' proyecto_id hu_id %}" method="post">
 			{% csrf_token %}
 			<table>{{form}}</table>
@@ -56,6 +67,7 @@
 						{% endif %}
 					{% endfor %} 
 			</select><br>
+			<!-- <input type="hidden" name="flujo" value="{{f.descripcion}}" /> -->
 			<b>Prioridad</b>&emsp;&emsp;&emsp;&emsp;&emsp;
 			<select name="pri"  style="width:190px" sort = true>
 					{% for pr in prioridades %}
@@ -66,6 +78,8 @@
 						{% endif %}
 					{% endfor %} 
 			</select><br>
+			
+			<br>
 			{% if hu.estado == True %}
 				<input type='submit' value='Guardar'/>
 			{% endif %}

@@ -8,6 +8,7 @@ from django.utils import timezone
 from django.template import RequestContext, loader
 import time
 
+
 from apps.models import Roles, Users_Roles, Permisos, Permisos_Roles, Flujos, Actividades, Actividades_Estados, Proyectos, Equipo, UserStory, Sprint, Dia_Sprint, UserStoryVersiones, Prioridad,\
     Estados
 from django.contrib.auth.models import User
@@ -708,11 +709,19 @@ def crearflujo(request, user_logged):
     @param request: Http request    
     @return: render a apps/flow_set_activities.html con el id del flujo creado
     """
+    error = False
     if request.method == 'POST':
         form = FlowCreateForm(request.POST)
         if form.is_valid():
             form.save()
-            flow = Flujos.objects.get(descripcion = form.cleaned_data['descripcion'])
+            try:    
+                flow = Flujos.objects.get(descripcion = form.cleaned_data['descripcion'])
+            except:
+                flow = Flujos.objects.latest('id')
+                flow.delete()
+                error = True
+                return render_to_response('apps/flow_create.html', {'form':form, 'user_logged':user_logged, 'error':error}, context_instance=RequestContext(request))
+            
             flow_id = flow.id
             formulario = ActivityCreateForm()
         return render_to_response('apps/flow_set_activities.html', {'formulario':formulario, 'flow_id':flow_id, 'flow_descripcion':flow.descripcion, 'user_logged':user_logged}, context_instance=RequestContext(request))
@@ -850,11 +859,29 @@ def flowdelete(request, user_logged,  flow_id):
     @param flow_id: Id de una plantilla de flujo
     @return: render a  apps/flow_eliminated.html 
     """
+    '''
     f = get_object_or_404(Flujos, pk=flow_id)
     f.estado = False
     f.save()
+    '''
+    eliminarflujo(request, flow_id)
     return render_to_response("apps/flow_eliminated.html",{'user_logged':user_logged}, context_instance=RequestContext(request))
+
+def flowdeleteproj(request, proyecto_id, flujo_id):
+    proyecto = Proyectos.objects.get(id = proyecto_id)
+    flujos = Flujos.objects.filter(proyecto_id = proyecto_id, estado=True)
+    actividades = Actividades.objects.filter(plantilla = False , estado=True)
+    
+    eliminarflujo(request, flujo_id)
+    eliminado = True
+    return render_to_response("apps/project_modificar_listflujo.html", {"proyecto":proyecto , "flujos":flujos, "actividades":actividades, 'eliminado':eliminado})
+    
  
+def eliminarflujo(request, flow_id):
+    f = get_object_or_404(Flujos, pk=flow_id)
+    #f.estado = False
+    f.delete()
+    return f
 ###############################creacion de proyecto#################################################################################################
 
 #####################################################################################################################################################
@@ -1101,7 +1128,7 @@ def accionesproyecto(request, proyecto_id):
         users.append(User.objects.get(pk = ur.usuario_id))
         roles.append(Roles.objects.get(pk = ur.rol_id))
 
-    flujo = Flujos.objects.filter(proyecto_id = proyecto_id)
+    flujo = Flujos.objects.filter(proyecto_id = proyecto_id, estado=True)
     
     actividades = Actividades.objects.all()
     hus = UserStory.objects.filter(proyecto_id = proyecto_id, estado=True)
@@ -1109,9 +1136,12 @@ def accionesproyecto(request, proyecto_id):
     for hu in hus:
         hu.flujo_posicion = ((hu.f_actividad - 1)*3) + hu.f_a_estado
 
-
+    
         
     return render_to_response("apps/project_acciones.html", {"proyecto":proyecto, "usuario":request.user, "misPermisos":mispermisos, 'users':users, 'roles':roles, 'flujo':flujo, 'actividades':actividades, 'hus':hus})
+
+
+
 
 def elimparticipante(request, proyecto_id, usuario_id):
     """
@@ -1159,11 +1189,51 @@ def listflujosproyectos(request, proyecto_id):
     @return: render a apps/project_crear_flujo.html con el proyecto en el cual se encuentra, los flujos del proyecto y las actividades de los flujos
     """
     proyecto = Proyectos.objects.get(id = proyecto_id)
-    flujos = Flujos.objects.filter(estado = True, plantilla = True)
+    #flujos = Flujos.objects.filter(estado = True, plantilla = True)
+    flujos = getlistaflujos(request, proyecto_id)
+        
+                    
     actividades = Actividades.objects.filter(plantilla = True)
     
     return render_to_response('apps/project_crear_flujo.html', {"proyecto":proyecto, "flujos":flujos, "actividades":actividades}, context_instance=RequestContext(request))
 
+def getlistaflujos(request, proyecto_id):
+    """
+    Funcion que captura los flujos disponibles para el proyecto
+    
+    @param request: Http
+    @param proyecto_id: id del proyecto en cuestion
+    @return: Lista de flujos
+    """
+    fproy = Flujos.objects.filter(proyecto_id = proyecto_id)
+    ftotal = Flujos.objects.all()
+    flujos = []
+    existe = False
+    for fi in ftotal:
+        nombre_flujo = fi.descripcion
+        list_flujo_nombre = Flujos.objects.filter(descripcion = nombre_flujo)
+        for fj in list_flujo_nombre:
+            if fj.proyecto_id == proyecto_id and fj.estado == True:
+                existe = True
+        if existe == False:
+            try:
+                flujo_nuevo = Flujos.objects.get(descripcion = nombre_flujo, plantilla = True)
+            except Flujos.DoesNotExist:
+                flujo_nuevo = None
+            
+            if flujo_nuevo != None:
+                ex = False
+                for fk in fproy:
+                    if flujo_nuevo.descripcion == fk.descripcion:
+                        ex = True
+                
+                if ex == False:
+                    flujos.append(flujo_nuevo)
+                    #pass
+        existe = False
+    
+    return flujos
+    
 def agregarPlantillaProyecto(request, proyecto_id):
     """
     Asigna los nuevos flujos al proyecto
@@ -1172,6 +1242,7 @@ def agregarPlantillaProyecto(request, proyecto_id):
     @param proyecto_id: id de un proyecto
     @return: render a apps/project_crear_flujo_creado.html con el proyecto donde se encuentra
     """
+    actcount = 0
     proyecto = Proyectos.objects.get(id = proyecto_id)
     flujos_id = request.POST.getlist(u'f[]')
     for flujo_id in flujos_id:
@@ -1190,6 +1261,9 @@ def agregarPlantillaProyecto(request, proyecto_id):
             nuevaActividad.plantilla = False
             nuevaActividad.flujo_id = nuevoFlujo.id
             nuevaActividad.save()
+            actcount = actcount + 3
+        nuevoFlujo.tamano = actcount
+        nuevoFlujo.save()
         
     return render_to_response('apps/project_crear_flujo_creado.html', {"proyecto":proyecto}, context_instance=RequestContext(request))
 
@@ -1202,8 +1276,8 @@ def listflujosproyectosMod(request, proyecto_id):
     @return: render a apps/project_modificar_listflujo.html con el proyecto donde se encuentra, los flujos del proyecto y las actividades de los flujos
     """
     proyecto = Proyectos.objects.get(id = proyecto_id)
-    flujos = Flujos.objects.filter(proyecto_id = proyecto_id)
-    actividades = Actividades.objects.filter(plantilla = False)
+    flujos = Flujos.objects.filter(proyecto_id = proyecto_id, estado = True)
+    actividades = Actividades.objects.filter(plantilla = False , estado=True)
     
     return render_to_response("apps/project_modificar_listflujo.html", {"proyecto":proyecto , "flujos":flujos, "actividades":actividades})
 
@@ -1218,14 +1292,16 @@ def flujosproyectosRequestMod(request, proyecto_id, flujo_id, actividad_id):
     @param actividad_id: id de una actividad
     @return: render a apps/project_modificar_flujo.html con el formulario del flujo seleccionado, las actividades del flujo, el proyecto ene l cual se encuentra y el flujo mismo
     """
+    modificado = False
     flujo = get_object_or_404(Flujos, pk=flujo_id)
     if request.method == 'POST':
         if request.POST['cambio'] == "modificar flujo":
             formulario = FlowCreateForm(request.POST)
             if formulario.is_valid():
                 flujo.descripcion = formulario.cleaned_data['descripcion']
-                flujo.estado = formulario.cleaned_data['estado']
+                #flujo.estado = formulario.cleaned_data['estado']
                 flujo.save()
+                modificado = True
         elif request.POST['cambio'] == "modificar":
             actividad = Actividades.objects.get(id = actividad_id)
             formulario = ActivityCreateForm(request.POST)
@@ -1239,7 +1315,7 @@ def flujosproyectosRequestMod(request, proyecto_id, flujo_id, actividad_id):
     formFlujo = FlowCreateForm(initial={'descripcion':flujo.descripcion, 'estado':flujo.estado})
     actividades = Actividades.objects.filter(flujo_id = flujo_id)
         
-    return render_to_response('apps/project_modificar_flujo.html', {'formFlujo':formFlujo, "actividades":actividades, "proyecto":proyecto, "flujo":flujo}, context_instance=RequestContext(request))
+    return render_to_response('apps/project_modificar_flujo.html', {'formFlujo':formFlujo, "actividades":actividades, "proyecto":proyecto, "flujo":flujo, 'modificado':modificado}, context_instance=RequestContext(request))
 
 def flujosproyectosRequestModAct(request, proyecto_id, flujo_id, actividad_id):
     """

@@ -5,6 +5,13 @@
 {% block contenido %}
 <br><h1><b>{{proyecto.nombre}}</b></h1><br />
 
+
+{% if modificado == True %}
+	<table border="1" bordercolor="green" width=100% align="center" >
+		<tr><td align="center"><p><font color="green">Mensaje: El flujo se ha modificado con exito</font></p></td></tr>
+	</table>
+{% endif %}
+
 <h3>Flujo</h3>
 {% if formFlujo %}
 	<form action="{% url 'apps:flujosproyectosRequestMod' proyecto.id flujo.id 0 %}" method="post">{% csrf_token %}

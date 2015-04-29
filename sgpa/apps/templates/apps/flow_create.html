@@ -6,6 +6,12 @@
 <h1>Nuevo Flujo</h1>
 {% endblock %}
 {% block contenido %}
+{% if error %}
+	<table border=1 bordercolor="red" width=100%>
+		<tr><td align="center"><font color="red"><p>El nombre que eligio ya esta siendo utilizado. Por favor, elija otro.</p></font></td></tr>
+	</table>
+<br>
+{% endif %}
 <form action="{% url 'apps:crearflujo' user_logged %}" method='post'>{% csrf_token %}
 	<table>{{ form }}</table>
 	<input type="submit" value="Registrar">
