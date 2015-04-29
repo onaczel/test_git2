@@ -115,7 +115,7 @@ def add_prioridad(descripcion):
     
 def add_estado(descripcion):
     estado = Estados()
-    estado.descripcion(descripcion)
+    estado.descripcion = descripcion
     estado.save()
 
 if __name__ == '__main__':
