@@ -178,7 +178,7 @@ class Sprint(models.Model):
     #0 = todavia no empieza
     #1 = esta en progreso
     #2 = finalizado
-    estado = models.IntegerField()
+    estado = models.IntegerField(null=True)
     
 class Dia_Sprint(models.Model):
     """
