@@ -1337,7 +1337,9 @@ def crearHu(request, proyecto_id):
         form = HuCreateForm(request.POST)
         if form.is_valid():
             form.save()
-            hu = UserStory.objects.get(codigo  = form.cleaned_data['codigo'])
+            #hu = UserStory.objects.get(pk=form.cleaned_data['id'])
+            #hu = UserStory.objects.get(codigo  = form.cleaned_data['codigo'])
+            hu = UserStory.objects.latest('id')
             hu.proyecto_id = proyecto_id
             hu.fecha_creacion = time.strftime("%Y-%m-%d")
             user = User.objects.get(username = request.POST['us']) 
