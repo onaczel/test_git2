@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% block encabezado %}
+	<h1>{{proyecto.nombre}}</h1>
+{% endblock %}
+{% block contenido %}
+	<h3>Analisis de User Stories</h3>
+	<h5>Antes de pasar al siguiente Sprint analice los estados de los User Stories (los cambios seran guardados automaticamente)</h5>
+	{% if hus_sprint_actual %}
+		<div style="float:left;">
+			<h3>User stories del sprint actual</h3>
+			{% for hu in hus_sprint_actual %}
+				<form action="{% url 'apps:analizarhus' proyecto.id hu.id %}" method="post">{% csrf_token %}
+					<h3><b><font size="3">HU {{hu.codigo}}</font>&emsp;<font size="1">Detalles</font><input type="submit", name="cambio", value="+"><input type="submit", name="cambio", value="-"><input type="submit", name="cambio", value="Pasar al siguiente Sprint"></b></h3><br />
+				</form>
+				{% if userStory.id == hu.id %}
+					<form action="{% url 'apps:analizarhus' proyecto.id hu.id %}" method="post">{% csrf_token %}
+						<table>
+							<font size="3"><b>Descripcion:</b></font>&emsp;{{detalles.descripcion.value}}<br />
+							<font size="3"><b>Codigo:</b></font>&emsp;{{detalles.codigo.value}}<br />
+							<font size="3"><b>Tiempo Estimado:</b></font>&emsp;{{detalles.tiempo_Estimado.value}}<br />
+							<font size="3"><b>Valor Negocio:</b></font>&emsp;{{detalles.valor_Negocio.value}}<br />
+							<font size="3"><b>Valor Tecnico:</b></font>&emsp;{{detalles.valor_Tecnico.value}}<br />
+						</table>
+						<b>Usuario Asignado:</b>
+						<select name="us"  style="width:190px" sort = true>
+							<option>{{usuario.username}}</option>
+							{% for user in users %}
+								{% if usuario.id != user.id %}
+									<option >{{user.username}}</option>
+								{% endif %}
+							{% endfor %} 
+						</select><br>
+						<b>Flujo Asignado</b>&emsp;&emsp;
+						<select name="flujo"  style="width:190px" sort = true>
+							<option>{{flujo.descripcion}}</option>
+							{% for f in flujos %}
+								{% if flujo.id != f.id %}
+									<option >{{f.descripcion}}</option>
+								{% endif %}
+							{% endfor %} 
+						</select><br>
+						<b>Prioridad</b>&emsp;&emsp;&emsp;&emsp;&emsp;
+						<select name="pri"  style="width:190px" sort = true>
+							<option>{{prioridad.descripcion}}</option>
+							{% for pr in prioridades %}
+								{% if prioridad.id != pr.id %}
+									<option >{{pr.descripcion}}</option>
+								{% endif %}
+							{% endfor %} 
+						</select><br>
+						<input type="submit" name="cambio" value="Modificar" />
+					</form>
+				{% endif %}
+			{% endfor %}
+		</div>
+	{% endif%}
+	{% if hus_sprint_siguiente %}
+		<div style="float:right;">
+			<h3>User stories del siguiente sprint</h3>
+			{% for hu in hus_sprint_siguiente %}
+				<form action="{% url 'apps:analizarhus' proyecto.id hu.id %}" method="post">{% csrf_token %}
+					<h3><b><font size="3">HU {{hu.codigo}}</font>&emsp;<font size="1">Detalles</font><input type="submit", name="cambio", value="+"><input type="submit", name="cambio", value="-"><!-- <input type="submit", name="cambio", value="Volver al Sprint anterior"> --></b></h3><br />
+				</form>
+				{% if userStory.id == hu.id %}
+					<form action="{% url 'apps:analizarhus' proyecto.id hu.id %}" method="post">{% csrf_token %}
+						<table>
+							<font size="3"><b>Descripcion:</b></font>&emsp;{{detalles.descripcion.value}}<br />
+							<font size="3"><b>Codigo:</b></font>&emsp;{{detalles.codigo.value}}<br />
+							<font size="3"><b>Tiempo Estimado:</b></font>&emsp;{{detalles.tiempo_Estimado.value}}<br />
+							<font size="3"><b>Valor Negocio:</b></font>&emsp;{{detalles.valor_Negocio.value}}<br />
+							<font size="3"><b>Valor Tecnico:</b></font>&emsp;{{detalles.valor_Tecnico.value}}<br />
+						</table>
+						<b>Usuario Asignado:</b>
+						<select name="us"  style="width:190px" sort = true>
+							<option>{{usuario.username}}</option>
+							{% for user in users %}
+								{% if usuario.id != user.id %}
+									<option >{{user.username}}</option>
+								{% endif %}
+							{% endfor %} 
+						</select><br>
+						<b>Flujo Asignado</b>&emsp;&emsp;
+						<select name="flujo"  style="width:190px" sort = true>
+							<option>{{flujo.descripcion}}</option>
+							{% for f in flujos %}
+								{% if flujo.id != f.id %}
+									<option >{{f.descripcion}}</option>
+								{% endif %}
+							{% endfor %} 
+						</select><br>
+						<b>Prioridad</b>&emsp;&emsp;&emsp;&emsp;&emsp;
+						<select name="pri"  style="width:190px" sort = true>
+							<option>{{prioridad.descripcion}}</option>
+							{% for pr in prioridades %}
+								{% if prioridad.id != pr.id %}
+									<option >{{pr.descripcion}}</option>
+								{% endif %}
+							{% endfor %} 
+						</select><br>
+						<input type="submit" name="cambio" value="Modificar" />
+					</form>
+				{% endif %}
+			{% endfor %}
+		</div>
+	{% endif %}
+	<br />
+	<div Style="clear: both; width: 200px; margin: 0 auto;">
+		<a href="{% url 'apps:sprints' proyecto.id 0 0 %}">Hecho</a>
+	</div>
+{% endblock %}

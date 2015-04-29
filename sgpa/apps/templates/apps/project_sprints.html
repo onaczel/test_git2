@@ -1,69 +1,121 @@
 
-{% block titulo %}
-<h1><b>{{proyecto.nombre}}</b></h1>
+{% extends 'base.html' %}
+{% block encabezado %}
+	<h1>{{proyecto.nombre}}</h1>
+	<h2><b>Sprints</b></h2><br />
 {% endblock %}
 {% block contenido %}
-<h2><b>Sprints</b></h2><br />
-{% if proyecto.nro_sprint > 0%} 
-	<form action="{% url 'apps:sprints' proyecto.id 0 0 %}" method="post">{% csrf_token %}
-		<h3><b>Sprint actual: Sprint Numero {{proyecto.nro_sprint}}&emsp;&emsp;<font size=2>siguiente Sprint</font><input type="submit", name="cambio", value="-->"><font size="3">&emsp;{{mensaje}}</font></b></h3><br />
-	</form>
-{% else %}
-	<!--<form action="{% url 'apps:sprints' proyecto.id 0 0 %}" method="post">{% csrf_token %}
-		<h3><b>Sprint actual: Sprint Numero {{proyecto.nro_sprint}}&emsp;&emsp;<font size=2>siguiente Sprint</font><input type="submit", name="cambio", value="\-\-\>"></b></h3><br />
-	</form>-->
-	<h2><b>Finalizado</b></h2><br />
-{% endif %}
-{% if sprints %}
-	{% for s in sprints %}
-		<div style="clear:both">
-			<form action="{% url 'apps:sprints' proyecto.id s.id 0 %}" method="post">{% csrf_token %}
-				<br><label>Sprint Numero {{s.nro_sprint}}</label>&emsp;<input type="submit", name="cambio", value="Mostrar">&emsp;<input type="submit", name="cambio", value="Ocultar">
-			</form>
-			{% if sprint.nro_sprint == s.nro_sprint %}
-				{% if formularios %}
-					<div style="float:left">
-						<ul>
-							{% for formulario in formularios %}
-								{% if formulario.tiempo_estimado.value == 0 %}
-									<li>
-										<form action="{% url 'apps:sprints' proyecto.id s.id forloop.counter %}" method="post">{% csrf_token %}
-											<label>Dia {{forloop.counter}}:&emsp;{{formulario}}</label><input type="submit", name="cambio", value="Modificar">
-										</form>
-									</li>
+	{% if proyecto.nro_sprint > 0%} 
+		<form action="{% url 'apps:sprints' proyecto.id 0 0 %}" method="post">{% csrf_token %}
+			<h3><b>Sprint actual: Sprint Numero {{proyecto.nro_sprint}}&emsp;&emsp;<font size=2>siguiente Sprint</font><input type="submit", name="cambio", value="-->"><font size="3">&emsp;{{mensaje}}</font></b></h3><br />
+		</form>
+	{% else %}
+		<h2><b>Finalizado</b></h2><br />
+	{% endif %}
+	{% if sprints %}
+		{% for s in sprints %}
+			<div style="clear:both">
+				<form action="{% url 'apps:sprints' proyecto.id s.id 0 %}" method="post">{% csrf_token %}
+					<br><label>Sprint Numero {{s.nro_sprint}}</label>&emsp;<input type="submit", name="cambio", value="Mostrar">&emsp;<input type="submit", name="cambio", value="Ocultar">&emsp;<input type="submit", name="cambio", value="Planificar">
+				</form>
+				{% if sprint.nro_sprint == s.nro_sprint %}
+					<ul>
+						<li><h4>Duracion del Sprint: {{duracion_dias}} semanas&emsp;({{duracion_horas}} horas)&emsp;/&emsp;tiempo consumido: {{tiempo_consumido}} horas</h4></li>
+						<li><h3>User Stories</h3>
+							<ul>
+								{% if hus %}
+									{% for hu in hus %}
+										<li>
+											<form action="{% url 'apps:sprints' proyecto.id s.id hu.id %}" method="post">{% csrf_token %}
+												<h3><b><font size="3">HU {{hu.codigo}}</font>&emsp;<font size="1">Detalles</font><input type="submit", name="cambio", value="+"><input type="submit", name="cambio", value="-"></b></h3><br />
+											</form>
+											{% if userStory.id == hu.id %}
+												<form action="{% url 'apps:sprints' proyecto.id s.id hu.id %}" method="post">{% csrf_token %}
+													<table>
+														<font size="3"><b>Descripcion:</b></font>&emsp;{{detalles.descripcion.value}}<br />
+														<font size="3"><b>Codigo:</b></font>&emsp;{{detalles.codigo.value}}<br />
+														<font size="3"><b>Tiempo Estimado:</b></font>&emsp;{{detalles.tiempo_Estimado.value}}<br />
+														<font size="3"><b>Valor Negocio:</b></font>&emsp;{{detalles.valor_Negocio.value}}<br />
+														<font size="3"><b>Valor Tecnico:</b></font>&emsp;{{detalles.valor_Tecnico.value}}<br />
+													</table>
+													<b>Usuario Asignado:</b>
+													<select name="us"  style="width:190px" sort = true>
+														<option>{{usuario.username}}</option>
+														{% for user in users %}
+															{% if usuario.id != user.id %}
+																<option >{{user.username}}</option>
+															{% endif %}
+														{% endfor %} 
+													</select><br>
+													<b>Flujo Asignado</b>&emsp;&emsp;
+													<select name="flujo"  style="width:190px" sort = true>
+														<option>{{flujo.descripcion}}</option>
+														{% for f in flujos %}
+															{% if flujo.id != f.id %}
+																<option >{{f.descripcion}}</option>
+															{% endif %}
+														{% endfor %} 
+													</select><br>
+													<b>Prioridad</b>&emsp;&emsp;&emsp;&emsp;&emsp;
+													<select name="pri"  style="width:190px" sort = true>
+														<option>{{prioridad.descripcion}}</option>
+														{% for pr in prioridades %}
+															{% if prioridad.id != pr.id %}
+																<option >{{pr.descripcion}}</option>
+															{% endif %}
+														{% endfor %} 
+													</select><br>
+													<input type="submit" name="cambio" value="Modificar" />
+												</form>
+											{% endif %}
+										</li>
+									{% endfor %}
 								{% else %}
+									<li>El Sprint no tiene User Stories</li>
+								{% endif %}
+							</ul>
+						</li>
+					</ul>
+					<!-- Imprimia los campos de los dias de cada sprint... La accion del boton modificar tambien esta comentada -->
+					<!-- {% if formularios %}
+						<div style="float:left">
+							<ul>
+								{% for formulario in formularios %}
+									{% if formulario.tiempo_estimado.value == 0 %}
+										<li>
+											<form action="{% url 'apps:sprints' proyecto.id s.id forloop.counter %}" method="post">{% csrf_token %}
+												<label>Dia {{forloop.counter}}:&emsp;{{formulario}}</label><input type="submit", name="cambio", value="Modificar">
+											</form>
+										</li>
+									{% else %}
+										<li>
+											<form action="{% url 'apps:sprints' proyecto.id s.id forloop.counter %}" method="post">{% csrf_token %}
+												<label><h4>Dia {{forloop.counter}}:&emsp;Tiempo estimado:&emsp;&emsp;{{formulario.tiempo_estimado.value}} horas</h4></label>
+											</form>
+										</li>
+									{% endif %}
+								{% endfor %}
+							</ul>
+						</div>
+					{% endif %}
+					{% if tiempos_reales %}
+						<div style="float:left">
+							<ul>
+								{% for tiempo_real in tiempos_reales %}
 									<li>
 										<form action="{% url 'apps:sprints' proyecto.id s.id forloop.counter %}" method="post">{% csrf_token %}
-											<label><h4>Dia {{forloop.counter}}:&emsp;Tiempo estimado:&emsp;&emsp;{{formulario.tiempo_estimado.value}} horas</h4></label>
+											<label><h4>Tiempo Real:&emsp;&emsp;{{tiempo_real.tiempo_real}} horas</h4></label>
 										</form>
 									</li>
-								{% endif %}
-							{% endfor %}
-						</ul>
-					</div>
+								{% endfor %}
+							</ul>
+						</div>
+					{% endif %} -->
 				{% endif %}
-				{% if tiempos_reales %}
-					<div style="float:left">
-						<ul>
-							{% for tiempo_real in tiempos_reales %}
-								<li>
-									<form action="{% url 'apps:sprints' proyecto.id s.id forloop.counter %}" method="post">{% csrf_token %}
-										<label><h4>Tiempo Real:&emsp;&emsp;{{tiempo_real.tiempo_real}} horas</h4></label>
-									</form>
-								</li>
-							{% endfor %}
-						</ul>
-					</div>
-				{% endif %}
-			{% endif %}
-		</div>
-	{% endfor %}
-{% endif %}
+			</div>
+		{% endfor %}
+	{% endif %}
 {% endblock %}
-<div style="clear:both">
-<br />
-
 {% block atras %}
-<a href="{% url 'apps:accionesproyecto' proyecto.id %}">Volver</a>
-</div>
+	<a href="{% url 'apps:accionesproyecto' proyecto.id %}">Volver</a>
 {% endblock %}
