@@ -969,7 +969,7 @@ def agregarPlantilla(request, user_logged, proyecto_pk):
     copyFlujo.save()                 
     
     actividades = Actividades.objects.filter(flujo_id = request.POST['f'])    
-    
+    count = 0
     for actividad in actividades:
         copyActividad = Actividades()             
         copyActividad.descripcion = actividad.descripcion
@@ -977,6 +977,10 @@ def agregarPlantilla(request, user_logged, proyecto_pk):
         copyActividad.plantilla = False
         copyActividad.flujo_id = copyFlujo.id
         copyActividad.save()
+        count = count + 3
+    
+    copyFlujo.tamano = count
+    copyFlujo.save()
       
      
     us = Equipo.objects.get(proyecto_id= proyecto_pk, rol_id=3)
