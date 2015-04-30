@@ -1137,9 +1137,15 @@ def accionesproyecto(request, proyecto_id):
             hu.flujo_posicion = ((hu.f_actividad - 1)*3) + hu.f_a_estado
             hu.save()
     
+    tamanolista = []
+    for act in actividades:
+        tamanolista.append(act)
+        tamanolista.append(act)
+        tamanolista.append(act)
+        
     
         
-    return render_to_response("apps/project_acciones.html", {"proyecto":proyecto, "usuario":request.user, "misPermisos":mispermisos, 'users':users, 'roles':roles, 'flujo':flujo, 'actividades':actividades, 'hus':hus})
+    return render_to_response("apps/project_acciones.html", {"proyecto":proyecto, "usuario":request.user, "misPermisos":mispermisos, 'users':users, 'roles':roles, 'flujo':flujo, 'actividades':actividades, 'hus':hus, 'tamanolista':tamanolista})
 
 
 

@@ -81,7 +81,7 @@
 					{% for h in hus %}
 						{% if h.f_actividad != 0 %}
 							<tr>
-								{% for i in "x"|ljust:f.tamano %}
+								{% for i in tamanolista %}
 									{% if  h.flujo == f.id and forloop.counter <= f.tamano %}
 										{% if forloop.counter == h.flujo_posicion  %}
 											<td><a href="{% url 'apps:setEstadoHu' proyecto.id h.id %}">{{h.descripcion}}</a></td>
