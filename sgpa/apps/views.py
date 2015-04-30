@@ -1794,6 +1794,8 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
     @return: render a project_sprints.html 
     """
     mensaje = ""
+    mensaje_planificar_iniciado = ""
+    mensaje_planificar_finalizado = ""
     duracion_dias = 3
     duracion_horas = 3*7*24
     proyecto = Proyectos.objects.get(id = proyecto_id)
@@ -1811,11 +1813,31 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
     detalles = []
     planificar = False
     pasar_sprint = False
+    fmayor = []
+    fmenor = []
+    nuevo_sprint = False
     if request.method == 'POST':
         if request.POST['cambio'] == "Mostrar" or request.POST['cambio'] == "-":
             sprint = Sprint.objects.get(id = sprint_id)
+            dias_sprint_actual = Dia_Sprint.objects.filter(sprint_id = sprint.id)
+            fmayor = dias_sprint_actual.first()
+            for dia_sprint_actual in dias_sprint_actual:
+                if int(fmayor.fecha.year) < int(dia_sprint_actual.fecha.year):
+                    fmayor = dia_sprint_actual
+                elif (int(fmayor.fecha.year) == int(dia_sprint_actual.fecha.year)) and (int(fmayor.fecha.month) < int(dia_sprint_actual.fecha.month)):
+                    fmayor = dia_sprint_actual
+                elif (int(fmayor.fecha.year) == int(dia_sprint_actual.fecha.year)) and (int(fmayor.fecha.month) == int(dia_sprint_actual.fecha.month)) and (int(fmayor.fecha.day) < int(dia_sprint_actual.fecha.day)):
+                    fmayor = dia_sprint_actual
+            fmenor = dias_sprint_actual.first()
+            for dia_sprint_actual in dias_sprint_actual:
+                if int(fmenor.fecha.year) > int(dia_sprint_actual.fecha.year):
+                    fmenor = dia_sprint_actual
+                elif (int(fmenor.fecha.year) == int(dia_sprint_actual.fecha.year)) and (int(fmenor.fecha.month) > int(dia_sprint_actual.fecha.month)):
+                    fmenor = dia_sprint_actual
+                elif (int(fmenor.fecha.year) == int(dia_sprint_actual.fecha.year)) and (int(fmenor.fecha.month) == int(dia_sprint_actual.fecha.month)) and (int(fmenor.fecha.day) > int(dia_sprint_actual.fecha.day)):
+                    fmenor = dia_sprint_actual
             try:
-                hus = UserStory.objects.filter(proyecto_id = proyecto_id, sprint = sprint_id)
+                hus = UserStory.objects.filter(proyecto_id = proyecto_id, sprint = sprint.nro_sprint)
             except:
                 hus = []
             #Mostraba los dias de los Sprints
@@ -1840,7 +1862,7 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
         elif request.POST['cambio'] == "+":
             sprint = Sprint.objects.get(id = sprint_id)
             try:
-                hus = UserStory.objects.filter(proyecto_id = proyecto_id, sprint = sprint_id)
+                hus = UserStory.objects.filter(proyecto_id = proyecto_id, sprint = sprint.nro_sprint)
             except:
                 hus = []
             equipos = Equipo.objects.filter(proyecto_id = proyecto_id)
@@ -1858,7 +1880,7 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
         elif request.POST['cambio'] == "Modificar":
             sprint = Sprint.objects.get(id = sprint_id)
             try:
-                hus = UserStory.objects.filter(proyecto_id = proyecto_id, sprint = sprint_id)
+                hus = UserStory.objects.filter(proyecto_id = proyecto_id, sprint = sprint.nro_sprint)
             except:
                 hus = []
             hu = UserStory.objects.get(id = hu_id)
@@ -1871,10 +1893,60 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
             hu.prioridad = oprioridad
             hu.save()
         elif request.POST['cambio'] == "Planificar":
-            planificar = True
             sprint = Sprint.objects.get(id = sprint_id)
+            planificar = True
+            if sprint.estado == 1 and sprint.nro_sprint != 1:
+                mensaje_planificar_iniciado = "El sprint ya esta en progreso!"
+                planificar = False
+            elif sprint.estado == 2:
+                mensaje_planificar_finalizado = "El sprint ya ha finalizado!"
+                planificar = False
+                
+            if planificar == False:
+                dias_sprint_actual = Dia_Sprint.objects.filter(sprint_id = sprint.id)
+                fmayor = dias_sprint_actual.first()
+                for dia_sprint_actual in dias_sprint_actual:
+                    if int(fmayor.fecha.year) < int(dia_sprint_actual.fecha.year):
+                        fmayor = dia_sprint_actual
+                    elif (int(fmayor.fecha.year) == int(dia_sprint_actual.fecha.year)) and (int(fmayor.fecha.month) < int(dia_sprint_actual.fecha.month)):
+                        fmayor = dia_sprint_actual
+                    elif (int(fmayor.fecha.year) == int(dia_sprint_actual.fecha.year)) and (int(fmayor.fecha.month) == int(dia_sprint_actual.fecha.month)) and (int(fmayor.fecha.day) < int(dia_sprint_actual.fecha.day)):
+                        fmayor = dia_sprint_actual
+                fmenor = dias_sprint_actual.first()
+                for dia_sprint_actual in dias_sprint_actual:
+                    if int(fmenor.fecha.year) > int(dia_sprint_actual.fecha.year):
+                        fmenor = dia_sprint_actual
+                    elif (int(fmenor.fecha.year) == int(dia_sprint_actual.fecha.year)) and (int(fmenor.fecha.month) > int(dia_sprint_actual.fecha.month)):
+                        fmenor = dia_sprint_actual
+                    elif (int(fmenor.fecha.year) == int(dia_sprint_actual.fecha.year)) and (int(fmenor.fecha.month) == int(dia_sprint_actual.fecha.month)) and (int(fmenor.fecha.day) < int(dia_sprint_actual.fecha.day)):
+                        fmenor = dia_sprint_actual
+            """
+            #Calcula si una fecha esta entre un menor y un mayor
+            menor_que_fmayor = False
+            if int(fmayor.fecha.year) > int(datetime.today().strftime("%Y")):
+                menor_que_fmayor = True
+            elif (int(fmayor.fecha.year) == int(datetime.today().strftime("%Y"))) and (int(fmayor.fecha.month) > int(datetime.today().strftime("%m"))):
+                menor_que_fmayor = True
+            elif (int(fmayor.fecha.year) == int(datetime.today().strftime("%Y"))) and (int(fmayor.fecha.month) == int(datetime.today().strftime("%m"))) and (int(fmayor.fecha.day) > int(datetime.today().strftime("%d"))):
+                menor_que_fmayor = True
+            mayor_que_fmenor = False
+            if int(fmenor.fecha.year) < int(datetime.today().strftime("%Y")):
+                mayor_que_fmenor = True
+            elif (int(fmenor.fecha.year) == int(datetime.today().strftime("%Y"))) and (int(fmenor.fecha.month) < int(datetime.today().strftime("%m"))):
+                mayor_que_fmenor = True
+            elif (int(fmenor.fecha.year) == int(datetime.today().strftime("%Y"))) and (int(fmenor.fecha.month) == int(datetime.today().strftime("%m"))) and (int(fmenor.fecha.day) < int(datetime.today().strftime("%d"))):
+                mayor_que_fmenor = True
+            
+            if menor_que_fmayor and mayor_que_fmenor:
+                mensaje_planificar_iniciado = "El sprint ya esta en progreso!"
+                planificar = False
+            elif menor_que_fmayor == False:
+                mensaje_planificar_finalizado = "El sprint ya ha finalizado!"
+                planificar = False
+            """
+            
             try:
-                hus = UserStory.objects.filter(proyecto_id = proyecto_id)
+                hus = UserStory.objects.filter(sprint = sprint.nro_sprint, proyecto_id = proyecto_id)
             except:
                 hus = []
         elif request.POST['cambio'] == " + ":
@@ -1886,9 +1958,13 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
                 hus = []
             equipos = Equipo.objects.filter(proyecto_id = proyecto_id)
             for equipo in equipos:
-                user = User.objects.filter(id = equipo.usuario_id)
-                user = user.first()
-                users.append(user)
+                user = User.objects.get(id = equipo.usuario_id)
+                se_encuentra = False
+                for u in users:
+                    if u.id == user.id:
+                        se_encuentra = True
+                if se_encuentra == False:
+                    users.append(user)
             flujos = Flujos.objects.filter(proyecto_id = proyecto_id)
             prioridades = Prioridad.objects.all()
             userStory = UserStory.objects.get(id = hu_id)
@@ -1947,6 +2023,7 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
         elif request.POST['cambio'] == "-->":
             try:
                 siguiente_sprint = Sprint.objects.get(nro_sprint = (proyecto.nro_sprint + 1), proyecto_id = proyecto_id)
+                es_mayor = False
                 sprint_actual = Sprint.objects.get(nro_sprint = proyecto.nro_sprint, proyecto_id = proyecto.id)
                 dias_sprint_actual = Dia_Sprint.objects.filter(sprint_id = sprint_actual.id)
                 mayor = dias_sprint_actual.first()
@@ -1957,40 +2034,146 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
                         mayor = dia_sprint_actual
                     elif (int(mayor.fecha.year) == int(dia_sprint_actual.fecha.year)) and (int(mayor.fecha.month) == int(dia_sprint_actual.fecha.month)) and (int(mayor.fecha.day) < int(dia_sprint_actual.fecha.day)):
                         mayor = dia_sprint_actual
-                        
-                hus = UserStory.objects.filter(sprint = proyecto.nro_sprint, proyecto_id = proyecto.id)
-                for hu_sprint_actual in hus:
-                    hu_sprint_actual.estado = False
-                    hu_sprint_actual.save()
+
                 if int(mayor.fecha.year) < int(datetime.today().strftime("%Y")):
-                    proyecto.nro_sprint = proyecto.nro_sprint + 1
-                    proyecto.save()
-                    pasar_sprint = True
+                    es_mayor = True
                 elif (int(mayor.fecha.year) == int(datetime.today().strftime("%Y"))) and (int(mayor.fecha.month) < int(datetime.today().strftime("%m"))):
-                    proyecto.nro_sprint = proyecto.nro_sprint + 1
-                    proyecto.save()
-                    pasar_sprint = True
+                    es_mayor = True
                 elif (int(mayor.fecha.year) == int(datetime.today().strftime("%Y"))) and (int(mayor.fecha.month) == int(datetime.today().strftime("%m"))) and (int(mayor.fecha.day) < int(datetime.today().strftime("%d"))):
+                    es_mayor = True
+                else:
+                    mensaje = "aun quedan dias por trabajar en este sprint!"
+                
+                if es_mayor:
+                    try:
+                        hus = UserStory.objects.filter(sprint = proyecto.nro_sprint, proyecto_id = proyecto.id)
+                        for hu_sprint_actual in hus:
+                            hu_sprint_actual.estado = False
+                            hu_sprint_actual.save()
+                    except:
+                        hus = []
                     proyecto.nro_sprint = proyecto.nro_sprint + 1
                     proyecto.save()
+                    sprint_actual.estado = sprint_actual.estado + 1
+                    sprint_actual.save()
+                    sprint_siguiente = Sprint.objects.get(nro_sprint = proyecto.nro_sprint, proyecto_id = proyecto.id)
+                    sprint_siguiente.estado = sprint_siguiente.estado + 1
+                    sprint_siguiente.save()
                     pasar_sprint = True
+            except:
+                #crear un nuevo sprint
+                es_mayor = False
+                sprint_actual = Sprint.objects.get(nro_sprint = proyecto.nro_sprint, proyecto_id = proyecto.id)
+                dias_sprint_actual = Dia_Sprint.objects.filter(sprint_id = sprint_actual.id)
+                mayor = dias_sprint_actual.first()
+                for dia_sprint_actual in dias_sprint_actual:
+                    if int(mayor.fecha.year) < int(dia_sprint_actual.fecha.year):
+                        mayor = dia_sprint_actual
+                    elif (int(mayor.fecha.year) == int(dia_sprint_actual.fecha.year)) and (int(mayor.fecha.month) < int(dia_sprint_actual.fecha.month)):
+                        mayor = dia_sprint_actual
+                    elif (int(mayor.fecha.year) == int(dia_sprint_actual.fecha.year)) and (int(mayor.fecha.month) == int(dia_sprint_actual.fecha.month)) and (int(mayor.fecha.day) < int(dia_sprint_actual.fecha.day)):
+                        mayor = dia_sprint_actual
+
+                if int(mayor.fecha.year) < int(datetime.today().strftime("%Y")):
+                    es_mayor = True
+                elif (int(mayor.fecha.year) == int(datetime.today().strftime("%Y"))) and (int(mayor.fecha.month) < int(datetime.today().strftime("%m"))):
+                    es_mayor = True
+                elif (int(mayor.fecha.year) == int(datetime.today().strftime("%Y"))) and (int(mayor.fecha.month) == int(datetime.today().strftime("%m"))) and (int(mayor.fecha.day) < int(datetime.today().strftime("%d"))):
+                    es_mayor = True
                 else:
                     mensaje = "aun quedan dias por trabajar en este sprint!"
                     
-            except:
-                #crear un nuevo sprint
-                proyecto.nro_sprint = 0
-                proyecto.save()
-                
-                
+                if es_mayor:
+                    hus = UserStory.objects.filter(sprint = proyecto.nro_sprint, proyecto_id = proyecto.id)
+                    if hus:
+                        sprint = Sprint()
+                        sprint.estado = 0
+                        sprint.nro_sprint = proyecto.nro_sprint + 1
+                        sprint.save()
+                        for hu_sprint_actual in hus:
+                            hu_sprint_actual.estado = False
+                            hu_sprint_actual.save()
+                        nuevo_sprint = True
+                        pasar_sprint = True
+                    else:
+                        hus = []
+                        viejo_sprint = Sprint.objects.get(id = sprint_id)
+                        viejo_sprint.estado = viejo_sprint.estado + 1
+                        viejo_sprint.save()
+                        proyecto.nro_sprint = 0
+                        proyecto.save()
+
     sprints = Sprint.objects.filter(proyecto_id = proyecto_id)
     if pasar_sprint:
-        return render_to_response('apps/project_sprints_pasarhu.html', {"proyecto":proyecto, "hus_sprint_actual":hus}, context_instance = RequestContext(request))
+        return render_to_response('apps/project_sprints_pasarhu.html', {"proyecto":proyecto, "hus_sprint_actual":hus, "nuevo_sprint":nuevo_sprint, "sprint":sprint}, context_instance = RequestContext(request))
     elif planificar:
-        return render_to_response('apps/project_sprint_planificar.html', {"proyecto":proyecto, "sprints":sprints, "hus":hus, "sprint":sprint, "userStory":userStory, "usuario":usuario, "users":users, "flujos":flujos, "prioridades":prioridades, "flujo":flujo, 'prioridad':prioridad, "detalles":detalles}, context_instance = RequestContext(request))
+        return render_to_response('apps/project_sprint_planificar.html', {"proyecto":proyecto, "sprints":sprints, "hus":hus, "sprint":sprint, "userStory":userStory, "usuario":usuario, "users":users, "flujos":flujos, "prioridades":prioridades, "flujo":flujo, 'prioridad':prioridad, "detalles":detalles, "fmayor":fmayor, "fmenor":fmenor}, context_instance = RequestContext(request))
     else:
         #return render_to_response('apps/project_sprints.html', {"proyecto":proyecto, "sprint":sprint, "sprints":sprints, "formularios":formularios, "tiempos_reales":tiempos_reales, "mensaje":mensaje}, context_instance = RequestContext(request))
-        return render_to_response('apps/project_sprints.html', {"proyecto":proyecto, "sprint":sprint, "sprints":sprints, "mensaje":mensaje, "duracion_dias":duracion_dias, "duracion_horas":duracion_horas, "hus":hus, "userStory":userStory, "usuario":usuario, "users":users, "flujos":flujos, "prioridades":prioridades, "flujo":flujo, 'prioridad':prioridad, "detalles":detalles}, context_instance = RequestContext(request))
+        return render_to_response('apps/project_sprints.html', {"proyecto":proyecto, "sprint":sprint, "sprints":sprints, "mensaje":mensaje, "duracion_dias":duracion_dias, "duracion_horas":duracion_horas, "hus":hus, "userStory":userStory, "usuario":usuario, "users":users, "flujos":flujos, "prioridades":prioridades, "flujo":flujo, 'prioridad':prioridad, "detalles":detalles, "fmayor":fmayor, "fmenor":fmenor, "mensaje_planificar_iniciado":mensaje_planificar_iniciado, "mensaje_planificar_finalizado":mensaje_planificar_finalizado}, context_instance = RequestContext(request))
+
+def nuevoSprint(request, proyecto_id, sprint_id):
+    """
+    Crea un nuevo sprint en el proyecto o da por terminado todos los User Stories del sprint que acaba de terminar
+    @param request: Http
+    @param proyecto_id: id de un proyecto
+    @param sprint_id: id de un sprint
+    @return: render a project_sprints si el proyecto ha terminado o render a project_sprint_planificar si se crea un nuevo sprint
+    """
+    nuevo_sprint = False
+    proyecto = Proyectos.objects.get(id = proyecto_id)
+    sprints = Sprint.objects.filter(proyecto_id = proyecto_id)
+    sprint = Sprint.objects.get(id = sprint_id)
+    hus = []
+    try:
+        hus = UserStory.objects.filter(sprint = proyecto.nro_sprint, proyecto_id = proyecto.id)
+    except:
+        hus = []
+    if request.POST['cambio'] == "Dar por finalizado todos los User Stories":
+        viejo_sprint = Sprint.objects.get(nro_sprint = proyecto.nro_sprint, proyecto_id = proyecto.id)
+        viejo_sprint.estado = viejo_sprint.estado + 1
+        sprint.delete()
+    elif request.POST['cambio'] == "Crear nuevo Sprint":
+        viejo_sprint = Sprint.objects.get(nro_sprint = proyecto.nro_sprint, proyecto_id = proyecto.id)
+        try:
+            hus = UserStory.objects.filter(sprint = viejo_sprint.nro_sprint, proyecto_id = proyecto.id)
+        except:
+            hus = []
+        viejo_sprint.estado = viejo_sprint.estado + 1
+        viejo_sprint.save()
+        sprint.nro_sprint = viejo_sprint.nro_sprint + 1
+        sprint.proyecto_id = proyecto_id
+        sprint.estado = 1
+        sprint.save()
+        proyecto.nro_sprint = proyecto.nro_sprint + 1
+        proyecto.save()
+        dias_sprint_actual = Dia_Sprint.objects.filter(sprint_id = viejo_sprint.id)
+        fmayor = dias_sprint_actual.first()
+        for dia_sprint_actual in dias_sprint_actual:
+            if int(fmayor.fecha.year) < int(dia_sprint_actual.fecha.year):
+                fmayor = dia_sprint_actual
+            elif (int(fmayor.fecha.year) == int(dia_sprint_actual.fecha.year)) and (int(fmayor.fecha.month) < int(dia_sprint_actual.fecha.month)):
+                fmayor = dia_sprint_actual
+            elif (int(fmayor.fecha.year) == int(dia_sprint_actual.fecha.year)) and (int(fmayor.fecha.month) == int(dia_sprint_actual.fecha.month)) and (int(fmayor.fecha.day) < int(dia_sprint_actual.fecha.day)):
+                fmayor = dia_sprint_actual
+        d1 = fmayor.fecha
+        dia = 1
+        for i in range(1, 21):
+            nuevo_dia_sprint = Dia_Sprint()
+            nuevo_dia_sprint.tiempo_estimado = 0
+            nuevo_dia_sprint.tiempo_real = 0
+            nuevo_dia_sprint.dia = dia
+            nuevo_dia_sprint.sprint_id = sprint_id
+            dia = dia + 1
+            nuevo_dia_sprint.fecha = d1 + timedelta(days=i)
+            nuevo_dia_sprint.save()
+        nuevo_sprint = True
+        
+    if nuevo_sprint:
+        return render_to_response('apps/project_sprint_planificar.html', {"proyecto":proyecto, "sprints":sprints, "hus":hus, "sprint":sprint}, context_instance = RequestContext(request))
+    else:
+        return render_to_response('apps/project_sprints.html', {"proyecto":proyecto, "sprint":sprint, "sprints":sprints}, context_instance = RequestContext(request)) 
+
 def crearSprints(proyecto_id):
     """
     Genera automaticamente los sprints y sus dias
@@ -2012,6 +2195,10 @@ def crearSprints(proyecto_id):
     for i in range(1, sprint+1):
         nuevo_sprint = Sprint()
         nuevo_sprint.nro_sprint = i
+        if i == 1:
+            nuevo_sprint.estado = 1
+        else:
+            nuevo_sprint.estado = 0
         nuevo_sprint.proyecto_id = proyecto_id
         nuevo_sprint.save()
     

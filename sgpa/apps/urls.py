@@ -77,6 +77,7 @@ urlpatterns = patterns('',
     url(r'^(?P<proyecto_id>\d+)/(?P<hu_id>\d+)/modproyecto/accionesproyecto/adminhu/editar/assignUser$', views.userToHU, name='userToHU'),
     url(r'^(?P<proyecto_id>\d+)/modproyecto/accionesproyecto/verCliente$', views.verCliente, name='verCliente'),
     url(r'^(?P<proyecto_id>\d+)/(?P<hu_id>\d+)/sprint/analizarHu$', views.analizarhus, name='analizarhus'),
+    url(r'^(?P<proyecto_id>\d+)/(?P<sprint_id>\d+)/sprint/nuevoSprint$', views.nuevoSprint, name='nuevoSprint'),
   
 
     url(r'^(?P<hu_id>\d+)/AgregarHoras/$', views.horas, name='horas'),

@@ -10,7 +10,11 @@
 			<h3>User stories del sprint actual</h3>
 			{% for hu in hus_sprint_actual %}
 				<form action="{% url 'apps:analizarhus' proyecto.id hu.id %}" method="post">{% csrf_token %}
-					<h3><b><font size="3">HU {{hu.codigo}}</font>&emsp;<font size="1">Detalles</font><input type="submit", name="cambio", value="+"><input type="submit", name="cambio", value="-"><input type="submit", name="cambio", value="Pasar al siguiente Sprint"></b></h3><br />
+					<h3><b><font size="3">HU {{hu.codigo}}</font>&emsp;<font size="1">Detalles</font><input type="submit", name="cambio", value="+"><input type="submit", name="cambio", value="-">
+					{% if nuevo_sprint %}
+					{% else %}
+						<input type="submit", name="cambio", value="Pasar al siguiente Sprint"></b></h3><br />
+					{% endif %}
 				</form>
 				{% if userStory.id == hu.id %}
 					<form action="{% url 'apps:analizarhus' proyecto.id hu.id %}" method="post">{% csrf_token %}
@@ -53,6 +57,8 @@
 				{% endif %}
 			{% endfor %}
 		</div>
+	{% else %}
+		<center><h4>No hay User Stories para pasar</h4></center>
 	{% endif%}
 	{% if hus_sprint_siguiente %}
 		<div style="float:right;">
@@ -105,6 +111,12 @@
 	{% endif %}
 	<br />
 	<div Style="clear: both; width: 200px; margin: 0 auto;">
-		<a href="{% url 'apps:sprints' proyecto.id 0 0 %}">Hecho</a>
+		{% if nuevo_sprint %}
+			<form action="{% url 'apps:nuevoSprint' proyecto.id sprint.id %}" method="post">{% csrf_token %}
+				<input type="submit", name="cambio", value="Crear nuevo Sprint">&emsp;<input type="submit", name="cambio", value="Dar por finalizado todos los User Stories"><br />
+			</form>
+		{% else %}
+			<a href="{% url 'apps:sprints' proyecto.id 0 0 %}">Hecho</a>
+		{% endif %}
 	</div>
 {% endblock %}
