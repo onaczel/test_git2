@@ -62,14 +62,14 @@
 			</ul>
 		{% endif %}
 	</div>
-<form action="{% url 'apps:sprints' proyecto.id sprint.id 0%}" method="post">{% csrf_token %}
+<form action="{% url 'apps:sprints' proyecto.id sprint.id 0 %}" method="post">{% csrf_token %}
 	<div style="float: left;">
 		{% if hus %}
 			<h4>User Stories de otros Sprints</h4>
 			<ul>
 				{% for s in sprints %}
 					{% if s.id != sprint.id %}
-						<br><label>Sprint Numero {{s.nro_sprint}}</label>
+						<br><label>Sprint Numero {{s.nro_sprint}}</label><br />
 						{% for hu in hus %}
 							{% if hu.sprint == s.nro_sprint %}
 								<li>

@@ -6,7 +6,7 @@
 {% endblock %}
 {% block contenido %}
 	{% if proyecto.nro_sprint > 0%} 
-		<form action="{% url 'apps:sprints' proyecto.id 0 0 %}" method="post">{% csrf_token %}
+		<form action="{% url 'apps:sprints' proyecto.id proyecto.nro_sprint 0 %}" method="post">{% csrf_token %}
 			<h3><b>Sprint actual: Sprint Numero {{proyecto.nro_sprint}}&emsp;&emsp;<font size=2>siguiente Sprint</font><input type="submit", name="cambio", value="-->"><font size="3">&emsp;{{mensaje}}</font></b></h3><br />
 		</form>
 	{% else %}
@@ -19,8 +19,19 @@
 					<br><label>Sprint Numero {{s.nro_sprint}}</label>&emsp;<input type="submit", name="cambio", value="Mostrar">&emsp;<input type="submit", name="cambio", value="Ocultar">&emsp;<input type="submit", name="cambio", value="Planificar">
 				</form>
 				{% if sprint.nro_sprint == s.nro_sprint %}
+					{% if mensaje_planificar_iniciado %}
+						<center>
+							<h4>{{mensaje_planificar_iniciado}}</h4>
+						</center>
+					{% elif mensaje_planificar_finalizado %}
+						<center>
+							<h4>{{mensaje_planificar_finalizado}}</h4>
+						</center>
+					{% endif %}
 					<ul>
 						<li><h4>Duracion del Sprint: {{duracion_dias}} semanas&emsp;({{duracion_horas}} horas)&emsp;/&emsp;tiempo consumido: {{tiempo_consumido}} horas</h4></li>
+						<li><h5>Fecha de inicio del sprint&emsp;<font size="4">"{{fmenor.fecha}}"</font></h5></li>
+						<li><h5>Fecha de finalizacion del sprint&emsp;<font size="4">"{{fmayor.fecha}}"</font></h5></li>
 						<li><h3>User Stories</h3>
 							<ul>
 								{% if hus %}
