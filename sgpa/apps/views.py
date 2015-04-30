@@ -2019,7 +2019,7 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
             """
             
             try:
-                hus = UserStory.objects.filter(sprint = sprint.nro_sprint, proyecto_id = proyecto_id)
+                hus = UserStory.objects.filter(proyecto_id = proyecto_id)
             except:
                 hus = []
         elif request.POST['cambio'] == " + ":
