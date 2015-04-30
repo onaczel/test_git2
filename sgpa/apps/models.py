@@ -145,6 +145,7 @@ class UserStory(models.Model):
     flujo_posicion = models.IntegerField(null = True)
     #indica si el User Story se ha finalizado 
     finalizado = models.BooleanField(default = False)
+    notas = models.CharField(max_length = 512, null = True)
 
 class UserStoryVersiones(models.Model):
     """
@@ -167,6 +168,7 @@ class UserStoryVersiones(models.Model):
     usercambio = models.ForeignKey(User, null = True)
     f_actividad = models.IntegerField(default = 1)
     f_a_estado = models.IntegerField(default = 1)
+    notas = models.CharField(max_length = 512, null = True)
     
 class Sprint(models.Model):
     """

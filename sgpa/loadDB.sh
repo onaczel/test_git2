@@ -19,7 +19,7 @@ psql -U postgres postgres -f createDB.sql
 
 #Make Migrations
 echo "manage.py makemigrations"
-./manage.py makemigrations 
+./manage.py makemigrations apps
 
 #Migrate
 echo "manage.py migrate"
@@ -31,3 +31,6 @@ echo "manage.py population"
 
 #tests
 ./manage.py test
+
+#runserver
+#./manage.py runserver

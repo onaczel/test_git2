@@ -1425,6 +1425,7 @@ def crearHu(request, proyecto_id):
             hu.flujo = oflujo.id
             prioridad = Prioridad.objects.get(descripcion = request.POST['pri'])
             hu.prioridad = prioridad
+            hu.notas = request.POST.get('notas', False)
             hu.save()
             return render_to_response('apps/hu_creado.html',{"proyecto_id":proyecto_id},  context_instance = RequestContext(request))
         else:
@@ -1477,6 +1478,7 @@ def editarHu(request, proyecto_id, hu_id):
             prioridad = Prioridad.objects.get(descripcion = request.POST['pri'])
             hu.prioridad = prioridad
             hu.fecha_modificacion = time.strftime("%Y-%m-%d")
+            hu.notas = request.POST.get('notas', False)
             hu.save()
             return render_to_response('apps/hu_modificado.html',{"proyecto_id":proyecto_id, 'hu_id':hu_id, 'hu':hu},  context_instance = RequestContext(request))
         else:
@@ -1506,7 +1508,9 @@ def copiarHU(hu, huv, user):
     huv.usuario_Asignado = hu.usuario_Asignado
     huv.sprint = hu.sprint
     huv.estado = hu.estado
+    huv.prioridad = hu.prioridad
     huv.fechahora = time.strftime("%Y-%m-%d %H:%M")
+    huv.notas = hu.notas
     huv.usercambio = user
     huv.save()
 

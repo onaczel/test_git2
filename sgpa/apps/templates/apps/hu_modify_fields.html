@@ -80,6 +80,12 @@
 			</select><br>
 			
 			<br>
+			<table>
+				<tr>
+					<td valign="top" width=150px><label><b>Notas:</b></label></td>
+					<td><textarea name="notas" rows="10" cols="40">{{hu.notas}}</textarea></td>
+				</tr>
+			</table>
 			{% if hu.estado == True %}
 				<input type='submit' value='Guardar'/>
 			{% endif %}
