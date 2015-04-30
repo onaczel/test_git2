@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block titulo %}
+<h1>{{proyecto.nombre}}</h1>
+{% endblock %}
+{% block encabezado %}
+<h1>Registro de Actividades</h1>
+{% endblock %}
+{% block contenido %}
+	{% if guardado %}
+		<table border=1 bordercolor="green" width=100%>
+			<tr><td align="center"><font color="green"><p>Mensaje: El registro se ha guardado correctamente.</p></font></td></tr>
+		</table>
+	{% endif %}
+	<br>
+	<a href="{% url 'apps:crearregistroHu' proyecto.id hu.id %}">Nuevo Registro</a>
+	<br>
+	<!-- {% if hu_reg %}
+		<table width=100%>
+			<tr>
+				<td width=20%><b>Codigo</b></td><td width=20%><b>Descripcion</b></td><td width=60%><b>Descripcion Tarea</b></td>
+			</tr>
+			{% for reg in hu_reg %}
+				<tr>
+					<td>{{reg.codigo}}</td>
+					<td>{{reg.descripcion}}</td>
+					<td>{{reg.descripcion_tarea}}</td>
+				</tr>
+			{% endfor %}
+		</table>
+	{% else %}
+		<p>No existe ningun Registro de Actividades del User Story</p>
+	{% endif %} -->
+	<br>
+	{% if hu_reg %}
+		<table width=100% bordercolor="green" border=1px>
+			<tr><td width=70% align="center"><b>Actividad</b></td><td align="center"><b>Fecha</b></td></tr>
+			{% for reg in hu_reg %}
+				<tr>
+					<td><p><h3><a href="{% url 'apps:verregistroHu' proyecto.id reg.id %}">{{reg.descripcion_tarea}}</h3></a><br>
+						<small>Horas Registradas: {{reg.tiempo_Real}}</small></p>
+						
+					</td>
+					<td align="center">{{reg.fechahora}}</td>
+				</tr>
+				
+			{% endfor %}
+		</table>
+	{% else %}
+	 	<p>No existe ningun Registro de Actividades del User Story</p>
+	{% endif %}
+	
+{% endblock %}
+{% block atras %}
+	<a href="{% url 'apps:editarHu' proyecto.id hu.id %}">Volver</a>
+{% endblock %}

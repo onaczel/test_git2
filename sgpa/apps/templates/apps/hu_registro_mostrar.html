@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block titulo %}
+<h1>{{proyecto.nombre}}</h1>
+{% endblock %}
+{% block encabezado %}
+<h1>Registro de Actividades</h1>
+{% endblock %}
+{% block contenido %}
+	<h2>{{hu_reg.descripcion}}</h2>
+
+	<table border=0px bordercolor="green" width=100%>
+		
+		<tr>
+			<td width=20%><b>Tarea:</b></td>
+			<td>{{hu_reg.descripcion_tarea}}</td></tr>
+			<tr><td><b>Horas Registradas:</b></td>
+			<td>{{hu_reg.tiempo_Real}}</td></tr>
+	</table>
+	<br>
+	<table border=0px bordercolor="green" width=100%>
+	
+			<tr><td width = 20%><b>Sprint:</b></td>
+			{% if hu_reg.sprint == 0 %}
+				<td>No asignado</td>
+			{% else %}
+				<td>{{hu_reg.sprint}}</td>
+			{% endif %}
+			</tr>
+			<tr><td><b>Flujo:</b></td><td>{{flujo}}</td></tr>
+			<tr><td><b>Actividad en Flujo:</b></td><td>{{actividad}}</td></tr>
+			<tr><td><b>Estado en Actividad:</b></td><td>{{estado}}</td></tr>
+		
+	
+	</table>
+	
+{% endblock %}
+{% block atras %}
+	<a href="{% url 'apps:registroHu' proyecto.id hu_reg.idr  %}">Volver</a>
+{% endblock %}

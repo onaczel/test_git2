@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block titulo %}
+<h1>{{proyecto.nombre}}</h1>
+{% endblock %}
+{% block encabezado %}
+<h1>{{hu.descripcion}}</h1>
+{% endblock %}
+{% block contenido %}
+	
+	<form action="" method="post">
+		{% csrf_token %}
+		<fieldset>
+		<table>
+			<tr>
+				<td><label>Horas Trabajadas:</label> </td>
+				<td><input id="campo1" name="tiempo_real" type="number" size="20" maxlength="20" autofocus="autofocus" style="width:190px" required/></td>
+			</tr>
+	
+		</table>
+		</br><label>Descripción de la Actividad</label>
+			<br><textarea name="descripcion_tarea" rows="10" cols="100"></textarea></br>
+		
+		<br><input id="campo5" name="crear" type="submit" value="Crear Registro" />
+		
+	
+	</fieldset>
+		
+	</form>
+{% endblock %}
+{% block atras %}
+	<a href="{% url 'apps:registroHu' proyecto.id hu.id  %}">Volver</a>
+{% endblock %}

@@ -170,6 +170,31 @@ class UserStoryVersiones(models.Model):
     f_a_estado = models.IntegerField(default = 1)
     notas = models.CharField(max_length = 512, null = True)
     
+class UserStoryRegistro(models.Model):
+    """
+    Model para guardar los registros de actividades de un HU
+    """
+    idr = models.IntegerField()
+    descripcion_tarea = models.CharField(max_length = 256)
+    
+    descripcion = models.CharField(max_length = 50)
+    codigo = models.CharField(max_length = 30)
+    valor_Negocio = models.IntegerField(null = True)
+    valor_Tecnico = models.IntegerField(null = True)
+    prioridad = models.ForeignKey(Prioridad, null=True)
+    tiempo_Estimado = models.IntegerField()
+    tiempo_Real = models.IntegerField(null=True)
+    sprint = models.IntegerField(null = True)
+    usuario_Asignado = models.IntegerField(null = True)
+    flujo = models.IntegerField(null = True)
+    proyecto = models.ForeignKey(Proyectos, null = True)
+    estado = models.BooleanField(default = True)
+    fechahora = models.DateTimeField(null = True)
+    usercambio = models.ForeignKey(User, null = True)
+    f_actividad = models.IntegerField(default = 1)
+    f_a_estado = models.IntegerField(default = 1)
+    notas = models.CharField(max_length = 512, null = True)
+    
 class Sprint(models.Model):
     """
     Modelo para almacenar los Sprints

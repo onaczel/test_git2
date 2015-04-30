@@ -10,7 +10,7 @@ import time
 
 
 from apps.models import Roles, Users_Roles, Permisos, Permisos_Roles, Flujos, Actividades, Actividades_Estados, Proyectos, Equipo, UserStory, Sprint, Dia_Sprint, UserStoryVersiones, Prioridad,\
-    Estados
+    Estados, UserStoryRegistro
 from django.contrib.auth.models import User
 
 
@@ -756,7 +756,6 @@ def setactividades(request, user_logged, flow_id):
                 f.tamano = 0
                 print f.tamano
                 for a in actividades:
-                    print "hola"
                     f.tamano = f.tamano + 3
                 f.save()
                 return render_to_response('apps/flow_created.html', {'flow_id':flow_id, 'flow_descripcion':f.descripcion, 'user_logged':user_logged}, context_instance = RequestContext(request))
@@ -1134,8 +1133,10 @@ def accionesproyecto(request, proyecto_id):
     hus = UserStory.objects.filter(proyecto_id = proyecto_id, estado=True)
 
     for hu in hus:
-        hu.flujo_posicion = ((hu.f_actividad - 1)*3) + hu.f_a_estado
-
+        if hu.f_a_estado != 0 and hu.f_actividad != 0:
+            hu.flujo_posicion = ((hu.f_actividad - 1)*3) + hu.f_a_estado
+            hu.save()
+    
     
         
     return render_to_response("apps/project_acciones.html", {"proyecto":proyecto, "usuario":request.user, "misPermisos":mispermisos, 'users':users, 'roles':roles, 'flujo':flujo, 'actividades':actividades, 'hus':hus})
@@ -1487,6 +1488,78 @@ def editarHu(request, proyecto_id, hu_id):
         form = HuCreateForm(initial={'descripcion':hu.descripcion, 'codigo':hu.codigo, 'tiempo_Estimado':hu.tiempo_Estimado, 'valor_Tecnico':hu.valor_Tecnico, 'valor_Negocio':hu.valor_Negocio})
 
     return render_to_response('apps/hu_modify_fields.html', {"form":form, "proyecto_id":proyecto_id, "hu_id":hu_id, "hu_descripcion":hu.descripcion, 'misPermisos':mispermisos, 'users':users, 'flujos':flujos, 'proyecto_nombre':proyecto.nombre, 'prioridades':prioridades, 'hu':hu}, context_instance = RequestContext(request))
+
+def registroHu(request, proyecto_id, hu_id):
+    hu = UserStory.objects.get(pk=hu_id)
+    hu_reg = UserStoryRegistro.objects.filter(idr = hu.id)
+    
+    hu_reg = sorted(hu_reg, key=gethudate, reverse=True)
+    proyecto = Proyectos.objects.get(pk=proyecto_id)
+    
+    return render_to_response('apps/hu_registro.html', {'hu_reg':hu_reg, 'hu':hu, 'proyecto':proyecto}, context_instance=RequestContext(request))
+
+    
+def gethudate(hu):
+    return hu.fechahora
+
+def crearregistroHu(request, proyecto_id, hu_id):
+    hu = UserStory.objects.get(pk=hu_id)
+    user = request.user
+    proyecto = Proyectos.objects.get(pk=proyecto_id)
+    guardado = False
+    if request.method == 'POST':
+        hu_reg = UserStoryRegistro()
+        hu_reg.idr = hu.id
+        copiarHU(hu, hu_reg, user)
+        hu_reg.descripcion_tarea = request.POST.get('descripcion_tarea', False)
+        hu_reg.tiempo_Real = request.POST.get('tiempo_real', False)
+        hu_reg.save()
+        guardado = True
+        hu_reg = UserStoryRegistro.objects.filter(idr = hu.id)
+        return render_to_response('apps/hu_registro.html', {'hu':hu, 'proyecto':proyecto, 'guardado':guardado, 'hu_reg':hu_reg}, context_instance=RequestContext(request))
+    
+    return render_to_response('apps/hu_registro_nuevo.html', {'hu':hu, 'proyecto':proyecto, 'guardado':guardado}, context_instance=RequestContext(request))
+
+def verregistroHu(request, proyecto_id, hu_id):
+    """
+    Muestra los campos del registro de la actividad
+    @param request: Http
+    @param proyecto_id: id del proyecto actual
+    @param hu_id: id del Registro del User Story
+    """
+    hu_reg = UserStoryRegistro.objects.get(pk=hu_id)
+    proyecto = Proyectos.objects.get(pk=proyecto_id)
+    flujo = Flujos.objects.get(pk=hu_reg.flujo)
+    actividad = getActividadHu(hu_reg)
+    estado = getEstadoHu(hu_reg)
+    
+    return render_to_response('apps/hu_registro_mostrar.html', {'hu_reg':hu_reg, 'proyecto':proyecto, 'actividad':actividad.descripcion, 'estado':estado.descripcion, 'flujo':flujo.descripcion})
+
+def getActividadHu(hu):
+    """
+    Funcion que retorna la Actividad del User Story
+    """
+    actividadeslist = Actividades.objects.filter(flujo_id = hu.flujo)
+    count = 0
+    for act in actividadeslist:
+        count = count + 1
+        if count == hu.f_actividad:
+            actividad = Actividades.objects.get(pk = act.id)
+            
+    return actividad
+
+def getEstadoHu(hu):
+    """
+    Funcion que retorna el estado del User Story
+    """
+    count = 0
+    estadoslist = Estados.objects.all()
+    for est in estadoslist:
+        count = count + 1
+        if count == hu.f_a_estado:
+            estado = Estados.objects.get(pk = est.id)
+         
+    return estado
 
 def copiarHU(hu, huv, user):
     """
@@ -1933,6 +2006,8 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
                 except:
                     hu = None
                 hu.sprint = sprint.nro_sprint
+                hu.f_actividad = 1
+                hu.f_a_estado = 1
                 hu.save()
         elif request.POST['cambio'] == "x":
             planificar = True
