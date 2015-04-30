@@ -921,7 +921,8 @@ def crearProyecto(request, user_logged):
                 #Creacion de equipo
                 equipo = Equipo()
                 #se obtiene el usuario que se ha escogido
-                equipo.usuario = User.objects.get(username = request.POST['sm'])
+                user1 = User.objects.get(username = request.POST['sm'])
+                equipo.usuario = user1
           
                 equipo.proyecto = proyecto
                 equipo.rol = Roles.objects.get(descripcion = 'Scrum Master')
@@ -930,7 +931,8 @@ def crearProyecto(request, user_logged):
                 #Se asocia un proyecto con un usuario con el rol cliente
                 team = Equipo()
                 #se obtiene el usuario que se ha escogido
-                team.usuario = User.objects.get(username = request.POST['cli'])
+                user2 = User.objects.get(username = request.POST['cli'])
+                team.usuario = user2
           
                 team.proyecto = proyecto
                 team.rol = Roles.objects.get(descripcion = 'Cliente')
@@ -939,7 +941,18 @@ def crearProyecto(request, user_logged):
                 flujo = Flujos.objects.filter(plantilla = True, estado = True)
                 actividades = Actividades.objects.filter(plantilla = True)
                 
-               
+                #Se le envia una notificacion al usuario asignado como Scrum Master
+                send_mail('SGPA-Asignacion a Proyecto',
+                       'Su usuario: '+user1.username+', ha sido asignado al proyecto: '+proyecto.nombre+', con el rol de Scrum Master',
+                       'noreply.sgpa@gmail.com',
+                        [user1.email], 
+                        fail_silently=False)
+                #Se le envia una notificacion al usuario asignado como Cliente
+                send_mail('SGPA-Asignacion a Proyecto',
+                       'Su usuario: '+user2.username+', ha sido asignado al proyecto: '+proyecto.nombre+', con el rol de Cliente',
+                       'noreply.sgpa@gmail.com',
+                        [user2.email], 
+                        fail_silently=False)
             
             return render_to_response('apps/project_add_plantilla.html', {'flujo':flujo,'actividades':actividades, 'p_descripcion':proyecto.descripcion, 'idp':proyecto.id, 'user_logged':user_logged},context_instance=RequestContext(request))
             
@@ -1155,6 +1168,13 @@ def elimparticipante(request, proyecto_id, usuario_id):
     """
     proyecto = Proyectos.objects.get(id = proyecto_id)  
     Equipo.objects.filter(usuario_id = usuario_id, proyecto_id = proyecto_id).delete()
+    user = User.objects.get(id = usuario_id)
+    #Se le envia una notificacion al usuario encargado del user story
+    send_mail('SGPA-Desvinculacion de proyecto',
+              'Su usuario: '+user.username+', ha sido desvinculado del proyecto: '+proyecto.nombre,
+              'noreply.sgpa@gmail.com',
+              [user.email], 
+              fail_silently=False)
     return render_to_response("apps/project_eliminar_participante_eliminado.html", {"proyecto":proyecto, "usuario":request.user})
 
 def asigparticipanterol(request, proyecto_id, usuario_id):
@@ -1428,6 +1448,13 @@ def crearHu(request, proyecto_id):
             hu.prioridad = prioridad
             hu.notas = request.POST.get('notas', False)
             hu.save()
+            #Se le envia una notificacion al usuario encargado del user story
+            send_mail('SGPA-Asignacion a User Story',
+                       'Su usuario: '+user.username+', ha sido asignado como el responsable del user story: '+ hu.descripcion+ ', del proyecto: '+proyecto.nombre,
+                       'noreply.sgpa@gmail.com',
+                        [user.email], 
+                        fail_silently=False)
+            
             return render_to_response('apps/hu_creado.html',{"proyecto_id":proyecto_id},  context_instance = RequestContext(request))
         else:
             return render_to_response('apps/hu_form_no_valido.html', context_instance = RequestContext(request))
@@ -1472,6 +1499,7 @@ def editarHu(request, proyecto_id, hu_id):
             hu.valor_Tecnico = form.cleaned_data['valor_Tecnico']
             hu.proyecto_id = proyecto_id
             user = User.objects.get(username = request.POST['us']) 
+            oldUser = hu.usuario_Asignado
             hu.usuario_Asignado =  user.id
             flujolist = Flujos.objects.filter(descripcion = request.POST['flujo'], proyecto_id = proyecto_id)
             oflujo = flujolist.get(descripcion = request.POST['flujo'])
@@ -1481,6 +1509,25 @@ def editarHu(request, proyecto_id, hu_id):
             hu.fecha_modificacion = time.strftime("%Y-%m-%d")
             hu.notas = request.POST.get('notas', False)
             hu.save()
+            
+            #se envian notificaciones si se ha cambiado de responsable del user story
+            if oldUser != hu.usuario_Asignado:
+                #se obtiene el usuariio que ha sido desvinculado
+                user2 = User.objects.get(id = oldUser) 
+                #Se le envia una notificacion al usuario encargado del user story
+                send_mail('SGPA-Asignacion a User Story',
+                       'Su usuario: '+user.username+', ha sido asignado como el responsable del user story: '+ hu.descripcion+ ' del proyecto: '+proyecto.nombre,
+                       'noreply.sgpa@gmail.com',
+                        [user.email], 
+                        fail_silently=False)
+                #Se le envia una notificacion al usuario desvinculado del user story
+                send_mail('SGPA-Asignacion a User Story',
+                       'Su usuario: '+user2.username+', ha sido desvinculado del user story: '+ hu.descripcion+ ' del proyecto: '+proyecto.nombre,
+                       'noreply.sgpa@gmail.com',
+                        [user2.email], 
+                        fail_silently=False)
+                
+                
             return render_to_response('apps/hu_modificado.html',{"proyecto_id":proyecto_id, 'hu_id':hu_id, 'hu':hu},  context_instance = RequestContext(request))
         else:
             return render_to_response('apps/hu_form_no_valido.html', context_instance = RequestContext(request))
