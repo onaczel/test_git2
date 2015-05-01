@@ -118,6 +118,7 @@ class UserStory(models.Model):
     """
     Modelo para almacenar los User Stories
     """
+    
     descripcion = models.CharField(max_length = 50)
     codigo = models.CharField(max_length = 30)
     valor_Negocio = models.IntegerField(null = True)
@@ -217,4 +218,7 @@ class Dia_Sprint(models.Model):
     dia = models.IntegerField(null=True)
     fecha = models.DateField(null=True)
 
+class archivoAdjunto(models.Model):
+    archivo = models.FileField(upload_to="adjunto")
+    hu = models.ForeignKey(UserStory, null=True, blank=True)
 
