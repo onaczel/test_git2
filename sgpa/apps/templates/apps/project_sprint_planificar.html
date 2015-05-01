@@ -69,15 +69,25 @@
 			<ul>
 				{% for s in sprints %}
 					{% if s.id != sprint.id %}
-						<br><label>Sprint Numero {{s.nro_sprint}}</label><br />
-						{% for hu in hus %}
-							{% if hu.sprint == s.nro_sprint %}
-								<li>
-									<input type="checkbox" name="hus[]" id="option{{hu.id}}" value={{hu.id}} />
-									<label for="option{{hu.id}}"><b>{{hu.codigo}}</b></label><br />
-								</li>
-							{% endif %}
-						{% endfor %}
+						<br><label><font size="5">Sprint Numero {{s.nro_sprint}}</font></label><br />
+						{% if s.estado == 0 %}
+							{% for hu in hus %}
+								{% if hu.sprint == s.nro_sprint %}
+									<li>
+										<input type="checkbox" name="hus[]" id="option{{hu.id}}" value={{hu.id}} />
+										<label for="option{{hu.id}}"><b>{{hu.codigo}}</b></label><br />
+									</li>
+								{% endif %}
+							{% endfor %}
+						{% elif s.estado == 1 %}
+							<li>
+								<font size="3">Sprint en progreso</font><br />
+							</li>
+						{% elif s.estado == 2 %}
+							<li>
+								<font size="3">Sprint finalizado</font><br />
+							</li>
+						{% endif %}
 					{% endif %}
 				{% endfor %}
 			</ul>
@@ -100,7 +110,8 @@
 	</div>
 	<center>
 		<div style="clear: both;">
-			<input type="submit" name="cambio" value="Asignar User Stories"/>
+			<input type="submit" name="cambio" value="Asignar User Stories"/><br /><br />
+			<a href="{% url 'apps:sprints' proyecto.id 0 0 %}">Hecho</a>
 		</div>
 	</center>
 </form>

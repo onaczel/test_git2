@@ -49,34 +49,45 @@
 														<font size="3"><b>Valor Negocio:</b></font>&emsp;{{detalles.valor_Negocio.value}}<br />
 														<font size="3"><b>Valor Tecnico:</b></font>&emsp;{{detalles.valor_Tecnico.value}}<br />
 													</table>
-													<b>Usuario Asignado:</b>
-													<select name="us"  style="width:190px" sort = true>
-														<option>{{usuario.username}}</option>
-														{% for user in users %}
-															{% if usuario.id != user.id %}
-																<option >{{user.username}}</option>
-															{% endif %}
-														{% endfor %} 
-													</select><br>
-													<b>Flujo Asignado</b>&emsp;&emsp;
-													<select name="flujo"  style="width:190px" sort = true>
-														<option>{{flujo.descripcion}}</option>
-														{% for f in flujos %}
-															{% if flujo.id != f.id %}
-																<option >{{f.descripcion}}</option>
-															{% endif %}
-														{% endfor %} 
-													</select><br>
-													<b>Prioridad</b>&emsp;&emsp;&emsp;&emsp;&emsp;
-													<select name="pri"  style="width:190px" sort = true>
-														<option>{{prioridad.descripcion}}</option>
-														{% for pr in prioridades %}
-															{% if prioridad.id != pr.id %}
-																<option >{{pr.descripcion}}</option>
-															{% endif %}
-														{% endfor %} 
-													</select><br>
-													<input type="submit" name="cambio" value="Modificar" />
+													{% if estado != 2 %}
+														<b>Usuario Asignado:</b>
+														<select name="us"  style="width:190px" sort = true>
+															<option>{{usuario.username}}</option>
+															{% for user in users %}
+																{% if usuario.id != user.id %}
+																	<option >{{user.username}}</option>
+																{% endif %}
+															{% endfor %} 
+														</select><br>
+														<!-- No se puede modificar flujo si ya esta en progreso -->
+														{% if s.estado == 0 %}
+															<b>Flujo Asignado:</b>&emsp;&emsp;
+															<select name="flujo"  style="width:190px" sort = true>
+																<option>{{flujo.descripcion}}</option>
+																{% for f in flujos %}
+																	{% if flujo.id != f.id %}
+																		<option >{{f.descripcion}}</option>
+																	{% endif %}
+																{% endfor %} 
+															</select><br>
+														{% endif %}
+														<b>Prioridad:</b>&emsp;&emsp;&emsp;&emsp;&emsp;
+														<select name="pri"  style="width:190px" sort = true>
+															<option>{{prioridad.descripcion}}</option>
+															{% for pr in prioridades %}
+																{% if prioridad.id != pr.id %}
+																	<option >{{pr.descripcion}}</option>
+																{% endif %}
+															{% endfor %} 
+														</select><br>
+														<input type="submit" name="cambio" value="Modificar" />
+													{% else %}
+													<table>
+														<font size="3"><b>Usuario Asignado:</b></font>&emsp;{{usuario.username}}<br />
+														<font size="3"><b>Flujo Asignado:</b></font>&emsp;{{flujo.descripcion}}<br />
+														<font size="3"><b>Prioridad:</b></font>&emsp;{{prioridad.descripcion}}<br />
+													</table>
+													{% endif %}
 												</form>
 											{% endif %}
 										</li>

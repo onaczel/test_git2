@@ -10,10 +10,11 @@
 			<h3>User stories del sprint actual</h3>
 			{% for hu in hus_sprint_actual %}
 				<form action="{% url 'apps:analizarhus' proyecto.id hu.id %}" method="post">{% csrf_token %}
-					<h3><b><font size="3">HU {{hu.codigo}}</font>&emsp;<font size="1">Detalles</font><input type="submit", name="cambio", value="+"><input type="submit", name="cambio", value="-">
+					<h3><b><font size="3">HU {{hu.codigo}}</font>&emsp;<font size="1">Detalles</font>
 					{% if nuevo_sprint %}
+						<input type="submit", name="cambio", value=" + "><input type="submit", name="cambio", value=" - "><input type="submit", name="cambio", value="Pasar al siguiente Sprint "></b></h3><br />
 					{% else %}
-						<input type="submit", name="cambio", value="Pasar al siguiente Sprint"></b></h3><br />
+						<input type="submit", name="cambio", value="+"><input type="submit", name="cambio", value="-"><input type="submit", name="cambio", value="Pasar al siguiente Sprint"></b></h3><br />
 					{% endif %}
 				</form>
 				{% if userStory.id == hu.id %}
@@ -24,35 +25,39 @@
 							<font size="3"><b>Tiempo Estimado:</b></font>&emsp;{{detalles.tiempo_Estimado.value}}<br />
 							<font size="3"><b>Valor Negocio:</b></font>&emsp;{{detalles.valor_Negocio.value}}<br />
 							<font size="3"><b>Valor Tecnico:</b></font>&emsp;{{detalles.valor_Tecnico.value}}<br />
+							<font size="3"><b>Usuario Asignado:</b></font>&emsp;{{usuario.username}}<br />
+							<font size="3"><b>Flujo Asignado:</b></font>&emsp;{{flujo.descripcion}}<br />
+							<font size="3"><b>Prioridad:</b></font>&emsp;{{prioridad.descripcion}}<br />
 						</table>
-						<b>Usuario Asignado:</b>
-						<select name="us"  style="width:190px" sort = true>
-							<option>{{usuario.username}}</option>
-							{% for user in users %}
-								{% if usuario.id != user.id %}
-									<option >{{user.username}}</option>
-								{% endif %}
-							{% endfor %} 
-						</select><br>
-						<b>Flujo Asignado</b>&emsp;&emsp;
-						<select name="flujo"  style="width:190px" sort = true>
-							<option>{{flujo.descripcion}}</option>
-							{% for f in flujos %}
-								{% if flujo.id != f.id %}
-									<option >{{f.descripcion}}</option>
-								{% endif %}
-							{% endfor %} 
-						</select><br>
-						<b>Prioridad</b>&emsp;&emsp;&emsp;&emsp;&emsp;
-						<select name="pri"  style="width:190px" sort = true>
-							<option>{{prioridad.descripcion}}</option>
-							{% for pr in prioridades %}
-								{% if prioridad.id != pr.id %}
-									<option >{{pr.descripcion}}</option>
-								{% endif %}
-							{% endfor %} 
-						</select><br>
-						<input type="submit" name="cambio" value="Modificar" />
+						<!-- No puedo cambiarle los datos al sprint anterior -->
+							<!-- <b>Usuario Asignado:</b>
+							<select name="us"  style="width:190px" sort = true>
+								<option>{{usuario.username}}</option>
+								{% for user in users %}
+									{% if usuario.id != user.id %}
+										<option >{{user.username}}</option>
+									{% endif %}
+								{% endfor %} 
+							</select><br>
+							<b>Flujo Asignado</b>&emsp;&emsp;
+							<select name="flujo"  style="width:190px" sort = true>
+								<option>{{flujo.descripcion}}</option>
+								{% for f in flujos %}
+									{% if flujo.id != f.id %}
+										<option >{{f.descripcion}}</option>
+									{% endif %}
+								{% endfor %} 
+							</select><br>
+							<b>Prioridad</b>&emsp;&emsp;&emsp;&emsp;&emsp;
+							<select name="pri"  style="width:190px" sort = true>
+								<option>{{prioridad.descripcion}}</option>
+								{% for pr in prioridades %}
+									{% if prioridad.id != pr.id %}
+										<option >{{pr.descripcion}}</option>
+									{% endif %}
+								{% endfor %} 
+							</select><br>
+						<input type="submit" name="cambio" value="Modificar" /> -->
 					</form>
 				{% endif %}
 			{% endfor %}
@@ -65,7 +70,12 @@
 			<h3>User stories del siguiente sprint</h3>
 			{% for hu in hus_sprint_siguiente %}
 				<form action="{% url 'apps:analizarhus' proyecto.id hu.id %}" method="post">{% csrf_token %}
-					<h3><b><font size="3">HU {{hu.codigo}}</font>&emsp;<font size="1">Detalles</font><input type="submit", name="cambio", value="+"><input type="submit", name="cambio", value="-"><!-- <input type="submit", name="cambio", value="Volver al Sprint anterior"> --></b></h3><br />
+					<h3><b><font size="3">HU {{hu.codigo}}</font>&emsp;<font size="1">Detalles
+					{% if nuevo_sprint %}
+						<input type="submit", name="cambio", value=" + "><input type="submit", name="cambio", value=" - "></b></h3><br />
+					{% else %}
+						<input type="submit", name="cambio", value="+"><input type="submit", name="cambio", value="-"></b></h3><br />
+					{% endif %}<!-- <input type="submit", name="cambio", value="Volver al Sprint anterior"> -->
 				</form>
 				{% if userStory.id == hu.id %}
 					<form action="{% url 'apps:analizarhus' proyecto.id hu.id %}" method="post">{% csrf_token %}
@@ -103,7 +113,11 @@
 								{% endif %}
 							{% endfor %} 
 						</select><br>
-						<input type="submit" name="cambio" value="Modificar" />
+						{% if nuevo_sprint %}
+							<input type="submit" name="cambio" value="Modificar " />
+						{% else %}
+							<input type="submit" name="cambio" value="Modificar" />
+						{% endif %}
 					</form>
 				{% endif %}
 			{% endfor %}
@@ -113,7 +127,10 @@
 	<div Style="clear: both; width: 200px; margin: 0 auto;">
 		{% if nuevo_sprint %}
 			<form action="{% url 'apps:nuevoSprint' proyecto.id sprint.id %}" method="post">{% csrf_token %}
-				<input type="submit", name="cambio", value="Crear nuevo Sprint">&emsp;<input type="submit", name="cambio", value="Dar por finalizado todos los User Stories"><br />
+				<input type="submit", name="cambio", value="Crear nuevo Sprint">&emsp;
+				{% if not hus_sprint_siguiente %}
+					<input type="submit", name="cambio", value="Dar por finalizado todos los User Stories"><br />
+				{% endif %}
 			</form>
 		{% else %}
 			<a href="{% url 'apps:sprints' proyecto.id 0 0 %}">Hecho</a>
