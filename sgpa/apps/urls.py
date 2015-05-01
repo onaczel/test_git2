@@ -68,6 +68,7 @@ urlpatterns = patterns('',
     url(r'^(?P<proyecto_id>\d+)/modproyecto/accionesproyecto/adminhu/(?P<hu_id>\d+)/resumen/$', views.resumenHu, name='resumenHu'),
     url(r'^(?P<proyecto_id>\d+)/modproyecto/accionesproyecto/adminhu/(?P<hu_id>\d+)/fileManager/$', views.fileAdjunto, name='fileAdjunto'),
     url(r'^/modproyecto/accionesproyecto/adminhu/(?P<f_id>\d+)/fileManager/descarga/$', views.send_file, name='send_file'),
+    url(r'^(?P<proyecto_id>\d+)/(?P<hu_id>\d+)/modproyecto/accionesproyecto/adminhu/(?P<f_id>\d+)/fileManager/eliminar/$', views.delete_file, name='delete_file'),
     
     url(r'^(?P<proyecto_id>\d+)/modproyecto/accionesproyecto/asigparticipante$', views.listasigparticipante, name='listasigparticipante'),
     url(r'^(?P<proyecto_id>\d+)/(?P<usuario_id>\d+)/modproyecto/accionesproyecto/listasigparticipanterol$', views.listasigparticipanterol, name='listasigparticipanterol'),
