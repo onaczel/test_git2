@@ -1785,7 +1785,8 @@ def crearregistroHu(request, proyecto_id, hu_id):
         hu_reg.save()
         guardado = True
         hu_reg = UserStoryRegistro.objects.filter(idr = hu.id)
-        return render_to_response('apps/hu_registro.html', {'hu':hu, 'proyecto':proyecto, 'guardado':guardado, 'hu_reg':hu_reg}, context_instance=RequestContext(request))
+        #return render_to_response('apps/hu_registro.html', {'hu':hu, 'proyecto':proyecto, 'guardado':guardado, 'hu_reg':hu_reg}, context_instance=RequestContext(request))
+        return registroHu(request, proyecto_id, hu_id)
     
     return render_to_response('apps/hu_registro_nuevo.html', {'hu':hu, 'proyecto':proyecto, 'guardado':guardado}, context_instance=RequestContext(request))
 
@@ -1865,6 +1866,8 @@ def copiarHU(hu, huv, user):
     huv.fechahora = time.strftime("%Y-%m-%d %H:%M")
     huv.notas = hu.notas
     huv.usercambio = user
+    huv.f_actividad = hu.f_actividad
+    huv.f_a_estado = hu.f_a_estado
     huv.save()
 
 def listhuversiones(request, proyecto_id, hu_id):
