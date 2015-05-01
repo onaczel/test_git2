@@ -7,10 +7,10 @@ from django.views import generic
 from django.utils import timezone
 from django.template import RequestContext, loader
 import time
-
+from django.core.servers.basehttp import FileWrapper
 
 from apps.models import Roles, Users_Roles, Permisos, Permisos_Roles, Flujos, Actividades, Actividades_Estados, Proyectos, Equipo, UserStory, Sprint, Dia_Sprint, UserStoryVersiones, Prioridad,\
-    Estados, UserStoryRegistro
+    Estados, UserStoryRegistro, archivoAdjunto
 from django.contrib.auth.models import User
 
 
@@ -45,6 +45,7 @@ from twisted.protocols.telnet import NULL
 from django.core.exceptions import ObjectDoesNotExist
 from _ast import Str
 from django.forms.formsets import INITIAL_FORM_COUNT
+
 
 ######################################################################################################################################################
 
@@ -1438,6 +1439,7 @@ def crearHu(request, proyecto_id):
     proyecto = Proyectos.objects.get(pk = proyecto_id)
     if request.method == 'POST':
         form = HuCreateForm(request.POST)
+       
         if form.is_valid():
             form.save()
             #hu = UserStory.objects.get(pk=form.cleaned_data['id'])
@@ -1454,21 +1456,44 @@ def crearHu(request, proyecto_id):
             hu.prioridad = prioridad
             hu.notas = request.POST.get('notas', False)
             hu.save()
+            
+           
+            
             #Se le envia una notificacion al usuario encargado del user story
-            send_mail('SGPA-Asignacion a User Story',
-                       'Su usuario: '+user.username+', ha sido asignado como el responsable del user story: '+ hu.descripcion+ ', del proyecto: '+proyecto.nombre,
-                       'noreply.sgpa@gmail.com',
-                        [user.email], 
-                        fail_silently=False)
+            #send_mail('SGPA-Asignacion a User Story',
+            #           'Su usuario: '+user.username+', ha sido asignado como el responsable del user story: '+ hu.descripcion+ ', del proyecto: '+proyecto.nombre,
+            #           'noreply.sgpa@gmail.com',
+            #            [user.email], 
+            #            fail_silently=False)
             
             return render_to_response('apps/hu_creado.html',{"proyecto_id":proyecto_id},  context_instance = RequestContext(request))
         else:
             return render_to_response('apps/hu_form_no_valido.html', context_instance = RequestContext(request))
     else:        
         form = HuCreateForm()
-    
+        
     return render_to_response('apps/hu_create.html', {"form":form, "proyecto_id":proyecto_id, 'proyecto_nombre':proyecto.nombre, 'users':users, 'flujos':flujos, 'prioridades':prioridades}, context_instance = RequestContext(request))
 
+def fileAdjunto(request, proyecto_id, hu_id):
+    
+    mispermisos = misPermisos(request.user.id, proyecto_id)
+    hu = UserStory.objects.get(pk=hu_id)
+    proyecto = Proyectos.objects.get(pk = proyecto_id)
+    listaAdjunto = archivoAdjunto.objects.filter(hu_id = hu_id)
+    
+    if request.method == 'POST':
+     
+        hu = UserStory.objects.get(id = hu_id)
+        file = request.FILES['file']
+        adjunto = archivoAdjunto.objects.create(archivo=file, hu = hu)
+        adjunto.save()
+        return render_to_response('apps/hu_fileManager.html', {"lista":listaAdjunto,'misPermisos':mispermisos,'hu_id':hu_id,'hu':hu,"proyecto_id":proyecto_id, 'proyecto_nombre':proyecto.nombre, }, context_instance = RequestContext(request))
+
+    
+    
+    return render_to_response('apps/hu_fileManager.html', {"lista":listaAdjunto,'misPermisos':mispermisos,'hu_id':hu_id,'hu':hu,"proyecto_id":proyecto_id, 'proyecto_nombre':proyecto.nombre, }, context_instance = RequestContext(request))
+
+    
 def editarHu(request, proyecto_id, hu_id):
     """
     editar un User Story existente
@@ -1498,6 +1523,7 @@ def editarHu(request, proyecto_id, hu_id):
         if form.is_valid():
             #form.save()
             copiarHU(hu, huv, user_logged)
+            oldnameHU = hu.descripcion
             hu.descripcion = form.cleaned_data['descripcion']
             hu.codigo = form.cleaned_data['codigo']
             hu.tiempo_Estimado = form.cleaned_data['tiempo_Estimado']
@@ -1527,12 +1553,18 @@ def editarHu(request, proyecto_id, hu_id):
                         [user.email], 
                         fail_silently=False)
                 #Se le envia una notificacion al usuario desvinculado del user story
-                send_mail('SGPA-Asignacion a User Story',
+                send_mail('SGPA-Desvinculacion de User Story',
                        'Su usuario: '+user2.username+', ha sido desvinculado del user story: '+ hu.descripcion+ ' del proyecto: '+proyecto.nombre,
                        'noreply.sgpa@gmail.com',
                         [user2.email], 
                         fail_silently=False)
-                
+            else: 
+                #si no se cambio de responsable, se le notifica que el user story experimento cambios
+                    send_mail('Modificacion de User Story',
+                       'El User Story: '+oldnameHU+' del proyecto: '+proyecto.nombre+', ha experimentado modificaciones ',
+                       'noreply.sgpa@gmail.com',
+                        [user.email], 
+                        fail_silently=False)  
                 
             return render_to_response('apps/hu_modificado.html',{"proyecto_id":proyecto_id, 'hu_id':hu_id, 'hu':hu},  context_instance = RequestContext(request))
         else:
