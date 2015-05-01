@@ -221,4 +221,7 @@ class Dia_Sprint(models.Model):
 class archivoAdjunto(models.Model):
     archivo = models.FileField(upload_to="adjunto")
     hu = models.ForeignKey(UserStory, null=True, blank=True)
-
+    filename = models.CharField(max_length = 100, null=True, blank=True)
+    def __unicode__(self):
+        """Representacion unicode del objeto"""
+        return self.archivo.name
