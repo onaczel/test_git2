@@ -86,6 +86,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+MEDIA_ROOT = '/var/www/'
+MEDIA_URL = '/var/www/'
 #configuraciones para envio de mail
 
 EMAIL_USE_TLS = True

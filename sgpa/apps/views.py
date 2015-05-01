@@ -7,10 +7,12 @@ from django.views import generic
 from django.utils import timezone
 from django.template import RequestContext, loader
 import time
-
+import os
+from django.views.static import serve
+from django.core.servers.basehttp import FileWrapper
 
 from apps.models import Roles, Users_Roles, Permisos, Permisos_Roles, Flujos, Actividades, Actividades_Estados, Proyectos, Equipo, UserStory, Sprint, Dia_Sprint, UserStoryVersiones, Prioridad,\
-    Estados, UserStoryRegistro
+    Estados, UserStoryRegistro, archivoAdjunto
 from django.contrib.auth.models import User
 
 
@@ -45,6 +47,8 @@ from twisted.protocols.telnet import NULL
 from django.core.exceptions import ObjectDoesNotExist
 from _ast import Str
 from django.forms.formsets import INITIAL_FORM_COUNT
+from types import StringType
+
 
 ######################################################################################################################################################
 
@@ -938,7 +942,8 @@ def crearProyecto(request, user_logged):
                 #Creacion de equipo
                 equipo = Equipo()
                 #se obtiene el usuario que se ha escogido
-                equipo.usuario = User.objects.get(username = request.POST['sm'])
+                user1 = User.objects.get(username = request.POST['sm'])
+                equipo.usuario = user1
           
                 equipo.proyecto = proyecto
                 equipo.rol = Roles.objects.get(descripcion = 'Scrum Master')
@@ -947,7 +952,8 @@ def crearProyecto(request, user_logged):
                 #Se asocia un proyecto con un usuario con el rol cliente
                 team = Equipo()
                 #se obtiene el usuario que se ha escogido
-                team.usuario = User.objects.get(username = request.POST['cli'])
+                user2 = User.objects.get(username = request.POST['cli'])
+                team.usuario = user2
           
                 team.proyecto = proyecto
                 team.rol = Roles.objects.get(descripcion = 'Cliente')
@@ -956,7 +962,18 @@ def crearProyecto(request, user_logged):
                 flujo = Flujos.objects.filter(plantilla = True, estado = True)
                 actividades = Actividades.objects.filter(plantilla = True)
                 
-               
+                #Se le envia una notificacion al usuario asignado como Scrum Master
+                send_mail('SGPA-Asignacion a Proyecto',
+                       'Su usuario: '+user1.username+', ha sido asignado al proyecto: '+proyecto.nombre+', con el rol de Scrum Master',
+                       'noreply.sgpa@gmail.com',
+                        [user1.email], 
+                        fail_silently=False)
+                #Se le envia una notificacion al usuario asignado como Cliente
+                send_mail('SGPA-Asignacion a Proyecto',
+                       'Su usuario: '+user2.username+', ha sido asignado al proyecto: '+proyecto.nombre+', con el rol de Cliente',
+                       'noreply.sgpa@gmail.com',
+                        [user2.email], 
+                        fail_silently=False)
             
             return render_to_response('apps/project_add_plantilla.html', {'flujo':flujo,'actividades':actividades, 'p_descripcion':proyecto.descripcion, 'idp':proyecto.id, 'user_logged':user_logged},context_instance=RequestContext(request))
             
@@ -1182,6 +1199,13 @@ def elimparticipante(request, proyecto_id, usuario_id):
     """
     proyecto = Proyectos.objects.get(id = proyecto_id)  
     Equipo.objects.filter(usuario_id = usuario_id, proyecto_id = proyecto_id).delete()
+    user = User.objects.get(id = usuario_id)
+    #Se le envia una notificacion al usuario encargado del user story
+    send_mail('SGPA-Desvinculacion de proyecto',
+              'Su usuario: '+user.username+', ha sido desvinculado del proyecto: '+proyecto.nombre,
+              'noreply.sgpa@gmail.com',
+              [user.email], 
+              fail_silently=False)
     return render_to_response("apps/project_eliminar_participante_eliminado.html", {"proyecto":proyecto, "usuario":request.user})
 
 def asigparticipanterol(request, proyecto_id, usuario_id):
@@ -1439,6 +1463,7 @@ def crearHu(request, proyecto_id):
     proyecto = Proyectos.objects.get(pk = proyecto_id)
     if request.method == 'POST':
         form = HuCreateForm(request.POST)
+       
         if form.is_valid():
             form.save()
             #hu = UserStory.objects.get(pk=form.cleaned_data['id'])
@@ -1455,14 +1480,68 @@ def crearHu(request, proyecto_id):
             hu.prioridad = prioridad
             hu.notas = request.POST.get('notas', False)
             hu.save()
+            
+           
+            
+            #Se le envia una notificacion al usuario encargado del user story
+            send_mail('SGPA-Asignacion a User Story',
+                       'Su usuario: '+user.username+', ha sido asignado como el responsable del user story: '+ hu.descripcion+ ', del proyecto: '+proyecto.nombre,
+                       'noreply.sgpa@gmail.com',
+                        [user.email], 
+                        fail_silently=False)
+            
             return render_to_response('apps/hu_creado.html',{"proyecto_id":proyecto_id},  context_instance = RequestContext(request))
         else:
             return render_to_response('apps/hu_form_no_valido.html', context_instance = RequestContext(request))
     else:        
         form = HuCreateForm()
-    
+        
     return render_to_response('apps/hu_create.html', {"form":form, "proyecto_id":proyecto_id, 'proyecto_nombre':proyecto.nombre, 'users':users, 'flujos':flujos, 'prioridades':prioridades}, context_instance = RequestContext(request))
 
+def fileAdjunto(request, proyecto_id, hu_id):
+    
+    mispermisos = misPermisos(request.user.id, proyecto_id)
+    hu = UserStory.objects.get(pk=hu_id)
+    proyecto = Proyectos.objects.get(pk = proyecto_id)
+    lista = archivoAdjunto.objects.filter(hu_id = hu_id)
+   
+  
+   
+        
+    if request.method == 'POST':
+     
+        hu = UserStory.objects.get(id = hu_id)
+        file = request.FILES['file']
+        adjunto = archivoAdjunto.objects.create(archivo=file, hu = hu)
+        adjunto.save()
+        var = ""
+        var = adjunto.archivo.name
+        var = var.split('/')
+        var = var[-1]
+        adjunto.filename = var
+        adjunto.save()
+        return render_to_response('apps/hu_fileManager.html', {"lista":lista,'misPermisos':mispermisos,'hu_id':hu_id,'hu':hu,"proyecto_id":proyecto_id, 'proyecto_nombre':proyecto.nombre, }, context_instance = RequestContext(request))
+
+    
+    
+    return render_to_response('apps/hu_fileManager.html', {"lista":lista,'misPermisos':mispermisos,'hu_id':hu_id,'hu':hu,"proyecto_id":proyecto_id, 'proyecto_nombre':proyecto.nombre, }, context_instance = RequestContext(request))
+
+def send_file(request,f_id):
+    """                                                                         
+    Send a file through Django without loading the whole file into              
+    memory at once. The FileWrapper will turn the file object into an           
+    iterator for chunks of 8KB.                                           
+    """
+    archivo = archivoAdjunto.objects.get(id = f_id)
+    f = ""
+    f = archivo.filename
+    filename = '/var/www/adjunto/'+f
+    wrapper = FileWrapper(file(filename))
+    response = HttpResponse(wrapper, content_type='text/plain')
+    response['Content-Disposition'] = 'attachment; filename=%s' % os.path.basename(filename)
+    response['Content-Length'] = os.path.getsize(filename)
+    return response
+    
 def editarHu(request, proyecto_id, hu_id):
     """
     editar un User Story existente
@@ -1492,6 +1571,7 @@ def editarHu(request, proyecto_id, hu_id):
         if form.is_valid():
             #form.save()
             copiarHU(hu, huv, user_logged)
+            oldnameHU = hu.descripcion
             hu.descripcion = form.cleaned_data['descripcion']
             hu.codigo = form.cleaned_data['codigo']
             hu.tiempo_Estimado = form.cleaned_data['tiempo_Estimado']
@@ -1499,6 +1579,7 @@ def editarHu(request, proyecto_id, hu_id):
             hu.valor_Tecnico = form.cleaned_data['valor_Tecnico']
             hu.proyecto_id = proyecto_id
             user = User.objects.get(username = request.POST['us']) 
+            oldUser = hu.usuario_Asignado
             hu.usuario_Asignado =  user.id
             flujolist = Flujos.objects.filter(descripcion = request.POST['flujo'], proyecto_id = proyecto_id)
             oflujo = flujolist.get(descripcion = request.POST['flujo'])
@@ -1508,6 +1589,31 @@ def editarHu(request, proyecto_id, hu_id):
             hu.fecha_modificacion = time.strftime("%Y-%m-%d")
             hu.notas = request.POST.get('notas', False)
             hu.save()
+            
+            #se envian notificaciones si se ha cambiado de responsable del user story
+            if oldUser != hu.usuario_Asignado:
+                #se obtiene el usuariio que ha sido desvinculado
+                user2 = User.objects.get(id = oldUser) 
+                #Se le envia una notificacion al usuario encargado del user story
+                send_mail('SGPA-Asignacion a User Story',
+                       'Su usuario: '+user.username+', ha sido asignado como el responsable del user story: '+ hu.descripcion+ ' del proyecto: '+proyecto.nombre,
+                       'noreply.sgpa@gmail.com',
+                        [user.email], 
+                        fail_silently=False)
+                #Se le envia una notificacion al usuario desvinculado del user story
+                send_mail('SGPA-Desvinculacion de User Story',
+                       'Su usuario: '+user2.username+', ha sido desvinculado del user story: '+ hu.descripcion+ ' del proyecto: '+proyecto.nombre,
+                       'noreply.sgpa@gmail.com',
+                        [user2.email], 
+                        fail_silently=False)
+            else: 
+                #si no se cambio de responsable, se le notifica que el user story experimento cambios
+                    send_mail('Modificacion de User Story',
+                       'El User Story: '+oldnameHU+' del proyecto: '+proyecto.nombre+', ha experimentado modificaciones ',
+                       'noreply.sgpa@gmail.com',
+                        [user.email], 
+                        fail_silently=False)  
+                
             return render_to_response('apps/hu_modificado.html',{"proyecto_id":proyecto_id, 'hu_id':hu_id, 'hu':hu},  context_instance = RequestContext(request))
         else:
             return render_to_response('apps/hu_form_no_valido.html', context_instance = RequestContext(request))
@@ -1961,15 +2067,36 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
                 #tiempos_reales.append(d_sprint)
         elif request.POST['cambio'] == "+":
             sprint = Sprint.objects.get(id = sprint_id)
+            dias_sprint_actual = Dia_Sprint.objects.filter(sprint_id = sprint.id)
+            fmayor = dias_sprint_actual.first()
+            for dia_sprint_actual in dias_sprint_actual:
+                if int(fmayor.fecha.year) < int(dia_sprint_actual.fecha.year):
+                    fmayor = dia_sprint_actual
+                elif (int(fmayor.fecha.year) == int(dia_sprint_actual.fecha.year)) and (int(fmayor.fecha.month) < int(dia_sprint_actual.fecha.month)):
+                    fmayor = dia_sprint_actual
+                elif (int(fmayor.fecha.year) == int(dia_sprint_actual.fecha.year)) and (int(fmayor.fecha.month) == int(dia_sprint_actual.fecha.month)) and (int(fmayor.fecha.day) < int(dia_sprint_actual.fecha.day)):
+                    fmayor = dia_sprint_actual
+            fmenor = dias_sprint_actual.first()
+            for dia_sprint_actual in dias_sprint_actual:
+                if int(fmenor.fecha.year) > int(dia_sprint_actual.fecha.year):
+                    fmenor = dia_sprint_actual
+                elif (int(fmenor.fecha.year) == int(dia_sprint_actual.fecha.year)) and (int(fmenor.fecha.month) > int(dia_sprint_actual.fecha.month)):
+                    fmenor = dia_sprint_actual
+                elif (int(fmenor.fecha.year) == int(dia_sprint_actual.fecha.year)) and (int(fmenor.fecha.month) == int(dia_sprint_actual.fecha.month)) and (int(fmenor.fecha.day) > int(dia_sprint_actual.fecha.day)):
+                    fmenor = dia_sprint_actual
             try:
                 hus = UserStory.objects.filter(proyecto_id = proyecto_id, sprint = sprint.nro_sprint)
             except:
                 hus = []
             equipos = Equipo.objects.filter(proyecto_id = proyecto_id)
             for equipo in equipos:
-                user = User.objects.filter(id = equipo.usuario_id)
-                user = user.first()
-                users.append(user)
+                user = User.objects.get(id = equipo.usuario_id)
+                se_encuentra = False
+                for u in users:
+                    if u.id == user.id:
+                        se_encuentra = True
+                if se_encuentra == False:
+                    users.append(user)
             flujos = Flujos.objects.filter(proyecto_id = proyecto_id)
             prioridades = Prioridad.objects.all()
             userStory = UserStory.objects.get(id = hu_id)
@@ -2044,11 +2171,16 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
                 mensaje_planificar_finalizado = "El sprint ya ha finalizado!"
                 planificar = False
             """
-            
-            try:
-                hus = UserStory.objects.filter(proyecto_id = proyecto_id)
-            except:
-                hus = []
+            if planificar == False:
+                try:
+                    hus = UserStory.objects.filter(proyecto_id = proyecto_id, sprint = sprint.nro_sprint)
+                except:
+                    hus = []
+            else:
+                try:
+                    hus = UserStory.objects.filter(proyecto_id = proyecto_id)
+                except:
+                    hus = []
         elif request.POST['cambio'] == " + ":
             planificar = True
             sprint = Sprint.objects.get(id = sprint_id)
@@ -2191,6 +2323,7 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
                         sprint = Sprint()
                         sprint.estado = 0
                         sprint.nro_sprint = proyecto.nro_sprint + 1
+                        sprint.proyecto_id = proyecto.id
                         sprint.save()
                         for hu_sprint_actual in hus:
                             hu_sprint_actual.estado = False
@@ -2238,13 +2371,11 @@ def nuevoSprint(request, proyecto_id, sprint_id):
     elif request.POST['cambio'] == "Crear nuevo Sprint":
         viejo_sprint = Sprint.objects.get(nro_sprint = proyecto.nro_sprint, proyecto_id = proyecto.id)
         try:
-            hus = UserStory.objects.filter(sprint = viejo_sprint.nro_sprint, proyecto_id = proyecto.id)
+            hus = UserStory.objects.filter(proyecto_id = proyecto.id)
         except:
             hus = []
         viejo_sprint.estado = viejo_sprint.estado + 1
         viejo_sprint.save()
-        sprint.nro_sprint = viejo_sprint.nro_sprint + 1
-        sprint.proyecto_id = proyecto_id
         sprint.estado = 1
         sprint.save()
         proyecto.nro_sprint = proyecto.nro_sprint + 1
@@ -2384,13 +2515,19 @@ def analizarhus(request, proyecto_id, hu_id):
     flujo = []
     prioridades =[]
     prioridad = []
+    sprint = Sprint()
+    nuevo_sprint = False
     if request.POST:
-        if request.POST['cambio'] == "+":
+        if request.POST['cambio'] == "+" or request.POST['cambio'] == " + ":
             equipos = Equipo.objects.filter(proyecto_id = proyecto_id)
             for equipo in equipos:
-                user = User.objects.filter(id = equipo.usuario_id)
-                user = user.first()
-                users.append(user)
+                user = User.objects.get(id = equipo.usuario_id)
+                se_encuentra = False
+                for u in users:
+                    if u.id == user.id:
+                        se_encuentra = True
+                if se_encuentra == False:
+                    users.append(user)
             flujos = Flujos.objects.filter(proyecto_id = proyecto_id)
             prioridades = Prioridad.objects.all()
             userStory = UserStory.objects.get(id = hu_id)
@@ -2398,18 +2535,25 @@ def analizarhus(request, proyecto_id, hu_id):
             flujo = Flujos.objects.get(id = userStory.flujo)
             prioridad = Prioridad.objects.get(id = userStory.prioridad_id)
             detalles = HuCreateForm(initial = {"descripcion":userStory.descripcion, "codigo":userStory.codigo, "tiempo_Estimado":userStory.tiempo_Estimado, "valor_Negocio":userStory.valor_Negocio, "valor_Tecnico":userStory.valor_Tecnico})
-        elif request.POST['cambio'] == "Pasar al siguiente Sprint":
+            if request.POST['cambio'] == " + ":
+                sprint = Sprint.objects.get(nro_sprint = proyecto.nro_sprint + 1, proyecto_id = proyecto.id)
+                nuevo_sprint = True
+
+        elif request.POST['cambio'] == "Pasar al siguiente Sprint" or request.POST['cambio'] == "Pasar al siguiente Sprint ":
             userStory = UserStory.objects.get(id = hu_id)
             userStory.estado = True
             userStory.sprint = int(userStory.sprint) + 1
             userStory.save()
             userStory = []
+            if request.POST['cambio'] == "Pasar al siguiente Sprint ":
+                sprint = Sprint.objects.get(nro_sprint = proyecto.nro_sprint + 1, proyecto_id = proyecto.id)
+                nuevo_sprint = True
         #elif request.POST['cambio'] == "Volver al Sprint anterior":
             #userStory = UserStory.objects.get(id = hu_id)
             #userStory.sprint = int(userStory.sprint) - 1
             #userStory.save()
             #userStory = []
-        elif request.POST['cambio'] == "Modificar":
+        elif request.POST['cambio'] == "Modificar" or request.POST['cambio'] == "Modificar ":
             hu = UserStory.objects.get(id = hu_id)
             ouser = User.objects.get(username = request.POST['us']) 
             hu.usuario_Asignado =  ouser.id
@@ -2419,19 +2563,33 @@ def analizarhus(request, proyecto_id, hu_id):
             oprioridad = Prioridad.objects.get(descripcion = request.POST['pri'])
             hu.prioridad = oprioridad
             hu.save()
+            if request.POST['cambio'] == "Modificar ":
+                sprint = Sprint.objects.get(nro_sprint = proyecto.nro_sprint + 1, proyecto_id = proyecto.id)
+                nuevo_sprint = True
+        elif request.POST['cambio'] == " - ":
+            sprint = Sprint.objects.get(nro_sprint = proyecto.nro_sprint + 1, proyecto_id = proyecto.id)
+            nuevo_sprint = True
     try:
-        hus_sprint_actual = UserStory.objects.filter(sprint = proyecto.nro_sprint - 1, proyecto_id = proyecto.id)
+        if nuevo_sprint:
+            hus_sprint_actual = UserStory.objects.filter(sprint = proyecto.nro_sprint, proyecto_id = proyecto.id)
+        else:
+            hus_sprint_actual = UserStory.objects.filter(sprint = proyecto.nro_sprint - 1, proyecto_id = proyecto.id)
+            
         for hu_sprint_actual in hus_sprint_actual:
             hu_sprint_actual.estado = False
             hu_sprint_actual.save()
     except:
         hus_sprint_actual = []
     try:
-        hus_sprint_siguiente = UserStory.objects.filter(sprint = proyecto.nro_sprint, proyecto_id = proyecto.id)
+        if nuevo_sprint:
+            hus_sprint_siguiente = UserStory.objects.filter(sprint = proyecto.nro_sprint + 1, proyecto_id = proyecto.id)
+        else:
+            hus_sprint_siguiente = UserStory.objects.filter(sprint = proyecto.nro_sprint, proyecto_id = proyecto.id)
+            
         for hu_sprint_siguiente in hus_sprint_siguiente:
             hu_sprint_siguiente.estado = True
             hu_sprint_siguiente.save()
     except:
         hus_sprint_siguiente = []
     
-    return render_to_response('apps/project_sprints_pasarhu.html', {"proyecto":proyecto, "hus_sprint_actual":hus_sprint_actual, "hus_sprint_siguiente":hus_sprint_siguiente, "userStory":userStory, "detalles":detalles, "users":users, "usuario":usuario, "flujos":flujos, "flujo":flujo, "prioridades":prioridades, "prioridad":prioridad}, context_instance = RequestContext(request))
+    return render_to_response('apps/project_sprints_pasarhu.html', {"proyecto":proyecto, "hus_sprint_actual":hus_sprint_actual, "hus_sprint_siguiente":hus_sprint_siguiente, "userStory":userStory, "detalles":detalles, "users":users, "usuario":usuario, "flujos":flujos, "flujo":flujo, "prioridades":prioridades, "prioridad":prioridad, "nuevo_sprint":nuevo_sprint, "sprint":sprint}, context_instance = RequestContext(request))
