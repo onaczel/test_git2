@@ -429,8 +429,7 @@ def listrolesproj(request, proyecto_id):
     """
     roles = Roles.objects.filter(sistema=False)
     user = request.user
-    mispermisos = misPermisos(user.id, proyecto_id)
-    return render_to_response("apps/role_admin_project.html", {"roles":roles, 'proyecto_id':proyecto_id, 'user_logged':user.id, 'misPermisos':mispermisos, 'guardado':False})
+    return render_to_response("apps/role_admin_project.html", {"roles":roles, 'proyecto_id':proyecto_id, 'user_logged':user.id, 'guardado':False})
 '''
 def listrolesdel(request):
     """
@@ -477,8 +476,7 @@ def asignarrolproj(request, proyecto_id, role_id):
     
     roles = Roles.objects.filter(sistema = False)
     user = request.user
-    mispermisos = misPermisos(user.id, proyecto_id)
-    return render_to_response("apps/role_admin_project.html", {"roles":roles, 'proyecto_id':proyecto_id, 'user_logged':user.id, 'misPermisos':mispermisos, 'guardado':True})
+    return render_to_response("apps/role_admin_project.html", {"roles":roles, 'proyecto_id':proyecto_id, 'user_logged':user.id, 'guardado':True})
 
 def rolemodifyproj(request, proyecto_id, role_id):
     """
@@ -515,9 +513,8 @@ def roledeleteproj(request, proyecto_id, role_id):
     r.save()
     
     roles = Roles.objects.filter(estado = True, sistema=False)
-    user = request.user
-    mispermisos = misPermisos(user.id, proyecto_id)
-    return render_to_response("apps/role_admin_project.html", {"roles":roles, 'proyecto_id':proyecto_id, 'misPermisos':mispermisos, 'eliminado':True})
+    
+    return render_to_response("apps/role_admin_project.html", {"roles":roles, 'proyecto_id':proyecto_id, 'eliminado':True})
 
 
 def muser(request, user_logged, user_id):
@@ -733,9 +730,7 @@ def asignarpermisosmod(request, user_logged, role_id, proyecto_id):
 
     roles = Roles.objects.filter(sistema=False)
     if int(user_logged) == 0:
-        user = request.user
-        mispermisos = misPermisos(user.id, proyecto_id)
-        return render_to_response("apps/role_admin_project.html", {"roles":roles, 'proyecto_id':proyecto_id, 'user_logged':user_logged, 'misPermisos':mispermisos, 'modificado':True}, context_instance=RequestContext(request))
+        return render_to_response("apps/role_admin_project.html", {"roles":roles, 'proyecto_id':proyecto_id, 'user_logged':user_logged, 'modificado':True}, context_instance=RequestContext(request))
     
     return render_to_response("apps/role_modified.html",{'user_logged':user_logged}, context_instance=RequestContext(request))
     
@@ -1486,7 +1481,7 @@ def listhu(request, proyecto_id):
     
     mispermisos = misPermisos(request.user.id, proyecto_id)
     proyecto = Proyectos.objects.get(pk=proyecto_id)
-    hu = UserStory.objects.filter(proyecto_id = proyecto_id, estado = True)
+    hu = UserStory.objects.filter(proyecto_id = proyecto_id)
     hu_activos = UserStory.objects.filter(proyecto_id = proyecto_id, estado = True, sprint = proyecto.nro_sprint, finalizado = False) 
     hu_plan = UserStory.objects.filter(proyecto_id = proyecto_id, estado = True, finalizado = False)
     hu_planificados = []
@@ -1641,14 +1636,12 @@ def send_file(request,f_id):
     @param f_id: id del archivo que se desea descargar
     @return response : El archivo para su descarga                                         
     """
-    archivo = archivoAdjunto.objects.get(id = f_id)
-    f = ""
-    f = archivo.filename
-    filename = '/var/www/adjunto/'+f
-    wrapper = FileWrapper(file(filename))
+    file = archivoAdjunto.objects.get(id = f_id)
+    file_path = settings.MEDIA_URL + '/adjunto/' + str(file.filename)
+    wrapper = FileWrapper(file(file_path))
     response = HttpResponse(wrapper, content_type='text/plain')
-    response['Content-Disposition'] = 'attachment; filename=%s' % os.path.basename(filename)
-    response['Content-Length'] = os.path.getsize(filename)
+    response['Content-Disposition'] = 'attachment; filename=%s' % os.path.basename(file_path)
+    response['Content-Length'] = os.path.getsize(file_path)
     
     return response
 
@@ -1801,23 +1794,13 @@ def verregistroHu(request, proyecto_id, hu_id):
     flujo = Flujos.objects.get(pk=hu_reg.flujo)
     actividad = getActividadHu(hu_reg)
     estado = getEstadoHu(hu_reg)
-    if actividad == None:
-        act = "No planificado"
-    else:
-        act = actividad.descripcion
-        
-    if estado == None:
-        est = "No planificado"
-    else:
-        est = estado.descripcion
     
-    return render_to_response('apps/hu_registro_mostrar.html', {'hu_reg':hu_reg, 'proyecto':proyecto, 'actividad':act, 'estado':est, 'flujo':flujo.descripcion})
+    return render_to_response('apps/hu_registro_mostrar.html', {'hu_reg':hu_reg, 'proyecto':proyecto, 'actividad':actividad.descripcion, 'estado':estado.descripcion, 'flujo':flujo.descripcion})
 
 def getActividadHu(hu):
     """
     Funcion que retorna la Actividad del User Story
     """
-    actividad = None
     actividadeslist = Actividades.objects.filter(flujo_id = hu.flujo)
     count = 0
     for act in actividadeslist:
@@ -1831,7 +1814,6 @@ def getEstadoHu(hu):
     """
     Funcion que retorna el estado del User Story
     """
-    estado = None
     count = 0
     estadoslist = Estados.objects.all()
     for est in estadoslist:
@@ -2274,10 +2256,9 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
             hu = UserStory.objects.get(id = hu_id)
             ouser = User.objects.get(username = request.POST['us']) 
             hu.usuario_Asignado =  ouser.id
-            if sprint.estado == 0:
-                flujolist = Flujos.objects.filter(descripcion = request.POST['flujo'], proyecto_id = proyecto_id)
-                oflujo = flujolist.get(descripcion = request.POST['flujo'])
-                hu.flujo = oflujo.id
+            flujolist = Flujos.objects.filter(descripcion = request.POST['flujo'], proyecto_id = proyecto_id)
+            oflujo = flujolist.get(descripcion = request.POST['flujo'])
+            hu.flujo = oflujo.id
             oprioridad = Prioridad.objects.get(descripcion = request.POST['pri'])
             hu.prioridad = oprioridad
             hu.save()
@@ -2383,11 +2364,9 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
             hu = UserStory.objects.get(id = hu_id)
             ouser = User.objects.get(username = request.POST['us']) 
             hu.usuario_Asignado =  ouser.id
-            if sprint.estado == 0:
-                flujolist = Flujos.objects.filter(descripcion = request.POST['flujo'], proyecto_id = proyecto_id)
-                oflujo = flujolist.get(descripcion = request.POST['flujo'])
-                hu.flujo = oflujo.id
-            
+            flujolist = Flujos.objects.filter(descripcion = request.POST['flujo'], proyecto_id = proyecto_id)
+            oflujo = flujolist.get(descripcion = request.POST['flujo'])
+            hu.flujo = oflujo.id
             oprioridad = Prioridad.objects.get(descripcion = request.POST['pri'])
             hu.prioridad = oprioridad
             hu.save()
