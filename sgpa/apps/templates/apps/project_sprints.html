@@ -7,7 +7,10 @@
 {% block contenido %}
 	{% if proyecto.nro_sprint > 0%} 
 		<form action="{% url 'apps:sprints' proyecto.id proyecto.nro_sprint 0 %}" method="post">{% csrf_token %}
-			<h3><b>Sprint actual: Sprint Numero {{proyecto.nro_sprint}}&emsp;&emsp;<font size=2>siguiente Sprint</font><input type="submit", name="cambio", value="-->"><font size="3">&emsp;{{mensaje}}</font></b></h3><br />
+			<h3><b>Sprint actual: Sprint Numero {{proyecto.nro_sprint}}
+			{% if scrum.rol_id == 3 %}
+				&emsp;&emsp;<font size=2>siguiente Sprint</font><input type="submit", name="cambio", value="-->"><font size="3">&emsp;{{mensaje}}</font></b></h3><br />
+			{% endif %}
 		</form>
 	{% else %}
 		<h2><b>Finalizado</b></h2><br />

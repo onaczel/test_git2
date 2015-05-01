@@ -2040,6 +2040,8 @@ def misPermisos(usuario_id, proyecto_id):
     for rol_usuario in roles_usuario:
         roles.append(Roles.objects.get(id = rol_usuario.role_id))
     if proyecto_id != 0:
+        #Se quitara cuando los roles de sistema y los roles de proyecto esten vien separados
+        roles = []
         roles_proyectos = Equipo.objects.filter(usuario_id = user.id, proyecto_id = proyecto_id)
         for rol_proyecto in roles_proyectos:
             roles.append(Roles.objects.get(id = rol_proyecto.rol_id))
@@ -2459,13 +2461,20 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
                         proyecto.save()
 
     sprints = Sprint.objects.filter(proyecto_id = proyecto_id)
+    
+    scrum = []
+    try:
+        scrum = Equipo.objects.get(proyecto_id = proyecto_id, usuario_id = request.user.id, rol_id = 3)
+    except:
+        scrum = Equipo()
+        
     if pasar_sprint:
         return render_to_response('apps/project_sprints_pasarhu.html', {"proyecto":proyecto, "hus_sprint_actual":hus, "nuevo_sprint":nuevo_sprint, "sprint":sprint}, context_instance = RequestContext(request))
     elif planificar:
         return render_to_response('apps/project_sprint_planificar.html', {"proyecto":proyecto, "sprints":sprints, "hus":hus, "sprint":sprint, "userStory":userStory, "usuario":usuario, "users":users, "flujos":flujos, "prioridades":prioridades, "flujo":flujo, 'prioridad':prioridad, "detalles":detalles, "fmayor":fmayor, "fmenor":fmenor}, context_instance = RequestContext(request))
     else:
         #return render_to_response('apps/project_sprints.html', {"proyecto":proyecto, "sprint":sprint, "sprints":sprints, "formularios":formularios, "tiempos_reales":tiempos_reales, "mensaje":mensaje}, context_instance = RequestContext(request))
-        return render_to_response('apps/project_sprints.html', {"proyecto":proyecto, "sprint":sprint, "sprints":sprints, "mensaje":mensaje, "duracion_dias":duracion_dias, "duracion_horas":duracion_horas, "hus":hus, "userStory":userStory, "usuario":usuario, "users":users, "flujos":flujos, "prioridades":prioridades, "flujo":flujo, 'prioridad':prioridad, "detalles":detalles, "fmayor":fmayor, "fmenor":fmenor, "mensaje_planificar_iniciado":mensaje_planificar_iniciado, "mensaje_planificar_finalizado":mensaje_planificar_finalizado, "horas_consumidas":horas_consumidas}, context_instance = RequestContext(request))
+        return render_to_response('apps/project_sprints.html', {"proyecto":proyecto, "sprint":sprint, "sprints":sprints, "mensaje":mensaje, "duracion_dias":duracion_dias, "duracion_horas":duracion_horas, "hus":hus, "userStory":userStory, "usuario":usuario, "users":users, "flujos":flujos, "prioridades":prioridades, "flujo":flujo, 'prioridad':prioridad, "detalles":detalles, "fmayor":fmayor, "fmenor":fmenor, "mensaje_planificar_iniciado":mensaje_planificar_iniciado, "mensaje_planificar_finalizado":mensaje_planificar_finalizado, "horas_consumidas":horas_consumidas, "scrum":scrum}, context_instance = RequestContext(request))
 
 def nuevoSprint(request, proyecto_id, sprint_id):
     """
@@ -2521,11 +2530,17 @@ def nuevoSprint(request, proyecto_id, sprint_id):
             nuevo_dia_sprint.fecha = d1 + timedelta(days=i)
             nuevo_dia_sprint.save()
         nuevo_sprint = True
+    
+    scrum = []
+    try:
+        scrum = Equipo.objects.get(proyecto_id = proyecto_id, usuario_id = request.user.id, rol_id = 3)
+    except:
+        scrum = Equipo()
         
     if nuevo_sprint:
         return render_to_response('apps/project_sprint_planificar.html', {"proyecto":proyecto, "sprints":sprints, "hus":hus, "sprint":sprint}, context_instance = RequestContext(request))
     else:
-        return render_to_response('apps/project_sprints.html', {"proyecto":proyecto, "sprint":sprint, "sprints":sprints}, context_instance = RequestContext(request)) 
+        return render_to_response('apps/project_sprints.html', {"proyecto":proyecto, "sprint":sprint, "sprints":sprints, "scrum":scrum}, context_instance = RequestContext(request)) 
 
 def crearSprints(proyecto_id):
     """
