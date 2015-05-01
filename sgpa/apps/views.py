@@ -1744,7 +1744,7 @@ def editarHu(request, proyecto_id, hu_id):
                         fail_silently=False)
             else: 
                 #si no se cambio de responsable, se le notifica que el user story experimento cambios
-                    send_mail('Modificacion de User Story',
+                    send_mail('SGPA-Modificacion de User Story',
                        'El User Story: '+oldnameHU+' del proyecto: '+proyecto.nombre+', ha experimentado modificaciones ',
                        'noreply.sgpa@gmail.com',
                         [user.email], 

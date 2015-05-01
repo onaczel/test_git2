@@ -204,7 +204,17 @@ class test_templates(TestCase):
         resp= self.factory.get('/apps/hu_modify_asigUser')
     
         self.assertTemplateUsed(resp, 'hu_modify_asigUser.html')
+ 
+def test_ver_adminArchivoAdjunto(self):
+        """
+        Prueba de visualizacion del template de administracion de archivos adjuntos
+        """
+        self.factory = RequestFactory()
+        resp= self.factory.get('/apps/hu_fileManager')
     
+        self.assertTemplateUsed(resp, 'hu_fileManager.html')
+    
+  
 
 class test_login(TestCase):
     
@@ -843,4 +853,214 @@ class test_registros_hu(TestCase):
         ur.save()
         
         self.assertTrue(UserStoryRegistro.objects.filter(descripcion_tarea = 'Esto es una prueba de un registro de HU', tiempo_Real = 5, proyecto_id = proyecto.id, idr = uh.id).exists(), "El Registro de User Story no se ha creado correctamente")
+
+class test_notificaciones(TestCase):
+    
+    def test_notificacionesProyecto(self):
+        """
+        Prueba envio de mail de notificaciones al crear proyecto
+        """
+        mail.outbox = []
+        #Se crean usuarios para la prueba
+        us = User()
+        us.username = "selm"
+        us.password = "selm"
+        us.email = "selm@outlook.com"
+        us.is_active = True
+        us.save()
         
+        us2 = User()
+        us2.username = "lastdeo"
+        us2.password = "lastdeo"
+        us2.email = "selm@outlook.com"
+        us2.is_active = True
+        us2.save()
+        
+        # Se crea un proyecto para la prueba
+        proyecto = Proyectos()
+        proyecto.nombre = 'test'
+        proyecto.fecha_ini= '2015-01-01'
+        proyecto.fecha_est_fin = '2015-01-02'
+        proyecto.descripcion = 'una prueba de proyecto'
+        proyecto.observaciones = 'ninguna'
+        proyecto.save()  
+              
+        #Se crean roles para la prueba        
+        rol = Roles()
+        rol.descripcion = "Scrum Master"
+        rol.estado = True
+        rol.save()
+        
+        rol2 = Roles()
+        rol2.descripcion = "Cliente"
+        rol2.estado = True
+        rol2.save()   
+              
+        #Se crea el Equipo        
+        equipo = Equipo()
+        equipo.proyecto = proyecto
+        equipo.usuario = us
+        equipo.rol = rol
+        equipo.save()
+        
+        equipo2 = Equipo()
+        equipo2.proyecto = proyecto
+        equipo2.usuario = us
+        equipo2.rol = rol
+        equipo2.save()
+        
+        #Se le notifica al usuario asignado como scrum master
+        mail.send_mail('SGPA-Asignacion a Proyecto',
+                       'Su usuario: '+us.username+', ha sido asignado al proyecto: '+proyecto.nombre+', con el rol de Scrum Master',
+                       'noreply.sgpa@gmail.com',
+                        [us.email], 
+                        fail_silently=False)
+        
+        #Se le notifica al usuario asignado como Cliente
+        mail.send_mail('SGPA-Asignacion a Proyecto',
+                       'Su usuario: '+us2.username+', ha sido asignado al proyecto: '+proyecto.nombre+', con el rol de Cliente',
+                       'noreply.sgpa@gmail.com',
+                        [us2.email], 
+                        fail_silently=False)
+        
+       
+        
+        #Verifica que el subject del mensaje para el Scrum Master es correcto
+        self.assertEqual(mail.outbox[0].subject, 'SGPA-Asignacion a Proyecto')
+        
+        #verifica que se ha enviado correctamente el cuerpo del mensaje
+        self.assertEqual(mail.outbox[0].body, 'Su usuario: '+us.username+', ha sido asignado al proyecto: '+proyecto.nombre+', con el rol de Scrum Master')    
+        
+        
+        
+        #Verifica que el subject del mensaje para el Cliente es correcto
+        self.assertEqual(mail.outbox[1].subject, 'SGPA-Asignacion a Proyecto')
+        
+        #verifica que se ha enviado correctamente el cuerpo del mensaje
+        self.assertEqual(mail.outbox[1].body, 'Su usuario: '+us2.username+', ha sido asignado al proyecto: '+proyecto.nombre+', con el rol de Cliente')
+        
+        
+    def test_notificarResponsableHU(self):
+        """
+        Prueba envio de mail de notificacion al responsable de HU
+        """
+        mail.outbox = []
+        #Se crea usuario para la prueba
+        user = User()
+        user.username = "lastdeo"
+        user.password = "lastdeo"
+        user.email = "selm@outlook.com"
+        user.is_active = True
+        user.save()
+        
+        # Se crea un proyecto para la prueba
+        proyecto = Proyectos()
+        proyecto.nombre = 'test'
+        proyecto.fecha_ini= '2015-01-01'
+        proyecto.fecha_est_fin = '2015-01-02'
+        proyecto.descripcion = 'una prueba de proyecto'
+        proyecto.observaciones = 'ninguna'
+        proyecto.save()
+        
+        #Se crea un User Story para la prueba
+        us = UserStory()
+        us.descripcion = 'test user story'
+        us.codigo = 'us1_p1'
+        us.tiempo_Estimado = 50
+        us.proyecto_id = proyecto.id
+        us.usuario_Asignado = user.id
+        us.save()
+        
+        mail.send_mail('SGPA-Asignacion a User Story',
+                       'Su usuario: '+user.username+', ha sido asignado como el responsable del user story: '+ us.descripcion+ ', del proyecto: '+proyecto.nombre,
+                       'noreply.sgpa@gmail.com',
+                        [user.email], 
+                        fail_silently=False)
+        
+        #Verifica que el subject del mensaje para el Cliente es correcto
+        self.assertEqual(mail.outbox[0].subject, 'SGPA-Asignacion a User Story')
+        
+        #verifica que se ha enviado correctamente el cuerpo del mensaje
+        self.assertEqual(mail.outbox[0].body, 'Su usuario: '+user.username+', ha sido asignado como el responsable del user story: '+ us.descripcion+ ', del proyecto: '+proyecto.nombre)
+    
+    
+    def test_notificarDesvinculacionProyecto(self):
+        """
+        Prueba envio de mail de notificacion de desvinculacion de proyecto
+        """
+        #se crea un usuario para la prueba
+        user = User()
+        user.username = "lastdeo"
+        user.password = "lastdeo"
+        user.email = "selm@outlook.com"
+        user.is_active = True
+        user.save()
+        # se crea un proyecto para la prueba
+        proyecto = Proyectos()
+        proyecto.nombre = 'test'
+        proyecto.fecha_ini= '2015-01-01'
+        proyecto.fecha_est_fin = '2015-01-02'
+        proyecto.descripcion = 'una prueba de proyecto'
+        proyecto.observaciones = 'ninguna'
+        proyecto.save()
+        
+        mail.outbox = []
+        mail.send_mail('SGPA-Desvinculacion de proyecto',
+              'Su usuario: '+user.username+', ha sido desvinculado del proyecto: '+proyecto.nombre,
+              'noreply.sgpa@gmail.com',
+              [user.email], 
+              fail_silently=False)
+        
+        
+        
+        #Verifica que el subject del mensaje es correcto
+        self.assertEqual(mail.outbox[0].subject, 'SGPA-Desvinculacion de proyecto')
+        
+        #verifica que se ha enviado correctamente el cuerpo del mensaje
+        self.assertEqual(mail.outbox[0].body, 'Su usuario: '+user.username+', ha sido desvinculado del proyecto: '+proyecto.nombre)
+        
+    
+    def test_notificarModificacionHU(self):
+        """
+        Prueba envio de mail de notificacion de modificacion de hu
+        """
+        
+        mail.outbox = []
+        #Se crea usuario para la prueba
+        user = User()
+        user.username = "lastdeo"
+        user.password = "lastdeo"
+        user.email = "selm@outlook.com"
+        user.is_active = True
+        user.save()
+        
+        # Se crea un proyecto para la prueba
+        proyecto = Proyectos()
+        proyecto.nombre = 'test'
+        proyecto.fecha_ini= '2015-01-01'
+        proyecto.fecha_est_fin = '2015-01-02'
+        proyecto.descripcion = 'una prueba de proyecto'
+        proyecto.observaciones = 'ninguna'
+        proyecto.save()
+        #Se crea un User Story para la prueba
+        us = UserStory()
+        us.descripcion = 'test user story'
+        us.codigo = 'us1_p1'
+        us.tiempo_Estimado = 50
+        us.proyecto_id = proyecto.id
+        us.usuario_Asignado = user.id
+        us.save()
+        
+        mail.send_mail('Modificacion de User Story',
+                       'El User Story: '+us.descripcion+' del proyecto: '+proyecto.nombre+', ha experimentado modificaciones ',
+                       'noreply.sgpa@gmail.com',
+                        [user.email], 
+                        fail_silently=False)
+        
+        
+        #Verifica que el subject del mensaje es correcto
+        self.assertEqual(mail.outbox[0].subject, 'Modificacion de User Story')
+        
+        #verifica que se ha enviado correctamente el cuerpo del mensaje
+        self.assertEqual(mail.outbox[0].body, 'El User Story: '+us.descripcion+' del proyecto: '+proyecto.nombre+', ha experimentado modificaciones ')
+    
