@@ -48,6 +48,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from _ast import Str
 from django.forms.formsets import INITIAL_FORM_COUNT
 from types import StringType
+from django.conf import settings
 
 
 ######################################################################################################################################################
@@ -1596,14 +1597,18 @@ def crearHu(request, proyecto_id):
     return render_to_response('apps/hu_create.html', {"form":form, "proyecto_id":proyecto_id, 'proyecto_nombre':proyecto.nombre, 'users':users, 'flujos':flujos, 'prioridades':prioridades}, context_instance = RequestContext(request))
 
 def fileAdjunto(request, proyecto_id, hu_id):
+    """
+    Adjunta un archivo a un user story
     
+    @param request: Http
+    @param proyecto_id: id del proyecto en el que se creara el User Story
+    @param hu_id: id del user story al que se le adjuntara el archivo 
+    @return: render a hu_fileManager.html 
+    """    
     mispermisos = misPermisos(request.user.id, proyecto_id)
     hu = UserStory.objects.get(pk=hu_id)
     proyecto = Proyectos.objects.get(pk = proyecto_id)
-    lista = archivoAdjunto.objects.filter(hu_id = hu_id)
-   
-  
-   
+    lista = archivoAdjunto.objects.filter(hu_id = hu_id) 
         
     if request.method == 'POST':
      
@@ -1624,10 +1629,12 @@ def fileAdjunto(request, proyecto_id, hu_id):
     return render_to_response('apps/hu_fileManager.html', {"lista":lista,'misPermisos':mispermisos,'hu_id':hu_id,'hu':hu,"proyecto_id":proyecto_id, 'proyecto_nombre':proyecto.nombre, }, context_instance = RequestContext(request))
 
 def send_file(request,f_id):
-    """                                                                         
-    Send a file through Django without loading the whole file into              
-    memory at once. The FileWrapper will turn the file object into an           
-    iterator for chunks of 8KB.                                           
+    """
+    Prepara un archivo adjunto de un user story para su descarga
+    
+    @param request: Http
+    @param f_id: id del archivo que se desea descargar
+    @return response : El archivo para su descarga                                         
     """
     archivo = archivoAdjunto.objects.get(id = f_id)
     f = ""
@@ -1637,7 +1644,29 @@ def send_file(request,f_id):
     response = HttpResponse(wrapper, content_type='text/plain')
     response['Content-Disposition'] = 'attachment; filename=%s' % os.path.basename(filename)
     response['Content-Length'] = os.path.getsize(filename)
+    
     return response
+
+def delete_file(request, proyecto_id, hu_id, f_id):
+    """
+    Elimina un archivo adjunto de un user story
+    
+    @param request: Http
+    @param proyecto_id: id del proyecto del User Story
+    @param hu_id: id del user story donde al que pertenece el archivo 
+    @return HttpResponse a fileAdjunto()
+    """
+    file = archivoAdjunto.objects.get(id = f_id)
+    file_path = settings.MEDIA_URL + '/adjunto/' + str(file.filename)
+
+    if os.path.isfile(file_path):
+        
+        file.delete()
+        os.remove(file_path)
+        
+    return HttpResponse(fileAdjunto(request, proyecto_id, hu_id))
+
+
     
 def editarHu(request, proyecto_id, hu_id):
     """
@@ -1654,13 +1683,7 @@ def editarHu(request, proyecto_id, hu_id):
     mispermisos = misPermisos(request.user.id, proyecto_id)
     hu = get_object_or_404(UserStory, pk=hu_id)
     huv = UserStoryVersiones()
-    '''
-    users = []
-
-    eq = Equipo.objects.filter(proyecto_id = proyecto_id)
-    for e in eq:
-        users.append(User.objects.get(pk=e.usuario_id))
-    '''
+  
     users = []           
     equipos = Equipo.objects.filter(proyecto_id = proyecto_id)
     for equipo in equipos:
