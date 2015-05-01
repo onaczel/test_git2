@@ -118,26 +118,29 @@
 		</table>
 	{% endif %}
 	<table width=100%	 height=100>
-		<td width=33%>
+		<td width=66%>
 			<table border=1px width=100%>
 				<tr>
-					<td><b>Usuario</b></td>
+					<td><b>Usuario</b></td><td><b>Roles</b></td>
 				</tr>
 				{% if users %}
 					{% for us in users %}
-						<tr><td>{{us.username}}</td></tr>
+						<tr>
+							<td>{{us.username}}</td>
+							<td>
+								{% for eq in equipo %}
+									{% if eq.usuario_id == us.id %}
+										{% for ro in roles %}
+											{% if eq.rol_id == ro.id and eq.usuario_id == us.id %}
+												{{ro.descripcion}}.
+											{% endif %}
+										{% endfor %}
+									{% endif %}
+								{% endfor %}  
+							</td>
+						</tr>
 					{% endfor %}
 				{% endif %}
-			</table>
-		</td>
-		<td width = 33%>
-			<table border=1px width=100%>
-				<tr><td><b>Rol</b></td></tr>
-				{% if roles %}
-					{% for ro in roles %}
-						<tr><td>{{ro.descripcion}}</td></tr>		
-					{% endfor %}
-				{% endif %} 
 			</table>
 		</td>
 		<td width = 33%>
@@ -151,7 +154,6 @@
 			</table>
 		</td>
 	</table>
-
 {% endblock %}
 {% block atras %}
 	<a href="{% url 'apps:listproyectosdelusuario' usuario.id %}">Volver</a>

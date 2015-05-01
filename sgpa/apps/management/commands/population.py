@@ -20,12 +20,15 @@ class Command(BaseCommand):
 		add_roles('Cliente', False)
 		
 		add_user('admin', 'a123', 'deserver123@gmail.com', 1)
+		add_user('jquin', 'a123', 'jquin@gmail.com', 2)
+		add_user('hroa', 'a123', 'hroa@gmail.com', 2)
+		add_user('jrojas', 'a123', 'jrojas@gmail.com', 2)
 		
 		add_flujo('Plantilla Generica')
 		
-		permisos = ['Crear Usuario', 'Modificar Usuario', 'Eliminar Usuario', 'Crear Roles', 'Modificar Roles', 'Eliminar Roles','Crear Proyecto', 'Modificar Proyecto', 'Crear Plantilla de Flujos', 'Modificar Plantilla de Flujos', 'Eliminar Plantilla de Flujos', 'Asignar Participantes a Proyecto', 'Eliminar Participantes de Proyecto', 'Crear User Stories', 'Modificar User Stories', 'Eliminar User Stories', 'Planificar Sprints', 'Visualizar Proyectos']
-		tags = ['CU', 'MU', 'EU', 'CR', 'MR', 'ER', 'CP', 'MP','CPF', 'MPF', 'EPF', 'APP', 'EPP', 'CUS', 'MUS', 'EUS', 'PS', 'VP']
-		sistema = [True, True, True, True, True, True, True, True, True, True, True, False, False, False, False, False, False, False]
+		permisos = ['Crear Usuario', 'Modificar Usuario', 'Eliminar Usuario', 'Crear Roles', 'Modificar Roles', 'Eliminar Roles','Crear Proyecto', 'Modificar Proyecto', 'Crear Plantilla de Flujos', 'Modificar Plantilla de Flujos', 'Eliminar Plantilla de Flujos', 'Asignar Participantes a Proyecto', 'Eliminar Participantes de Proyecto', 'Crear User Stories', 'Modificar User Stories', 'Eliminar User Stories', 'Planificar Sprints', 'Visualizar Proyectos', 'Crear Roles en Proyecto', 'Modificar Roles en Proyecto', 'Eliminar Roles en Proyecto']
+		tags = ['CU', 'MU', 'EU', 'CR', 'MR', 'ER', 'CP', 'MP','CPF', 'MPF', 'EPF', 'APP', 'EPP', 'CUS', 'MUS', 'EUS', 'PS', 'VP', 'CRP', 'MRP', 'ERP']
+		sistema = [True, True, True, True, True, True, True, True, True, True, True, False, False, False, False, False, False, False, False, False, False]
 		c=1
 		for p in permisos:
 		    add_permisos(p, tags[c-1], sistema[c-1])
@@ -33,7 +36,7 @@ class Command(BaseCommand):
 		    c = c + 1
 		
 		permisos_usuario = [15]
-		permisos_scrum_master = [12, 13, 14, 15, 16, 17, 18 ]
+		permisos_scrum_master = [12, 13, 14, 15, 16, 17, 18, 19, 20, 21 ]
 		permisos_cliente = [15]
 		
 		for p in permisos_usuario:

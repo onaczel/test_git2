@@ -1221,9 +1221,27 @@ def accionesproyecto(request, proyecto_id):
     uroles = Equipo.objects.filter(proyecto_id = proyecto_id)
     users = []
     roles = []    
+    
     for ur in uroles:
-        users.append(User.objects.get(pk = ur.usuario_id))
-        roles.append(Roles.objects.get(pk = ur.rol_id))
+        if not is_in_list(users, ur.usuario_id):
+            users.append(User.objects.get(pk = ur.usuario_id))
+    
+    '''
+    for ur in uroles:
+        listu = Equipo.objects.filter(proyecto_id=proyecto_id, usuario_id=ur.usuario_id)
+        if len(listu) > 1:
+            listhu.
+        else:
+            users.append(User.objects.get(pk = ur.usuario_id))
+    '''   
+    for ur in uroles:
+        if not is_in_list(roles, ur.rol_id):
+            roles.append(Roles.objects.get(pk = ur.rol_id))
+    
+    
+    #roleslist = Roles.objects.filter(proyecto_id = proyecto_id)
+    #roles = []
+    
 
     flujo = Flujos.objects.filter(proyecto_id = proyecto_id, estado=True)
     
@@ -1243,9 +1261,14 @@ def accionesproyecto(request, proyecto_id):
         
     
         
-    return render_to_response("apps/project_acciones.html", {"proyecto":proyecto, "usuario":request.user, "misPermisos":mispermisos, 'users':users, 'roles':roles, 'flujo':flujo, 'actividades':actividades, 'hus':hus, 'tamanolista':tamanolista})
+    return render_to_response("apps/project_acciones.html", {"proyecto":proyecto, "usuario":request.user, "misPermisos":mispermisos, 'equipo':uroles,'users':users, 'roles':roles, 'flujo':flujo, 'actividades':actividades, 'hus':hus, 'tamanolista':tamanolista})
 
-
+def is_in_list(list, o_id):
+    for il in list:
+        if il.id == o_id:
+            return True
+    
+    return False
 
 
 def elimparticipante(request, proyecto_id, usuario_id):
