@@ -1575,7 +1575,7 @@ def crearHu(request, proyecto_id):
             prioridad = Prioridad.objects.get(descripcion = request.POST['pri'])
             hu.prioridad = prioridad
             hu.notas = request.POST.get('notas', False)
-            hu.tiempo_real = 0
+            hu.tiempo_Real = 0
             hu.save()
             
            
@@ -2137,10 +2137,13 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
     fmayor = []
     fmenor = []
     nuevo_sprint = False
+    horas_consumidas = 0
     if request.method == 'POST':
         if request.POST['cambio'] == "Mostrar" or request.POST['cambio'] == "-":
             sprint = Sprint.objects.get(id = sprint_id)
             dias_sprint_actual = Dia_Sprint.objects.filter(sprint_id = sprint.id)
+            for dia_sprint_actual in dias_sprint_actual:
+                horas_consumidas = horas_consumidas + dia_sprint_actual.tiempo_real
             fmayor = dias_sprint_actual.first()
             for dia_sprint_actual in dias_sprint_actual:
                 if int(fmayor.fecha.year) < int(dia_sprint_actual.fecha.year):
@@ -2183,6 +2186,8 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
         elif request.POST['cambio'] == "+":
             sprint = Sprint.objects.get(id = sprint_id)
             dias_sprint_actual = Dia_Sprint.objects.filter(sprint_id = sprint.id)
+            for dia_sprint_actual in dias_sprint_actual:
+                horas_consumidas = horas_consumidas + dia_sprint_actual.tiempo_real
             fmayor = dias_sprint_actual.first()
             for dia_sprint_actual in dias_sprint_actual:
                 if int(fmayor.fecha.year) < int(dia_sprint_actual.fecha.year):
@@ -2460,7 +2465,7 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
         return render_to_response('apps/project_sprint_planificar.html', {"proyecto":proyecto, "sprints":sprints, "hus":hus, "sprint":sprint, "userStory":userStory, "usuario":usuario, "users":users, "flujos":flujos, "prioridades":prioridades, "flujo":flujo, 'prioridad':prioridad, "detalles":detalles, "fmayor":fmayor, "fmenor":fmenor}, context_instance = RequestContext(request))
     else:
         #return render_to_response('apps/project_sprints.html', {"proyecto":proyecto, "sprint":sprint, "sprints":sprints, "formularios":formularios, "tiempos_reales":tiempos_reales, "mensaje":mensaje}, context_instance = RequestContext(request))
-        return render_to_response('apps/project_sprints.html', {"proyecto":proyecto, "sprint":sprint, "sprints":sprints, "mensaje":mensaje, "duracion_dias":duracion_dias, "duracion_horas":duracion_horas, "hus":hus, "userStory":userStory, "usuario":usuario, "users":users, "flujos":flujos, "prioridades":prioridades, "flujo":flujo, 'prioridad':prioridad, "detalles":detalles, "fmayor":fmayor, "fmenor":fmenor, "mensaje_planificar_iniciado":mensaje_planificar_iniciado, "mensaje_planificar_finalizado":mensaje_planificar_finalizado}, context_instance = RequestContext(request))
+        return render_to_response('apps/project_sprints.html', {"proyecto":proyecto, "sprint":sprint, "sprints":sprints, "mensaje":mensaje, "duracion_dias":duracion_dias, "duracion_horas":duracion_horas, "hus":hus, "userStory":userStory, "usuario":usuario, "users":users, "flujos":flujos, "prioridades":prioridades, "flujo":flujo, 'prioridad':prioridad, "detalles":detalles, "fmayor":fmayor, "fmenor":fmenor, "mensaje_planificar_iniciado":mensaje_planificar_iniciado, "mensaje_planificar_finalizado":mensaje_planificar_finalizado, "horas_consumidas":horas_consumidas}, context_instance = RequestContext(request))
 
 def nuevoSprint(request, proyecto_id, sprint_id):
     """
@@ -2582,12 +2587,15 @@ def horas(request, hu_id):
                 hu = UserStory.objects.get(id = hu_id)
                 #Str(datetime.today().strftime("%Y-%m-%d"))
                 try:
-                    dia_sprint = Dia_Sprint.objects.get(fecha = datetime.today().strftime("%Y-%m-%d"), sprint_id = hu.sprint)
+                    sprint = Sprint.objects.get(nro_sprint = hu.sprint, proyecto_id = hu.proyecto_id)
+                    dia_sprint = Dia_Sprint.objects.get(fecha = datetime.today().strftime("%Y-%m-%d"), sprint_id = sprint.id)
                     dia_sprint.tiempo_real = int(dia_sprint.tiempo_real) + int(formulario.cleaned_data['tiempo_real'])
                     dia_sprint.save()
+                    hu.tiempo_Real = int(hu.tiempo_Real) + int(formulario.cleaned_data['tiempo_real'])
+                    hu.save()
                 except:
                     mensaje = "Error: No se sumaron las horas, Probablemente el User Story ya haya terminado"
-            
+    
     user_stories = UserStory.objects.filter(usuario_Asignado = request.user.id, finalizado = False, estado = True)
     
     equipos = Equipo.objects.filter(usuario_id=request.user.id)

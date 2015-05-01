@@ -13,9 +13,13 @@
 				<ul>
 					{% if hu.proyecto_id == p.id %}
 						<li>
-							<form action="{% url 'apps:horas' hu.id %}" method="post">{% csrf_token %}
-								<label><font size="4">User Story {{hu.id}}</font>:&emsp;<font size="3">{{hu.descripcion}}</font><font size="2">&emsp;{{formulario}}</label>Horas&emsp;<input type="submit", name="{{hu.id}}", value="Sumar Horas"></font>&emsp;{{mensaje}}
-							</form>
+							{% if hu.sprint > 0 %}
+								<form action="{% url 'apps:horas' hu.id %}" method="post">{% csrf_token %}
+									<label><font size="4">User Story {{hu.id}}</font>:&emsp;<font size="3">{{hu.descripcion}}</font><font size="2">&emsp;{{formulario}}</label>Horas&emsp;<input type="submit", name="{{hu.id}}", value="Sumar Horas"></font>&emsp;{{mensaje}}
+								</form>
+							{% else %}
+								<label><font size="4">User Story {{hu.id}}</font>:&emsp;<font size="3">{{hu.descripcion}}</font><font size="2">&emsp;(Sin Sprint asignado)</label>
+							{% endif %}
 						</li>
 					{% endif %}
 				</ul>
