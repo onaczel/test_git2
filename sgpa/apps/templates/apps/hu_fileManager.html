@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block titulo %}
+	<h1>{{proyecto_nombre}}</h1>
+{% endblock %}
+{% block encabezado %}
+	<h1>{{hu.descripcion}}</h1>
+{% endblock %}
+<h3>Editar HU</h3>
+{% block index %}
+	
+	<h3>{{hu_descripcion}}</h3>
+	{% if misPermisos.MUS %}
+		
+		{% if hu.estado == True %}
+			<a href="{% url 'apps:setEstadoHu' proyecto_id hu_id  %}">Cambiar Estado</a><br />
+		{% endif %}
+		<br>
+		<a href="{% url 'apps:listhuversiones' proyecto_id hu_id  %}">Historial</a><br />
+		<br>
+		<a href="{% url 'apps:registroHu' proyecto_id hu_id  %}">Registros</a><br />
+	{% endif %}
+	
+	<br>
+	{% if misPermisos.EUS and hu.estado == True %}
+		<a href="{% url 'apps:eliminarHu' proyecto_id hu_id %}">Eliminar User Story</a><br /><br />
+	{% endif %}
+	<b>Archivos Adjuntos</b><br />
+{% endblock %}
+<br/>
+
+{% block contenido %}
+	<form enctype="multipart/form-data" action="{% url 'apps:fileAdjunto' proyecto_id hu_id %}" method="post" >
+		{% csrf_token %}
+		<fieldset>
+			<legend>Adjuntar archivo</legend>
+			
+				<table>
+					<tr>
+						
+						<td><input type="file" value="file2" name= "file"/><br></td>
+						<td><input type="submit" value="Guardar" /></td>
+					</tr>
+					
+				</table>
+		</fieldset>	
+	</form>
+	
+	<table>	
+		{% for l in lista %}		
+		<tr>
+						
+			<td><a href={{l.archivo}}>{{l.archivo}}</a></td> 
+			
+						
+		</tr>
+		{% endfor %} 
+	</table>
+	
+		
+		
+	
+	
+{% endblock %}
+{% block atras %}
+	<a href="{% url 'apps:listhu' proyecto_id %}">Volver</a>
+{% endblock %}
