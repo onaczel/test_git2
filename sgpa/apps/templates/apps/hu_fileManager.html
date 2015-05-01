@@ -45,14 +45,19 @@
 		</fieldset>	
 	</form>
 	
-	<table>	
-		{% for l in lista %}		
+	<table cellpadding=5>
+		<tr>
+			<p><b>Archivos: </b></p>
+		</tr>
+		<UL type= disk> 
+		{% for f in lista %}		
 		<tr>
 						
-			<td><a href={{l.archivo}}>{{l.archivo}}</a></td> 
+			<td><LI><a href="{% url 'apps:send_file' f.id %}">{{f.filename}}</a></td>
 			
 						
 		</tr>
+		</UL>
 		{% endfor %} 
 	</table>
 	
