@@ -1,4 +1,6 @@
 from django.conf.urls import patterns, url
+from django.conf.urls.static import static
+from django.conf import settings
 
 from apps import views
 
@@ -64,6 +66,7 @@ urlpatterns = patterns('',
     url(r'^(?P<proyecto_id>\d+)/modproyecto/accionesproyecto/adminhu/(?P<hu_id>\d+)/versiones/$', views.listhuversiones, name='listhuversiones'),
     url(r'^(?P<proyecto_id>\d+)/modproyecto/accionesproyecto/adminhu/(?P<hu_id>\d+)/versiones/(?P<huv_id>\d+)/cambios/$', views.huvcambios, name='huvcambios'),
     url(r'^(?P<proyecto_id>\d+)/modproyecto/accionesproyecto/adminhu/(?P<hu_id>\d+)/resumen/$', views.resumenHu, name='resumenHu'),
+    url(r'^(?P<proyecto_id>\d+)/modproyecto/accionesproyecto/adminhu/(?P<hu_id>\d+)/fileManager/$', views.fileAdjunto, name='fileAdjunto'),
     
     url(r'^(?P<proyecto_id>\d+)/modproyecto/accionesproyecto/asigparticipante$', views.listasigparticipante, name='listasigparticipante'),
     url(r'^(?P<proyecto_id>\d+)/(?P<usuario_id>\d+)/modproyecto/accionesproyecto/listasigparticipanterol$', views.listasigparticipanterol, name='listasigparticipanterol'),
@@ -128,4 +131,4 @@ urlpatterns = patterns('',
     
     url(r'^(?P<user_id>\d+)/modproyecto/$', views.listprojects, name="listprojects"),
     url(r'^(?P<project_id>\d+)/project/$', views.project, name="project"),
-)
+) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
