@@ -31,13 +31,13 @@
 {% block contenido %}
 	<form enctype="multipart/form-data" action="{% url 'apps:fileAdjunto' proyecto_id hu_id %}" method="post" >
 		{% csrf_token %}
-		<fieldset>
+		<fieldset style="width:400px;height:70px">
 			<legend>Adjuntar archivo</legend>
 			
 				<table>
 					<tr>
 						
-						<td><input type="file" value="file2" name= "file"/><br></td>
+						<td><input type="file" value="file2" name= "file"required/><br></td>
 						<td><input type="submit" value="Guardar" /></td>
 					</tr>
 					
@@ -45,7 +45,7 @@
 		</fieldset>	
 	</form>
 	
-	<table cellpadding=5>
+	<table cellpadding=7>
 		<tr>
 			<p><b>Archivos: </b></p>
 		</tr>
@@ -53,8 +53,8 @@
 		{% for f in lista %}		
 		<tr>
 						
-			<td><LI><a href="{% url 'apps:send_file' f.id %}">{{f.filename}}</a></td>
-			
+			<td><LI><a href="{% url 'apps:send_file' f.id %}" title="Descargar">{{f.filename}}</a></td>
+			<td><a href="{% url 'apps:delete_file'  proyecto_id hu_id f.id %}" title="Eliminar archivo"> <i>x</i></a></td>
 						
 		</tr>
 		</UL>
