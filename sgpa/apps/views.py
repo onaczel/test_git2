@@ -1552,6 +1552,7 @@ def crearHu(request, proyecto_id):
             prioridad = Prioridad.objects.get(descripcion = request.POST['pri'])
             hu.prioridad = prioridad
             hu.notas = request.POST.get('notas', False)
+            hu.tiempo_real = 0
             hu.save()
             
            
@@ -2373,7 +2374,7 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
                     try:
                         hus = UserStory.objects.filter(sprint = proyecto.nro_sprint, proyecto_id = proyecto.id)
                         for hu_sprint_actual in hus:
-                            hu_sprint_actual.estado = False
+                            hu_sprint_actual.finalizado = True
                             hu_sprint_actual.save()
                     except:
                         hus = []
@@ -2417,7 +2418,7 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
                         sprint.proyecto_id = proyecto.id
                         sprint.save()
                         for hu_sprint_actual in hus:
-                            hu_sprint_actual.estado = False
+                            hu_sprint_actual.finalizado = True
                             hu_sprint_actual.save()
                         nuevo_sprint = True
                         pasar_sprint = True
@@ -2564,7 +2565,7 @@ def horas(request, hu_id):
                 except:
                     mensaje = "Error: No se sumaron las horas, Probablemente el User Story ya haya terminado"
             
-    user_stories = UserStory.objects.filter(usuario_Asignado = request.user.id, estado = True)
+    user_stories = UserStory.objects.filter(usuario_Asignado = request.user.id, finalizado = False, estado = True)
     
     equipos = Equipo.objects.filter(usuario_id=request.user.id)
     proyectos_id = []
@@ -2632,7 +2633,7 @@ def analizarhus(request, proyecto_id, hu_id):
 
         elif request.POST['cambio'] == "Pasar al siguiente Sprint" or request.POST['cambio'] == "Pasar al siguiente Sprint ":
             userStory = UserStory.objects.get(id = hu_id)
-            userStory.estado = True
+            userStory.finalizado = False
             userStory.sprint = int(userStory.sprint) + 1
             userStory.save()
             userStory = []
@@ -2667,7 +2668,7 @@ def analizarhus(request, proyecto_id, hu_id):
             hus_sprint_actual = UserStory.objects.filter(sprint = proyecto.nro_sprint - 1, proyecto_id = proyecto.id)
             
         for hu_sprint_actual in hus_sprint_actual:
-            hu_sprint_actual.estado = False
+            hu_sprint_actual.finalizado = True
             hu_sprint_actual.save()
     except:
         hus_sprint_actual = []
@@ -2678,7 +2679,7 @@ def analizarhus(request, proyecto_id, hu_id):
             hus_sprint_siguiente = UserStory.objects.filter(sprint = proyecto.nro_sprint, proyecto_id = proyecto.id)
             
         for hu_sprint_siguiente in hus_sprint_siguiente:
-            hu_sprint_siguiente.estado = True
+            hu_sprint_siguiente.finalizado = False
             hu_sprint_siguiente.save()
     except:
         hus_sprint_siguiente = []

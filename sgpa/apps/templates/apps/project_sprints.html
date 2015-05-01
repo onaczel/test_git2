@@ -49,7 +49,7 @@
 														<font size="3"><b>Valor Negocio:</b></font>&emsp;{{detalles.valor_Negocio.value}}<br />
 														<font size="3"><b>Valor Tecnico:</b></font>&emsp;{{detalles.valor_Tecnico.value}}<br />
 													</table>
-													{% if estado != 2 %}
+													{% if s.estado != 2 %}
 														<b>Usuario Asignado:</b>
 														<select name="us"  style="width:190px" sort = true>
 															<option>{{usuario.username}}</option>
@@ -82,11 +82,11 @@
 														</select><br>
 														<input type="submit" name="cambio" value="Modificar" />
 													{% else %}
-													<table>
-														<font size="3"><b>Usuario Asignado:</b></font>&emsp;{{usuario.username}}<br />
-														<font size="3"><b>Flujo Asignado:</b></font>&emsp;{{flujo.descripcion}}<br />
-														<font size="3"><b>Prioridad:</b></font>&emsp;{{prioridad.descripcion}}<br />
-													</table>
+														<table>
+															<font size="3"><b>Usuario Asignado:</b></font>&emsp;{{usuario.username}}<br />
+															<font size="3"><b>Flujo Asignado:</b></font>&emsp;{{flujo.descripcion}}<br />
+															<font size="3"><b>Prioridad:</b></font>&emsp;{{prioridad.descripcion}}<br />
+														</table>
 													{% endif %}
 												</form>
 											{% endif %}
