@@ -7,6 +7,8 @@ from django.views import generic
 from django.utils import timezone
 from django.template import RequestContext, loader
 import time
+import os
+from django.views.static import serve
 from django.core.servers.basehttp import FileWrapper
 
 from apps.models import Roles, Users_Roles, Permisos, Permisos_Roles, Flujos, Actividades, Actividades_Estados, Proyectos, Equipo, UserStory, Sprint, Dia_Sprint, UserStoryVersiones, Prioridad,\
@@ -45,6 +47,7 @@ from twisted.protocols.telnet import NULL
 from django.core.exceptions import ObjectDoesNotExist
 from _ast import Str
 from django.forms.formsets import INITIAL_FORM_COUNT
+from types import StringType
 
 
 ######################################################################################################################################################
@@ -1464,11 +1467,11 @@ def crearHu(request, proyecto_id):
            
             
             #Se le envia una notificacion al usuario encargado del user story
-            #send_mail('SGPA-Asignacion a User Story',
-            #           'Su usuario: '+user.username+', ha sido asignado como el responsable del user story: '+ hu.descripcion+ ', del proyecto: '+proyecto.nombre,
-            #           'noreply.sgpa@gmail.com',
-            #            [user.email], 
-            #            fail_silently=False)
+            send_mail('SGPA-Asignacion a User Story',
+                       'Su usuario: '+user.username+', ha sido asignado como el responsable del user story: '+ hu.descripcion+ ', del proyecto: '+proyecto.nombre,
+                       'noreply.sgpa@gmail.com',
+                        [user.email], 
+                        fail_silently=False)
             
             return render_to_response('apps/hu_creado.html',{"proyecto_id":proyecto_id},  context_instance = RequestContext(request))
         else:
@@ -1483,20 +1486,44 @@ def fileAdjunto(request, proyecto_id, hu_id):
     mispermisos = misPermisos(request.user.id, proyecto_id)
     hu = UserStory.objects.get(pk=hu_id)
     proyecto = Proyectos.objects.get(pk = proyecto_id)
-    listaAdjunto = archivoAdjunto.objects.filter(hu_id = hu_id)
-    
+    lista = archivoAdjunto.objects.filter(hu_id = hu_id)
+   
+  
+   
+        
     if request.method == 'POST':
      
         hu = UserStory.objects.get(id = hu_id)
         file = request.FILES['file']
         adjunto = archivoAdjunto.objects.create(archivo=file, hu = hu)
         adjunto.save()
-        return render_to_response('apps/hu_fileManager.html', {"lista":listaAdjunto,'misPermisos':mispermisos,'hu_id':hu_id,'hu':hu,"proyecto_id":proyecto_id, 'proyecto_nombre':proyecto.nombre, }, context_instance = RequestContext(request))
+        var = ""
+        var = adjunto.archivo.name
+        var = var.split('/')
+        var = var[-1]
+        adjunto.filename = var
+        adjunto.save()
+        return render_to_response('apps/hu_fileManager.html', {"lista":lista,'misPermisos':mispermisos,'hu_id':hu_id,'hu':hu,"proyecto_id":proyecto_id, 'proyecto_nombre':proyecto.nombre, }, context_instance = RequestContext(request))
 
     
     
-    return render_to_response('apps/hu_fileManager.html', {"lista":listaAdjunto,'misPermisos':mispermisos,'hu_id':hu_id,'hu':hu,"proyecto_id":proyecto_id, 'proyecto_nombre':proyecto.nombre, }, context_instance = RequestContext(request))
+    return render_to_response('apps/hu_fileManager.html', {"lista":lista,'misPermisos':mispermisos,'hu_id':hu_id,'hu':hu,"proyecto_id":proyecto_id, 'proyecto_nombre':proyecto.nombre, }, context_instance = RequestContext(request))
 
+def send_file(request,f_id):
+    """                                                                         
+    Send a file through Django without loading the whole file into              
+    memory at once. The FileWrapper will turn the file object into an           
+    iterator for chunks of 8KB.                                           
+    """
+    archivo = archivoAdjunto.objects.get(id = f_id)
+    f = ""
+    f = archivo.filename
+    filename = '/var/www/adjunto/'+f
+    wrapper = FileWrapper(file(filename))
+    response = HttpResponse(wrapper, content_type='text/plain')
+    response['Content-Disposition'] = 'attachment; filename=%s' % os.path.basename(filename)
+    response['Content-Length'] = os.path.getsize(filename)
+    return response
     
 def editarHu(request, proyecto_id, hu_id):
     """
