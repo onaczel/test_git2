@@ -22,15 +22,22 @@
 			</tr>
 		</table>
 	{% endif %}
-	<a href="{% url 'apps:rolecreateproj' proyecto_id %}">Nuevo Rol</a><br />
-	<br>
+	{% if misPermisos.CRP %}
+		<a href="{% url 'apps:rolecreateproj' proyecto_id %}">Nuevo Rol</a><br />
+		<br>
+	{% endif %}
 	
 	{% if roles %}
 		{% for r in roles %}
 			{% if r.estado == True %}
 				<label>{{r.descripcion}}</label>
-				<a href="{% url  'apps:rolemodifyproj' proyecto_id r.id %}">Modificar</a>
-				<a href="{% url 'apps:roledeleteproj' proyecto_id r.id %}">Eliminar</a><br />
+				{% if misPermisos.MRP %}
+					<a href="{% url  'apps:rolemodifyproj' proyecto_id r.id %}">Modificar</a>
+				{% endif %}
+				{% if misPermisos.ERP %}
+					<a href="{% url 'apps:roledeleteproj' proyecto_id r.id %}">Eliminar</a>
+				{% endif %}
+				<br />
 			{% endif %}
 		{% endfor %}
 	{% else %}
