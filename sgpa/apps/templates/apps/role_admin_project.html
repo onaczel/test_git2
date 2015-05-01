@@ -9,6 +9,18 @@
 				<td align="center"><p><font color="green">El Rol se ha creado con exito</font></p></td>
 			</tr>
 		</table>
+	{% elif modificado%}
+		<table bordercolor="green", border=1px, width=100%>
+			<tr>
+				<td align="center"><p><font color="green">El Rol se ha modificado con exito</font></p></td>
+			</tr>
+		</table>
+	{% elif eliminado %}
+		<table bordercolor="green", border=1px, width=100%>
+			<tr>
+				<td align="center"><p><font color="green">El Rol se ha eliminado con exito</font></p></td>
+			</tr>
+		</table>
 	{% endif %}
 	<a href="{% url 'apps:rolecreateproj' proyecto_id %}">Nuevo Rol</a><br />
 	<br>
@@ -17,8 +29,8 @@
 		{% for r in roles %}
 			{% if r.estado == True %}
 				<label>{{r.descripcion}}</label>
-				<a href="{% url  'apps:rolemodify' user_logged r.id %}">Modificar</a>
-				<a href="{% url 'apps:roledelete' user_logged r.id %}">Eliminar</a><br />
+				<a href="{% url  'apps:rolemodifyproj' proyecto_id r.id %}">Modificar</a>
+				<a href="{% url 'apps:roledeleteproj' proyecto_id r.id %}">Eliminar</a><br />
 			{% endif %}
 		{% endfor %}
 	{% else %}

@@ -14,8 +14,12 @@
 	<table>{{ form }}</table>
 	<input type="submit" value="Modificar">
 </form>
-<a href="{% url 'apps:rolemodifypermisos' user_logged rol.id %}">Ir a Modificar Permisos</a>
+<a href="{% url 'apps:rolemodifypermisos' user_logged rol.id proyecto_id %}">Ir a Modificar Permisos</a>
 {% endblock %}
 {% block atras %}
-<a href="{% url 'apps:listrolesmod' user_logged %}">Atras</a><br />
+	{% if proj %}
+		<a href="{% url 'apps:listrolesproj' proyecto_id %}">Atras</a>
+	{% else %}
+		<a href="{% url 'apps:listrolesmod' user_logged %}">Atras</a><br />
+	{% endif %}
 {% endblock %}

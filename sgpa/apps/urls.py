@@ -24,8 +24,8 @@ urlpatterns = patterns('',
     url(r'^(?P<user_logged>\d+)/modadmin/adminrole/$', views.listrolesmod, name="listrolesmod"),
     url(r'^(?P<user_logged>\d+)/modadmin/adminrole/crearrole/$', views.listpermisos, name="listpermisos"),
     url(r'^(?P<user_logged>\d+)/modadmin/adminrole/(?P<role_id>\d+)/modificarrol/$', views.rolemodify, name="rolemodify"),
-    url(r'^(?P<user_logged>\d+)/modadmin/adminrole/(?P<role_id>\d+)/modificarrol/rolesetp$', views.rolemodifypermisos, name="rolemodifypermisos"),
-    url(r'^(?P<user_logged>\d+)/modadmin/adminrole/(?P<role_id>\d+)/modificarrol/rolesetp/asignarpermisosmod/$', views.asignarpermisosmod, name="asignarpermisosmod"),
+    url(r'^(?P<user_logged>\d+)/modadmin/adminrole/(?P<role_id>\d+)/(?P<proyecto_id>\d+)/modificarrol/rolesetp$', views.rolemodifypermisos, name="rolemodifypermisos"),
+    url(r'^(?P<user_logged>\d+)/modadmin/adminrole/(?P<role_id>\d+)/(?P<proyecto_id>\d+)/modificarrol/rolesetp/asignarpermisosmod/$', views.asignarpermisosmod, name="asignarpermisosmod"),
     url(r'^(?P<user_logged>\d+)/modadmin/adminrole/(?P<role_id>\d+)/eliminarrole/$', views.roledelete, name="roledelete"),
     url(r'^(?P<user_logged>\d+)/modadmin/adminrole/(?P<role_id>\d+)/asignarrol/$', views.asignarrol, name="asignarrol"),
     
@@ -98,7 +98,9 @@ urlpatterns = patterns('',
     
     url(r'^(?P<proyecto_id>\d+)/modproyecto/Roles/$', views.listrolesproj, name="listrolesproj"),
     url(r'^(?P<proyecto_id>\d+)/modproyecto/Roles/nuevo/$', views.rolecreateproj, name="rolecreateproj"),
-    url(r'^(?P<proyecto_id>\d+)/(?P<role_id>\d+)/nuevo/asignarrol/$', views.asignarrolproj, name="asignarrolproj"),
+    url(r'^(?P<proyecto_id>\d+)/modproyecto/Roles/nuevo/(?P<role_id>\d+)/asignarrol/$', views.asignarrolproj, name="asignarrolproj"),
+    url(r'^(?P<proyecto_id>\d+)/modproyecto/Roles/(?P<role_id>\d+)/modificar/$', views.rolemodifyproj, name="rolemodifyproj"),
+    url(r'^(?P<proyecto_id>\d+)/modproyecto/Roles/(?P<role_id>\d+)/eliminar/$', views.roledeleteproj, name="roledeleteproj"),
     #url(r'^asigpermisos/$', views.listpermisos, name="listpermisos"),
     
     

@@ -428,7 +428,7 @@ def listrolesproj(request, proyecto_id):
     """
     roles = Roles.objects.filter(sistema=False)
     user = request.user
-    return render_to_response("apps/role_admin_project.html", {"roles":roles, 'proyecto_id':proyecto_id, 'user_logged':user.id})
+    return render_to_response("apps/role_admin_project.html", {"roles":roles, 'proyecto_id':proyecto_id, 'user_logged':user.id, 'guardado':False})
 '''
 def listrolesdel(request):
     """
@@ -468,11 +468,53 @@ def rolecreateproj(request, proyecto_id):
 
 def asignarrolproj(request, proyecto_id, role_id):
     r = Roles.objects.get(pk = role_id)
-    setpermisos(request, r)
+    if setpermisos(request, r) == None:
+        #error
+        print "error"
+    
     
     roles = Roles.objects.filter(sistema = False)
     user = request.user
     return render_to_response("apps/role_admin_project.html", {"roles":roles, 'proyecto_id':proyecto_id, 'user_logged':user.id, 'guardado':True})
+
+def rolemodifyproj(request, proyecto_id, role_id):
+    """
+    Modifica un rol del sistema
+    @param request: Http request
+    @param role_id: Id de un rol registrado en el sistema
+    @return: render a apps/role_set_permisos_mod.html con una lista de permisos, el id y la descripcion del rol
+    """
+    rol = get_object_or_404(Roles, pk=role_id)
+    if request.method == 'POST':
+        form = RoleModifyForm(request.POST)
+        if form.is_valid():
+            rol.descripcion = form.cleaned_data['descripcion']
+            rol.save()
+        #return render_to_response("apps/role_set_permisos_mod.html", {"role_id":rol.id, "role_descripcion":rol.descripcion}, context_instance=RequestContext(request))
+        return rolemodifypermisos(request, 0, rol.id, proyecto_id)
+    else:
+        form = RoleModifyForm(initial={'descripcion':rol.descripcion})
+    
+    return render_to_response('apps/role_modify_form.html' ,{'form':form, 'proyecto_id':proyecto_id, "rol":rol, 'user_logged':0, 'proj':True}, context_instance=RequestContext(request))
+    
+def roledeleteproj(request, proyecto_id, role_id):
+    """
+    Establece el estado de un rol a False
+    @param request: Http request
+    @param proyecto_id: id del proyecto actual
+    @param role_id: Id de un rol registrado en el sistema
+    
+    @return: render a apps/role_deleted.html
+    """
+    r = get_object_or_404(Roles, pk=role_id)
+    
+    r.estado = False
+    r.save()
+    
+    roles = Roles.objects.filter(estado = True)
+    
+    return render_to_response("apps/role_admin_project.html", {"roles":roles, 'proyecto_id':proyecto_id, 'eliminado':True})
+
 
 def muser(request, user_logged, user_id):
     """
@@ -586,7 +628,7 @@ def asignarrol(request, user_logged, role_id):
 
 def setpermisos(request, role):
     
-    
+    permrol = None
     lista = request.POST.getlist(u'permisos')
     for p in lista:
         try:
@@ -599,7 +641,10 @@ def setpermisos(request, role):
         permrol.permisos_id = permiso.id
         permrol.save()
     
+    
     return permrol
+    
+    
 
 def listrolesmod(request, user_logged):
     """
@@ -625,13 +670,14 @@ def rolemodify(request, user_logged, role_id):
             rol.descripcion = form.cleaned_data['descripcion']
             rol.save()
         #return render_to_response("apps/role_set_permisos_mod.html", {"role_id":rol.id, "role_descripcion":rol.descripcion}, context_instance=RequestContext(request))
-        return rolemodifypermisos(request, user_logged, rol.id)
+
+        return rolemodifypermisos(request, user_logged, rol.id, 0)
     else:
         form = RoleModifyForm(initial={'descripcion':rol.descripcion})
     
-    return render_to_response('apps/role_modify_form.html' ,{'form':form, "rol":rol , 'user_logged':user_logged}, context_instance=RequestContext(request))
+    return render_to_response('apps/role_modify_form.html' ,{'form':form, "rol":rol , 'user_logged':user_logged, 'proyecto_id':0}, context_instance=RequestContext(request))
     
-def rolemodifypermisos(request, user_logged,  role_id):
+def rolemodifypermisos(request, user_logged, role_id, proyecto_id):
     rol = get_object_or_404(Roles, pk=role_id)
    
     permisos = Permisos.objects.all()
@@ -647,9 +693,16 @@ def rolemodifypermisos(request, user_logged,  role_id):
         permisos = Permisos.objects.filter(sistema=True)
     else:
         permisos = Permisos.objects.filter(sistema=False)
+    print user_logged
+    
+    if int(user_logged) == 0: 
+        return render_to_response("apps/role_set_permisos_mod_proj.html", {"permisos":permisos, 'rol':rol, 'user_logged':user_logged, 'proyecto_id':proyecto_id, 'role_id':role_id}, context_instance=RequestContext(request))
+        
+        
     return render_to_response("apps/role_set_permisos_mod.html", {"permisos":permisos, "role_id":role_id, "role_descripcion":rol.descripcion, 'user_logged':user_logged}, context_instance=RequestContext(request))
+    
            
-def asignarpermisosmod(request, user_logged, role_id):
+def asignarpermisosmod(request, user_logged, role_id, proyecto_id):
     """
     Asigna permisos a un rol
     @param request: Http request
@@ -674,6 +727,10 @@ def asignarpermisosmod(request, user_logged, role_id):
         permrol.permisos_id = permiso.id
         permrol.save()
 
+    roles = Roles.objects.filter(sistema=False)
+    if int(user_logged) == 0:
+        return render_to_response("apps/role_admin_project.html", {"roles":roles, 'proyecto_id':proyecto_id, 'user_logged':user_logged, 'modificado':True}, context_instance=RequestContext(request))
+    
     return render_to_response("apps/role_modified.html",{'user_logged':user_logged}, context_instance=RequestContext(request))
     
 def inicializarPermisos():
