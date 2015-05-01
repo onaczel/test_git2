@@ -1632,7 +1632,7 @@ def send_file(request,f_id):
     """
     Prepara un archivo adjunto de un user story para su descarga
     
-    @param request: Http
+    @param request: HttpRequest
     @param f_id: id del archivo que se desea descargar
     @return response : El archivo para su descarga                                         
     """
@@ -1672,7 +1672,7 @@ def editarHu(request, proyecto_id, hu_id):
     """
     editar un User Story existente
     
-    @param request: Http
+    @param request: HttpRequest
     @param proyecto_id: id del proyecto donde se encuentra el User Story a editar
     @param hu_id: id del User Story a editar
     @return: render a hu_modificado.html con el id del proyecto en el que se encuentra el user story
