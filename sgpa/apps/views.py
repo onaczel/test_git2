@@ -1651,7 +1651,7 @@ def delete_file(request, proyecto_id, hu_id, f_id):
     """
     Elimina un archivo adjunto de un user story
     
-    @param request: Http
+    @param request: HttpRequest
     @param proyecto_id: id del proyecto del User Story
     @param hu_id: id del user story donde al que pertenece el archivo 
     @return HttpResponse a fileAdjunto()
