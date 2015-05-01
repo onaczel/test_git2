@@ -1778,7 +1778,8 @@ def crearregistroHu(request, proyecto_id, hu_id):
         hu_reg.save()
         guardado = True
         hu_reg = UserStoryRegistro.objects.filter(idr = hu.id)
-        return render_to_response('apps/hu_registro.html', {'hu':hu, 'proyecto':proyecto, 'guardado':guardado, 'hu_reg':hu_reg}, context_instance=RequestContext(request))
+        #return render_to_response('apps/hu_registro.html', {'hu':hu, 'proyecto':proyecto, 'guardado':guardado, 'hu_reg':hu_reg}, context_instance=RequestContext(request))
+        return registroHu(request, proyecto_id, hu_id)
     
     return render_to_response('apps/hu_registro_nuevo.html', {'hu':hu, 'proyecto':proyecto, 'guardado':guardado}, context_instance=RequestContext(request))
 
@@ -1847,6 +1848,8 @@ def copiarHU(hu, huv, user):
     huv.fechahora = time.strftime("%Y-%m-%d %H:%M")
     huv.notas = hu.notas
     huv.usercambio = user
+    huv.f_actividad = hu.f_actividad
+    huv.f_a_estado = hu.f_a_estado
     huv.save()
 
 def listhuversiones(request, proyecto_id, hu_id):
@@ -2184,7 +2187,7 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
                 elif (int(fmenor.fecha.year) == int(dia_sprint_actual.fecha.year)) and (int(fmenor.fecha.month) == int(dia_sprint_actual.fecha.month)) and (int(fmenor.fecha.day) > int(dia_sprint_actual.fecha.day)):
                     fmenor = dia_sprint_actual
             try:
-                hus = UserStory.objects.filter(proyecto_id = proyecto_id, sprint = sprint.nro_sprint)
+                hus = UserStory.objects.filter(proyecto_id = proyecto_id, sprint = sprint.nro_sprint, estado = True)
             except:
                 hus = []
             #Mostraba los dias de los Sprints
@@ -2228,7 +2231,7 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
                 elif (int(fmenor.fecha.year) == int(dia_sprint_actual.fecha.year)) and (int(fmenor.fecha.month) == int(dia_sprint_actual.fecha.month)) and (int(fmenor.fecha.day) > int(dia_sprint_actual.fecha.day)):
                     fmenor = dia_sprint_actual
             try:
-                hus = UserStory.objects.filter(proyecto_id = proyecto_id, sprint = sprint.nro_sprint)
+                hus = UserStory.objects.filter(proyecto_id = proyecto_id, sprint = sprint.nro_sprint, estado = True)
             except:
                 hus = []
             equipos = Equipo.objects.filter(proyecto_id = proyecto_id)
@@ -2250,7 +2253,7 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
         elif request.POST['cambio'] == "Modificar":
             sprint = Sprint.objects.get(id = sprint_id)
             try:
-                hus = UserStory.objects.filter(proyecto_id = proyecto_id, sprint = sprint.nro_sprint)
+                hus = UserStory.objects.filter(proyecto_id = proyecto_id, sprint = sprint.nro_sprint, estado = True)
             except:
                 hus = []
             hu = UserStory.objects.get(id = hu_id)
@@ -2316,19 +2319,19 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
             """
             if planificar == False:
                 try:
-                    hus = UserStory.objects.filter(proyecto_id = proyecto_id, sprint = sprint.nro_sprint)
+                    hus = UserStory.objects.filter(proyecto_id = proyecto_id, sprint = sprint.nro_sprint, estado = True)
                 except:
                     hus = []
             else:
                 try:
-                    hus = UserStory.objects.filter(proyecto_id = proyecto_id)
+                    hus = UserStory.objects.filter(proyecto_id = proyecto_id, estado = True)
                 except:
                     hus = []
         elif request.POST['cambio'] == " + ":
             planificar = True
             sprint = Sprint.objects.get(id = sprint_id)
             try:
-                hus = UserStory.objects.filter(proyecto_id = proyecto_id)
+                hus = UserStory.objects.filter(proyecto_id = proyecto_id, estado = True)
             except:
                 hus = []
             equipos = Equipo.objects.filter(proyecto_id = proyecto_id)
@@ -2351,14 +2354,14 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
             planificar = True
             sprint = Sprint.objects.get(id = sprint_id)
             try:
-                hus = UserStory.objects.filter(proyecto_id = proyecto_id)
+                hus = UserStory.objects.filter(proyecto_id = proyecto_id, estado = True)
             except:
                 hus = []
         elif request.POST['cambio'] == "Modificar ":
             planificar = True
             sprint = Sprint.objects.get(id = sprint_id)
             try:
-                hus = UserStory.objects.filter(proyecto_id = proyecto_id)
+                hus = UserStory.objects.filter(proyecto_id = proyecto_id, estado = True)
             except:
                 hus = []
             hu = UserStory.objects.get(id = hu_id)
@@ -2374,7 +2377,7 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
             planificar = True
             sprint = Sprint.objects.get(id = sprint_id)
             try:
-                hus = UserStory.objects.filter(proyecto_id = proyecto_id)
+                hus = UserStory.objects.filter(proyecto_id = proyecto_id, estado = True)
             except:
                 hus = []
             user_stories_id = request.POST.getlist(u'hus[]')
@@ -2391,7 +2394,7 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
             planificar = True
             sprint = Sprint.objects.get(id = sprint_id)
             try:
-                hus = UserStory.objects.filter(proyecto_id = proyecto_id)
+                hus = UserStory.objects.filter(proyecto_id = proyecto_id, estado = True)
             except:
                 hus = []
             hu = UserStory.objects.get(id = hu_id)
@@ -2423,7 +2426,7 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
                 
                 if es_mayor:
                     try:
-                        hus = UserStory.objects.filter(sprint = proyecto.nro_sprint, proyecto_id = proyecto.id)
+                        hus = UserStory.objects.filter(sprint = proyecto.nro_sprint, proyecto_id = proyecto.id, estado = True)
                         for hu_sprint_actual in hus:
                             hu_sprint_actual.finalizado = True
                             hu_sprint_actual.save()
@@ -2461,7 +2464,7 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
                     mensaje = "aun quedan dias por trabajar en este sprint!"
                     
                 if es_mayor:
-                    hus = UserStory.objects.filter(sprint = proyecto.nro_sprint, proyecto_id = proyecto.id)
+                    hus = UserStory.objects.filter(sprint = proyecto.nro_sprint, proyecto_id = proyecto.id, estado = True)
                     if hus:
                         sprint = Sprint()
                         sprint.estado = 0
@@ -2511,7 +2514,7 @@ def nuevoSprint(request, proyecto_id, sprint_id):
     sprint = Sprint.objects.get(id = sprint_id)
     hus = []
     try:
-        hus = UserStory.objects.filter(sprint = proyecto.nro_sprint, proyecto_id = proyecto.id)
+        hus = UserStory.objects.filter(sprint = proyecto.nro_sprint, proyecto_id = proyecto.id, estado = True)
     except:
         hus = []
     if request.POST['cambio'] == "Dar por finalizado todos los User Stories":
@@ -2521,7 +2524,7 @@ def nuevoSprint(request, proyecto_id, sprint_id):
     elif request.POST['cambio'] == "Crear nuevo Sprint":
         viejo_sprint = Sprint.objects.get(nro_sprint = proyecto.nro_sprint, proyecto_id = proyecto.id)
         try:
-            hus = UserStory.objects.filter(proyecto_id = proyecto.id)
+            hus = UserStory.objects.filter(proyecto_id = proyecto.id, estado = True)
         except:
             hus = []
         viejo_sprint.estado = viejo_sprint.estado + 1
@@ -2730,9 +2733,9 @@ def analizarhus(request, proyecto_id, hu_id):
             nuevo_sprint = True
     try:
         if nuevo_sprint:
-            hus_sprint_actual = UserStory.objects.filter(sprint = proyecto.nro_sprint, proyecto_id = proyecto.id)
+            hus_sprint_actual = UserStory.objects.filter(sprint = proyecto.nro_sprint, proyecto_id = proyecto.id, estado = True)
         else:
-            hus_sprint_actual = UserStory.objects.filter(sprint = proyecto.nro_sprint - 1, proyecto_id = proyecto.id)
+            hus_sprint_actual = UserStory.objects.filter(sprint = proyecto.nro_sprint - 1, proyecto_id = proyecto.id, estado = True)
             
         for hu_sprint_actual in hus_sprint_actual:
             hu_sprint_actual.finalizado = True
@@ -2741,9 +2744,9 @@ def analizarhus(request, proyecto_id, hu_id):
         hus_sprint_actual = []
     try:
         if nuevo_sprint:
-            hus_sprint_siguiente = UserStory.objects.filter(sprint = proyecto.nro_sprint + 1, proyecto_id = proyecto.id)
+            hus_sprint_siguiente = UserStory.objects.filter(sprint = proyecto.nro_sprint + 1, proyecto_id = proyecto.id, estado = True)
         else:
-            hus_sprint_siguiente = UserStory.objects.filter(sprint = proyecto.nro_sprint, proyecto_id = proyecto.id)
+            hus_sprint_siguiente = UserStory.objects.filter(sprint = proyecto.nro_sprint, proyecto_id = proyecto.id, estado = True)
             
         for hu_sprint_siguiente in hus_sprint_siguiente:
             hu_sprint_siguiente.finalizado = False

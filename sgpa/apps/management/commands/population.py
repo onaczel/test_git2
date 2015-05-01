@@ -35,9 +35,9 @@ class Command(BaseCommand):
 		    add_permisos_roles(c, 1)
 		    c = c + 1
 		
-		permisos_usuario = [15]
+		permisos_usuario = [18]
 		permisos_scrum_master = [12, 13, 14, 15, 16, 17, 18, 19, 20, 21 ]
-		permisos_cliente = [15]
+		permisos_cliente = [18]
 		
 		for p in permisos_usuario:
 		    add_permisos_roles(p, 2)

@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User, AnonymousUser
-from apps.models import Proyectos, Roles, Equipo, Flujos, Actividades, UserStory, Sprint, Dia_Sprint
+from apps.models import Proyectos, Roles, Equipo, Flujos, Actividades, UserStory, Sprint, Dia_Sprint, UserStoryRegistro
 from django.core import mail
 from random import choice
 from django.contrib.auth.hashers import make_password, check_password
@@ -7,7 +7,8 @@ from django.test.client import Client
 from django.test import TestCase, RequestFactory
 from django.contrib.auth import authenticate, login
 from django.core.urlresolvers import reverse
-from apps.views import ingresar, recuperarContrasena, crearProyecto, agregarPlantilla, crearSprints
+from apps.views import ingresar, recuperarContrasena, crearProyecto, agregarPlantilla, crearSprints,\
+    copiarHU
 from datetime import timedelta, date, datetime
 
 
@@ -203,8 +204,8 @@ class test_templates(TestCase):
         resp= self.factory.get('/apps/hu_modify_asigUser')
     
         self.assertTemplateUsed(resp, 'hu_modify_asigUser.html')
-        
-    def test_ver_adminArchivoAdjunto(self):
+ 
+def test_ver_adminArchivoAdjunto(self):
         """
         Prueba de visualizacion del template de administracion de archivos adjuntos
         """
@@ -213,6 +214,7 @@ class test_templates(TestCase):
     
         self.assertTemplateUsed(resp, 'hu_fileManager.html')
     
+  
 
 class test_login(TestCase):
     
@@ -809,6 +811,48 @@ class test_sprint(TestCase):
         dia_sprint.save()
         
         self.assertTrue(Dia_Sprint.objects.filter(id = dia_sprint.id, tiempo_real = 20).exists() , "No se sumaron las horas")
+
+class test_registros_hu(TestCase):
+    
+    def test_crear_registro(self):
+        """
+        comprueba si un regsitro se ha creado correctamente
+        """
+        #Se crea un usuario para la prueba
+        us = User()
+        us.username = "ariel"
+        us.password = "ariel"
+        us.email = "ariel@lastdeo.com"
+        us.is_active = True
+        us.save() 
+        # Se crea un proyecto para la prueba
+        proyecto = Proyectos()
+        proyecto.nombre = 'test'
+        proyecto.fecha_ini= '2015-01-01'
+        proyecto.fecha_est_fin = '2015-01-02'
+        proyecto.descripcion = 'una prueba de proyecto'
+        proyecto.observaciones = 'ninguna'
+        proyecto.save()
+        
+        uh = UserStory()
+        uh.descripcion = 'test user story'
+        uh.codigo = 'us1_p1'
+        uh.tiempo_Estimado = 50
+        uh.proyecto_id = proyecto.id
+        uh.usuario_Asignado = us.id
+        uh.save()
+        
+        ur = UserStoryRegistro()
+        
+        ur.idr = uh.id
+        copiarHU(uh, ur, us)
+        
+        
+        ur.descripcion_tarea = 'Esto es una prueba de un registro de HU'
+        ur.tiempo_Real = 5
+        ur.save()
+        
+        self.assertTrue(UserStoryRegistro.objects.filter(descripcion_tarea = 'Esto es una prueba de un registro de HU', tiempo_Real = 5, proyecto_id = proyecto.id, idr = uh.id).exists(), "El Registro de User Story no se ha creado correctamente")
 
 class test_notificaciones(TestCase):
     
