@@ -92,12 +92,13 @@ urlpatterns = patterns('',
     
     #url(r'^modadmin/adminuser/eliminaruser/del/$', views.eliminaruser),
     
-    
-    url(r'^modadmin/adminproyecto/(?P<proyecto_id>\d+)/crearrolproj/$', views.rolecreateproj, name="rolecreateproj"),
+    url(r'^(?P<proyecto_id>\d+)/modproyecto/Roles/$', views.listrolesproj, name="listrolesproj"),
+    url(r'^(?P<proyecto_id>\d+)/modproyecto/Roles/nuevo/$', views.rolecreateproj, name="rolecreateproj"),
+    url(r'^(?P<proyecto_id>\d+)/(?P<role_id>\d+)/nuevo/asignarrol/$', views.asignarrolproj, name="asignarrolproj"),
     #url(r'^asigpermisos/$', views.listpermisos, name="listpermisos"),
     
     
-    url(r'^modadmin/adminproyecto/(?P<proyecto_id>\d+)/modificarrolproj/$', views.listrolesproj, name="listrolesproj"),
+    
     
     
     #url(r'^modadmin/adminrole/selectrolmod/$', views.selectrolmod, name="selectrolmod"),

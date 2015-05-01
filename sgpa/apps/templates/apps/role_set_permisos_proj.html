@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block titulo %}
+<h1>Administrar Roles</h1>
+{% endblock %}
+{% block encabezado %}
+<h1>{{role_descripcion}}</h1>
+<h3>Seleccione los permisos a asignar al rol</h3>
+<br>
+{% endblock %}
+{% block contenido %}
+<form action="{% url 'apps:asignarrolproj' proyecto_id role_id%}" method="post">{% csrf_token %}
+{% if permisos %}
+	{% for p in permisos%}
+		<!-- <p>hola</p> -->
+		<input type="checkbox" name="permisos" id="option{{p.id}}" value={{p.id}} />
+		<label for="option{{p.id}}"><b>{{p.descripcion}}</b></label><br />
+	{% endfor %}
+{% else %}
+ 	<p>There are no elements in permisos</p>
+ {% endif %}
+ <input type="submit" name="Asignar" value="Asignar Permisos"/>
+ </form>
+ {% endblock %}
+ {% block atras %}
+ 
+ {% endblock %}
