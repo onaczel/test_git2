@@ -6,7 +6,7 @@
 <h1>Registrar un nuevo Rol</h1>
 {% endblock %}
 {% block contenido %}
-<form action="{% url 'apps:rolecreateproj' user_logged %}" method="post">{% csrf_token %}
+<form action="{% url 'apps:rolecreateproj' proyecto_id %}" method="post">{% csrf_token %}
 	<table>{{ form }}</table>
 	<p><input type='submit' value='Registrar'/></p>
 </form>

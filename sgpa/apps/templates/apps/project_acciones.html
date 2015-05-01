@@ -26,7 +26,7 @@
 	{% endif %}
 	<br>
 	<br>
-	{% if misPermisos.CR or misPermisos.ER or misPermisos.MR %}
+	{% if misPermisos.CRP or misPermisos.ERP or misPermisos.MRP %}
 		<a href="{% url 'apps:listrolesproj' proyecto.id %}">Roles</a>
 	{% endif %}
 		

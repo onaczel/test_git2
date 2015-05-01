@@ -167,8 +167,8 @@ class UserStoryVersiones(models.Model):
     estado = models.BooleanField(default = True)
     fechahora = models.DateTimeField(null = True)
     usercambio = models.ForeignKey(User, null = True)
-    f_actividad = models.IntegerField(default = 1)
-    f_a_estado = models.IntegerField(default = 1)
+    f_actividad = models.IntegerField(default = 0)
+    f_a_estado = models.IntegerField(default = 0)
     notas = models.CharField(max_length = 512, null = True)
     
 class UserStoryRegistro(models.Model):
@@ -192,8 +192,8 @@ class UserStoryRegistro(models.Model):
     estado = models.BooleanField(default = True)
     fechahora = models.DateTimeField(null = True)
     usercambio = models.ForeignKey(User, null = True)
-    f_actividad = models.IntegerField(default = 1)
-    f_a_estado = models.IntegerField(default = 1)
+    f_actividad = models.IntegerField(default = 0)
+    f_a_estado = models.IntegerField(default = 0)
     notas = models.CharField(max_length = 512, null = True)
     
 class Sprint(models.Model):
@@ -207,7 +207,7 @@ class Sprint(models.Model):
     #1 = esta en progreso
     #2 = finalizado
     estado = models.IntegerField(null=True)
-    
+
 class Dia_Sprint(models.Model):
     """
     Modelo para almacenar los datos de los dias de cada Sprint

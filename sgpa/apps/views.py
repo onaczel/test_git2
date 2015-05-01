@@ -511,7 +511,7 @@ def roledeleteproj(request, proyecto_id, role_id):
     r.estado = False
     r.save()
     
-    roles = Roles.objects.filter(estado = True)
+    roles = Roles.objects.filter(estado = True, sistema=False)
     
     return render_to_response("apps/role_admin_project.html", {"roles":roles, 'proyecto_id':proyecto_id, 'eliminado':True})
 
@@ -1192,10 +1192,13 @@ def listasigparticipanterol(request, proyecto_id, usuario_id):
     """
     proyecto = Proyectos.objects.get(id = proyecto_id)
     usuario = User.objects.get(id = usuario_id)
+    '''
     roles = []
     for rol in Roles.objects.all():
         if rol.estado == True:
             roles.append(rol)
+    '''
+    roles = Roles.objects.filter(estado = True, sistema = False)
             
     return render_to_response("apps/project_asignar_participante_rol.html", {"proyecto":proyecto, "usuario":usuario, "roles":roles}, context_instance=RequestContext(request))
 
@@ -1510,11 +1513,24 @@ def crearHu(request, proyecto_id):
     @return: render a hu_form_no_valido.html
     @return: render a hu_create.html con el id del proyecto en cuestion, y el formulario de creacion del User Story
     """
+    '''
     users = []
 
     eq = Equipo.objects.filter(proyecto_id = proyecto_id)
     for e in eq:
         users.append(User.objects.get(pk=e.usuario_id))
+    '''
+    users = []           
+    equipos = Equipo.objects.filter(proyecto_id = proyecto_id)
+    for equipo in equipos:
+        user = User.objects.get(id = equipo.usuario_id)
+        se_encuentra = False
+        for u in users:
+            if u.id == user.id:
+                se_encuentra = True
+        if se_encuentra == False:
+            users.append(user)
+            
     flujos = Flujos.objects.filter(proyecto_id = proyecto_id)
     prioridades = Prioridad.objects.all()
     proyecto = Proyectos.objects.get(pk = proyecto_id)
@@ -1614,12 +1630,23 @@ def editarHu(request, proyecto_id, hu_id):
     mispermisos = misPermisos(request.user.id, proyecto_id)
     hu = get_object_or_404(UserStory, pk=hu_id)
     huv = UserStoryVersiones()
+    '''
     users = []
 
     eq = Equipo.objects.filter(proyecto_id = proyecto_id)
     for e in eq:
         users.append(User.objects.get(pk=e.usuario_id))
-
+    '''
+    users = []           
+    equipos = Equipo.objects.filter(proyecto_id = proyecto_id)
+    for equipo in equipos:
+        user = User.objects.get(id = equipo.usuario_id)
+        se_encuentra = False
+        for u in users:
+            if u.id == user.id:
+                se_encuentra = True
+        if se_encuentra == False:
+                users.append(user)
     flujos = Flujos.objects.filter(proyecto_id = proyecto_id)
     prioridades = Prioridad.objects.all()
     user_logged = User.objects.get(username = request.user)
@@ -2033,6 +2060,13 @@ def misPermisos(usuario_id, proyecto_id):
                 misPermisos.MR = True
             elif permiso.tag=="ER":
                 misPermisos.ER = True
+            elif permiso.tag=="CRP":
+                misPermisos.CRP = True
+            elif permiso.tag=="MRP":
+                misPermisos.MRP = True
+            elif permiso.tag=="ERP":
+                misPermisos.ERP = True
+                
 
     return (misPermisos)
 
