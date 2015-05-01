@@ -2258,9 +2258,10 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
             hu = UserStory.objects.get(id = hu_id)
             ouser = User.objects.get(username = request.POST['us']) 
             hu.usuario_Asignado =  ouser.id
-            flujolist = Flujos.objects.filter(descripcion = request.POST['flujo'], proyecto_id = proyecto_id)
-            oflujo = flujolist.get(descripcion = request.POST['flujo'])
-            hu.flujo = oflujo.id
+            if sprint.estado == 0:
+                flujolist = Flujos.objects.filter(descripcion = request.POST['flujo'], proyecto_id = proyecto_id)
+                oflujo = flujolist.get(descripcion = request.POST['flujo'])
+                hu.flujo = oflujo.id
             oprioridad = Prioridad.objects.get(descripcion = request.POST['pri'])
             hu.prioridad = oprioridad
             hu.save()
@@ -2366,9 +2367,11 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
             hu = UserStory.objects.get(id = hu_id)
             ouser = User.objects.get(username = request.POST['us']) 
             hu.usuario_Asignado =  ouser.id
-            flujolist = Flujos.objects.filter(descripcion = request.POST['flujo'], proyecto_id = proyecto_id)
-            oflujo = flujolist.get(descripcion = request.POST['flujo'])
-            hu.flujo = oflujo.id
+            if sprint.estado == 0:
+                flujolist = Flujos.objects.filter(descripcion = request.POST['flujo'], proyecto_id = proyecto_id)
+                oflujo = flujolist.get(descripcion = request.POST['flujo'])
+                hu.flujo = oflujo.id
+            
             oprioridad = Prioridad.objects.get(descripcion = request.POST['pri'])
             hu.prioridad = oprioridad
             hu.save()

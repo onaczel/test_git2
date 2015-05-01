@@ -125,20 +125,22 @@
 				</tr>
 				{% if users %}
 					{% for us in users %}
-						<tr>
-							<td>{{us.username}}</td>
-							<td>
-								{% for eq in equipo %}
-									{% if eq.usuario_id == us.id %}
-										{% for ro in roles %}
-											{% if eq.rol_id == ro.id and eq.usuario_id == us.id %}
-												{{ro.descripcion}}.
-											{% endif %}
-										{% endfor %}
-									{% endif %}
-								{% endfor %}  
-							</td>
-						</tr>
+						{% if us.is_active == True %}
+							<tr>
+								<td>{{us.username}}</td>
+								<td>
+									{% for eq in equipo %}
+										{% if eq.usuario_id == us.id %}
+											{% for ro in roles %}
+												{% if eq.rol_id == ro.id and eq.usuario_id == us.id %}
+													{{ro.descripcion}}.
+												{% endif %}
+											{% endfor %}
+										{% endif %}
+									{% endfor %}  
+								</td>
+							</tr>
+						{% endif %}
 					{% endfor %}
 				{% endif %}
 			</table>
@@ -148,7 +150,9 @@
 				<tr><td><b>Ultima Conexion</b></td></tr>
 				{% if users %}
 					{% for us in users %}
-						<tr><td>{{us.last_login}}</td></tr>		
+						{% if us.is_active == True %}
+							<tr><td>{{us.last_login}}</td></tr>
+						{% endif %}		
 					{% endfor %}
 				{% endif %} 
 			</table>
