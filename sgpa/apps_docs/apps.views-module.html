@@ -323,8 +323,9 @@
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a name="adminmod"></a><span class="summary-sig-name">adminmod</span>(<span class="summary-sig-arg">request</span>,
-        <span class="summary-sig-arg">user_logged</span>)</span></td>
+          <td><span class="summary-sig"><a href="apps.views-module.html#adminmod" class="summary-sig-name">adminmod</a>(<span class="summary-sig-arg">request</span>,
+        <span class="summary-sig-arg">user_logged</span>)</span><br />
+      obtiene el rol y los permisos del usuario</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="apps.views-pysrc.html#adminmod">source&nbsp;code</a></span>
             
@@ -507,6 +508,63 @@
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
+          <td><span class="summary-sig"><a href="apps.views-module.html#asignarrolproj" class="summary-sig-name">asignarrolproj</a>(<span class="summary-sig-arg">request</span>,
+        <span class="summary-sig-arg">proyecto_id</span>,
+        <span class="summary-sig-arg">role_id</span>)</span><br />
+      Funcion para asignar permisos a un rol creado</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="apps.views-pysrc.html#asignarrolproj">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="apps.views-module.html#rolemodifyproj" class="summary-sig-name">rolemodifyproj</a>(<span class="summary-sig-arg">request</span>,
+        <span class="summary-sig-arg">proyecto_id</span>,
+        <span class="summary-sig-arg">role_id</span>)</span><br />
+      Modifica un rol del sistema</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="apps.views-pysrc.html#rolemodifyproj">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="apps.views-module.html#roledeleteproj" class="summary-sig-name">roledeleteproj</a>(<span class="summary-sig-arg">request</span>,
+        <span class="summary-sig-arg">proyecto_id</span>,
+        <span class="summary-sig-arg">role_id</span>)</span><br />
+      Establece el estado de un rol a False</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="apps.views-pysrc.html#roledeleteproj">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
           <td><span class="summary-sig"><a href="apps.views-module.html#muser" class="summary-sig-name">muser</a>(<span class="summary-sig-arg">request</span>,
         <span class="summary-sig-arg">user_logged</span>,
         <span class="summary-sig-arg">user_id</span>)</span><br />
@@ -603,6 +661,24 @@
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
+          <td><span class="summary-sig"><a href="apps.views-module.html#setpermisos" class="summary-sig-name">setpermisos</a>(<span class="summary-sig-arg">request</span>,
+        <span class="summary-sig-arg">role</span>)</span><br />
+      Funcion que asigna una lista de permisos a un rol</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="apps.views-pysrc.html#setpermisos">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
           <td><span class="summary-sig"><a href="apps.views-module.html#listrolesmod" class="summary-sig-name">listrolesmod</a>(<span class="summary-sig-arg">request</span>,
         <span class="summary-sig-arg">user_logged</span>)</span></td>
           <td align="right" valign="top">
@@ -639,9 +715,11 @@
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a name="rolemodifypermisos"></a><span class="summary-sig-name">rolemodifypermisos</span>(<span class="summary-sig-arg">request</span>,
+          <td><span class="summary-sig"><a href="apps.views-module.html#rolemodifypermisos" class="summary-sig-name">rolemodifypermisos</a>(<span class="summary-sig-arg">request</span>,
         <span class="summary-sig-arg">user_logged</span>,
-        <span class="summary-sig-arg">role_id</span>)</span></td>
+        <span class="summary-sig-arg">role_id</span>,
+        <span class="summary-sig-arg">proyecto_id</span>)</span><br />
+      obtiene la lista de permisos de un rol, los modifica, y los guarda</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="apps.views-pysrc.html#rolemodifypermisos">source&nbsp;code</a></span>
             
@@ -659,7 +737,8 @@
         <tr>
           <td><span class="summary-sig"><a href="apps.views-module.html#asignarpermisosmod" class="summary-sig-name">asignarpermisosmod</a>(<span class="summary-sig-arg">request</span>,
         <span class="summary-sig-arg">user_logged</span>,
-        <span class="summary-sig-arg">role_id</span>)</span><br />
+        <span class="summary-sig-arg">role_id</span>,
+        <span class="summary-sig-arg">proyecto_id</span>)</span><br />
       Asigna permisos a un rol</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="apps.views-pysrc.html#asignarpermisosmod">source&nbsp;code</a></span>
@@ -885,8 +964,46 @@
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a name="adminproject"></a><span class="summary-sig-name">adminproject</span>(<span class="summary-sig-arg">request</span>,
-        <span class="summary-sig-arg">user_logged</span>)</span></td>
+          <td><span class="summary-sig"><a href="apps.views-module.html#flowdeleteproj" class="summary-sig-name">flowdeleteproj</a>(<span class="summary-sig-arg">request</span>,
+        <span class="summary-sig-arg">proyecto_id</span>,
+        <span class="summary-sig-arg">flujo_id</span>)</span><br />
+      obtiene una lista de flujos a ser eliminados</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="apps.views-pysrc.html#flowdeleteproj">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="apps.views-module.html#eliminarflujo" class="summary-sig-name">eliminarflujo</a>(<span class="summary-sig-arg">request</span>,
+        <span class="summary-sig-arg">flow_id</span>)</span><br />
+      Elimina un flujo</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="apps.views-pysrc.html#eliminarflujo">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="apps.views-module.html#adminproject" class="summary-sig-name">adminproject</a>(<span class="summary-sig-arg">request</span>,
+        <span class="summary-sig-arg">user_logged</span>)</span><br />
+      obtiene el usuario logueado y sus permisos</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="apps.views-pysrc.html#adminproject">source&nbsp;code</a></span>
             
@@ -1031,6 +1148,24 @@
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
+          <td><span class="summary-sig"><a href="apps.views-module.html#is_in_list" class="summary-sig-name">is_in_list</a>(<span class="summary-sig-arg">list</span>,
+        <span class="summary-sig-arg">o_id</span>)</span><br />
+      Funcion que controla si un objeto esta o no en una lista</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="apps.views-pysrc.html#is_in_list">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
           <td><span class="summary-sig"><a href="apps.views-module.html#elimparticipante" class="summary-sig-name">elimparticipante</a>(<span class="summary-sig-arg">request</span>,
         <span class="summary-sig-arg">proyecto_id</span>,
         <span class="summary-sig-arg">usuario_id</span>)</span><br />
@@ -1074,6 +1209,24 @@
       Lista las plantillas de los flujos disponibles</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="apps.views-pysrc.html#listflujosproyectos">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="apps.views-module.html#getlistaflujos" class="summary-sig-name">getlistaflujos</a>(<span class="summary-sig-arg">request</span>,
+        <span class="summary-sig-arg">proyecto_id</span>)</span><br />
+      Funcion que captura los flujos disponibles para el proyecto</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="apps.views-pysrc.html#getlistaflujos">source&nbsp;code</a></span>
             
           </td>
         </tr>
@@ -1185,6 +1338,42 @@
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
+          <td><span class="summary-sig"><a href="apps.views-module.html#gethuid" class="summary-sig-name">gethuid</a>(<span class="summary-sig-arg">hu</span>)</span><br />
+      Funcion utilizada para ordenar una lista en base a la fecha</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="apps.views-pysrc.html#gethuid">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="apps.views-module.html#resumenHu" class="summary-sig-name">resumenHu</a>(<span class="summary-sig-arg">request</span>,
+        <span class="summary-sig-arg">proyecto_id</span>,
+        <span class="summary-sig-arg">hu_id</span>)</span><br />
+      funcion utilizada para mostrar el resumen de User Story</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="apps.views-pysrc.html#resumenHu">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
           <td><span class="summary-sig"><a href="apps.views-module.html#listhuflujo" class="summary-sig-name">listhuflujo</a>(<span class="summary-sig-arg">request</span>,
         <span class="summary-sig-arg">proyecto_id</span>,
         <span class="summary-sig-arg">hu_id</span>)</span><br />
@@ -1223,6 +1412,63 @@
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
+          <td><span class="summary-sig"><a href="apps.views-module.html#fileAdjunto" class="summary-sig-name">fileAdjunto</a>(<span class="summary-sig-arg">request</span>,
+        <span class="summary-sig-arg">proyecto_id</span>,
+        <span class="summary-sig-arg">hu_id</span>)</span><br />
+      Adjunta un archivo a un user story</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="apps.views-pysrc.html#fileAdjunto">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="apps.views-module.html#send_file" class="summary-sig-name">send_file</a>(<span class="summary-sig-arg">request</span>,
+        <span class="summary-sig-arg">f_id</span>)</span><br />
+      Prepara un archivo adjunto de un user story para su descarga</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="apps.views-pysrc.html#send_file">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="apps.views-module.html#delete_file" class="summary-sig-name">delete_file</a>(<span class="summary-sig-arg">request</span>,
+        <span class="summary-sig-arg">proyecto_id</span>,
+        <span class="summary-sig-arg">hu_id</span>,
+        <span class="summary-sig-arg">f_id</span>)</span><br />
+      Elimina un archivo adjunto de un user story</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="apps.views-pysrc.html#delete_file">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
           <td><span class="summary-sig"><a href="apps.views-module.html#editarHu" class="summary-sig-name">editarHu</a>(<span class="summary-sig-arg">request</span>,
         <span class="summary-sig-arg">proyecto_id</span>,
         <span class="summary-sig-arg">hu_id</span>)</span><br />
@@ -1242,8 +1488,119 @@
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
+          <td><span class="summary-sig"><a href="apps.views-module.html#registroHu" class="summary-sig-name">registroHu</a>(<span class="summary-sig-arg">request</span>,
+        <span class="summary-sig-arg">proyecto_id</span>,
+        <span class="summary-sig-arg">hu_id</span>)</span><br />
+      Funcion que muestra el registro de actividades de un User Story</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="apps.views-pysrc.html#registroHu">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="apps.views-module.html#gethudate" class="summary-sig-name">gethudate</a>(<span class="summary-sig-arg">hu</span>)</span><br />
+      Funcion utilizada para ordenar una lista de User Stories en base a la
+      fecha de modificacion</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="apps.views-pysrc.html#gethudate">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="apps.views-module.html#crearregistroHu" class="summary-sig-name">crearregistroHu</a>(<span class="summary-sig-arg">request</span>,
+        <span class="summary-sig-arg">proyecto_id</span>,
+        <span class="summary-sig-arg">hu_id</span>)</span><br />
+      obtiene un User Story, y guarda sus horas consumidas y una 
+      descripcion</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="apps.views-pysrc.html#crearregistroHu">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="apps.views-module.html#verregistroHu" class="summary-sig-name">verregistroHu</a>(<span class="summary-sig-arg">request</span>,
+        <span class="summary-sig-arg">proyecto_id</span>,
+        <span class="summary-sig-arg">hu_id</span>)</span><br />
+      Muestra los campos del registro de la actividad</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="apps.views-pysrc.html#verregistroHu">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="apps.views-module.html#getActividadHu" class="summary-sig-name">getActividadHu</a>(<span class="summary-sig-arg">hu</span>)</span><br />
+      Funcion que retorna la Actividad del User Story</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="apps.views-pysrc.html#getActividadHu">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="apps.views-module.html#getEstadoHu" class="summary-sig-name">getEstadoHu</a>(<span class="summary-sig-arg">hu</span>)</span><br />
+      Funcion que retorna el estado del User Story</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="apps.views-pysrc.html#getEstadoHu">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
           <td><span class="summary-sig"><a href="apps.views-module.html#copiarHU" class="summary-sig-name">copiarHU</a>(<span class="summary-sig-arg">hu</span>,
-        <span class="summary-sig-arg">huv</span>)</span><br />
+        <span class="summary-sig-arg">huv</span>,
+        <span class="summary-sig-arg">user</span>)</span><br />
       Funcion que hace una copia de todos los campos de un User Story a 
       otro</td>
           <td align="right" valign="top">
@@ -1281,10 +1638,11 @@
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a name="huvcambios"></a><span class="summary-sig-name">huvcambios</span>(<span class="summary-sig-arg">request</span>,
+          <td><span class="summary-sig"><a href="apps.views-module.html#huvcambios" class="summary-sig-name">huvcambios</a>(<span class="summary-sig-arg">request</span>,
         <span class="summary-sig-arg">proyecto_id</span>,
         <span class="summary-sig-arg">hu_id</span>,
-        <span class="summary-sig-arg">huv_id</span>)</span></td>
+        <span class="summary-sig-arg">huv_id</span>)</span><br />
+      obtiene los atributos de una version de un User Story</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="apps.views-pysrc.html#huvcambios">source&nbsp;code</a></span>
             
@@ -1306,6 +1664,25 @@
       obtiene los atributos del User Story a ser modificado</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="apps.views-pysrc.html#modificarHu">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="apps.views-module.html#setEstadoHu" class="summary-sig-name">setEstadoHu</a>(<span class="summary-sig-arg">request</span>,
+        <span class="summary-sig-arg">proyecto_id</span>,
+        <span class="summary-sig-arg">hu_id</span>)</span><br />
+      Cambia el estado de un User Story</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="apps.views-pysrc.html#setEstadoHu">source&nbsp;code</a></span>
             
           </td>
         </tr>
@@ -1416,10 +1793,30 @@
           <td><span class="summary-sig"><a href="apps.views-module.html#sprints" class="summary-sig-name">sprints</a>(<span class="summary-sig-arg">request</span>,
         <span class="summary-sig-arg">proyecto_id</span>,
         <span class="summary-sig-arg">sprint_id</span>,
-        <span class="summary-sig-arg">dia_sprint</span>)</span><br />
+        <span class="summary-sig-arg">hu_id</span>)</span><br />
       retorna los sprints de cada proyecto</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="apps.views-pysrc.html#sprints">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="apps.views-module.html#nuevoSprint" class="summary-sig-name">nuevoSprint</a>(<span class="summary-sig-arg">request</span>,
+        <span class="summary-sig-arg">proyecto_id</span>,
+        <span class="summary-sig-arg">sprint_id</span>)</span><br />
+      Crea un nuevo sprint en el proyecto o da por terminado todos los User
+      Stories del sprint que acaba de terminar</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="apps.views-pysrc.html#nuevoSprint">source&nbsp;code</a></span>
             
           </td>
         </tr>
@@ -1455,6 +1852,26 @@
       Asigna horas trabajadas por user story a los dias de cada sprint</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="apps.views-pysrc.html#horas">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="apps.views-module.html#analizarhus" class="summary-sig-name">analizarhus</a>(<span class="summary-sig-arg">request</span>,
+        <span class="summary-sig-arg">proyecto_id</span>,
+        <span class="summary-sig-arg">hu_id</span>)</span><br />
+      despliega una interfaz con los user stories del proyectos donde el 
+      Scrum Master analiza y decide si pasan al siguiente sprint</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="apps.views-pysrc.html#analizarhus">source&nbsp;code</a></span>
             
           </td>
         </tr>
@@ -1647,6 +2064,34 @@
     <dt>Returns:</dt>
         <dd>Si hay exito retorna render a apps/user_new_pwd.html y una 
           instancia del contexto</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="adminmod"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">adminmod</span>(<span class="sig-arg">request</span>,
+        <span class="sig-arg">user_logged</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="apps.views-pysrc.html#adminmod">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>obtiene el rol y los permisos del usuario</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>request</code></strong> - Http</li>
+        <li><strong class="pname"><code>user_logged</code></strong> - id del usuario logueado en el sistema</li>
+    </ul></dd>
+    <dt>Returns:</dt>
+        <dd>render a apps/admin_mod.html con el id del usuario, el id de su 
+          rol y la lista de sus permisos</dd>
   </dl>
 </td></tr></table>
 </div>
@@ -1895,10 +2340,100 @@
     <dt>Parameters:</dt>
     <dd><ul class="nomargin-top">
         <li><strong class="pname"><code>request</code></strong> - Http request</li>
+        <li><strong class="pname"><code>proyecto_id</code></strong> - id del proyecto actual</li>
     </ul></dd>
     <dt>Returns:</dt>
         <dd>render a apps/role_set_permisos.html, lista de permisos, el id y 
           la descripcion del rol que se creo recientemente</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="asignarrolproj"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">asignarrolproj</span>(<span class="sig-arg">request</span>,
+        <span class="sig-arg">proyecto_id</span>,
+        <span class="sig-arg">role_id</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="apps.views-pysrc.html#asignarrolproj">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Funcion para asignar permisos a un rol creado</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>request</code></strong> - Http</li>
+        <li><strong class="pname"><code>proyecto_id</code></strong> - id del proyecto actual</li>
+        <li><strong class="pname"><code>role_id</code></strong> - id del rol al que se asignaran permisos</li>
+    </ul></dd>
+    <dt>Returns:</dt>
+        <dd>render a apps/role_admin_project.html con la lista de roles, el 
+          id del proyecto, la lista de permisos del usuario, el id del 
+          usuario logueado, y un booleano que indica el exito de la accion</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="rolemodifyproj"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">rolemodifyproj</span>(<span class="sig-arg">request</span>,
+        <span class="sig-arg">proyecto_id</span>,
+        <span class="sig-arg">role_id</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="apps.views-pysrc.html#rolemodifyproj">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Modifica un rol del sistema</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>request</code></strong> - Http request</li>
+        <li><strong class="pname"><code>role_id</code></strong> - Id de un rol registrado en el sistema</li>
+    </ul></dd>
+    <dt>Returns:</dt>
+        <dd>render a apps/role_set_permisos_mod.html con una lista de 
+          permisos, el id y la descripcion del rol</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="roledeleteproj"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">roledeleteproj</span>(<span class="sig-arg">request</span>,
+        <span class="sig-arg">proyecto_id</span>,
+        <span class="sig-arg">role_id</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="apps.views-pysrc.html#roledeleteproj">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Establece el estado de un rol a False</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>request</code></strong> - Http request</li>
+        <li><strong class="pname"><code>proyecto_id</code></strong> - id del proyecto actual</li>
+        <li><strong class="pname"><code>role_id</code></strong> - Id de un rol registrado en el sistema</li>
+    </ul></dd>
+    <dt>Returns:</dt>
+        <dd>render a apps/role_deleted.html</dd>
   </dl>
 </td></tr></table>
 </div>
@@ -2041,6 +2576,33 @@
   </dl>
 </td></tr></table>
 </div>
+<a name="setpermisos"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">setpermisos</span>(<span class="sig-arg">request</span>,
+        <span class="sig-arg">role</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="apps.views-pysrc.html#setpermisos">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Funcion que asigna una lista de permisos a un rol</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>request</code></strong> - Http</li>
+        <li><strong class="pname"><code>role</code></strong> - objeto Rol al que seran asignados los permisos</li>
+    </ul></dd>
+    <dt>Returns:</dt>
+        <dd>objeto Permisos_Roles con la lista de permisos asociados al rol</dd>
+  </dl>
+</td></tr></table>
+</div>
 <a name="listrolesmod"></a>
 <div>
 <table class="details" border="1" cellpadding="3"
@@ -2094,6 +2656,38 @@
   </dl>
 </td></tr></table>
 </div>
+<a name="rolemodifypermisos"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">rolemodifypermisos</span>(<span class="sig-arg">request</span>,
+        <span class="sig-arg">user_logged</span>,
+        <span class="sig-arg">role_id</span>,
+        <span class="sig-arg">proyecto_id</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="apps.views-pysrc.html#rolemodifypermisos">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>obtiene la lista de permisos de un rol, los modifica, y los guarda</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>request</code></strong> - Http</li>
+        <li><strong class="pname"><code>user_logged</code></strong> - id del usuario logueado en el sistema</li>
+        <li><strong class="pname"><code>role_id</code></strong> - id del rol a ser modificado</li>
+        <li><strong class="pname"><code>proyecto_id</code></strong> - id del proyecto actual</li>
+    </ul></dd>
+    <dt>Returns:</dt>
+        <dd>render a role_set_permisos mod_proj: con la lista de permisos, el
+          rol, el id del usuario, el id del proyecto</dd>
+  </dl>
+</td></tr></table>
+</div>
 <a name="asignarpermisosmod"></a>
 <div>
 <table class="details" border="1" cellpadding="3"
@@ -2103,7 +2697,8 @@
   <tr valign="top"><td>
   <h3 class="epydoc"><span class="sig"><span class="sig-name">asignarpermisosmod</span>(<span class="sig-arg">request</span>,
         <span class="sig-arg">user_logged</span>,
-        <span class="sig-arg">role_id</span>)</span>
+        <span class="sig-arg">role_id</span>,
+        <span class="sig-arg">proyecto_id</span>)</span>
   </h3>
   </td><td align="right" valign="top"
     ><span class="codelink"><a href="apps.views-pysrc.html#asignarpermisosmod">source&nbsp;code</a></span>&nbsp;
@@ -2403,6 +2998,92 @@
   </dl>
 </td></tr></table>
 </div>
+<a name="flowdeleteproj"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">flowdeleteproj</span>(<span class="sig-arg">request</span>,
+        <span class="sig-arg">proyecto_id</span>,
+        <span class="sig-arg">flujo_id</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="apps.views-pysrc.html#flowdeleteproj">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>obtiene una lista de flujos a ser eliminados</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>request</code></strong> - Http</li>
+        <li><strong class="pname"><code>proyecto_id</code></strong> - id del proyecto actual</li>
+        <li><strong class="pname"><code>flujo_id</code></strong> - id del flujo a ser eliminado</li>
+    </ul></dd>
+    <dt>Returns:</dt>
+        <dd>render a project_modificar_listflujo con el proyecto, la lista de
+          flujos, las actividades, y un valor bool que indica si se el rol 
+          se ha eliminado</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="eliminarflujo"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">eliminarflujo</span>(<span class="sig-arg">request</span>,
+        <span class="sig-arg">flow_id</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="apps.views-pysrc.html#eliminarflujo">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Elimina un flujo</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>request</code></strong> - Http</li>
+        <li><strong class="pname"><code>flow_id</code></strong> - id del flujo a ser eliminado</li>
+    </ul></dd>
+    <dt>Returns:</dt>
+        <dd>objeto tipo Flujo</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="adminproject"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">adminproject</span>(<span class="sig-arg">request</span>,
+        <span class="sig-arg">user_logged</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="apps.views-pysrc.html#adminproject">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>obtiene el usuario logueado y sus permisos</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>request</code></strong> - Http</li>
+        <li><strong class="pname"><code>user_logged</code></strong> - id del usuario logueado en el sistema</li>
+    </ul></dd>
+    <dt>Returns:</dt>
+        <dd>render a apps/project_admin con la lista de permisos del usuario,
+          su id, y su rol</dd>
+  </dl>
+</td></tr></table>
+</div>
 <a name="crearProyecto"></a>
 <div>
 <table class="details" border="1" cellpadding="3"
@@ -2604,6 +3285,33 @@
   </dl>
 </td></tr></table>
 </div>
+<a name="is_in_list"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">is_in_list</span>(<span class="sig-arg">list</span>,
+        <span class="sig-arg">o_id</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="apps.views-pysrc.html#is_in_list">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Funcion que controla si un objeto esta o no en una lista</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>list</code></strong> - lista de objetos</li>
+        <li><strong class="pname"><code>o_id</code></strong> - objeto a buscar</li>
+    </ul></dd>
+    <dt>Returns:</dt>
+        <dd>True si el objeto se encuentra, False en otro caso</dd>
+  </dl>
+</td></tr></table>
+</div>
 <a name="elimparticipante"></a>
 <div>
 <table class="details" border="1" cellpadding="3"
@@ -2690,6 +3398,33 @@
         <dd>render a apps/project_crear_flujo.html con el proyecto en el cual
           se encuentra, los flujos del proyecto y las actividades de los 
           flujos</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="getlistaflujos"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">getlistaflujos</span>(<span class="sig-arg">request</span>,
+        <span class="sig-arg">proyecto_id</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="apps.views-pysrc.html#getlistaflujos">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Funcion que captura los flujos disponibles para el proyecto</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>request</code></strong> - Http</li>
+        <li><strong class="pname"><code>proyecto_id</code></strong> - id del proyecto en cuestion</li>
+    </ul></dd>
+    <dt>Returns:</dt>
+        <dd>Lista de flujos</dd>
   </dl>
 </td></tr></table>
 </div>
@@ -2849,6 +3584,60 @@
   </dl>
 </td></tr></table>
 </div>
+<a name="gethuid"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">gethuid</span>(<span class="sig-arg">hu</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="apps.views-pysrc.html#gethuid">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Funcion utilizada para ordenar una lista en base a la fecha</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>hu</code></strong> - Objeto User Story</li>
+    </ul></dd>
+    <dt>Returns:</dt>
+        <dd>la fecha de creacion del User Story</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="resumenHu"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">resumenHu</span>(<span class="sig-arg">request</span>,
+        <span class="sig-arg">proyecto_id</span>,
+        <span class="sig-arg">hu_id</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="apps.views-pysrc.html#resumenHu">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>funcion utilizada para mostrar el resumen de User Story</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>request</code></strong> - Http</li>
+        <li><strong class="pname"><code>proyecto_id</code></strong> - id del proyecto del User Story</li>
+    </ul></dd>
+    <dt>Returns:</dt>
+        <dd>render a apps/hu_resuemn con el id y el nombre del proyecto, y el
+          objeto User Story</dd>
+  </dl>
+</td></tr></table>
+</div>
 <a name="listhuflujo"></a>
 <div>
 <table class="details" border="1" cellpadding="3"
@@ -2909,6 +3698,89 @@
   </dl>
 </td></tr></table>
 </div>
+<a name="fileAdjunto"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">fileAdjunto</span>(<span class="sig-arg">request</span>,
+        <span class="sig-arg">proyecto_id</span>,
+        <span class="sig-arg">hu_id</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="apps.views-pysrc.html#fileAdjunto">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Adjunta un archivo a un user story</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>request</code></strong> - Http</li>
+        <li><strong class="pname"><code>proyecto_id</code></strong> - id del proyecto en el que se creara el User Story</li>
+        <li><strong class="pname"><code>hu_id</code></strong> - id del user story al que se le adjuntara el archivo</li>
+    </ul></dd>
+    <dt>Returns:</dt>
+        <dd>render a hu_fileManager.html</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="send_file"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">send_file</span>(<span class="sig-arg">request</span>,
+        <span class="sig-arg">f_id</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="apps.views-pysrc.html#send_file">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Prepara un archivo adjunto de un user story para su descarga</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>request</code></strong> - HttpRequest</li>
+        <li><strong class="pname"><code>f_id</code></strong> - id del archivo que se desea descargar</li>
+    </ul></dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="delete_file"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">delete_file</span>(<span class="sig-arg">request</span>,
+        <span class="sig-arg">proyecto_id</span>,
+        <span class="sig-arg">hu_id</span>,
+        <span class="sig-arg">f_id</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="apps.views-pysrc.html#delete_file">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Elimina un archivo adjunto de un user story</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>request</code></strong> - HttpRequest</li>
+        <li><strong class="pname"><code>proyecto_id</code></strong> - id del proyecto del User Story</li>
+        <li><strong class="pname"><code>hu_id</code></strong> - id del user story donde al que pertenece el archivo @return 
+          HttpResponse a fileAdjunto()</li>
+    </ul></dd>
+  </dl>
+</td></tr></table>
+</div>
 <a name="editarHu"></a>
 <div>
 <table class="details" border="1" cellpadding="3"
@@ -2929,13 +3801,178 @@
   <dl class="fields">
     <dt>Parameters:</dt>
     <dd><ul class="nomargin-top">
-        <li><strong class="pname"><code>request</code></strong> - Http</li>
+        <li><strong class="pname"><code>request</code></strong> - HttpRequest</li>
         <li><strong class="pname"><code>proyecto_id</code></strong> - id del proyecto donde se encuentra el User Story a editar</li>
         <li><strong class="pname"><code>hu_id</code></strong> - id del User Story a editar</li>
     </ul></dd>
     <dt>Returns:</dt>
         <dd>render a hu_modificado.html con el id del proyecto en el que se 
           encuentra el user story</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="registroHu"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">registroHu</span>(<span class="sig-arg">request</span>,
+        <span class="sig-arg">proyecto_id</span>,
+        <span class="sig-arg">hu_id</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="apps.views-pysrc.html#registroHu">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Funcion que muestra el registro de actividades de un User Story</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>request</code></strong> - Http</li>
+        <li><strong class="pname"><code>proyecto_id</code></strong> - id del proyecto del User Story</li>
+        <li><strong class="pname"><code>hu_id</code></strong> - id del User Story</li>
+    </ul></dd>
+    <dt>Returns:</dt>
+        <dd>render a apps/hu_registro.html con el la lista de registros del 
+          User Story, el objeto User Story, y el proyecto</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="gethudate"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">gethudate</span>(<span class="sig-arg">hu</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="apps.views-pysrc.html#gethudate">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Funcion utilizada para ordenar una lista de User Stories en base a la 
+  fecha de modificacion</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>hu</code></strong> - objeto User Story</li>
+    </ul></dd>
+    <dt>Returns:</dt>
+        <dd>la fecha de modificacion del User Story</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="crearregistroHu"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">crearregistroHu</span>(<span class="sig-arg">request</span>,
+        <span class="sig-arg">proyecto_id</span>,
+        <span class="sig-arg">hu_id</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="apps.views-pysrc.html#crearregistroHu">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>obtiene un User Story, y guarda sus horas consumidas y una 
+  descripcion</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>request</code></strong> - Http</li>
+        <li><strong class="pname"><code>proyecto_id</code></strong> - id del proyecto del User Story</li>
+        <li><strong class="pname"><code>hu_id</code></strong> - id del User Story</li>
+    </ul></dd>
+    <dt>Returns:</dt>
+        <dd>render a hu_registro.html con el User Story, el registro del User
+          Story, el proyecto, y un boolenao que indica si el registro ha 
+          sido guardado</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="verregistroHu"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">verregistroHu</span>(<span class="sig-arg">request</span>,
+        <span class="sig-arg">proyecto_id</span>,
+        <span class="sig-arg">hu_id</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="apps.views-pysrc.html#verregistroHu">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Muestra los campos del registro de la actividad</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>request</code></strong> - Http</li>
+        <li><strong class="pname"><code>proyecto_id</code></strong> - id del proyecto actual</li>
+        <li><strong class="pname"><code>hu_id</code></strong> - id del Registro del User Story</li>
+    </ul></dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="getActividadHu"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">getActividadHu</span>(<span class="sig-arg">hu</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="apps.views-pysrc.html#getActividadHu">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Funcion que retorna la Actividad del User Story</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>hu</code></strong> - objeto User Story</li>
+    </ul></dd>
+    <dt>Returns:</dt>
+        <dd>la actividad del User Story</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="getEstadoHu"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">getEstadoHu</span>(<span class="sig-arg">hu</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="apps.views-pysrc.html#getEstadoHu">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Funcion que retorna el estado del User Story</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>hu</code></strong> - objeto User Story</li>
+    </ul></dd>
+    <dt>Returns:</dt>
+        <dd>el estado del User Story</dd>
   </dl>
 </td></tr></table>
 </div>
@@ -2947,7 +3984,8 @@
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
   <tr valign="top"><td>
   <h3 class="epydoc"><span class="sig"><span class="sig-name">copiarHU</span>(<span class="sig-arg">hu</span>,
-        <span class="sig-arg">huv</span>)</span>
+        <span class="sig-arg">huv</span>,
+        <span class="sig-arg">user</span>)</span>
   </h3>
   </td><td align="right" valign="top"
     ><span class="codelink"><a href="apps.views-pysrc.html#copiarHU">source&nbsp;code</a></span>&nbsp;
@@ -2961,6 +3999,7 @@
     <dd><ul class="nomargin-top">
         <li><strong class="pname"><code>hu</code></strong> - objeto User Story a copiar</li>
         <li><strong class="pname"><code>huv</code></strong> - objeto User Story de destino</li>
+        <li><strong class="pname"><code>user</code></strong> - objeto del Usuario que realiza una modificacion en el HU</li>
     </ul></dd>
   </dl>
 </td></tr></table>
@@ -2996,6 +4035,38 @@
   </dl>
 </td></tr></table>
 </div>
+<a name="huvcambios"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">huvcambios</span>(<span class="sig-arg">request</span>,
+        <span class="sig-arg">proyecto_id</span>,
+        <span class="sig-arg">hu_id</span>,
+        <span class="sig-arg">huv_id</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="apps.views-pysrc.html#huvcambios">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>obtiene los atributos de una version de un User Story</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>request</code></strong> - Http</li>
+        <li><strong class="pname"><code>proyecto_id</code></strong> - id del proyecto del User Story</li>
+        <li><strong class="pname"><code>hu_id</code></strong> - id del User Story</li>
+        <li><strong class="pname"><code>huv_id</code></strong> - id de la version del User Story</li>
+    </ul></dd>
+    <dt>Returns:</dt>
+        <dd>render a hu_list_versiones_cambios.html con el id del proyecto, 
+          el objeto User Story, y su version</dd>
+  </dl>
+</td></tr></table>
+</div>
 <a name="modificarHu"></a>
 <div>
 <table class="details" border="1" cellpadding="3"
@@ -3023,6 +4094,38 @@
     <dt>Returns:</dt>
         <dd>render a hu_modify.html con el id y la descripcion del User 
           Story, y el id del proyecto donde se encuentra</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="setEstadoHu"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">setEstadoHu</span>(<span class="sig-arg">request</span>,
+        <span class="sig-arg">proyecto_id</span>,
+        <span class="sig-arg">hu_id</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="apps.views-pysrc.html#setEstadoHu">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Cambia el estado de un User Story</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>request</code></strong> - Http</li>
+        <li><strong class="pname"><code>proyecto_id</code></strong> - id del proyecto del User Story</li>
+        <li><strong class="pname"><code>hu_id</code></strong> - id del User Story</li>
+        <li><strong class="pname"><code>actividades</code></strong> - lista de actividades en el flujo</li>
+        <li><strong class="pname"><code>estados</code></strong> - lista de estados en las actividades</li>
+    </ul></dd>
+    <dt>Returns:</dt>
+        <dd>render a apps/hu_set_estado con el id del proyecto, y del User 
+          Story</dd>
   </dl>
 </td></tr></table>
 </div>
@@ -3182,7 +4285,7 @@
   <h3 class="epydoc"><span class="sig"><span class="sig-name">sprints</span>(<span class="sig-arg">request</span>,
         <span class="sig-arg">proyecto_id</span>,
         <span class="sig-arg">sprint_id</span>,
-        <span class="sig-arg">dia_sprint</span>)</span>
+        <span class="sig-arg">hu_id</span>)</span>
   </h3>
   </td><td align="right" valign="top"
     ><span class="codelink"><a href="apps.views-pysrc.html#sprints">source&nbsp;code</a></span>&nbsp;
@@ -3195,9 +4298,42 @@
     <dd><ul class="nomargin-top">
         <li><strong class="pname"><code>request</code></strong> - Http</li>
         <li><strong class="pname"><code>proyecto_id</code></strong> - id de un proyecto</li>
+        <li><strong class="pname"><code>sprint_id</code></strong> - id de un sprint</li>
+        <li><strong class="pname"><code>hu_id</code></strong> - id de un user story</li>
     </ul></dd>
     <dt>Returns:</dt>
         <dd>render a project_sprints.html</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="nuevoSprint"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">nuevoSprint</span>(<span class="sig-arg">request</span>,
+        <span class="sig-arg">proyecto_id</span>,
+        <span class="sig-arg">sprint_id</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="apps.views-pysrc.html#nuevoSprint">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Crea un nuevo sprint en el proyecto o da por terminado todos los User 
+  Stories del sprint que acaba de terminar</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>request</code></strong> - Http</li>
+        <li><strong class="pname"><code>proyecto_id</code></strong> - id de un proyecto</li>
+        <li><strong class="pname"><code>sprint_id</code></strong> - id de un sprint</li>
+    </ul></dd>
+    <dt>Returns:</dt>
+        <dd>render a project_sprints si el proyecto ha terminado o render a 
+          project_sprint_planificar si se crea un nuevo sprint</dd>
   </dl>
 </td></tr></table>
 </div>
@@ -3255,6 +4391,38 @@
   </dl>
 </td></tr></table>
 </div>
+<a name="analizarhus"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">analizarhus</span>(<span class="sig-arg">request</span>,
+        <span class="sig-arg">proyecto_id</span>,
+        <span class="sig-arg">hu_id</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="apps.views-pysrc.html#analizarhus">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>despliega una interfaz con los user stories del proyectos donde el 
+  Scrum Master analiza y decide si pasan al siguiente sprint</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>request</code></strong> - Http</li>
+        <li><strong class="pname"><code>proyecto_id</code></strong> - id de un proyecto</li>
+        <li><strong class="pname"><code>hu_id</code></strong> - id de un user story</li>
+    </ul></dd>
+    <dt>Returns:</dt>
+        <dd>render a project_sprints_pasarhu.html con el id del proyecto, 
+          lista de los user stories en el sprint actual y siguiente y el 
+          sprint del cual se quiere saber los detalles</dd>
+  </dl>
+</td></tr></table>
+</div>
 <br />
 <!-- ==================== NAVIGATION BAR ==================== -->
 <table class="navbar" border="0" width="100%" cellpadding="0"
@@ -3282,7 +4450,7 @@
 <table border="0" cellpadding="0" cellspacing="0" width="100%%">
   <tr>
     <td align="left" class="footer">
-    Generated by Epydoc 3.0.1 on Sat Apr 25 00:37:22 2015
+    Generated by Epydoc 3.0.1 on Fri May  1 23:52:42 2015
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"
