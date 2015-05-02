@@ -36,7 +36,7 @@ class Command(BaseCommand):
 		    c = c + 1
 		
 		permisos_usuario = [18]
-		permisos_scrum_master = [12, 13, 14, 15, 16, 17, 18, 19, 20, 21 ]
+		permisos_scrum_master = [8, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21 ]
 		permisos_cliente = [18]
 		
 		for p in permisos_usuario:

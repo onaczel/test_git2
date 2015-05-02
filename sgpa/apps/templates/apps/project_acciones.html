@@ -87,7 +87,8 @@
 								{% for i in tamanolista %}
 									{% if  h.flujo == f.id and forloop.counter <= f.tamano %}
 										{% if forloop.counter == h.flujo_posicion  %}
-											<td><a href="{% url 'apps:setEstadoHu' proyecto.id h.id %}">{{h.descripcion}}</a></td>
+											<!-- <td><a href="{% url 'apps:setEstadoHu' proyecto.id h.id %}">{{h.descripcion}}</a></td> -->
+											<td>{{h.descripcion}}</td>
 										{% else %}
 											<td></td>
 										{% endif %}
