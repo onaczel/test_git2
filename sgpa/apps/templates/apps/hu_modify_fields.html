@@ -28,7 +28,9 @@
 	{% if misPermisos.EUS and hu.estado == True %}
 		<a href="{% url 'apps:eliminarHu' proyecto_id hu_id %}">Eliminar User Story</a><br /><br />
 	{% endif %}
-	<a href="{% url 'apps:fileAdjunto' proyecto_id hu_id %}">Archivos Adjuntos</a><br />
+	{% if misPermisos.MUS %}
+		<a href="{% url 'apps:fileAdjunto' proyecto_id hu_id %}">Archivos Adjuntos</a><br />
+	{% endif %}
 {% endblock %}
 <br/>
 

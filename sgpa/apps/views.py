@@ -315,6 +315,12 @@ class adminflow(generic.DetailView):
 ##############################################################################################################################################
 
 def adminmod(request, user_logged):
+    """
+    obtiene el rol y los permisos del usuario
+    @param request: Http
+    @param user_logged: id del usuario logueado en el sistema
+    @return: render a apps/admin_mod.html con el id del usuario, el id de su rol y la lista de sus permisos
+    """
     permisos = misPermisos(user_logged, 0)
     rol_permiso = Users_Roles.objects.get(user_id = user_logged)
     rol = Roles.objects.get(pk=rol_permiso.role_id)
@@ -449,6 +455,7 @@ def listrolesdel(request):
 def rolecreateproj(request, proyecto_id):
     """
     @param request: Http request
+    @param proyecto_id: id del proyecto actual
     @return: render a apps/role_set_permisos.html, lista de permisos, el id y la descripcion del rol que se creo recientemente
     """
     user = request.user
@@ -469,6 +476,13 @@ def rolecreateproj(request, proyecto_id):
     return render_to_response('apps/role_create_proj.html' ,{'form':form, 'proyecto_id':proyecto_id, 'user_logged':user.id, 'proyecto':True}, context_instance=RequestContext(request))
 
 def asignarrolproj(request, proyecto_id, role_id):
+    """
+    Funcion para asignar permisos a un rol creado
+    @param request: Http
+    @param proyecto_id: id del proyecto actual
+    @param role_id: id del rol al que se asignaran permisos
+    @return: render a apps/role_admin_project.html con la lista de roles, el id del proyecto, la lista de permisos del usuario, el id del usuario logueado, y un booleano que indica el exito de la accion
+    """
     r = Roles.objects.get(pk = role_id)
     if setpermisos(request, r) == None:
         #error
@@ -630,7 +644,12 @@ def asignarrol(request, user_logged, role_id):
     return render_to_response("apps/role_created.html", {'sistema':sistema, 'user_logged':user_logged}, context_instance = RequestContext(request))
 
 def setpermisos(request, role):
-    
+    """
+    Funcion que asigna una lista de permisos a un rol
+    @param request: Http
+    @param role: objeto Rol al que seran asignados los permisos
+    @return: objeto Permisos_Roles con la lista de permisos asociados al rol
+    """
     permrol = None
     lista = request.POST.getlist(u'permisos')
     for p in lista:
@@ -681,6 +700,15 @@ def rolemodify(request, user_logged, role_id):
     return render_to_response('apps/role_modify_form.html' ,{'form':form, "rol":rol , 'user_logged':user_logged, 'proyecto_id':0}, context_instance=RequestContext(request))
     
 def rolemodifypermisos(request, user_logged, role_id, proyecto_id):
+    """
+    obtiene la lista de permisos de un rol, los modifica, y los guarda
+    @param request:Http
+    @param user_logged: id del usuario logueado en el sistema
+    @param role_id: id del rol a ser modificado
+    @param proyecto_id: id del proyecto actual
+    @return: render a role_set_permisos mod_proj: con la lista de permisos, el rol, el id del usuario, el id del proyecto
+    @return: render a role_set_permisos_mod: con la lista de permisos, el id del rol, su descripcion, y el usuario logueado
+    """
     rol = get_object_or_404(Roles, pk=role_id)
    
     permisos = Permisos.objects.all()
@@ -950,6 +978,13 @@ def flowdelete(request, user_logged,  flow_id):
     return render_to_response("apps/flow_eliminated.html",{'user_logged':user_logged}, context_instance=RequestContext(request))
 
 def flowdeleteproj(request, proyecto_id, flujo_id):
+    """
+    obtiene una lista de flujos a ser eliminados
+    @param request:Http
+    @param proyecto_id: id del proyecto actual
+    @param flujo_id: id del flujo a ser eliminado
+    @return: render a project_modificar_listflujo con el proyecto, la lista de flujos, las actividades, y un valor bool que indica si se el rol se ha eliminado
+    """
     proyecto = Proyectos.objects.get(id = proyecto_id)
     flujos = Flujos.objects.filter(proyecto_id = proyecto_id, estado=True)
     actividades = Actividades.objects.filter(plantilla = False , estado=True)
@@ -960,6 +995,12 @@ def flowdeleteproj(request, proyecto_id, flujo_id):
     
  
 def eliminarflujo(request, flow_id):
+    """
+    Elimina un flujo
+    @param request: Http
+    @param flow_id: id del flujo a ser eliminado
+    @return: objeto tipo Flujo
+    """
     f = get_object_or_404(Flujos, pk=flow_id)
     #f.estado = False
     f.delete()
@@ -969,6 +1010,12 @@ def eliminarflujo(request, flow_id):
 #####################################################################################################################################################
 
 def adminproject(request, user_logged):
+    """
+    obtiene el usuario logueado y sus permisos
+    @param request:Http
+    @param user_logged: id del usuario logueado en el sistema
+    @return: render a apps/project_admin con la lista de permisos del usuario, su id, y su rol
+    """
     permisos = misPermisos(user_logged, 0)
     rol_permiso = Users_Roles.objects.get(user_id = user_logged)
     rol = Roles.objects.get(pk=rol_permiso.role_id)
@@ -1269,6 +1316,13 @@ def accionesproyecto(request, proyecto_id):
     return render_to_response("apps/project_acciones.html", {"proyecto":proyecto, "usuario":request.user, "misPermisos":mispermisos, 'equipo':uroles,'users':users, 'roles':roles, 'flujo':flujo, 'actividades':actividades, 'hus':hus, 'tamanolista':tamanolista})
 
 def is_in_list(list, o_id):
+    """
+    Funcion que controla si un objeto esta o no en una lista
+    
+    @param list: lista de objetos
+    @param o_id: objeto a buscar
+    @return: True si el objeto se encuentra, False en otro caso
+    """
     for il in list:
         if il.id == o_id:
             return True
@@ -1510,9 +1564,21 @@ def listhu(request, proyecto_id):
     return render_to_response('apps/hu_admin.html', { 'hu':hu, 'proyecto':proyecto, 'proyecto_descripcion':proyecto.nombre, 'scrum':scrum, 'user_logged':user_logged, 'misPermisos':mispermisos, 'hu_activos':hu_activos, 'hu_planificados':hu_planificados, 'hu_terminados':hu_terminados, 'hu_descartados':hu_descartados, 'hu_noplanificados':hu_no_planificados})
 
 def gethuid(hu):
+    """
+    Funcion utilizada para ordenar una lista en base a la fecha
+    @param hu: Objeto User Story
+    @return: la fecha de creacion del User Story
+    """
     return hu.fecha_creacion
     
 def resumenHu(request, proyecto_id, hu_id):
+    """
+    funcion utilizada para mostrar el resumen de User Story
+    @param request:Http
+    @param proyecto_id: id del proyecto del User Story
+    @paramm hu_id: id del User Story
+    @return: render a apps/hu_resuemn con el id y el nombre del proyecto, y el objeto User Story
+    """
     hu = UserStory.objects.get(pk=hu_id)
     proyecto = Proyectos.objects.get(pk=proyecto_id)
     return render_to_response('apps/hu_resumen.html', {'proyecto_id':proyecto_id, 'hu':hu, 'proyecto_nombre':proyecto.nombre})
@@ -1768,6 +1834,14 @@ def editarHu(request, proyecto_id, hu_id):
     return render_to_response('apps/hu_modify_fields.html', {"form":form, "proyecto_id":proyecto_id, "hu_id":hu_id, "hu_descripcion":hu.descripcion, 'misPermisos':mispermisos, 'users':users, 'flujos':flujos, 'proyecto_nombre':proyecto.nombre, 'prioridades':prioridades, 'hu':hu}, context_instance = RequestContext(request))
 
 def registroHu(request, proyecto_id, hu_id):
+    """
+    Funcion que muestra el registro de actividades de un User Story
+    
+    @param request:Http
+    @param proyecto_id: id del proyecto del User Story
+    @param hu_id: id del User Story
+    @return: render a apps/hu_registro.html con el la lista de registros del User Story, el objeto User Story, y el proyecto
+    """
     hu = UserStory.objects.get(pk=hu_id)
     hu_reg = UserStoryRegistro.objects.filter(idr = hu.id)
     
@@ -1778,9 +1852,23 @@ def registroHu(request, proyecto_id, hu_id):
 
     
 def gethudate(hu):
+    """
+    Funcion utilizada para ordenar una lista de User Stories en base a la fecha de modificacion
+    @param hu: objeto User Story
+    @return: la fecha de modificacion del User Story
+    """
     return hu.fechahora
 
 def crearregistroHu(request, proyecto_id, hu_id):
+    """
+    obtiene un User Story, y guarda sus horas consumidas y una descripcion
+    
+    @param request: Http
+    @param proyecto_id: id del proyecto del User Story
+    @param hu_id: id del User Story
+    @return: render a hu_registro.html con el User Story, el registro del User Story, el proyecto, y un boolenao que indica si el registro ha sido guardado
+    @return: render a hu_regisro_nuevo.html con el User Story, el proyecto, y un boolenao que indica si el registro ha sido guardado
+    """
     hu = UserStory.objects.get(pk=hu_id)
     user = request.user
     proyecto = Proyectos.objects.get(pk=proyecto_id)
@@ -1816,6 +1904,8 @@ def verregistroHu(request, proyecto_id, hu_id):
 def getActividadHu(hu):
     """
     Funcion que retorna la Actividad del User Story
+    @param hu: objeto User Story
+    @return: la actividad del User Story
     """
     actividadeslist = Actividades.objects.filter(flujo_id = hu.flujo)
     count = 0
@@ -1829,6 +1919,9 @@ def getActividadHu(hu):
 def getEstadoHu(hu):
     """
     Funcion que retorna el estado del User Story
+    @param hu: objeto User Story
+    @return: el estado del User Story
+    
     """
     count = 0
     estadoslist = Estados.objects.all()
@@ -1880,6 +1973,14 @@ def listhuversiones(request, proyecto_id, hu_id):
     return render_to_response('apps/hu_list_versiones.html', {'proyecto_id':proyecto_id, 'hu_id':hu_id,'hu':hu, 'hu_descripcion':hu.descripcion, 'hu_versiones':huversiones, 'user_logged':user_logged})
     
 def huvcambios(request, proyecto_id, hu_id, huv_id):
+    """
+    obtiene los atributos de una version de un User Story
+    @param request: Http
+    @param proyecto_id: id del proyecto del User Story
+    @param hu_id: id del User Story
+    @param huv_id: id de la version del User Story
+    @return: render a hu_list_versiones_cambios.html con el id del proyecto, el objeto User Story, y su version
+    """
     huv = UserStoryVersiones.objects.get(pk=huv_id)
     hu = UserStory.objects.get(pk=hu_id)
     return render_to_response('apps/hu_list_versiones_cambios.html', {'proyecto_id':proyecto_id, 'hu':hu, 'huv':huv})
@@ -1973,19 +2074,19 @@ def userToHU(request, proyecto_id, hu_id):
 
 
 def verCliente(request, proyecto_id):
-        """
-        Permite visualizar los clientes de un proyecto
-        @param request: Http
-        @param proyecto_id: id del proyecto donde se encuentra el usuario
-        @return: render a project_verCliente.html con la lista de clientes(users), la descripcion del proyecto y su id
-        """
-        team = Equipo.objects.filter(proyecto_id = proyecto_id, rol_id = 4)
-        users = []
-        for t in team:
-            users.append(User.objects.get(id = t.usuario_id))
-        proyecto = Proyectos.objects.get(id = proyecto_id, )
-        
-        return render_to_response('apps/project_verCliente.html', {'users':users, 'proyecto':proyecto.descripcion,'proyecto_id':proyecto_id},context_instance = RequestContext(request))
+    """
+    Permite visualizar los clientes de un proyecto
+    @param request: Http
+    @param proyecto_id: id del proyecto donde se encuentra el usuario
+    @return: render a project_verCliente.html con la lista de clientes(users), la descripcion del proyecto y su id
+    """
+    team = Equipo.objects.filter(proyecto_id = proyecto_id, rol_id = 4)
+    users = []
+    for t in team:
+        users.append(User.objects.get(id = t.usuario_id))
+    proyecto = Proyectos.objects.get(id = proyecto_id, )
+    
+    return render_to_response('apps/project_verCliente.html', {'users':users, 'proyecto':proyecto.descripcion,'proyecto_id':proyecto_id},context_instance = RequestContext(request))
 
     
 def eliminarHu(request, proyecto_id, hu_id):
