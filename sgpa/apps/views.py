@@ -1689,24 +1689,30 @@ def fileAdjunto(request, proyecto_id, hu_id):
     hu = UserStory.objects.get(pk=hu_id)
     proyecto = Proyectos.objects.get(pk = proyecto_id)
     lista = archivoAdjunto.objects.filter(hu_id = hu_id) 
-        
+    msg = ""
     if request.method == 'POST':
      
         hu = UserStory.objects.get(id = hu_id)
         file = request.FILES['file']
-        adjunto = archivoAdjunto.objects.create(archivo=file, hu = hu)
-        adjunto.save()
-        var = ""
-        var = adjunto.archivo.name
-        var = var.split('/')
-        var = var[-1]
-        adjunto.filename = var
-        adjunto.save()
-        return render_to_response('apps/hu_fileManager.html', {"lista":lista,'misPermisos':mispermisos,'hu_id':hu_id,'hu':hu,"proyecto_id":proyecto_id, 'proyecto_nombre':proyecto.nombre, }, context_instance = RequestContext(request))
+        print file.size
+        if file.size <= 10485760:
+            adjunto = archivoAdjunto.objects.create(archivo=file, hu = hu)
+            adjunto.save()
+            var = ""
+            var = adjunto.archivo.name
+            var = var.split('/')
+            var = var[-1]
+            adjunto.filename = var
+            adjunto.save()
+            return render_to_response('apps/hu_fileManager.html', {"msg":msg,"lista":lista,'misPermisos':mispermisos,'hu_id':hu_id,'hu':hu,"proyecto_id":proyecto_id, 'proyecto_nombre':proyecto.nombre, }, context_instance = RequestContext(request))
+
+        else:
+            msg = "Archivo sobrepaso 10 MB"
+        return render_to_response('apps/hu_fileManager.html', {"msg":msg,"lista":lista,'misPermisos':mispermisos,'hu_id':hu_id,'hu':hu,"proyecto_id":proyecto_id, 'proyecto_nombre':proyecto.nombre, }, context_instance = RequestContext(request))
 
     
     
-    return render_to_response('apps/hu_fileManager.html', {"lista":lista,'misPermisos':mispermisos,'hu_id':hu_id,'hu':hu,"proyecto_id":proyecto_id, 'proyecto_nombre':proyecto.nombre, }, context_instance = RequestContext(request))
+    return render_to_response('apps/hu_fileManager.html', {"msg":msg,"lista":lista,'misPermisos':mispermisos,'hu_id':hu_id,'hu':hu,"proyecto_id":proyecto_id, 'proyecto_nombre':proyecto.nombre, }, context_instance = RequestContext(request))
 
 def send_file(request,f_id):
     """
