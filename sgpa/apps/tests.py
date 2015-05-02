@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User, AnonymousUser
-from apps.models import Proyectos, Roles, Equipo, Flujos, Actividades, UserStory, Sprint, Dia_Sprint, UserStoryRegistro
+from apps.models import Proyectos, Roles, Equipo, Flujos, Actividades, UserStory, Sprint, Dia_Sprint, UserStoryRegistro,\
+    Estados, Prioridad
 from django.core import mail
 from random import choice
 from django.contrib.auth.hashers import make_password, check_password
@@ -723,8 +724,215 @@ class test_user_story(TestCase):
         us.usuario_Asignado = user.id
         us.save()
         
-        self.assertTrue(UserStory.objects.filter(descripcion = 'test user story', codigo = 'us1_p1', tiempo_Estimado=50, proyecto_id = proyecto.id, usuario_Asignado=user.id).exists(), "El User Story no se ha creado correctamente")
+        self.assertTrue(UserStory.objects.filter(descripcion = 'test user story', codigo = 'us1_p1', tiempo_Estimado=50, proyecto_id = proyecto.id, usuario_Asignado=user.id).exists(), "El User Story no se ha asignado correctamente")
+
+    def test_cambiar_usuario_asignado(self):
+        """
+        Prueba de asignar un usuario a un User Story
+        """
+        # Se crea un proyecto para la prueba
+        proyecto = Proyectos()
+        proyecto.nombre = 'test'
+        proyecto.fecha_ini= '2015-01-01'
+        proyecto.fecha_est_fin = '2015-01-02'
+        proyecto.descripcion = 'una prueba de proyecto'
+        proyecto.observaciones = 'ninguna'
+        proyecto.save()
+        #Se crea un usuario para la prueba
+        user0 = User()
+        user0.username = "ariel"
+        user0.password = "ariel"
+        user0.email = "ariel@lastdeo.com"
+        user0.is_active = True
+        user0.save() 
         
+        user1 = User()
+        user1.username = "santiago"
+        user1.password = "santiago"
+        user1.email = "santiago@selm.com"
+        user1.is_active = True
+        user1.save() 
+        
+        user2 = User()
+        user2.username = "serigo"
+        user2.password = "sergio"
+        user2.email = "sergio@rokkaie.com"
+        user2.is_active = True
+        user2.save() 
+        #Se crea un rol para la prueba        
+        rol = Roles()
+        rol.descripcion = "Developer"
+        rol.estado = True
+        rol.save()     
+        
+        #Se crea el Equipo        
+        equipo = Equipo()
+        equipo.proyecto = proyecto
+        equipo.usuario = user0
+        equipo.rol = rol
+        equipo.save()
+        
+        equipo = Equipo()
+        equipo.proyecto = proyecto
+        equipo.usuario = user1
+        equipo.rol = rol
+        equipo.save()
+        
+        #Se crea el User Story
+        us = UserStory()
+        us.descripcion = 'test user story'
+        us.codigo = 'us1_p1'
+        us.tiempo_Estimado = 50
+        us.proyecto_id = proyecto.id
+        us.usuario_Asignado = user0.id
+        us.save()
+        
+        self.assertTrue(UserStory.objects.filter(descripcion = 'test user story', codigo = 'us1_p1', tiempo_Estimado=50, proyecto_id = proyecto.id, usuario_Asignado=user0.id).exists(), "El User Story no se ha asignado correctamente")
+        
+        us = UserStory.objects.get(codigo = 'us1_p1')
+        equipo = Equipo.objects.filter(proyecto_id = proyecto.id)
+        for eq in equipo:
+            if eq.usuario_id == user1.id:
+                us.usuario_Asignado = eq.usuario_id
+                us.save()
+                break        
+        
+        self.assertTrue(UserStory.objects.filter(descripcion = 'test user story', codigo = 'us1_p1', tiempo_Estimado=50, proyecto_id = proyecto.id, usuario_Asignado=user1.id).exists(), "El usuario asignado del User Story no se ha cambiado correctamente")
+        
+        us = UserStory.objects.get(codigo = 'us1_p1')
+        equipo = Equipo.objects.filter(proyecto_id = proyecto.id)
+        for eq in equipo:
+            if eq.usuario_id == user2.id:
+                us.usuario_Asignado = eq.usuario_id
+                us.save()
+                break 
+            
+        self.assertFalse(UserStory.objects.filter(descripcion = 'test user story', codigo = 'us1_p1', tiempo_Estimado=50, proyecto_id = proyecto.id, usuario_Asignado=user2.id).exists(), "El User Story se asigno a un Usuario fuera del proyecto")
+
+    def test_cambiar_estado(self):
+        """
+        prueba de cambio de estado de un User Story
+        """
+        #Se crea un flujo para la prueba
+        flow = Flujos()
+        flow.descripcion='Desarrollo de software'
+        flow.estado = True
+        flow.plantilla = True
+        flow.save()
+        
+        #Se crea las actividades del flujo
+        act = Actividades()
+        act.descripcion = 'Analisis'
+        act.estado = True
+        act.flujo = flow
+        act.plantilla = True
+        act.save()
+        
+        act = Actividades()
+        act.descripcion = 'Desarrollo'
+        act.estado = True
+        act.flujo = flow
+        act.plantilla = True
+        act.save()
+        
+        est = Estados()
+        est.descripcion = 'To Do'
+        est.save()
+        est = Estados()
+        est.descripcion = 'Doing'
+        est.save()
+        est = Estados()
+        est.descripcion = 'Done'
+        est.save()
+        
+        #Se crea un HU para la prueba
+        us = UserStory()
+        us.descripcion = 'test user story'
+        us.codigo = 'us1_p1'
+        us.tiempo_Estimado = 50
+        us.save()
+        
+        
+        actividadeslist = Actividades.objects.filter(flujo_id=flow.id)
+        counter = 0
+        for act in actividadeslist:
+            counter = counter +1
+            if act.descripcion=='Desarrollo':
+                #se guarda el indice de la actividad dentro del flujo
+                us.f_actividad = counter
+                
+        us.f_a_estado = Estados.objects.get(pk= 2).id
+        
+        us.save()
+        
+        self.assertTrue(UserStory.objects.filter(descripcion = 'test user story', codigo = 'us1_p1', tiempo_Estimado=50, f_a_estado = 2, f_actividad=2).exists(), "El User Story no se ha creado correctamente")
+             
+    def test_cambiar_prioridad(self):
+        """
+        prueba del cambio de prioridad de un User Story
+        """
+        # Se crea un proyecto para la prueba
+        proyecto = Proyectos()
+        proyecto.nombre = 'test'
+        proyecto.fecha_ini= '2015-01-01'
+        proyecto.fecha_est_fin = '2015-01-02'
+        proyecto.descripcion = 'una prueba de proyecto'
+        proyecto.observaciones = 'ninguna'
+        proyecto.save()
+        
+        #Se crea el User Story
+        us = UserStory()
+        us.descripcion = 'test user story'
+        us.codigo = 'us1_p1'
+        us.tiempo_Estimado = 50
+        us.proyecto_id = proyecto.id
+        us.save()
+        
+        pri = Prioridad()
+        pri.descripcion = 'Baja'
+        pri.save()
+        
+        pri = Prioridad()
+        pri.descripcion = 'Media'
+        pri.save()
+        
+        pri = Prioridad()
+        pri.descripcion = 'Alta'
+        pri.save()
+        
+        us.prioridad = Prioridad.objects.get(descripcion = 'Media')
+        us.save()
+        
+        self.assertTrue(UserStory.objects.filter(descripcion = 'test user story', codigo = 'us1_p1', tiempo_Estimado=50, prioridad=2).exists(), "La prioridad del User Story no se ha asignado correctamente")
+        
+
+    def test_asignar_notas(self):
+        """
+        prueba que las notas de un User Story se guarden correctamente
+        """
+        # Se crea un proyecto para la prueba
+        proyecto = Proyectos()
+        proyecto.nombre = 'test'
+        proyecto.fecha_ini= '2015-01-01'
+        proyecto.fecha_est_fin = '2015-01-02'
+        proyecto.descripcion = 'una prueba de proyecto'
+        proyecto.observaciones = 'ninguna'
+        proyecto.save()
+        
+        #Se crea el User Story
+        us = UserStory()
+        us.descripcion = 'test user story'
+        us.codigo = 'us1_p1'
+        us.tiempo_Estimado = 50
+        us.proyecto_id = proyecto.id
+        us.save()
+        
+        us.notas = 'Esto es una prueba de notas.'
+        us.save()
+        
+        self.assertTrue(UserStory.objects.filter(descripcion = 'test user story', codigo = 'us1_p1', tiempo_Estimado=50, notas='Esto es una prueba de notas.').exists(), "La prioridad del User Story no se ha asignado correctamente")
+                
+            
 class test_sprint(TestCase):
     
     def test_crear_sprints(self):
@@ -1063,4 +1271,4 @@ class test_notificaciones(TestCase):
         
         #verifica que se ha enviado correctamente el cuerpo del mensaje
         self.assertEqual(mail.outbox[0].body, 'El User Story: '+us.descripcion+' del proyecto: '+proyecto.nombre+', ha experimentado modificaciones ')
-    
+

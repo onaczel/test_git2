@@ -1251,7 +1251,7 @@ def accionesproyecto(request, proyecto_id):
     flujo = Flujos.objects.filter(proyecto_id = proyecto_id, estado=True)
     
     actividades = Actividades.objects.all()
-    hus = UserStory.objects.filter(proyecto_id = proyecto_id, estado=True)
+    hus = UserStory.objects.filter(proyecto_id = proyecto_id, estado=True, sprint=proyecto.nro_sprint)
 
     for hu in hus:
         if hu.f_a_estado != 0 and hu.f_actividad != 0:
@@ -1898,7 +1898,7 @@ def modificarHu(request, proyecto_id, hu_id):
 
 def setEstadoHu(request, proyecto_id, hu_id):
     """
-    Cambia el estado de un User Storie
+    Cambia el estado de un User Story
     
     @param request: Http
     @param proyecto_id: id del proyecto del User Story
