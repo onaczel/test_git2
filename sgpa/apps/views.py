@@ -429,7 +429,8 @@ def listrolesproj(request, proyecto_id):
     """
     roles = Roles.objects.filter(sistema=False)
     user = request.user
-    return render_to_response("apps/role_admin_project.html", {"roles":roles, 'proyecto_id':proyecto_id, 'user_logged':user.id, 'guardado':False})
+    mispermisos = misPermisos(user.id, proyecto_id)
+    return render_to_response("apps/role_admin_project.html", {"roles":roles, 'proyecto_id':proyecto_id, 'misPermisos':mispermisos,  'user_logged':user.id, 'guardado':False})
 '''
 def listrolesdel(request):
     """
@@ -476,7 +477,8 @@ def asignarrolproj(request, proyecto_id, role_id):
     
     roles = Roles.objects.filter(sistema = False)
     user = request.user
-    return render_to_response("apps/role_admin_project.html", {"roles":roles, 'proyecto_id':proyecto_id, 'user_logged':user.id, 'guardado':True})
+    mispermisos = misPermisos(user.id, proyecto_id)
+    return render_to_response("apps/role_admin_project.html", {"roles":roles, 'proyecto_id':proyecto_id, 'misPermisos':mispermisos, 'user_logged':user.id, 'guardado':True})
 
 def rolemodifyproj(request, proyecto_id, role_id):
     """
@@ -730,7 +732,9 @@ def asignarpermisosmod(request, user_logged, role_id, proyecto_id):
 
     roles = Roles.objects.filter(sistema=False)
     if int(user_logged) == 0:
-        return render_to_response("apps/role_admin_project.html", {"roles":roles, 'proyecto_id':proyecto_id, 'user_logged':user_logged, 'modificado':True}, context_instance=RequestContext(request))
+        user = request.user
+        mispermisos = misPermisos(user.id, proyecto_id)
+        return render_to_response("apps/role_admin_project.html", {"roles":roles, 'proyecto_id':proyecto_id, 'misPermisos':mispermisos, 'user_logged':user_logged, 'modificado':True}, context_instance=RequestContext(request))
     
     return render_to_response("apps/role_modified.html",{'user_logged':user_logged}, context_instance=RequestContext(request))
     
@@ -1492,8 +1496,15 @@ def listhu(request, proyecto_id):
     hu_descartados = UserStory.objects.filter(proyecto_id = proyecto_id, estado = False)
     hu = sorted(hu, key=gethuid, reverse=True)
     hu_no_planificados = UserStory.objects.filter(proyecto_id = proyecto_id, estado = True, sprint = 0)
-    print proyecto.nombre
-    return render_to_response('apps/hu_admin.html', { 'hu':hu, 'proyecto':proyecto, 'proyecto_descripcion':proyecto.nombre, 'misPermisos':mispermisos, 'hu_activos':hu_activos, 'hu_planificados':hu_planificados, 'hu_terminados':hu_terminados, 'hu_descartados':hu_descartados, 'hu_noplanificados':hu_no_planificados})
+    
+    user_logged = request.user
+    print user_logged.id
+    eqrol = Equipo.objects.get(usuario_id=user_logged.id)
+    if eqrol.rol_id == 3:
+        scrum = True
+    else:
+        scrum = False
+    return render_to_response('apps/hu_admin.html', { 'hu':hu, 'proyecto':proyecto, 'proyecto_descripcion':proyecto.nombre, 'scrum':scrum, 'user_logged':user_logged, 'misPermisos':mispermisos, 'hu_activos':hu_activos, 'hu_planificados':hu_planificados, 'hu_terminados':hu_terminados, 'hu_descartados':hu_descartados, 'hu_noplanificados':hu_no_planificados})
 
 def gethuid(hu):
     return hu.fecha_creacion

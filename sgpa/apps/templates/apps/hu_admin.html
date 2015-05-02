@@ -77,7 +77,12 @@
 		 
 		 {% for h in hu %}
 		 	<tr>
-		 		<td><a href="{% url 'apps:editarHu' proyecto.id h.id %}">{{h.descripcion}}</a><br></td>
+		 		{% if scrum or user_logged.id == h.usuario_Asignado %}
+			 		<td><a href="{% url 'apps:editarHu' proyecto.id h.id %}">{{h.descripcion}}</a><br></td>
+			 	{% else %}
+			 		<td>{{h.descripcion}}<br></td>
+			 	{% endif %}
+		 	
 		 		{% if h.sprint == proyecto.nro_sprint and h.estado == True and h.finalizado == False %}
 		 			<td>Activo</td>
 		 		{% elif h.sprint > proyecto.nro_sprint and h.estado == True %}
@@ -93,6 +98,7 @@
 		 		{% endif %}
 		 		<td>{{h.prioridad}}</td>
 		 		<td>{{h.fecha_creacion}}</td>
+			 	
 		 	</tr>
 		 {% endfor %}
 	{% else %}
