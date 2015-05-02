@@ -1,11 +1,3 @@
-'''
-import os
-from __builtin__ import True
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'apps.settings')
-import django
-django.setup()
-'''
-
 from django.core.management.base import BaseCommand, CommandError
 from django.contrib.auth.models import User
 from apps.models import Users_Roles, Flujos, Roles, Actividades, Permisos, Permisos_Roles,\
