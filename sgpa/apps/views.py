@@ -2597,7 +2597,7 @@ def crearSprints(proyecto_id):
     dia = 1
     for i in range(delta.days + 1):
         nuevo_dia_sprint = Dia_Sprint()
-        nuevo_dia_sprint.tiempo_estimado = 0
+        nuevo_dia_sprint.tiempo_estimado = 8
         nuevo_dia_sprint.tiempo_real = 0
         nuevo_dia_sprint.dia = dia
         nuevo_dia_sprint.sprint_id = Sprint.objects.get(nro_sprint = sprint, proyecto_id = proyecto_id).id
