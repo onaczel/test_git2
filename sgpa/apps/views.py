@@ -1903,9 +1903,18 @@ def verregistroHu(request, proyecto_id, hu_id):
     proyecto = Proyectos.objects.get(pk=proyecto_id)
     flujo = Flujos.objects.get(pk=hu_reg.flujo)
     actividad = getActividadHu(hu_reg)
+    if actividad == None:
+        act = "No planificado"
+    else:
+        act = actividad.descripcion
+        
     estado = getEstadoHu(hu_reg)
+    if estado == None:
+        est = "No planificado"
+    else:
+        est = estado.descripcion
     
-    return render_to_response('apps/hu_registro_mostrar.html', {'hu_reg':hu_reg, 'proyecto':proyecto, 'actividad':actividad.descripcion, 'estado':estado.descripcion, 'flujo':flujo.descripcion})
+    return render_to_response('apps/hu_registro_mostrar.html', {'hu_reg':hu_reg, 'proyecto':proyecto, 'actividad':act, 'estado':est, 'flujo':flujo.descripcion})
 
 def getActividadHu(hu):
     """
@@ -1913,6 +1922,7 @@ def getActividadHu(hu):
     @param hu: objeto User Story
     @return: la actividad del User Story
     """
+    actividad = None
     actividadeslist = Actividades.objects.filter(flujo_id = hu.flujo)
     count = 0
     for act in actividadeslist:
@@ -1929,6 +1939,7 @@ def getEstadoHu(hu):
     @return: el estado del User Story
     
     """
+    estado = None
     count = 0
     estadoslist = Estados.objects.all()
     for est in estadoslist:

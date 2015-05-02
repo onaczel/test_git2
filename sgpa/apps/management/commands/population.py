@@ -12,9 +12,9 @@ class Command(BaseCommand):
 		add_roles('Cliente', False)
 		
 		add_user('admin', 'a123', 'deserver123@gmail.com', 1)
-		add_user('jquin', 'a123', 'jquin@gmail.com', 2)
-		add_user('hroa', 'a123', 'hroa@gmail.com', 2)
-		add_user('jrojas', 'a123', 'jrojas@gmail.com', 2)
+		#add_user('jquin', 'a123', 'jquin@gmail.com', 2)
+		#add_user('hroa', 'a123', 'hroa@gmail.com', 2)
+		#add_user('jrojas', 'a123', 'jrojas@gmail.com', 2)
 		
 		add_flujo('Plantilla Generica')
 		
