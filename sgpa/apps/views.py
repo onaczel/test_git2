@@ -1499,11 +1499,14 @@ def listhu(request, proyecto_id):
     
     user_logged = request.user
     print user_logged.id
-    eqrol = Equipo.objects.get(usuario_id=user_logged.id)
-    if eqrol.rol_id == 3:
+    
+    
+       
+    scrum = False
+    usereq = Equipo.objects.filter(proyecto_id = proyecto_id, usuario_id=user_logged.id, rol_id = 3)
+    if len(usereq):
         scrum = True
-    else:
-        scrum = False
+    
     return render_to_response('apps/hu_admin.html', { 'hu':hu, 'proyecto':proyecto, 'proyecto_descripcion':proyecto.nombre, 'scrum':scrum, 'user_logged':user_logged, 'misPermisos':mispermisos, 'hu_activos':hu_activos, 'hu_planificados':hu_planificados, 'hu_terminados':hu_terminados, 'hu_descartados':hu_descartados, 'hu_noplanificados':hu_no_planificados})
 
 def gethuid(hu):
