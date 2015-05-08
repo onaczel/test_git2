@@ -1,11 +1,12 @@
 {% extends 'base.html' %}
 {% block titulo %}
-	<h1>Historial User Story</h1>
+	<h1>{{proyecto.nombre}}</h1>
 {% endblock %}
 {% block encabezado %}
 	<h1>{{hu_descripcion}}</h1>
 {% endblock %}
 {% block contenido %}
+	<h3>Historial User Story</h3>
 	{% if hu_versiones %}
 		<table border=1px width=750px>
 					<tr><td>Fecha</td><td>Usuario</td><td>Accion</td></tr>

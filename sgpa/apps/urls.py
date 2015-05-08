@@ -31,6 +31,8 @@ urlpatterns = patterns('',
     
     url(r'^(?P<user_logged>\d+)/modadmin/adminproyecto/$', views.adminproject, name="adminproject"),
     url(r'^(?P<user_logged>\d+)/modadmin/adminproyecto/crearproyecto/$', views.crearProyecto, name="crearProyecto"),
+    url(r'^(?P<user_logged>\d+)/modadmin/adminproyecto/verproyectos/$', views.verProyectos, name="verProyectos"),
+    url(r'^(?P<user_logged>\d+)/modadmin/adminproyecto/verproyectosporusuario/$', views.verprojusuario, name="verprojusuario"),
     url(r'^(?P<user_logged>\d+)/modadmin/adminproyecto/crearproyecto/(?P<proyecto_pk>\d+)/agregarPlantilla/$', views.agregarPlantilla, name='agregarPlantilla'),
     
     url(r'^(?P<user_logged>\d+)/modadmin/adminflujo/$', views.listflowmod, name="listflowmod"),
@@ -84,6 +86,7 @@ urlpatterns = patterns('',
     url(r'^(?P<proyecto_id>\d+)/(?P<sprint_id>\d+)/(?P<hu_id>\d+)/modproyecto/accionesproyecto/sprints$', views.sprints, name='sprints'),
     url(r'^(?P<proyecto_id>\d+)/(?P<hu_id>\d+)/modproyecto/accionesproyecto/adminhu/editar/assignUser$', views.userToHU, name='userToHU'),
     url(r'^(?P<proyecto_id>\d+)/modproyecto/accionesproyecto/verCliente$', views.verCliente, name='verCliente'),
+    url(r'^(?P<proyecto_id>\d+)/modproyecto/accionesproyecto/(?P<user_id>\d+)/verUsuario$', views.verUser, name='verUser'),
     url(r'^(?P<proyecto_id>\d+)/(?P<hu_id>\d+)/sprint/analizarHu$', views.analizarhus, name='analizarhus'),
     url(r'^(?P<proyecto_id>\d+)/(?P<sprint_id>\d+)/sprint/nuevoSprint$', views.nuevoSprint, name='nuevoSprint'),
   

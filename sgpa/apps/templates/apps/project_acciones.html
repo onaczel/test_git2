@@ -17,9 +17,9 @@
 		<br><a href="{% url 'apps:listflujosproyectosMod' proyecto.id %}">Modificar Flujo</a><br />
 	{% endif %}
 	-->
-	{% if misPermisos.MP == True %}
+	<!--  {% if misPermisos.MP == True %} -->
 		<br><a href="{% url 'apps:listflujosproyectosMod' proyecto.id %}">Flujos</a><br />
-	{% endif %}
+	<!-- {% endif %} -->
 		<br>
 	{% if misPermisos.CUS or misPermisos.MUS or misPermisos.EUS %}
 		<a href="{% url 'apps:listhu' proyecto.id %}">User Stories</a>
@@ -128,7 +128,7 @@
 					{% for us in users %}
 						{% if us.is_active == True %}
 							<tr>
-								<td>{{us.username}}</td>
+								<td><a href="{% url 'apps:verUser' proyecto.id us.id %}">{{us.username}}</a></td>
 								<td>
 									{% for eq in equipo %}
 										{% if eq.usuario_id == us.id %}

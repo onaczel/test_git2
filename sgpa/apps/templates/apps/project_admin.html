@@ -7,7 +7,10 @@
 {% if misPermisos.CP %}
 	<a href="{% url 'apps:crearProyecto' user_logged %}">Crear Proyecto</a><br />
 {% endif %}
-<a href="{% url 'apps:adminmod' user_logged %}">Pagina principal de Admin</a><br />
+<!--  <a href="{% url 'apps:adminmod' user_logged %}">Pagina principal de Admin</a><br /> -->
+
+<br>
+<a href="{% url 'apps:verProyectos' user_logged %}">Ver Proyectos</a><br>
 
 
 {% endblock %}

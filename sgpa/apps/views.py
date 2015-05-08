@@ -433,10 +433,11 @@ def listrolesproj(request, proyecto_id):
     @return: Retorna una lista con todos los roles de proyectos y lo envia al template
     de modificacion de roles
     """
+    proyecto = Proyectos.objects.get(pk = proyecto_id)
     roles = Roles.objects.filter(sistema=False)
     user = request.user
     mispermisos = misPermisos(user.id, proyecto_id)
-    return render_to_response("apps/role_admin_project.html", {"roles":roles, 'proyecto_id':proyecto_id, 'misPermisos':mispermisos,  'user_logged':user.id, 'guardado':False})
+    return render_to_response("apps/role_admin_project.html", {"roles":roles, 'proyecto_id':proyecto_id, 'misPermisos':mispermisos,  'user_logged':user.id, 'guardado':False, 'proyectonombre':proyecto.descripcion})
 '''
 def listrolesdel(request):
     """
@@ -458,6 +459,7 @@ def rolecreateproj(request, proyecto_id):
     @param proyecto_id: id del proyecto actual
     @return: render a apps/role_set_permisos.html, lista de permisos, el id y la descripcion del rol que se creo recientemente
     """
+    proyectonombre = Proyectos.objects.get(pk = proyecto_id).nombre
     user = request.user
     if request.method == 'POST':
         form = RoleModifyForm(request.POST)
@@ -469,11 +471,11 @@ def rolecreateproj(request, proyecto_id):
         role.save()
         role_id = role.id
         permisos = Permisos.objects.filter(sistema = False)
-        return render_to_response("apps/role_set_permisos_proj.html", {'proyecto_id':proyecto_id, "permisos":permisos, "role_id":role_id, "role_descripcion":role.descripcion}, context_instance=RequestContext(request))
+        return render_to_response("apps/role_set_permisos_proj.html", {'proyecto_id':proyecto_id, "permisos":permisos, "role_id":role_id, "role_descripcion":role.descripcion, 'proyectonombre':proyectonombre}, context_instance=RequestContext(request))
     else:
         form = RoleModifyForm()
     
-    return render_to_response('apps/role_create_proj.html' ,{'form':form, 'proyecto_id':proyecto_id, 'user_logged':user.id, 'proyecto':True}, context_instance=RequestContext(request))
+    return render_to_response('apps/role_create_proj.html' ,{'form':form, 'proyecto_id':proyecto_id, 'user_logged':user.id, 'proyecto':True, 'proyectonombre':proyectonombre}, context_instance=RequestContext(request))
 
 def asignarrolproj(request, proyecto_id, role_id):
     """
@@ -483,6 +485,7 @@ def asignarrolproj(request, proyecto_id, role_id):
     @param role_id: id del rol al que se asignaran permisos
     @return: render a apps/role_admin_project.html con la lista de roles, el id del proyecto, la lista de permisos del usuario, el id del usuario logueado, y un booleano que indica el exito de la accion
     """
+    proyectonombre = Proyectos.objects.get(pk=proyecto_id).nombre
     r = Roles.objects.get(pk = role_id)
     if setpermisos(request, r) == None:
         #error
@@ -492,7 +495,7 @@ def asignarrolproj(request, proyecto_id, role_id):
     roles = Roles.objects.filter(sistema = False)
     user = request.user
     mispermisos = misPermisos(user.id, proyecto_id)
-    return render_to_response("apps/role_admin_project.html", {"roles":roles, 'proyecto_id':proyecto_id, 'misPermisos':mispermisos, 'user_logged':user.id, 'guardado':True})
+    return render_to_response("apps/role_admin_project.html", {"roles":roles, 'proyecto_id':proyecto_id, 'misPermisos':mispermisos, 'user_logged':user.id, 'guardado':True, 'proyectonombre':proyectonombre})
 
 def rolemodifyproj(request, proyecto_id, role_id):
     """
@@ -1021,7 +1024,44 @@ def adminproject(request, user_logged):
     rol = Roles.objects.get(pk=rol_permiso.role_id)
     return render_to_response('apps/project_admin.html', {'misPermisos':permisos, 'user_logged':user_logged, 'rol_id':rol.id})
     
+def verProyectos(request, user_logged):
+    proyectoslist = Proyectos.objects.all()
+    usuarioslist = User.objects.all()
+    equipos = Equipo.objects.all()
+    eqlist = []
+    equiposlist = []
+    
+    for e in equipos:
+        eqlist.append(e)
+        if not se_repite(eqlist, e.usuario_id, e.proyecto_id):
+            equiposlist.append(e)
 
+    
+    return render_to_response("apps/project_ver_proyectos.html", {'user_logged':user_logged, 'proyectoslist':proyectoslist, 'usuarioslist':usuarioslist, 'equiposlist':equiposlist})
+
+def se_repite(lista, u_id, p_id):
+    count = 0
+    for l in lista:
+        if l.usuario_id == u_id and l.proyecto_id == p_id:
+            count = count + 1
+        if count > 1:
+            return True
+    
+    return False
+
+def verprojusuario(request, user_logged):
+    usuarioslist = User.objects.all()
+    proyectoslist = Proyectos.objects.all()
+    equipos = Equipo.objects.all()
+    equiposlist = []
+    eqlist = []
+    
+    for e in equipos:
+        eqlist.append(e)
+        if not se_repite(eqlist, e.usuario_id, e.proyecto_id):
+            equiposlist.append(e)
+
+    return render_to_response('apps/project_ver_proyectos_users.html', {'user_logged':user_logged, 'equiposlist':equiposlist, 'proyectoslist':proyectoslist, 'usuarioslist':usuarioslist})
 
 def crearProyecto(request, user_logged):
         """
@@ -1389,7 +1429,7 @@ def listflujosproyectos(request, proyecto_id):
                     
     actividades = Actividades.objects.filter(plantilla = True)
     
-    return render_to_response('apps/project_crear_flujo.html', {"proyecto":proyecto, "flujos":flujos, "actividades":actividades}, context_instance=RequestContext(request))
+    return render_to_response('apps/project_crear_flujo.html', {"proyecto":proyecto, "flujos":flujos, "actividades":actividades, 'proyecto':proyecto}, context_instance=RequestContext(request))
 
 def getlistaflujos(request, proyecto_id):
     """
@@ -1973,6 +2013,8 @@ def copiarHU(hu, huv, user):
     huv.fechahora = time.strftime("%Y-%m-%d %H:%M")
     huv.notas = hu.notas
     huv.usercambio = user
+    huv.f_actividad = hu.f_actividad
+    huv.f_a_estado = hu.f_a_estado
     huv.save()
 
 def listhuversiones(request, proyecto_id, hu_id):
@@ -1984,10 +2026,11 @@ def listhuversiones(request, proyecto_id, hu_id):
     @param hu_id: id del User Story en cuestion
     @return: render a hu_list_versiones.html, con el id del User Story, su lista de versiones, y el id del proyecto al que corresponde
     """
+    proyecto = Proyectos.objects.get(pk=proyecto_id)
     hu = UserStory.objects.get(pk = hu_id)
     huversiones = UserStoryVersiones.objects.filter(idv = hu_id)
     user_logged = request.user
-    return render_to_response('apps/hu_list_versiones.html', {'proyecto_id':proyecto_id, 'hu_id':hu_id,'hu':hu, 'hu_descripcion':hu.descripcion, 'hu_versiones':huversiones, 'user_logged':user_logged})
+    return render_to_response('apps/hu_list_versiones.html', {'proyecto_id':proyecto_id, 'hu_id':hu_id,'hu':hu, 'hu_descripcion':hu.descripcion, 'hu_versiones':huversiones, 'user_logged':user_logged, 'proyecto':proyecto})
     
 def huvcambios(request, proyecto_id, hu_id, huv_id):
     """
@@ -1998,9 +2041,10 @@ def huvcambios(request, proyecto_id, hu_id, huv_id):
     @param huv_id: id de la version del User Story
     @return: render a hu_list_versiones_cambios.html con el id del proyecto, el objeto User Story, y su version
     """
+    proyecto = Proyectos.objects.get(pk=proyecto_id)
     huv = UserStoryVersiones.objects.get(pk=huv_id)
     hu = UserStory.objects.get(pk=hu_id)
-    return render_to_response('apps/hu_list_versiones_cambios.html', {'proyecto_id':proyecto_id, 'hu':hu, 'huv':huv})
+    return render_to_response('apps/hu_list_versiones_cambios.html', {'proyecto_id':proyecto_id, 'hu':hu, 'huv':huv, 'proyecto':proyecto})
 
 def modificarHu(request, proyecto_id, hu_id):
     """
@@ -2103,9 +2147,14 @@ def verCliente(request, proyecto_id):
         users.append(User.objects.get(id = t.usuario_id))
     proyecto = Proyectos.objects.get(id = proyecto_id, )
     
-    return render_to_response('apps/project_verCliente.html', {'users':users, 'proyecto':proyecto.descripcion,'proyecto_id':proyecto_id},context_instance = RequestContext(request))
+    return render_to_response('apps/project_verCliente.html', {'users':users, 'proyecto':proyecto,'proyecto_id':proyecto_id},context_instance = RequestContext(request))
 
     
+def verUser(request, proyecto_id, user_id):
+    proyecto = Proyectos.objects.get(pk=proyecto_id)
+    user = User.objects.get(pk=user_id)
+    return render_to_response('apps/project_user_info.html', {'proyecto':proyecto, 'user':user})
+
 def eliminarHu(request, proyecto_id, hu_id):
     """
     cambia el estado de un User Story a inactivo

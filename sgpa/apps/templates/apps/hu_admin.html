@@ -87,7 +87,7 @@
 		 			<td>Activo</td>
 		 		{% elif h.sprint > proyecto.nro_sprint and h.estado == True %}
 		 			<td>Planificado</td>
-		 		{% elif h.sprint == 0 %}
+		 		{% elif h.sprint == 0 and h.estado == True %}
 		 			<td>No Planificado</td>
 		 		{% elif h.estado == False %}
 		 			<td>Eliminado</td>
