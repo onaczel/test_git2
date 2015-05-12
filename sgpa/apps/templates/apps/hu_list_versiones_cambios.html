@@ -3,12 +3,13 @@
 	<h1>{{proyecto.nombre}}</h1>
 {% endblock %}
 {% block encabezado %}
-	<h1>{{hu.descripcion}}</h1>
+	<h1>{{hu.nombre}}</h1>
 {% endblock %}
 {% block contenido %}
 	<center>
-		<table border=1 width=500  >
-				<tr><td></td><td align=center><b>Estado Actual</b><td align=center><b>Estado Anterior</b></td></tr>
+		<table border=1 width=99%  >
+				<tr><td width=30%></td><td align=center height=20 width=30%><b>Version Actual</b><td width=30% align=center><b>Versionn {{huv.version}}</b></td></tr>
+				<tr><td><b>Nombre</b></td><td align=center><p><b>{{hu.nombre}}</b> </p></td><td align=center><p> {{huv.nombre}}</p></td></tr>
 				<tr><td><b>Descripcion</b></td><td align=center><p><b>{{hu.descripcion}}</b> </p></td><td align=center><p> {{huv.descripcion}}</p></td></tr>
 				<tr><td><b>Codigo</b></td><td align=center><p><b>{{hu.codigo}}</b> </p></td><td align=center><p> {{huv.codigo}}</p></td></tr>
 				<tr><td><b>Valor Negocio</b></td><td align=center><p><b>{{hu.valor_Negocio}}</b> </p></td><td align=center><p> {{huv.valor_Negocio}}</p></td></tr>
@@ -24,6 +25,8 @@
 			
 		</table>
 	</center>
+	<br>
+	<a href="{% url 'apps:volverVersionHU' proyecto_id hu.id huv.id %}">Volver a Version {{huv.version}}</a> 
 {% endblock %}
 {% block atras %}
 <a href="{% url 'apps:listhuversiones' proyecto_id hu.id %}">Atras</a>

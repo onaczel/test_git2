@@ -1681,36 +1681,43 @@ def crearHu(request, proyecto_id):
     if request.method == 'POST':
         form = HuCreateForm(request.POST)
        
-        if form.is_valid():
-            form.save()
-            #hu = UserStory.objects.get(pk=form.cleaned_data['id'])
-            #hu = UserStory.objects.get(codigo  = form.cleaned_data['codigo'])
-            hu = UserStory.objects.latest('id')
-            hu.proyecto_id = proyecto_id
-            hu.fecha_creacion = time.strftime("%Y-%m-%d")
-            user = User.objects.get(username = request.POST['us']) 
-            hu.usuario_Asignado =  user.id
-            flujolist = Flujos.objects.filter(descripcion = request.POST['flujo'], proyecto_id = proyecto_id)
-            oflujo = flujolist.get(descripcion = request.POST['flujo'])
-            hu.flujo = oflujo.id
-            prioridad = Prioridad.objects.get(descripcion = request.POST['pri'])
-            hu.prioridad = prioridad
-            hu.notas = request.POST.get('notas', False)
-            hu.tiempo_Real = 0
-            hu.save()
-            
-           
-            
-            #Se le envia una notificacion al usuario encargado del user story
-            send_mail('SGPA-Asignacion a User Story',
-                       'Su usuario: '+user.username+', ha sido asignado como el responsable del user story: '+ hu.descripcion+ ', del proyecto: '+proyecto.nombre,
-                       'noreply.sgpa@gmail.com',
-                        [user.email], 
-                        fail_silently=False)
-            
-            return render_to_response('apps/hu_creado.html',{"proyecto_id":proyecto_id},  context_instance = RequestContext(request))
-        else:
-            return render_to_response('apps/hu_form_no_valido.html', context_instance = RequestContext(request))
+        #if form.is_valid():
+        #form.save()
+        #hu = UserStory.objects.get(pk=form.cleaned_data['id'])
+        #hu = UserStory.objects.get(codigo  = form.cleaned_data['codigo'])
+        hu = UserStory()
+        #hu = UserStory.objects.latest('id')
+        hu.nombre = request.POST['nombre']
+        hu.codigo = request.POST['codigo']
+        hu.descripcion = request.POST['descripcion']
+        hu.tiempo_Estimado = request.POST['tiempoestimado']
+        hu.valor_Negocio = request.POST['valornegocio']
+        hu.valor_Tecnico = request.POST['valortecnico']
+        hu.proyecto_id = proyecto_id
+        hu.fecha_creacion = time.strftime("%Y-%m-%d")
+        #user = User.objects.get(username = request.POST['us']) 
+        hu.usuario_Asignado =  user.id
+        #flujolist = Flujos.objects.filter(descripcion = request.POST['flujo'], proyecto_id = proyecto_id)
+        #oflujo = flujolist.get(descripcion = request.POST['flujo'])
+        #hu.flujo = oflujo.id
+        prioridad = Prioridad.objects.get(descripcion = request.POST['pri'])
+        hu.prioridad = prioridad
+        hu.notas = request.POST.get('notas', False)
+        hu.tiempo_Real = 0
+        hu.save()
+        
+       
+        
+        #Se le envia una notificacion al usuario encargado del user story
+        send_mail('SGPA-Asignacion a User Story',
+                   'Su usuario: '+user.username+', ha sido asignado como el responsable del user story: '+ hu.descripcion+ ', del proyecto: '+proyecto.nombre,
+                   'noreply.sgpa@gmail.com',
+                    [user.email], 
+                    fail_silently=False)
+        
+        return render_to_response('apps/hu_creado.html',{"proyecto_id":proyecto_id},  context_instance = RequestContext(request))
+        #else:
+            #return render_to_response('apps/hu_form_no_valido.html', context_instance = RequestContext(request))
     else:        
         form = HuCreateForm()
         
@@ -1825,59 +1832,80 @@ def editarHu(request, proyecto_id, hu_id):
     user_logged = User.objects.get(username = request.user)
     if request.method == 'POST':
         form = HuCreateForm(request.POST)
-        if form.is_valid():
-            #form.save()
-            copiarHU(hu, huv, user_logged)
-            oldnameHU = hu.descripcion
-            hu.descripcion = form.cleaned_data['descripcion']
-            hu.codigo = form.cleaned_data['codigo']
-            hu.tiempo_Estimado = form.cleaned_data['tiempo_Estimado']
-            hu.valor_Negocio = form.cleaned_data['valor_Negocio']
-            hu.valor_Tecnico = form.cleaned_data['valor_Tecnico']
-            hu.proyecto_id = proyecto_id
-            user = User.objects.get(username = request.POST['us']) 
-            oldUser = hu.usuario_Asignado
+        #if form.is_valid():
+        #form.save()
+        copiarHU(hu, huv, user_logged)
+        oldnameHU = hu.descripcion
+        #hu = UserStory.objects.latest('id')
+        hu.nombre = request.POST['nombre']
+        hu.codigo = request.POST['codigo']
+        hu.descripcion = request.POST['descripcion']
+        hu.tiempo_Estimado = request.POST['tiempoestimado']
+        hu.valor_Negocio = request.POST['valornegocio']
+        hu.valor_Tecnico = request.POST['valortecnico']
+        hu.proyecto_id = proyecto_id
+        
+        
+        try:
+            user = User.objects.get(username = request.POST['us'])
+        except: 
+            user = None
+        oldUser = hu.usuario_Asignado
+        try:
             hu.usuario_Asignado =  user.id
+        except:
+            hu.usuario_Asignado = None
+        try:
             flujolist = Flujos.objects.filter(descripcion = request.POST['flujo'], proyecto_id = proyecto_id)
             oflujo = flujolist.get(descripcion = request.POST['flujo'])
+        except:
+            flujolist = []
+        
+        
+        
+        try:
             hu.flujo = oflujo.id
-            prioridad = Prioridad.objects.get(descripcion = request.POST['pri'])
-            hu.prioridad = prioridad
-            hu.fecha_modificacion = time.strftime("%Y-%m-%d")
-            hu.notas = request.POST.get('notas', False)
-            hu.save()
+        except:
+            hu.flujo = None
             
-            #se envian notificaciones si se ha cambiado de responsable del user story
-            if oldUser != hu.usuario_Asignado:
-                #se obtiene el usuariio que ha sido desvinculado
-                user2 = User.objects.get(id = oldUser) 
-                #Se le envia una notificacion al usuario encargado del user story
-                send_mail('SGPA-Asignacion a User Story',
-                       'Su usuario: '+user.username+', ha sido asignado como el responsable del user story: '+ hu.descripcion+ ' del proyecto: '+proyecto.nombre,
-                       'noreply.sgpa@gmail.com',
-                        [user.email], 
-                        fail_silently=False)
-                #Se le envia una notificacion al usuario desvinculado del user story
-                send_mail('SGPA-Desvinculacion de User Story',
-                       'Su usuario: '+user2.username+', ha sido desvinculado del user story: '+ hu.descripcion+ ' del proyecto: '+proyecto.nombre,
-                       'noreply.sgpa@gmail.com',
-                        [user2.email], 
-                        fail_silently=False)
-            else: 
-                #si no se cambio de responsable, se le notifica que el user story experimento cambios
-                    send_mail('SGPA-Modificacion de User Story',
-                       'El User Story: '+oldnameHU+' del proyecto: '+proyecto.nombre+', ha experimentado modificaciones ',
-                       'noreply.sgpa@gmail.com',
-                        [user.email], 
-                        fail_silently=False)  
-                
-            return render_to_response('apps/hu_modificado.html',{"proyecto_id":proyecto_id, 'hu_id':hu_id, 'hu':hu},  context_instance = RequestContext(request))
-        else:
-            return render_to_response('apps/hu_form_no_valido.html', context_instance = RequestContext(request))
+        prioridad = Prioridad.objects.get(descripcion = request.POST['pri'])
+        hu.prioridad = prioridad
+        hu.fecha_modificacion = time.strftime("%Y-%m-%d")
+        hu.notas = request.POST.get('notas', False)
+        hu.save()
+        '''
+        #se envian notificaciones si se ha cambiado de responsable del user story
+        if oldUser != hu.usuario_Asignado:
+            #se obtiene el usuariio que ha sido desvinculado
+            user2 = User.objects.get(id = oldUser) 
+            #Se le envia una notificacion al usuario encargado del user story
+            send_mail('SGPA-Asignacion a User Story',
+                   'Su usuario: '+user.username+', ha sido asignado como el responsable del user story: '+ hu.descripcion+ ' del proyecto: '+proyecto.nombre,
+                   'noreply.sgpa@gmail.com',
+                    [user.email], 
+                    fail_silently=False)
+            #Se le envia una notificacion al usuario desvinculado del user story
+            send_mail('SGPA-Desvinculacion de User Story',
+                   'Su usuario: '+user2.username+', ha sido desvinculado del user story: '+ hu.descripcion+ ' del proyecto: '+proyecto.nombre,
+                   'noreply.sgpa@gmail.com',
+                    [user2.email], 
+                    fail_silently=False)
+        
+        else: 
+            #si no se cambio de responsable, se le notifica que el user story experimento cambios
+                send_mail('SGPA-Modificacion de User Story',
+                   'El User Story: '+oldnameHU+' del proyecto: '+proyecto.nombre+', ha experimentado modificaciones ',
+                   'noreply.sgpa@gmail.com',
+                    [user.email], 
+                    fail_silently=False)  
+        '''
+        return render_to_response('apps/hu_modificado.html',{"proyecto_id":proyecto_id, 'hu_id':hu_id, 'hu':hu},  context_instance = RequestContext(request))
+    #else:
+        #return render_to_response('apps/hu_form_no_valido.html', context_instance = RequestContext(request))
     else:        
         form = HuCreateForm(initial={'descripcion':hu.descripcion, 'codigo':hu.codigo, 'tiempo_Estimado':hu.tiempo_Estimado, 'valor_Tecnico':hu.valor_Tecnico, 'valor_Negocio':hu.valor_Negocio})
 
-    return render_to_response('apps/hu_modify_fields.html', {"form":form, "proyecto_id":proyecto_id, "hu_id":hu_id, "hu_descripcion":hu.descripcion, 'misPermisos':mispermisos, 'users':users, 'flujos':flujos, 'proyecto_nombre':proyecto.nombre, 'prioridades':prioridades, 'hu':hu}, context_instance = RequestContext(request))
+    return render_to_response('apps/hu_modify_fields.html', {"form":form, "proyecto_id":proyecto_id, "hu_id":hu_id, "hu":hu, 'misPermisos':mispermisos, 'users':users, 'flujos':flujos, 'proyecto_nombre':proyecto.nombre, 'prioridades':prioridades, 'hu':hu}, context_instance = RequestContext(request))
 
 def registroHu(request, proyecto_id, hu_id):
     """
@@ -1989,6 +2017,62 @@ def getEstadoHu(hu):
          
     return estado
 
+def volverVersionHU(request, proyecto_id, hu_id, huv_id):
+    """
+    Funcion que retorna un User Story a una version anterior
+    
+    @param request: Http
+    @param proyecto_id: Id del proyecto actual
+    @param hu_id: id de la version actual del User Story
+    @param huv_id: id de una version anterior del User Story
+    @return: render a hu_list_versiones_cambios.html con el id del proyecto, el User Story, su version User Story, y el objeto del Proyecto
+    """
+    hu = UserStory.objects.get(pk=hu_id)
+    huv = UserStoryVersiones()
+    
+    user = request.user
+    
+    proyecto = Proyectos.objects.get(pk = proyecto_id)
+    #Se crea una nueva version
+    copiarHU(hu, huv, user)
+    
+    huv = UserStoryVersiones.objects.get(pk=huv_id)
+    #Se copia la sobre la version actual
+    volverHU(hu, huv)
+    
+    return render_to_response('apps/hu_list_versiones_cambios.html', {'proyecto_id':proyecto_id, 'hu':hu, 'huv':huv, 'proyecto':proyecto})
+    
+def volverHU(hu, huv):
+    """
+    Funcion que copia todos los elementos de una version al User Story actual
+    
+    @param hu: objeto User Story con la version actual
+    @param huv: objeto User Story con version anterior
+    """
+    
+    hu.nombre = huv.nombre
+    hu.descripcion = huv.descripcion
+    hu.codigo = huv.codigo
+    hu.valor_Negocio = huv.valor_Negocio
+    hu.valor_Tecnico = huv.valor_Tecnico
+    hu.prioridad = huv.prioridad
+    hu.tiempo_Estimado = huv.tiempo_Estimado
+    hu.tiempo_Real = huv.tiempo_Real
+    #No puede volver al sprint anterior
+    #hu.sprint = huv.sprint
+    hu.usuario_Asignado = huv.usuario_Asignado
+    #hu.flujo
+    #hu.proyecto
+    hu.estado = huv.estado
+    #hu.fecha_creacion = huv.fecha_creacion
+    #hu.fecha_inicio = huv.fecha_inicio
+    hu.fecha_modificacion = time.strftime("%Y-%m-%d")
+    hu.f_actividad = huv.f_actividad
+    hu.f_a_estado = huv.f_a_estado
+    hu.flujo_posicion = huv.flujo_posicion
+    hu.finalizado = hu.finalizado
+    hu.save()
+
 def copiarHU(hu, huv, user):
     """
     Funcion que hace una copia de todos los campos de un User Story a otro
@@ -1997,8 +2081,12 @@ def copiarHU(hu, huv, user):
     @param huv: objeto User Story de destino
     @param user: objeto del Usuario que realiza una modificacion en el HU
     """
+    listhu = UserStoryVersiones.objects.filter(idv=hu.id)
+    cantv = listhu.count()
     huv.idv = hu.id
+    huv.version = cantv + 1    
     huv.descripcion = hu.descripcion
+    huv.nombre = hu.nombre
     huv.codigo = hu.codigo
     huv.valor_Negocio = hu.valor_Negocio
     huv.valor_Tecnico = hu.valor_Tecnico

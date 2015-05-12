@@ -118,8 +118,9 @@ class UserStory(models.Model):
     """
     Modelo para almacenar los User Stories
     """
-    
-    descripcion = models.CharField(max_length = 50)
+    nombre = models.CharField(max_length = 50, null = True)
+    #Controlar!
+    descripcion = models.CharField(max_length = 120, null=True)
     codigo = models.CharField(max_length = 30)
     valor_Negocio = models.IntegerField(null = True)
     valor_Tecnico = models.IntegerField(null = True)
@@ -153,7 +154,10 @@ class UserStoryVersiones(models.Model):
     Model para almacenar las versiones de los User Stories
     """
     idv = models.IntegerField()
-    descripcion = models.CharField(max_length = 50)
+    nombre = models.CharField(max_length = 50, null = True)
+    #Controlar!
+    version = models.IntegerField(null = True)
+    descripcion = models.CharField(max_length = 120, null = True)
     codigo = models.CharField(max_length = 30)
     valor_Negocio = models.IntegerField(null = True)
     valor_Tecnico = models.IntegerField(null = True)
@@ -169,6 +173,7 @@ class UserStoryVersiones(models.Model):
     usercambio = models.ForeignKey(User, null = True)
     f_actividad = models.IntegerField(default = 0)
     f_a_estado = models.IntegerField(default = 0)
+    flujo_posicion = models.IntegerField(null = True)
     notas = models.CharField(max_length = 512, null = True)
     
 class UserStoryRegistro(models.Model):
@@ -178,7 +183,10 @@ class UserStoryRegistro(models.Model):
     idr = models.IntegerField()
     descripcion_tarea = models.CharField(max_length = 256)
     
-    descripcion = models.CharField(max_length = 50)
+    nombre = models.CharField(max_length = 50, null = True)
+    #Controlar!!
+    version = models.IntegerField(null = True)
+    descripcion = models.CharField(max_length = 120, null = True)
     codigo = models.CharField(max_length = 30)
     valor_Negocio = models.IntegerField(null = True)
     valor_Tecnico = models.IntegerField(null = True)

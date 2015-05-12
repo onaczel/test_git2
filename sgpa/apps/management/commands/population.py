@@ -2,6 +2,7 @@ from django.core.management.base import BaseCommand, CommandError
 from django.contrib.auth.models import User
 from apps.models import Users_Roles, Flujos, Roles, Actividades, Permisos, Permisos_Roles,\
     Prioridad, Estados, Proyectos, Equipo
+from apps.views import crearSprints
 
 class Command(BaseCommand):
 
@@ -10,6 +11,8 @@ class Command(BaseCommand):
 		add_roles('Usuario', True)
 		add_roles('Scrum Master', False)
 		add_roles('Cliente', False)
+		add_roles('Developer', False)
+		add_roles('Observador', False)
 		
 		add_user('admin', 'a123', 'deserver123@gmail.com', 1)
 		add_user('rokkaie', 'a123', 'rokkaie@gmail.com', 2)
@@ -57,6 +60,7 @@ class Command(BaseCommand):
 		add_proyecto("Proyecto 1")
 		add_proyecto("Proyecto 2")
 		add_proyecto("Proyecto 3")
+
 
 		add_equipo(1, 3, 1)
 		add_equipo(1, 4, 2)
@@ -152,6 +156,9 @@ def add_proyecto(descripcion):
 	proyecto.descripcion = 'una prueba de proyecto'
 	proyecto.observaciones = 'ninguna'
 	proyecto.save()
+	proy = Proyectos.objects.filter(nombre = descripcion)
+	p = proy.first()
+	crearSprints(p.id)
     
 def add_equipo(p_id, r_id, u_id):
 	equipo = Equipo()

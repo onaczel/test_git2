@@ -2,9 +2,7 @@
 {% block titulo %}
 	<h1>{{proyecto_nombre}}</h1>
 {% endblock %}
-{% block encabezado %}
-	<h1>{{hu_descripcion}}</h1>
-{% endblock %}
+
 <h3>Editar HU</h3>
 {% block index %}
 	<!-- <a href="{% url 'apps:editarHu' proyecto_id hu_id %}">Modificar Campos</a><br/> -->
@@ -35,63 +33,113 @@
 <br/>
 
 {% block contenido %}
+	<table>
+		<tr>
+			<td width=120><h2>{{hu.codigo}}</h2></td>
+			<td><h2>{{hu.nombre}}</h2></td>
+		</tr>
+	</table>
 	{% if misPermisos.MUS %}
-		{% if hu.sprint == 0 %}
-			<table>
+			{% if hu.sprint == 0 %}
+				<table>
+					<tr>
+					<td><h4>Sprint:</h4></td>
+					<td>El User Story aun no se ha planificado</td>
+					</tr>
+				</table>
+				
+			{% else %}
+				<h4> Sprint: {{hu.sprint}}</h4>
+			{% endif %}
+						
+			{% if hu.sprint != 0 %}
+				<table>
+					<tr>
+						<td><b>Usuario Asignado:</b>
+							{% for user in users %}
+									{% if user.id == hu.usuario_Asignado %}
+										{{user.username}}
+									{% endif %}
+							{% endfor %} 
+						</td>
+					</tr>
+					<tr>
+						<td><b>Flujo:</b>
+							{% for f in flujos %}
+									{% if f.id == hu.flujo %}
+										{{f.descripcion}}
+									{% endif %}
+								{% endfor %} 
+						</td>
+					</tr>
+				</table>
+			{% endif %}
+			
+			<form action="{% url 'apps:editarHu' proyecto_id hu_id %}" method="post">
+				{% csrf_token %}
+						<table border=0px>
 				<tr>
-				<td><h4>Sprint:</h4></td>
-				<td>El User Story aun no se ha planificado</td>
+					<td valign="center" width=150px><label><b>Codigo:</b></label></td>
+				</tr>
+				<tr>
+					<td><textarea name="codigo" rows="1" cols="10" style="font-size:18px;">{{hu.codigo}}</textarea></td>
+				</tr>
+				<tr height=10px></tr>
+				<tr>
+					<td valign="center" width=150px><label><b>Nombre:</b></label></td>
+				</tr>
+				<tr>
+					<td><textarea name="nombre" rows="1" cols="80" style="font-size:18px;">{{hu.nombre}}</textarea></td>
+				</tr>
+				<tr height=10px></tr>
+				<tr>
+					<td valign="center" width=150px><label><b>Descripcion:</b></label></td>
+				</tr>
+				<tr>
+					<td><textarea name="descripcion" rows="10" cols="80" style="font-size:18px;">{{hu.descripcion}}</textarea></td>
+				</tr>
+				<tr height=20px></tr>
+			</table>
+			<table width=85%>
+				<tr>
+					<td valign="center" width=280px><label><b>Horas Estimadas:</b></label></td>
+					<td valign="center" width=280px><label><b>Valor Tecnico:</b></label></td>
+					<td valign="center" width=280px><label><b>Valor de Negocio:</b></label></td>
+					<td valign="center" width=280px><label><b>Prioridad:</b></label></td>
+					
+				</tr>
+				<tr>
+					<td><input type="number" name="tiempoestimado" rows="1" cols="20" value="{{hu.tiempo_Estimado}}"></textarea></td>
+					<td><input type="number" name="valortecnico" rows="1" cols="20" value="{{hu.valor_Tecnico}}"></textarea></td>
+					<td><input type="number" name="valornegocio" rows="1" cols="20" value="{{hu.valor_Negocio}}"></textarea></td>
+					<td>
+						<select name="pri"  style="width:190px" sort = true>
+						{% for pr in prioridades %}
+							{% if pr.descripcion == hu.prioridad %}
+								<option selected="selected">{{pr.descripcion}}</option>
+							{% else %}
+								<option >{{pr.descripcion}}</option>
+							{% endif %}
+						{% endfor %} 
+						</select>
+					</td>
 				</tr>
 			</table>
 			
-		{% else %}
-			<h4> Sprint: {{hu.sprint}}</h4>
-		{% endif %}
-		<form action="{% url 'apps:editarHu' proyecto_id hu_id %}" method="post">
-			{% csrf_token %}
-			<table>{{form}}</table>
-			<b>Usuario Asignado:</b>
-			<select name="us"  style="width:190px" sort = true>
-					{% for user in users %}
-						{% if user.id == hu.usuario_Asignado %}
-							<option selected="selected">{{user.username}}</option>
-						{% else %}
-							 <option>{{user.username}}</option>
-							
-						{% endif %}
-					{% endfor %} 
-			</select><br>
-			<b>Flujo Asignado</b>&emsp;&emsp;
-			<select name="flujo"  style="width:190px" sort = true>
-					{% for f in flujos %}
-						{% if f.id == hu.flujo %}
-							<option selected="selected">{{f.descripcion}}</option>
-						{% else %}
-							<option >{{f.descripcion}}</option>
-						{% endif %}
-					{% endfor %} 
-			</select><br>
-			<!-- <input type="hidden" name="flujo" value="{{f.descripcion}}" /> -->
-			<b>Prioridad</b>&emsp;&emsp;&emsp;&emsp;&emsp;
-			<select name="pri"  style="width:190px" sort = true>
-					{% for pr in prioridades %}
-						{% if pr.id == hu.prioridad_id %}
-							<option selected="selected">{{pr.descripcion}}</option>
-						{% else %}
-							<option >{{pr.descripcion}}</option>
-						{% endif %}
-					{% endfor %} 
-			</select><br>
+			
+			
 			
 			<br>
-			<table>
-				<tr>
-					<td valign="top" width=150px><label><b>Notas:</b></label></td>
-					<td><textarea name="notas" rows="10" cols="40">{{hu.notas}}</textarea></td>
-				</tr>
-			</table>
+
+			 
+			 
 			{% if hu.estado == True %}
-				<input type='submit' value='Guardar'/>
+				<table width=100%>
+					<tr height=50px></tr>
+					<tr>
+						<td align="left"><input style= "width:300px; float:center; "  type='submit' value='Guardar'/></td>
+					</tr>
+				</table>
 			{% endif %}
 		
 		

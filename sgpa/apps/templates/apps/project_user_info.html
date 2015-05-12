@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block titulo %}
+<h1>{{proyecto.nombre}}</h1>
+{% endblock %}
+
+{% block index %}
+	
+	
+{% endblock %}
+<br/>
+
+{% block contenido %}
+	
+	<h3>{{user.username}}</h3>
+	<table>
+		<tr><td><b>Nombre:</b></td><td>{{user.first_name}}</td><tr>
+		<tr><td><b>Apellido:</b></td><td>{{user.last_name}}</td></tr>
+		<tr><td><b>Username:</b></td><td>{{user.username}}</td></tr>
+		<tr><td><b>Email:</b></td><td>{{user.email}}</td></tr>
+		<tr><td><b>Ultima Conexion:</b></td><td>{{user.last_login}}</td></tr>
+	</table>
+
+{% endblock %}
+{% block atras %}
+	<a href="{% url 'apps:accionesproyecto' proyecto.id %}">Volver</a>
+	
+{% endblock %}
