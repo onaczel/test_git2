@@ -68,10 +68,13 @@
 			</ul>
 		{% endif %}
 	</div>
+<div style="float: left;">
+		<h4>User Stories Pentientes</h4>
+</div>
 <form action="{% url 'apps:sprints' proyecto.id sprint.id 0 %}" method="post">{% csrf_token %}
 	<div style="float: left;">
 		{% if hus %}
-			<h4>User Stories de otros Sprints</h4>
+			<h4>&emsp;&emsp;User Stories de otros Sprints</h4>
 			<ul>
 				{% for s in sprints %}
 					{% if s.id != sprint.id %}
@@ -99,9 +102,9 @@
 			</ul>
 		{% endif %}
 	</div>
-	<div style="float: right;">
+	<div style="float: left;">
 		{% if hus %}
-			<h4>User Stories sin Sprints</h4>
+			<h4>&emsp;&emsp;User Stories sin Sprints</h4>
 			<ul><br><label>user stories</label>
 				{% for hu in hus %}
 					{% if hu.sprint == 0 %}
