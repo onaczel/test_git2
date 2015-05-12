@@ -7,7 +7,7 @@ django.setup()
 
 from django.contrib.auth.models import User
 from apps.models import Users_Roles, Flujos, Roles, Actividades, Permisos, Permisos_Roles,\
-    Prioridad, Estados, Proyectos, Equipo
+    Prioridad, Estados, Proyectos, Equipo, Estados_Scrum
 
 def populate():
     add_roles('Administrador', True)
@@ -75,8 +75,19 @@ def populate():
     add_equipo(3, 3, 2)
     add_equipo(3, 4, 3)
     add_equipo(3, 5, 3)
-        
     
+    add_estado_scrum("Iniciado")
+    add_estado_scrum("Asignado")
+    add_estado_scrum("No Asignado")
+    add_estado_scrum("Pendiente")
+    add_estado_scrum("Finalizado")
+    add_estado_scrum("Cancelado")
+        
+def add_estado_scrum(descripcion):
+    estado = Estados_Scrum()
+    estado.descripcion = descripcion
+    estado.save()
+
 def add_roles(descripcion, sistema):
     rol = Roles()
     rol.descripcion = descripcion

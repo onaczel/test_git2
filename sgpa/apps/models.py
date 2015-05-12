@@ -233,3 +233,9 @@ class archivoAdjunto(models.Model):
     def __unicode__(self):
         """Representacion unicode del objeto"""
         return self.archivo.name
+    
+class Estados_Scrum(models.Model):
+    """
+    Estados Iniciado, Asignado, No Asignado, Pendiente, Finalizado y Cancelado de los User Stories 
+    """
+    descripcion = models.CharField(max_length = 50)
