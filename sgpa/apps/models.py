@@ -226,7 +226,7 @@ class archivoAdjunto(models.Model):
         """Representacion unicode del objeto"""
         return self.archivo.name
     
-class estados_scrum(models.Model):
+class Estados_Scrum(models.Model):
     """
     Estados Iniciado, Asignado, No Asignado, Pendiente, Finalizado y Cancelado de los User Stories 
     """
