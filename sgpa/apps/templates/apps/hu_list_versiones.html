@@ -6,12 +6,12 @@
 	<h1>{{hu_descripcion}}</h1>
 {% endblock %}
 {% block contenido %}
-	<h3>Historial User Story</h3>
+	<h3>Versiones User Story</h3>
 	{% if hu_versiones %}
 		<table border=1px width=99%>
 					<tr><td>Fecha</td><td>Usuario</td><td>Version</td><td>Accion</td></tr>
 					{% for h in hu_versiones %}
-						<tr><td>{{h.fechahora}}</td><td>{{h.usercambio}}</td><td>{{h.version}}</td>
+						<tr><td>{{h.fechahora}}</td><td>{{h.usercambio}}</td><td align="center">{{h.version}}</td>
 							<td><p>Se ha modificado <a href="{% url 'apps:huvcambios' proyecto_id hu_id h.id %}">Ver cambios</a></p></td>
 						</tr>
 					{% endfor %}

@@ -26,7 +26,9 @@
 		</table>
 	</center>
 	<br>
-	<a href="{% url 'apps:volverVersionHU' proyecto_id hu.id huv.id %}">Volver a Version {{huv.version}}</a> 
+	{% if misPermisos.EUS %}
+		<a href="{% url 'apps:volverVersionHU' proyecto_id hu.id huv.id %}">Volver a Version {{huv.version}}</a>
+	{% endif %} 
 {% endblock %}
 {% block atras %}
 <a href="{% url 'apps:listhuversiones' proyecto_id hu.id %}">Atras</a>

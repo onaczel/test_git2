@@ -17,14 +17,19 @@
 		<br><a href="{% url 'apps:listflujosproyectosMod' proyecto.id %}">Modificar Flujo</a><br />
 	{% endif %}
 	-->
-	<!--  {% if misPermisos.MP == True %} -->
+	<!--  {% if misPermisos.CUS	 %} -->
 		<br><a href="{% url 'apps:listflujosproyectosMod' proyecto.id %}">Flujos</a><br />
 	<!-- {% endif %} -->
 		<br>
 	{% if misPermisos.CUS or misPermisos.MUS or misPermisos.EUS %}
 		<a href="{% url 'apps:listhu' proyecto.id %}">Product Backlog</a>
+		<br>
 	{% endif %}
-	<br>
+	{% if misPermisos.PS %}
+		<a href="{% url 'apps:listsprint' proyecto.id %}">Sprint Backlog</a>
+		<br>
+	{% endif %}
+	
 	<br>
 	{% if misPermisos.CRP or misPermisos.ERP or misPermisos.MRP %}
 		<a href="{% url 'apps:listrolesproj' proyecto.id %}">Roles</a>

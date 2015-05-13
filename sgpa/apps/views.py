@@ -1568,6 +1568,14 @@ def flujosproyectosRequestModAct(request, proyecto_id, flujo_id, actividad_id):
 
     return render_to_response('apps/project_modificar_flujo_actividad.html', {"proyecto":proyecto, "flujo":flujo, "actividad":actividad, "form":form}, context_instance=RequestContext(request) )
 
+def listsprint(request, proyecto_id):
+    
+    sprintlista = Sprint.objects.all()
+    #hulista = UserStory.objects.filter(estado_scrum = iniciado)
+    
+##############################################################################################################################################
+###############################################################################################################################################
+##############################################################################################################################################
 def listhu(request, proyecto_id):
     """
     obtiene la lista de User Stories de un proyecto dado, para ser modificados o eliminados
@@ -2032,6 +2040,8 @@ def volverVersionHU(request, proyecto_id, hu_id, huv_id):
     
     user = request.user
     
+    mispermisos = misPermisos(request.user.id, 0)
+    print user.id
     proyecto = Proyectos.objects.get(pk = proyecto_id)
     #Se crea una nueva version
     copiarHU(hu, huv, user)
@@ -2040,7 +2050,7 @@ def volverVersionHU(request, proyecto_id, hu_id, huv_id):
     #Se copia la sobre la version actual
     volverHU(hu, huv)
     
-    return render_to_response('apps/hu_list_versiones_cambios.html', {'proyecto_id':proyecto_id, 'hu':hu, 'huv':huv, 'proyecto':proyecto})
+    return render_to_response('apps/hu_list_versiones_cambios.html', {'proyecto_id':proyecto_id, 'hu':hu, 'huv':huv, 'proyecto':proyecto, 'misPermisos':mispermisos})
     
 def volverHU(hu, huv):
     """
@@ -2132,7 +2142,8 @@ def huvcambios(request, proyecto_id, hu_id, huv_id):
     proyecto = Proyectos.objects.get(pk=proyecto_id)
     huv = UserStoryVersiones.objects.get(pk=huv_id)
     hu = UserStory.objects.get(pk=hu_id)
-    return render_to_response('apps/hu_list_versiones_cambios.html', {'proyecto_id':proyecto_id, 'hu':hu, 'huv':huv, 'proyecto':proyecto})
+    mispermisos = misPermisos(request.user.id, proyecto_id)
+    return render_to_response('apps/hu_list_versiones_cambios.html', {'proyecto_id':proyecto_id, 'hu':hu, 'huv':huv, 'proyecto':proyecto, 'misPermisos':mispermisos})
 
 def modificarHu(request, proyecto_id, hu_id):
     """
