@@ -1927,6 +1927,10 @@ def crearregistroHu(request, proyecto_id, hu_id):
         hu_reg.tiempo_Real = request.POST.get('tiempo_real', False)
         hu_reg.save()
         guardado = True
+        #Asignacion de horas a los dias del sprint
+        respuesta = horas(hu_reg, hu_id)
+        print respuesta
+        #termina asignacion de horas a los dias del sprint
         hu_reg = UserStoryRegistro.objects.filter(idr = hu.id)
         return render_to_response('apps/hu_registro.html', {'hu':hu, 'proyecto':proyecto, 'guardado':guardado, 'hu_reg':hu_reg}, context_instance=RequestContext(request))
     
@@ -2789,7 +2793,8 @@ def crearSprints(proyecto_id):
         nuevo_dia_sprint.fecha = d1 + timedelta(days=i)
         nuevo_dia_sprint.save()
 
-def horas(request, hu_id):
+#def horas(request, hu_id):
+def horas(hu_reg, hu_id):
     """
     Asigna horas trabajadas por user story a los dias de cada sprint
     @param request: Http
@@ -2799,46 +2804,47 @@ def horas(request, hu_id):
     
     mensaje = ""
     
-    if request.POST:
-        if request.POST[hu_id] == "Sumar Horas":
-            formulario = dia_sprintCreateForm2(request.POST)
-            if formulario.is_valid():
-                hu = UserStory.objects.get(id = hu_id)
-                #Str(datetime.today().strftime("%Y-%m-%d"))
-                try:
-                    sprint = Sprint.objects.get(nro_sprint = hu.sprint, proyecto_id = hu.proyecto_id)
-                    dia_sprint = Dia_Sprint.objects.get(fecha = datetime.today().strftime("%Y-%m-%d"), sprint_id = sprint.id)
-                    dia_sprint.tiempo_real = int(dia_sprint.tiempo_real) + int(formulario.cleaned_data['tiempo_real'])
-                    dia_sprint.save()
-                    hu.tiempo_Real = int(hu.tiempo_Real) + int(formulario.cleaned_data['tiempo_real'])
-                    hu.save()
-                except:
-                    mensaje = "Error: No se sumaron las horas, Probablemente el User Story ya haya terminado"
-    
-    user_stories = UserStory.objects.filter(usuario_Asignado = request.user.id, finalizado = False, estado = True)
-    
-    equipos = Equipo.objects.filter(usuario_id=request.user.id)
-    proyectos_id = []
-    for equipo in equipos:
-        esta = False
-        for proyecto_id in proyectos_id:
-            if proyecto_id == equipo.proyecto_id:
-                esta = True
-                break
-        if esta == False:
-            proyectos_id.append(equipo.proyecto_id)
+    #if request.POST:
+    #    if request.POST[hu_id] == "Crear Registro":
+    #        formulario = dia_sprintCreateForm2(request.POST)
+    #        if formulario.is_valid():
+    hu = UserStory.objects.get(id = hu_id)
+    #Str(datetime.today().strftime("%Y-%m-%d"))
+    try:
+        sprint = Sprint.objects.get(nro_sprint = hu.sprint, proyecto_id = hu.proyecto_id)
+        dia_sprint = Dia_Sprint.objects.get(fecha = datetime.today().strftime("%Y-%m-%d"), sprint_id = sprint.id)
+        dia_sprint.tiempo_real = int(dia_sprint.tiempo_real) + int(hu_reg.tiempo_Real)
+        dia_sprint.save()
+        hu.tiempo_Real = int(hu.tiempo_Real) + int(hu_reg.tiempo_Real)
+        hu.save()
+    except:
+        mensaje = "Error: No se sumaron las horas, Probablemente el User Story ya haya terminado"
+        
+    #
+    #user_stories = UserStory.objects.filter(usuario_Asignado = request.user.id, finalizado = False, estado = True)
+    #
+    #equipos = Equipo.objects.filter(usuario_id=request.user.id)
+    #proyectos_id = []
+    #for equipo in equipos:
+    #    esta = False
+    #    for proyecto_id in proyectos_id:
+    #        if proyecto_id == equipo.proyecto_id:
+    #            esta = True
+    #            break
+    #    if esta == False:
+    #        proyectos_id.append(equipo.proyecto_id)
             
-    proyectos = []
-    for proyecto_id in proyectos_id:
-        proyectos.append(Proyectos.objects.get(id = proyecto_id))
+    #proyectos = []
+    #for proyecto_id in proyectos_id:
+    #    proyectos.append(Proyectos.objects.get(id = proyecto_id))
 
-    formulario = dia_sprintCreateForm2()
+    #formulario = dia_sprintCreateForm2()
     
-    user = request.user
-    u_rol = Users_Roles.objects.get(user_id=user.id)
-    rol = Roles.objects.get(pk = u_rol.role_id)
-    
-    return render_to_response('apps/agregarHoras.html', {"user_stories":user_stories, "proyectos":proyectos, 'rol_id':u_rol.role_id, "user":request.user, "formulario":formulario, "mensaje":mensaje}, context_instance = RequestContext(request))
+    #user = request.user
+    #u_rol = Users_Roles.objects.get(user_id=user.id)
+    #rol = Roles.objects.get(pk = u_rol.role_id)
+    return mensaje
+    #return render_to_response('apps/agregarHoras.html', {"user_stories":user_stories, "proyectos":proyectos, 'rol_id':u_rol.role_id, "user":request.user, "formulario":formulario, "mensaje":mensaje}, context_instance = RequestContext(request))
 
 def analizarhus(request, proyecto_id, hu_id):
     """

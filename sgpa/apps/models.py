@@ -113,7 +113,13 @@ class Prioridad(models.Model):
     descripcion = models.CharField(max_length=30)
     def __str__(self):
         return self.descripcion
-    
+
+class Estados_Scrum(models.Model):
+    """
+    Estados Iniciado, Asignado, No Asignado, Pendiente, Finalizado y Cancelado de los User Stories 
+    """
+    descripcion = models.CharField(max_length = 50)
+
 class UserStory(models.Model):
     """
     Modelo para almacenar los User Stories
@@ -147,6 +153,7 @@ class UserStory(models.Model):
     #indica si el User Story se ha finalizado 
     finalizado = models.BooleanField(default = False)
     notas = models.CharField(max_length = 512, null = True)
+    estado_scrum = models.ForeignKey(Estados_Scrum, default = 3)
 
 class UserStoryVersiones(models.Model):
     """
@@ -170,6 +177,7 @@ class UserStoryVersiones(models.Model):
     f_actividad = models.IntegerField(default = 0)
     f_a_estado = models.IntegerField(default = 0)
     notas = models.CharField(max_length = 512, null = True)
+    estado_scrum = models.ForeignKey(Estados_Scrum, default = 3)
     
 class UserStoryRegistro(models.Model):
     """
@@ -195,6 +203,7 @@ class UserStoryRegistro(models.Model):
     f_actividad = models.IntegerField(default = 0)
     f_a_estado = models.IntegerField(default = 0)
     notas = models.CharField(max_length = 512, null = True)
+    estado_scrum = models.ForeignKey(Estados_Scrum, default = 3)
     
 class Sprint(models.Model):
     """
@@ -225,9 +234,3 @@ class archivoAdjunto(models.Model):
     def __unicode__(self):
         """Representacion unicode del objeto"""
         return self.archivo.name
-    
-class Estados_Scrum(models.Model):
-    """
-    Estados Iniciado, Asignado, No Asignado, Pendiente, Finalizado y Cancelado de los User Stories 
-    """
-    descripcion = models.CharField(max_length = 50)
