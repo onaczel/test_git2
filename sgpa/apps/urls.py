@@ -54,7 +54,7 @@ urlpatterns = patterns('',
    
     url(r'^(?P<usuario_id>\d+)/modproyecto/$', views.listproyectosdelusuario, name='listproyectosdelusuario'),
     url(r'^(?P<proyecto_id>\d+)/modproyecto/accionesproyecto$', views.accionesproyecto, name='accionesproyecto'),
-    url(r'^(?P<proyecto_id>\d+)/modproyecto/accionesproyecto/adminsprint/$', views.listsprint, name='listsprint'),
+    url(r'^(?P<proyecto_id>\d+)/modproyecto/accionesproyecto/adminsprint/(?P<sprint>\d+)/$', views.listsprint, name='listsprint'),
     url(r'^(?P<proyecto_id>\d+)/modproyecto/accionesproyecto/adminhu/$', views.listhu, name='listhu'),
     url(r'^(?P<proyecto_id>\d+)/modproyecto/accionesproyecto/adminhu/crearhu/$', views.crearHu, name='crearHu'),
     url(r'^(?P<proyecto_id>\d+)/modproyecto/accionesproyecto/adminhu/(?P<hu_id>\d+)/$', views.modificarHu, name="modificarHu"),

@@ -25,8 +25,9 @@
 		<a href="{% url 'apps:listhu' proyecto.id %}">Product Backlog</a>
 		<br>
 	{% endif %}
+	<br>
 	{% if misPermisos.PS %}
-		<a href="{% url 'apps:listsprint' proyecto.id %}">Sprint Backlog</a>
+		<a href="{% url 'apps:listsprint' proyecto.id  0 %}">Sprint Backlog</a>
 		<br>
 	{% endif %}
 	

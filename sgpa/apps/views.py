@@ -12,7 +12,7 @@ from django.views.static import serve
 from django.core.servers.basehttp import FileWrapper
 
 from apps.models import Roles, Users_Roles, Permisos, Permisos_Roles, Flujos, Actividades, Actividades_Estados, Proyectos, Equipo, UserStory, Sprint, Dia_Sprint, UserStoryVersiones, Prioridad,\
-    Estados, UserStoryRegistro, archivoAdjunto
+    Estados, UserStoryRegistro, archivoAdjunto, Estados_Scrum
 from django.contrib.auth.models import User
 
 
@@ -1568,10 +1568,23 @@ def flujosproyectosRequestModAct(request, proyecto_id, flujo_id, actividad_id):
 
     return render_to_response('apps/project_modificar_flujo_actividad.html', {"proyecto":proyecto, "flujo":flujo, "actividad":actividad, "form":form}, context_instance=RequestContext(request) )
 
-def listsprint(request, proyecto_id):
+def listsprint(request, proyecto_id, sprint):
     
-    sprintlista = Sprint.objects.all()
-    #hulista = UserStory.objects.filter(estado_scrum = iniciado)
+    proyecto = Proyectos.objects.get(pk=proyecto_id)
+    sprintlista = Sprint.objects.filter(proyecto_id = proyecto_id)
+    hulista = []
+    allhu = UserStory.objects.all()
+    for hu in allhu:
+        if hu.sprint != 0:
+            hulista.append(hu)
+            
+    
+    if int(sprint) == 0:
+        return render_to_response('apps/project_sprint_backlog_list.html', {'sprintlista':sprintlista, 'hu':hulista, 'proyecto':proyecto})
+    else:
+        #sprintlista = Sprint.objects.filter(proyecto_id = proyecto_id, nro_sprint = sprint)
+        hulista = UserStory.objects.filter(sprint = sprint)
+        return render_to_response('apps/project_sprint_backlog_list.html', {'sprintlista':sprintlista, 'hu':hulista, 'proyecto':proyecto})
     
 ##############################################################################################################################################
 ###############################################################################################################################################
@@ -1712,6 +1725,7 @@ def crearHu(request, proyecto_id):
         hu.prioridad = prioridad
         hu.notas = request.POST.get('notas', False)
         hu.tiempo_Real = 0
+        hu.estado_scrum = Estados_Scrum.objects.get(pk=3)
         hu.save()
         
        
