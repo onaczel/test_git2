@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block titulo %}
+	<h1>{{proyecto.nombre}}</h1>
+{% endblock %}
+
+
+{% block contenido %}
+	<table>
+		<tr>
+			<td width=120><h2>{{hu.codigo}}</h2></td>
+			<td><h2>{{hu.nombre}}</h2></td>
+		</tr>
+	</table>
+	<h3>Agregar Nota</h3>
+	{% if misPermisos.MUS %}
+			
+				
+				
+				<form action="{% url 'apps:agregarNotaHu' proyecto.id hu.id %}" method="post">
+					{% csrf_token %}
+							<table border=0px>
+	
+					<tr height=10px></tr>
+					<tr>
+						<td valign="center" width=150px><label><b>Nota:</b></label></td>
+					</tr>
+					<tr>
+						<td><textarea name="descripcion" rows="10" cols="80" style="font-size:18px;"></textarea></td>
+					</tr>
+					<tr height=20px></tr>
+				</table>
+				
+			
+		
+
+			 
+			 
+			{% if hu.estado == True %}
+				<table width=100%>
+					<tr height=10px></tr>
+					<tr>
+						<td align="left"><input style= "width:300px; float:center; "  type='submit' value='Guardar'/></td>
+					</tr>
+				</table>
+			{% endif %}
+		
+		
+		</form>
+	
+	{% endif %}
+{% endblock %}
+
+{% block atras %}
+	<a href="{% url 'apps:editarHu' proyecto.id hu.id %}">Volver</a>
+{% endblock %}

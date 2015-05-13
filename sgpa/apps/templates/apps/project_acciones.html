@@ -25,14 +25,18 @@
 		<a href="{% url 'apps:listhu' proyecto.id %}">Product Backlog</a>
 		<br>
 	{% endif %}
-	<br>
+	
+	<!-- 
 	{% if misPermisos.PS %}
+		<br>
 		<a href="{% url 'apps:listsprint' proyecto.id  0 %}">Sprint Backlog</a>
 		<br>
 	{% endif %}
+	 -->
 	
-	<br>
+	
 	{% if misPermisos.CRP or misPermisos.ERP or misPermisos.MRP %}
+		<br>
 		<a href="{% url 'apps:listrolesproj' proyecto.id %}">Roles</a>
 	{% endif %}
 		

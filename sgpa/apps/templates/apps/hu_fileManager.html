@@ -3,7 +3,7 @@
 	<h1>{{proyecto_nombre}}</h1>
 {% endblock %}
 {% block encabezado %}
-	<h1>{{hu.descripcion}}</h1>
+	<h1>{{hu.nombre}}</h1>
 {% endblock %}
 <h3>Editar HU</h3>
 {% block index %}
@@ -67,5 +67,5 @@
 	
 {% endblock %}
 {% block atras %}
-	<a href="{% url 'apps:listhu' proyecto_id %}">Volver</a>
+	<a href="{% url 'apps:editarHu' proyecto_id hu.id %}">Volver</a>
 {% endblock %}
