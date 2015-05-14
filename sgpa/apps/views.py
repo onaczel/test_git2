@@ -1339,11 +1339,11 @@ def accionesproyecto(request, proyecto_id):
     
     actividades = Actividades.objects.all()
     hus = UserStory.objects.filter(proyecto_id = proyecto_id, estado=True, sprint=proyecto.nro_sprint)
-
     for hu in hus:
         if hu.f_a_estado != 0 and hu.f_actividad != 0:
             hu.flujo_posicion = ((hu.f_actividad - 1)*3) + hu.f_a_estado
             hu.save()
+            
     
     tamanolista = []
     for act in actividades:

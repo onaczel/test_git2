@@ -58,22 +58,22 @@
 {% block contenido %}
 <h1>Sprint {{proyecto.nro_sprint}}</h1>
 <br>
-<table border="1" frame="lhs" cellspacing=1 cellpadding=20>	
+<table border="1" frame="lhs" cellspacing=1 cellpadding=20 width=200%>	
 	<center>
 
 	{% for f in flujo %}
 		
 		<tr>
 			<td>
-				<table border=1 cellspacing=0 cellpadding=2 bordercolor="666633">
+				<table border=1 cellspacing=0 cellpadding=2 bordercolor="666633" width=100%>
 					<tr>
 						<strong>{{f.descripcion}}</strong>
 					</tr>
 				</center>
-					<tr>
+					<tr height=30>
 						{% for actividad in actividades %}
 							{% if actividad.flujo_id == f.id%}
-								<td colspan="3">{{actividad.descripcion}}</td>
+								<td colspan="3" align="center"  width=200 height=50>{{actividad.descripcion}}</td>
 							
 							{% endif %}
 						{% endfor %} 
@@ -82,7 +82,7 @@
 					<tr>
 						{% for actividad in actividades %}
 					 		{% if actividad.flujo_id == f.id%}
-								<td>To Do </td><td>Doing</td><td>Done</td>
+								 <td width=65>To Do </td><td width=65>Doing</td><td width=65>Done</td>
 							{% endif %}
 						{% endfor %} 
 					</tr>
@@ -90,15 +90,16 @@
 
 					
 					
-					
+					{% if hus %}
 					{% for h in hus %}
 						{% if h.f_actividad != 0 %}
 							<tr>
 								{% for i in tamanolista %}
+								
 									{% if  h.flujo == f.id and forloop.counter <= f.tamano %}
 										{% if forloop.counter == h.flujo_posicion  %}
 											<!-- <td><a href="{% url 'apps:setEstadoHu' proyecto.id h.id %}">{{h.descripcion}}</a></td> -->
-											<td>{{h.descripcion}}</td>
+											<td height=100 valign="top"><small>{{h.nombre}}</small></td>
 										{% else %}
 											<td></td>
 										{% endif %}
@@ -107,6 +108,9 @@
 							<tr>
 						{% endif %}
 					{% endfor %}
+					{% else %}
+						
+					{% endif %}
 				
 				</table>
 			</td>
