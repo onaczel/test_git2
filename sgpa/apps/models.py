@@ -5,6 +5,7 @@ from django.utils import timezone
 from test.test_support import args_from_interpreter_flags
 from django.db.models.fields import CharField, IntegerField, BooleanField
 from django.template.defaultfilters import default
+import base64
 
     
 class Roles(models.Model):
@@ -236,9 +237,22 @@ class Dia_Sprint(models.Model):
     fecha = models.DateField(null=True)
 
 class archivoAdjunto(models.Model):
-    archivo = models.FileField(upload_to="adjunto")
+    #archivo = models.FileField(upload_to="adjunto")
+    archivo = models.TextField(blank=True)
     hu = models.ForeignKey(UserStory, null=True, blank=True)
     filename = models.CharField(max_length = 100, null=True, blank=True)
+    size = models.IntegerField(null=True, blank=True);
+    version = models.IntegerField(default = 1)
+    actual = models.BooleanField(default = True)
+    
     def __unicode__(self):
         """Representacion unicode del objeto"""
-        return self.archivo.name
+        return self.archivo.name    
+    
+    def set_data(self, data):
+        self.archivo = base64.encodestring(data)
+ 
+    def get_data(self):
+        return base64.decodestring(self.archivo)
+ 
+    data = property(get_data, set_data)
