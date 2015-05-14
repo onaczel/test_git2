@@ -12,7 +12,7 @@ from django.views.static import serve
 from django.core.servers.basehttp import FileWrapper
 
 from apps.models import Roles, Users_Roles, Permisos, Permisos_Roles, Flujos, Actividades, Actividades_Estados, Proyectos, Equipo, UserStory, Sprint, Dia_Sprint, UserStoryVersiones, Prioridad,\
-    Estados, UserStoryRegistro, archivoAdjunto
+    Estados, UserStoryRegistro, archivoAdjunto, Estados_Scrum, Notas
 from django.contrib.auth.models import User
 
 
@@ -1573,14 +1573,32 @@ def flujosproyectosRequestModAct(request, proyecto_id, flujo_id, actividad_id):
 
     return render_to_response('apps/project_modificar_flujo_actividad.html', {"proyecto":proyecto, "flujo":flujo, "actividad":actividad, "form":form}, context_instance=RequestContext(request) )
 
-def listsprint(request, proyecto_id):
+def listsprint(request, proyecto_id, sprint):
+    """
+    obtiene la lista de sprints y sus user stories en un proyecto
     
-    sprintlista = Sprint.objects.all()
-    #hulista = UserStory.objects.filter(estado_scrum = iniciado)
+    @param request: Http
+    @param proyecto_id: id del proyecto actual
+    @param sprint: nro del sprint en cuestion
+    @return: render a project_sprint_backlog_list.html con la lista de sprints, lista de User Stories y el objeto del proyecto
+    """
+    proyecto = Proyectos.objects.get(pk=proyecto_id)
+    sprintlista = Sprint.objects.filter(proyecto_id = proyecto_id)
+    hulista = []
+    allhu = UserStory.objects.all()
+    for hu in allhu:
+        if hu.sprint != 0:
+            hulista.append(hu)
+            
     
-##############################################################################################################################################
-###############################################################################################################################################
-##############################################################################################################################################
+    if int(sprint) == 0:
+        return render_to_response('apps/project_sprint_backlog_list.html', {'sprintlista':sprintlista, 'hu':hulista, 'proyecto':proyecto})
+    else:
+        #sprintlista = Sprint.objects.filter(proyecto_id = proyecto_id, nro_sprint = sprint)
+        hulista = UserStory.objects.filter(sprint = sprint)
+        return render_to_response('apps/project_sprint_backlog_list.html', {'sprintlista':sprintlista, 'hu':hulista, 'proyecto':proyecto})
+    
+    
 def listhu(request, proyecto_id):
     """
     obtiene la lista de User Stories de un proyecto dado, para ser modificados o eliminados
@@ -1715,8 +1733,9 @@ def crearHu(request, proyecto_id):
         #hu.flujo = oflujo.id
         prioridad = Prioridad.objects.get(descripcion = request.POST['pri'])
         hu.prioridad = prioridad
-        hu.notas = request.POST.get('notas', False)
+        #hu.notas = request.POST.get('notas', False)
         hu.tiempo_Real = 0
+        hu.estado_scrum = Estados_Scrum.objects.get(pk=3)
         hu.save()
         
        
@@ -1797,6 +1816,35 @@ def fileAdjunto(request, proyecto_id, hu_id):
     
     return render_to_response('apps/hu_fileManager.html', {"msg":msg,"lista":lista,'misPermisos':mispermisos,'hu_id':hu_id,'hu':hu,"proyecto_id":proyecto_id, 'proyecto_nombre':proyecto.nombre, }, context_instance = RequestContext(request))
 
+def notasHu(request, proyecto_id, hu_id):
+    
+    proyecto = Proyectos.objects.get(pk=proyecto_id)
+    hu = UserStory.objects.get(pk=hu_id)
+    mispermisos = misPermisos(request.user.id, proyecto_id)
+    notas = Notas.objects.filter(hu = hu_id)
+    
+    return render_to_response('apps/hu_notas.html', {'proyecto':proyecto, 'hu':hu, 'notas':notas, 'misPermisos':mispermisos}, context_instance=RequestContext(request))
+        
+def agregarNotaHu(request, proyecto_id, hu_id):
+    
+    proyecto = Proyectos.objects.get(pk=proyecto_id)
+    hu = UserStory.objects.get(pk=hu_id)
+    mispermisos = misPermisos(request.user.id, proyecto_id)
+    notas = Notas.objects.filter(hu = hu_id)
+    guardado = False
+    if request.method == 'POST':
+        nota = Notas()
+        nota.descripcion = request.POST['descripcion']
+        nota.fechahora = time.strftime("%Y-%m-%d %H:%M")
+        nota.user = request.user
+        nota.hu = hu
+        nota.save()
+        guardado = True
+        return render_to_response('apps/hu_notas.html', {'proyecto':proyecto, 'hu':hu, 'misPermisos':mispermisos, 'guardado':guardado, 'notas':notas}, context_instance=RequestContext(request))
+    
+    return render_to_response('apps/hu_asignar_notas.html', {'proyecto':proyecto, 'hu':hu, 'misPermisos':mispermisos}, context_instance=RequestContext(request))
+        
+    
 def send_file(request,f_id):
     """
     Prepara un archivo adjunto de un user story para su descarga
@@ -1932,7 +1980,7 @@ def editarHu(request, proyecto_id, hu_id):
         prioridad = Prioridad.objects.get(descripcion = request.POST['pri'])
         hu.prioridad = prioridad
         hu.fecha_modificacion = time.strftime("%Y-%m-%d")
-        hu.notas = request.POST.get('notas', False)
+        #hu.notas = request.POST.get('notas', False)
         hu.save()
         '''
         #se envian notificaciones si se ha cambiado de responsable del user story
@@ -2166,7 +2214,7 @@ def copiarHU(hu, huv, user):
     huv.estado = hu.estado
     huv.prioridad = hu.prioridad
     huv.fechahora = time.strftime("%Y-%m-%d %H:%M")
-    huv.notas = hu.notas
+    #huv.notas = hu.notas
     huv.usercambio = user
     huv.f_actividad = hu.f_actividad
     huv.f_a_estado = hu.f_a_estado

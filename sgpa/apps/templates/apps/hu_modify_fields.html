@@ -33,6 +33,10 @@
 		<a href="{% url 'apps:fileAdjunto' proyecto_id hu_id %}"><i class="fa fa-fw fa-edit"></i>Archivos Adjuntos</a>
 	</li>
 	{% endif %}
+	<br>
+	{% if misPermisos.MUS %}
+		<a href="{% url 'apps:notasHu' proyecto_id hu_id %}">Notas</a><br />
+	{% endif %}
 {% endblock %}
 <br/>
 

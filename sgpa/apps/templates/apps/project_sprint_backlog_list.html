@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block titulo %}
+	<h1>{{proyecto.nombre}}</h1>
+{% endblock %}
+
+
+
+{% block contenido %}
+	<h2>Sprint Backlog</h2>
+	<table>
+		<tr>
+			<td><h5><a href="{% url 'apps:listsprint' proyecto.id 0 %}">Ver Todos</a></h5></td>
+			{% for s in sprintlista %}
+				<td><h5><a href="{% url 'apps:listsprint' proyecto.id s.nro_sprint %}">Sprint {{s.nro_sprint}}</a></h5></td>
+			{% endfor %}
+		</tr>
+	</table>
+	{% if hu %}
+	 <table width=100%>
+		 <tr>
+		 	<td><b>Codigo</b></td><td><b>Nombre</b></td><td><b>Estado</b></td><td><b>Sprint</b></td><td><b>Fecha Creacion</b></td>
+		 </tr>
+		 
+		 {% for h in hu %}
+		 	<tr>
+		 		<td>{{h.codigo}}</td>
+		 		{% if scrum or user_logged.id == h.usuario_Asignado %}
+			 		<td><a href="{% url 'apps:editarHu' proyecto.id h.id %}">{{h.nombre}}</a><br></td>
+			 	{% else %}
+			 		<td width=30%>{{h.nombre}}<br></td>
+			 	{% endif %}
+		 		<td>{{h.estado_scrum}}</td>
+		 
+		 		<td>{{h.sprint}}</td>
+		 		<td>{{h.fecha_creacion}}</td>
+			 	
+		 	</tr>
+		 {% endfor %}
+		</table>
+	{% else %}
+		<p>No existen registros de User Stories</p>
+	{% endif %}
+	 
+	 
+{% endblock %}
+
+{% block atras %}
+	<a href="{% url 'apps:accionesproyecto' proyecto.id %}">Atras</a>
+{% endblock %}
