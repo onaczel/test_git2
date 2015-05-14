@@ -28,20 +28,15 @@
 		<a href="{% url 'apps:listhu' proyecto.id %}"><i class="fa fa-fw fa-edit"></i>Product Backlog</a>
 	</li>	
 	{% endif %}
-	
-	<!-- 
 	{% if misPermisos.PS %}
 
 	<li>
-		<a href="{% url 'apps:listsprint' proyecto.id %}"><i class="fa fa-fw fa-edit"></i>Sprint Backlog</a>
+		<a href="{% url 'apps:listsprint' proyecto.id 0 %}"><i class="fa fa-fw fa-edit"></i>Sprint Backlog</a>
 	</li>	
 
-		<br>
-		<a href="{% url 'apps:listsprint' proyecto.id  0 %}">Sprint Backlog</a>
-		<br>
-
+		
 	{% endif %}
-	 -->
+	 
 	
 	
 	{% if misPermisos.CRP or misPermisos.ERP or misPermisos.MRP %}
@@ -50,9 +45,7 @@
 		<a href="{% url 'apps:listrolesproj' proyecto.id %}"><i class="fa fa-fw fa-edit"></i>Roles</a>
 	</li>
 
-	<li>
-		<a href="{% url 'apps:listrolesproj' proyecto.id %}"><i class="fa fa-fw fa-edit">Roles</a>
-	</li>
+	
 	{% endif %}
 		
 		 
