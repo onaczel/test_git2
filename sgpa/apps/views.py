@@ -49,6 +49,11 @@ from _ast import Str
 from django.forms.formsets import INITIAL_FORM_COUNT
 from types import StringType
 from django.conf import settings
+import psycopg2
+from psycopg2 import connect
+from django.db import connection
+import StringIO
+from bsddb.dbtables import _data
 
 
 ######################################################################################################################################################
@@ -1743,7 +1748,7 @@ def fileAdjunto(request, proyecto_id, hu_id):
     mispermisos = misPermisos(request.user.id, proyecto_id)
     hu = UserStory.objects.get(pk=hu_id)
     proyecto = Proyectos.objects.get(pk = proyecto_id)
-    lista = archivoAdjunto.objects.filter(hu_id = hu_id) 
+    lista = archivoAdjunto.objects.filter(hu_id = hu_id,actual = True) 
     msg = ""
     if request.method == 'POST':
      
@@ -1751,16 +1756,39 @@ def fileAdjunto(request, proyecto_id, hu_id):
         file = request.FILES['file']
         print file.size
         if file.size <= 10485760:
-            adjunto = archivoAdjunto.objects.create(archivo=file, hu = hu)
-            adjunto.save()
-            var = ""
-            var = adjunto.archivo.name
-            var = var.split('/')
-            var = var[-1]
-            adjunto.filename = var
-            adjunto.save()
-            return render_to_response('apps/hu_fileManager.html', {"msg":msg,"lista":lista,'misPermisos':mispermisos,'hu_id':hu_id,'hu':hu,"proyecto_id":proyecto_id, 'proyecto_nombre':proyecto.nombre, }, context_instance = RequestContext(request))
-
+            count = archivoAdjunto.objects.filter(filename = file.name, hu = hu_id).count()
+            
+            print "count: " 
+            print count
+            if count >0:
+                oldAdjunto = archivoAdjunto.objects.get(filename = file.name, hu = hu_id, actual = True)
+                oldAdjunto.actual = False;
+                
+                adjunto = archivoAdjunto()
+                data = file.read()
+                archivoAdjunto.set_data(adjunto, data)
+       
+                adjunto.hu=hu
+                adjunto.size = file.size
+                adjunto.filename = file.name
+                
+                adjunto.version = oldAdjunto.version +1
+                adjunto.save()  
+                oldAdjunto.save()
+        
+                return render_to_response('apps/hu_fileManager.html', {"msg":msg,"lista":lista,'misPermisos':mispermisos,'hu_id':hu_id,'hu':hu,"proyecto_id":proyecto_id, 'proyecto_nombre':proyecto.nombre, }, context_instance = RequestContext(request))
+            else:
+                adjunto = archivoAdjunto()
+                data = file.read()
+                archivoAdjunto.set_data(adjunto, data)
+       
+                adjunto.hu=hu
+                adjunto.size = file.size
+                adjunto.filename = file.name
+                
+                adjunto.save()  
+        
+                return render_to_response('apps/hu_fileManager.html', {"msg":msg,"lista":lista,'misPermisos':mispermisos,'hu_id':hu_id,'hu':hu,"proyecto_id":proyecto_id, 'proyecto_nombre':proyecto.nombre, }, context_instance = RequestContext(request))
         else:
             msg = "Archivo sobrepaso 10 MB"
         return render_to_response('apps/hu_fileManager.html', {"msg":msg,"lista":lista,'misPermisos':mispermisos,'hu_id':hu_id,'hu':hu,"proyecto_id":proyecto_id, 'proyecto_nombre':proyecto.nombre, }, context_instance = RequestContext(request))
@@ -1777,16 +1805,18 @@ def send_file(request,f_id):
     @param f_id: id del archivo que se desea descargar
     @return response : El archivo para su descarga                                         
     """
+
     archivo = archivoAdjunto.objects.get(id = f_id)
-    f = ""
-    f = archivo.filename
-    filename = '/var/www/adjunto/'+f
-    wrapper = FileWrapper(file(filename))
-    response = HttpResponse(wrapper, content_type='text/plain')
-    response['Content-Disposition'] = 'attachment; filename=%s' % os.path.basename(filename)
-    response['Content-Length'] = os.path.getsize(filename)
+    data = archivoAdjunto.get_data(archivo)
+    file_content = data
+    filename = archivo.filename
+    
+    response = HttpResponse(file_content, content_type='text/plain')
+    response['Content-Disposition'] = 'inline; filename=%s'%filename
     
     return response
+    
+   
 
 def delete_file(request, proyecto_id, hu_id, f_id):
     """
@@ -1795,19 +1825,42 @@ def delete_file(request, proyecto_id, hu_id, f_id):
     @param request: HttpRequest
     @param proyecto_id: id del proyecto del User Story
     @param hu_id: id del user story donde al que pertenece el archivo 
+    @param f_id: id del archivo
     @return HttpResponse a fileAdjunto()
     """
-    file = archivoAdjunto.objects.get(id = f_id)
-    file_path = settings.MEDIA_URL + '/adjunto/' + str(file.filename)
-
-    if os.path.isfile(file_path):
+    adjunto = archivoAdjunto.objects.get(id = f_id)
+    
+    if adjunto.version > 1:
         
-        file.delete()
-        os.remove(file_path)
+        if archivoAdjunto.objects.filter(hu = hu_id, version = adjunto.version -1, filename = adjunto.filename).exists():
+            
+            adjunto2 = archivoAdjunto.objects.get(hu = hu_id, version = adjunto.version -1, filename = adjunto.filename)
+            adjunto2.actual = True
+            adjunto2.save()
         
+    adjunto.delete()
+    
     return HttpResponse(fileAdjunto(request, proyecto_id, hu_id))
 
+def versionesAdjunto(request, proyecto_id, hu_id):
+    """
+    Retorna una lista de las versiones de los archivos adjuntos
+    
+    @param request: Http
+    @param proyecto_id: id del proyecto en el que se creara el User Story
+    @param hu_id: id del user story al que se le adjuntara el archivo 
+    @return: render a hu_fileManager_verions.html 
+    """    
+    mispermisos = misPermisos(request.user.id, proyecto_id)
+    hu = UserStory.objects.get(pk=hu_id)
+    proyecto = Proyectos.objects.get(pk = proyecto_id)
+    lista = archivoAdjunto.objects.filter(hu_id = hu_id,actual = False) 
+   
+    
 
+    
+    
+    return render_to_response('apps/hu_fileManager_versions.html', {'lista':lista,'misPermisos':mispermisos,'hu_id':hu_id,'hu':hu,"proyecto_id":proyecto_id, 'proyecto_nombre':proyecto.nombre, }, context_instance = RequestContext(request))
     
 def editarHu(request, proyecto_id, hu_id):
     """
