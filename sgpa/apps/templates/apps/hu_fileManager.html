@@ -12,51 +12,71 @@
 	{% if misPermisos.MUS %}
 		
 		{% if hu.estado == True %}
-			<a href="{% url 'apps:setEstadoHu' proyecto_id hu_id  %}">Cambiar Estado</a><br />
+		<li>
+			<a href="{% url 'apps:setEstadoHu' proyecto_id hu_id  %}"><i class="fa fa-fw fa-edit"></i>Cambiar Estado</a>
+		</li>
 		{% endif %}
-		<br>
-		<a href="{% url 'apps:listhuversiones' proyecto_id hu_id  %}">Historial</a><br />
-		<br>
-		<a href="{% url 'apps:registroHu' proyecto_id hu_id  %}">Registros</a><br />
+		<li>
+			<a href="{% url 'apps:listhuversiones' proyecto_id hu_id  %}"><i class="fa fa-fw fa-edit"></i>Historial</a>
+		</li>
+		<li>
+			<a href="{% url 'apps:registroHu' proyecto_id hu_id  %}"><i class="fa fa-fw fa-edit"></i>Registros</a>
+		</li>
 	{% endif %}
 	
-	<br>
+	
 	{% if misPermisos.EUS and hu.estado == True %}
-		<a href="{% url 'apps:eliminarHu' proyecto_id hu_id %}">Eliminar User Story</a><br /><br />
+	<li>
+		<a href="{% url 'apps:eliminarHu' proyecto_id hu_id %}"><i class="fa fa-fw fa-edit"></i>Eliminar User Story</a>
+	</li>
 	{% endif %}
-	<b>Archivos Adjuntos</b><br />
+	<li>
+		<a href="#"><i class="fa fa-fw fa-edit"></i>Archivos Adjuntos</a>
+	</li>
+	<li>
+		<a href="{% url 'apps:versionesAdjunto' proyecto_id hu_id %}"><i class="fa fa-fw fa-edit"></i>Versiones de Archivos</a>
+	</li>
 {% endblock %}
 <br/>
 
 {% block contenido %}
 	<form enctype="multipart/form-data" action="{% url 'apps:fileAdjunto' proyecto_id hu_id %}" method="post" >
 		{% csrf_token %}
-		<fieldset style="width:600px;height:70px">
+		
 			<legend>Adjuntar archivo</legend>
 			
 				<table>
 					<tr>
 						
-						<td><input type="file" value="file2" name= "file"required/><br></td>
+						<td><input type="file" value="file2" name= "file"required/></td>
 						<td><input type="submit" value="Guardar" /> <label style="color: red; font-size: 12pt">{{msg}}</label></td>
 					</tr>
 					<tr> <td><i>Limite 10 MB</i><td></tr>
 				</table>
-		</fieldset>	
-	</form>
 	
-	<table cellpadding=7>
+	</form>
+	</br>
+	<table width=50%>
+		
+		
 		<tr>
-			<p><b>Archivos: </b></p>
-		</tr>
+						
+			<td><b>Archivo</b></td>
+			<td><b>Version</b></td>
+			<td><b>Eliminar</b></td>
+						
+		</tr>	
+		{% for f in lista %}	
 		<UL type= disk> 
-		{% for f in lista %}		
-		<tr>
-						
+		<center>
+		
+					
 			<td><LI><a href="{% url 'apps:send_file' f.id %}" title="Descargar">{{f.filename}}</a></td>
-			<td><a href="{% url 'apps:delete_file'  proyecto_id hu_id f.id %}" title="Eliminar archivo"> <i>x</i></a></td>
+			<td>&nbsp&nbsp&nbsp{{f.version}}</td>
+			<td><a href="{% url 'apps:delete_file'  proyecto_id hu_id f.id %}" title="Eliminar archivo"> <i>&nbsp&nbsp&nbspx</i></a></td>
 						
 		</tr>
+		
 		</UL>
 		{% endfor %} 
 	</table>
