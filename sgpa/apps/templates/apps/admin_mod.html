@@ -7,19 +7,19 @@
 {% endblock %}
 {% block contenido %}
 	{% if misPermisos.CU or misPermisos.MU or misPermisos.EU %}
-		<a href="{% url 'apps:listuser' user_logged %}">Administrar Usuarios</a><br />
+		<a href="{% url 'apps:listuser' user_logged %}"><i class="fa fa-fw fa-wrench"></i> Administrar Usuarios</a><br />
 	{% endif %}
 	<br>
 	{% if misPermisos.CR or misPermisos.MR or misPermisos.ER %}
-		<a href="{% url 'apps:listrolesmod' user_logged %}">Administrar Roles</a><br />
+		<a href="{% url 'apps:listrolesmod' user_logged %}"><i class="fa fa-fw fa-wrench"></i> Administrar Roles</a><br />
 	{% endif %}
 	<br>
 	{% if misPermisos.CP or misPermisos.MP or misPermisos.EP %}
-		<a href="{% url 'apps:adminproject' user_logged %}">Administrar Proyectos</a><br />
+		<a href="{% url 'apps:adminproject' user_logged %}"><i class="fa fa-fw fa-wrench"></i> Administrar Proyectos</a><br />
 	{% endif %}
 	<br>
 	{% if misPermisos.CPF or misPermisos.MPF or misPermisos.EPF %}
-		<a href="{% url 'apps:listflowmod' user_logged %}">Administrar Flujos</a><br />
+		<a href="{% url 'apps:listflowmod' user_logged %}"><i class="fa fa-fw fa-wrench"></i> Administrar Flujos</a><br />
 	{% endif %}
 	
 {% endblock %}
