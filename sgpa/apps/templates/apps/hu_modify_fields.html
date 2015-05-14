@@ -8,30 +8,36 @@
 	<!-- <a href="{% url 'apps:editarHu' proyecto_id hu_id %}">Modificar Campos</a><br/> -->
 	<h3>{{hu_descripcion}}</h3>
 	{% if misPermisos.MUS %}
-		<!-- <a href="{% url 'apps:userToHU' proyecto_id hu_id %}">Asignar Usuario</a><br/> -->
-		<!-- <a href="{% url 'apps:listhuflujo' proyecto_id hu_id %}">Asignar Flujo</a><br /> -->
 		{% if hu.estado == True %}
-			<a href="{% url 'apps:setEstadoHu' proyecto_id hu_id  %}">Cambiar Estado</a><br />
+		<li>
+              <a href="{% url 'apps:setEstadoHu' proyecto_id hu_id  %}"><i class="fa fa-fw fa-edit"></i> Cambiar Estado</a>          
+        </li>			
 		{% endif %}
-		<br>
-		<a href="{% url 'apps:listhuversiones' proyecto_id hu_id  %}">Historial</a><br />
-		<br>
-		<a href="{% url 'apps:registroHu' proyecto_id hu_id  %}">Registros</a><br />
+		<li>
+		
+		<a href="{% url 'apps:listhuversiones' proyecto_id hu_id  %}"><i class="fa fa-fw fa-edit"></i>Historial</a>
+		</li>
+		
+		<li>
+			<a href="{% url 'apps:registroHu' proyecto_id hu_id  %}"><i class="fa fa-fw fa-edit"></i>Registros</a>
+		</li>
 	{% endif %}
-	<!--<a href='assignSprint'>Asignar Sprint</a><br />
-	  a href='assignPriority'>Asignar Prioridad</a><br/>
-	<a href="">Asignar Valor Tecnico</a><br>
-	<a href="">Asignar Valor de Negocio</a><br> -->
-	<br>
+	
 	{% if misPermisos.EUS and hu.estado == True %}
-		<a href="{% url 'apps:eliminarHu' proyecto_id hu_id %}">Eliminar User Story</a><br /><br />
+	<li>
+		<a href="{% url 'apps:eliminarHu' proyecto_id hu_id %}"><i class="fa fa-fw fa-edit"></i>Eliminar User Story</a>
+	</li>
 	{% endif %}
 	{% if misPermisos.MUS and hu.estado == True %}
-		<a href="{% url 'apps:fileAdjunto' proyecto_id hu_id %}">Archivos Adjuntos</a><br />
+	<li>
+		<a href="{% url 'apps:fileAdjunto' proyecto_id hu_id %}"><i class="fa fa-fw fa-edit"></i>Archivos Adjuntos</a>
+	</li>
 	{% endif %}
-	<br>
+	
 	{% if misPermisos.MUS %}
-		<a href="{% url 'apps:notasHu' proyecto_id hu_id %}">Notas</a><br />
+	<li>
+		<a href="{% url 'apps:notasHu' proyecto_id hu_id %}"><i class="fa fa-fw fa-edit"></i>Notas</a>
+	</li>
 	{% endif %}
 {% endblock %}
 <br/>

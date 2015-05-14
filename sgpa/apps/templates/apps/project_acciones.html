@@ -18,36 +18,48 @@
 	{% endif %}
 	-->
 	<!--  {% if misPermisos.CUS	 %} -->
-		<br><a href="{% url 'apps:listflujosproyectosMod' proyecto.id %}">Flujos</a><br />
+	<li>
+		<a href="{% url 'apps:listflujosproyectosMod' proyecto.id %}"><i class="fa fa-fw fa-edit"></i>Flujos</a>
+	</li>
 	<!-- {% endif %} -->
-		<br>
+		
 	{% if misPermisos.CUS or misPermisos.MUS or misPermisos.EUS %}
-		<a href="{% url 'apps:listhu' proyecto.id %}">Product Backlog</a>
-		<br>
+	<li>
+		<a href="{% url 'apps:listhu' proyecto.id %}"><i class="fa fa-fw fa-edit"></i>Product Backlog</a>
+	</li>	
 	{% endif %}
-	
-	<!-- 
 	{% if misPermisos.PS %}
-		<br>
-		<a href="{% url 'apps:listsprint' proyecto.id  0 %}">Sprint Backlog</a>
-		<br>
+
+	<li>
+		<a href="{% url 'apps:listsprint' proyecto.id 0 %}"><i class="fa fa-fw fa-edit"></i>Sprint Backlog</a>
+	</li>	
+
+		
 	{% endif %}
-	 -->
+	 
 	
 	
 	{% if misPermisos.CRP or misPermisos.ERP or misPermisos.MRP %}
-		<br>
-		<a href="{% url 'apps:listrolesproj' proyecto.id %}">Roles</a>
+
+	<li>
+		<a href="{% url 'apps:listrolesproj' proyecto.id %}"><i class="fa fa-fw fa-edit"></i>Roles</a>
+	</li>
+
+	
 	{% endif %}
 		
-		<br> 
+		 
 	{%if misPermisos.PS == True %}
-		<br><a href="{% url 'apps:sprints' proyecto.id 0 0 %}">Sprints</a><br />
+	<li>
+		<a href="{% url 'apps:sprints' proyecto.id 0 0 %}"><i class="fa fa-fw fa-edit"></i>Sprints</a>
+	</li>
 	{% endif %}
 	{%if misPermisos.VP %}
-		<br><a href="{% url 'apps:verCliente' proyecto.id%}">Ver cliente</a><br />
+	<li>
+		<a href="{% url 'apps:verCliente' proyecto.id%}"><i class="fa fa-fw fa-edit"></i>Ver cliente</a>
+	</li>
 	{% endif %}
-	<br>
+	
 {% endblock %}
 
 {% block encabezado %}

@@ -1,28 +1,43 @@
-<div style="float:right">
-<a href="{% url 'apps:horas' 0 %}">Agregar Horas Trabajadas</a>
-</div>
-<div style="clear:both">
+{% extends 'base.html' %}
+
+
+
+
 	{% block titulo %}
 	<title>SGPA</title>
 	
-	<center>
-		<div style="color: blue">
+	
+		<div >
 			<h2>Acceso correcto al sistema</h2>
 		</div>
-	</center>
+	
 	
 	{% endblock %} 
 	
 	{% block encabezado %}
-	<center>
+	
 		<h1>Bienvenido</h1>
-	</center>
+	
 	
 	{% endblock %}
 	
+	{% block index %}	
+		{% if rol_sistema == True and rol_id != 2 %}
+				<li>
+					<a href="{% url 'apps:adminmod' usuario.id %}"><i class="fa fa-fw fa-edit"></i>Modulo Administracion</a>
+				</li>
+				<li>
+					<a href="{% url 'apps:listproyectosdelusuario' usuario.id %}"><i class="fa fa-fw fa-edit"></i>Modulo Proyecto</a>
+				</li>
+				
+				{% else %}
+				<li>
+					<a href="{% url 'apps:listproyectosdelusuario' usuario.id %}"><i class="fa fa-fw fa-edit"></i>Modulo Proyecto</a>
+				</li>
+		{% endif %}
 	
-	
-	<div style="background-color: #AFEEEE;">
+	{% endblock %}
+		
 		{% block contenido %}
 	
 		<center>
@@ -31,20 +46,11 @@
 				<p>Bienvenido {{usuario.username|upper}}, la ultima vez que te
 					vimos por aqui fue {{usuario.last_login}}.</p>
 				<p>Eres miembro desde {{usuario.date_joined}}</p>
-			</div>
-			<h3>Opciones</h3>
-			<table border="5">
-				{% if rol_sistema == True and rol_id != 2 %}
-					<td><strong><a href="{% url 'apps:adminmod' usuario.id %}">Modulo Administracion</a></strong></td>
-					<td><strong><a href="{% url 'apps:listproyectosdelusuario' usuario.id %}">Modulo Proyecto</a></strong></td>
-					<td><strong><a href="/apps/cerrar">Salir</a></strong></td>
-				{% else %}
-					<td><strong><a href="{% url 'apps:listproyectosdelusuario' usuario.id %}">Modulo Proyecto</a></strong></td>
-					<td><strong><a href="/apps/cerrar">Salir</a></strong></td>
-				{% endif %}
-			</table>
+			</div>			
+			
+				
+			
 		</center>
 	
 		{% endblock %}
 	</div>
-</div>

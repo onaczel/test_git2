@@ -3,7 +3,7 @@
 	<h1>{{proyecto_nombre}}</h1>
 {% endblock %}
 {% block encabezado %}
-	<h1>{{hu.nombre}}</h1>
+	<h1>{{hu.descripcion}}</h1>
 {% endblock %}
 <h3>Editar HU</h3>
 {% block index %}
@@ -23,60 +23,47 @@
 			<a href="{% url 'apps:registroHu' proyecto_id hu_id  %}"><i class="fa fa-fw fa-edit"></i>Registros</a>
 		</li>
 	{% endif %}
-	
+		
 	
 	{% if misPermisos.EUS and hu.estado == True %}
 	<li>
 		<a href="{% url 'apps:eliminarHu' proyecto_id hu_id %}"><i class="fa fa-fw fa-edit"></i>Eliminar User Story</a>
 	</li>
 	{% endif %}
+	{% if misPermisos.MUS and hu.estado == True %}
 	<li>
-		<a href="#"><i class="fa fa-fw fa-edit"></i>Archivos Adjuntos</a>
+		<a href="{% url 'apps:fileAdjunto' proyecto_id hu_id %}"><i class="fa fa-fw fa-edit"></i>Archivos Adjuntos</a>
 	</li>
+	{% endif %}
 	<li>
-		<a href="{% url 'apps:versionesAdjunto' proyecto_id hu_id %}"><i class="fa fa-fw fa-edit"></i>Versiones de Archivos</a>
+		<a href="#"><i class="fa fa-fw fa-edit"></i>Versiones de Archivos</a>
 	</li>
 {% endblock %}
-<br/>
 
 {% block contenido %}
-	<form enctype="multipart/form-data" action="{% url 'apps:fileAdjunto' proyecto_id hu_id %}" method="post" >
-		{% csrf_token %}
-		
-			<legend>Adjuntar archivo</legend>
-			
-				<table>
-					<tr>
-						
-						<td><input type="file" value="file2" name= "file"required/></td>
-						<td><input type="submit" value="Guardar" /> <label style="color: red; font-size: 12pt">{{msg}}</label></td>
-					</tr>
-					<tr> <td><i>Limite 10 MB</i><td></tr>
-				</table>
+	<legend>Versiones de archivos</legend>
 	
-	</form>
-	</br>
-	<table width=50%>
-		
-		
+	<table cellpadding=7 width=20%>
+		<tr>
+			<p><b></b></p>
+		</tr>
+		<UL type= disk> 
 		<tr>
 						
 			<td><b>Archivo</b></td>
 			<td><b>Version</b></td>
-			<td><b>Eliminar</b></td>
+			
 						
 		</tr>	
 		{% for f in lista %}	
-		<UL type= disk> 
-		<center>
 		
-					
+		<tr>
+						
 			<td><LI><a href="{% url 'apps:send_file' f.id %}" title="Descargar">{{f.filename}}</a></td>
-			<td>&nbsp&nbsp&nbsp{{f.version}}</td>
-			<td><a href="{% url 'apps:delete_file'  proyecto_id hu_id f.id %}" title="Eliminar archivo"> <i>&nbsp&nbsp&nbspx</i></a></td>
+			<td><center><p>{{f.version}}</p></center></td>
+			
 						
 		</tr>
-		
 		</UL>
 		{% endfor %} 
 	</table>
@@ -87,5 +74,5 @@
 	
 {% endblock %}
 {% block atras %}
-	<a href="{% url 'apps:editarHu' proyecto_id hu.id %}">Volver</a>
+	<a href="{% url 'apps:listhu' proyecto_id %}">Volver</a>
 {% endblock %}
