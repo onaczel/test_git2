@@ -278,3 +278,7 @@ class archivoAdjunto(models.Model):
         return base64.decodestring(self.archivo)
  
     data = property(get_data, set_data)
+    
+class historialResponsableHU(models.Model):
+    hu = models.ForeignKey(UserStory)
+    responsable = models.ForeignKey(User)
