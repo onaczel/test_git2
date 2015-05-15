@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block encabezado %}
+	<h1>{{proyecto.nombre}}</h1>
+{% endblock %}
+{% block contenido %}
+	<center>
+		<h3>Analisis de User Stories del Sprint {{sprint.nro_sprint}}</h3>
+	</center>
+	<center>
+		<a href="{% url 'apps:sprints' proyecto.id 0 0 %}">Hecho</a>
+	</center>
+	{% if hus %}
+		<div style="float: left">
+			<h3>User Stories Pendientes</h3>
+			{% for hu in hus %}
+				{% if hu.estado and hu.estado_scrum_id != 5 and hu.estado_scrum_id != 6 %}
+					<li>
+						<form action="{% url 'apps:sprints' proyecto.id sprint.id hu.id %}" method="post">{% csrf_token %}
+							<h3><b><font size="3">HU {{hu.codigo}}</font>&emsp;<font size="1">Detalles</font><input type="submit", name="cambio", value=" +"><input type="submit", name="cambio", value=" -"></b></h3>
+						</form>
+						{% if userStory.id == hu.id %}
+							<form action="{% url 'apps:sprints' proyecto.id sprint.id hu.id %}" method="post">{% csrf_token %}
+								<input type="submit", name="cambio", value="Finalizar User Story">&emsp;<input type="submit", name="cambio", value="Cancelar User Story"><br /><br />
+								<table>
+									<font size="3"><b>Descripcion:</b></font>&emsp;{{detalles.descripcion.value}}<br />
+									<font size="3"><b>Codigo:</b></font>&emsp;{{detalles.codigo.value}}<br /><br />
+									<font size="3"><b>Tiempo Estimado:</b></font>&emsp;{{detalles.tiempo_Estimado.value}}<br />
+									<font size="3"><b>Tiempo Consumido por el User Story:</b></font>&emsp;{{tiempo_hu_registrado}}<br /><br />
+									<font size="3"><b>Valor Negocio:</b></font>&emsp;{{detalles.valor_Negocio.value}}<br />
+									<font size="3"><b>Valor Tecnico:</b></font>&emsp;{{detalles.valor_Tecnico.value}}<br />
+								</table>
+								<table>
+									<font size="3"><b>Prioridad:</b></font>&emsp;{{prioridad.descripcion}}<br /><br />
+									<font size="3"><b>Usuario Asignado:</b></font>&emsp;{{usuario.username}}<br /><br />
+									<font size="3"><b>fecha de creacion:</b></font>&emsp;{{hu.fecha_creacion}}<br />
+									<font size="3"><b>fecha de inicio:</b></font>&emsp;{{hu.fecha_inicio}}<br />
+									<font size="3"><b>Ultima fecha de modificacion:</b></font>&emsp;{{hu.fecha_modificacion}}<br /><br />
+									<font size="3"><b>Flujo Asignado:</b></font>&emsp;{{flujo.descripcion}}<br />
+									<font size="3"><b>Actividad:</b></font>&emsp;{{f_actividad}}<br />
+									<font size="3"><b>Estado de la actividad:</b></font>&emsp;{{f_a_estado.descripcion}}<br /><br />
+									{% if hu.finalizado %}
+										<font size="3"><b>Estado segun el usuario Asignado:</b></font>&emsp;hu.Finalizado<br />
+									{% endif %}
+								</table>
+							</form>
+						{% endif %}
+					</li>
+				{% endif %}
+			{% endfor %}
+		</div>
+	{% else %}
+		<table border=1 bordercolor="green" width=100%>
+			<tr><td align="center"><font color="green"><p><h4>No hay User Stories para analizar</h4></p></font></td></tr>
+		</table>
+	{% endif%}
+{% endblock %}

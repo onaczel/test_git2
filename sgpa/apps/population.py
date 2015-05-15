@@ -59,6 +59,13 @@ def populate():
     add_estado('Doing')
     add_estado('Done')
     
+    add_estado_scrum("Iniciado")
+    add_estado_scrum("Asignado")
+    add_estado_scrum("No Asignado")
+    add_estado_scrum("Pendiente")
+    add_estado_scrum("Finalizado")
+    add_estado_scrum("Cancelado")
+    
     add_proyecto("Proyecto 1")
     add_proyecto("Proyecto 2")
     add_proyecto("Proyecto 3")
@@ -75,13 +82,6 @@ def populate():
     add_equipo(3, 3, 2)
     add_equipo(3, 4, 3)
     add_equipo(3, 5, 3)
-    
-    add_estado_scrum("Iniciado")
-    add_estado_scrum("Asignado")
-    add_estado_scrum("No Asignado")
-    add_estado_scrum("Pendiente")
-    add_estado_scrum("Finalizado")
-    add_estado_scrum("Cancelado")
         
 def add_estado_scrum(descripcion):
     estado = Estados_Scrum()
@@ -166,6 +166,7 @@ def add_proyecto(descripcion):
     proyecto.fecha_est_fin = '2015-06-02'
     proyecto.descripcion = 'una prueba de proyecto'
     proyecto.observaciones = 'ninguna'
+    proyecto.nro_sprint = 0
     proyecto.save()
     add_flujo_proyecto(proyecto.id, 1)
     

@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+<!DOCTYPE html> 
+{% block titulo%}
+<p><label style="font-size: 20pt;"><strong>{{proyecto.nombre}}</strong></label>   </p>
+<p><label style="font-size: 20pt;"><strong>Cambiar Fecha estimada de Fin del sprint {{sprint.nro_sprint}}      </strong></label>   </p> 
+{% endblock %}
+
+{% block contenido %}
+	<form action="{% url 'apps:sprints' proyecto.id sprint.id 0 %}" method="post">{% csrf_token %}
+		<table>
+			<tr>
+				<td><label>Fecha estimada de finalización:</label></td>
+				<td><input type="date" id="campo3" value="{{fecha_est_fin}}" name="fechaFin" style="width:190px" required/>AAAA-MM-DD <label style="color: red; font-size: 12pt">{{msg}}</label></td>
+			</tr>
+		</table>
+		<br><input type="submit", name="cambio", value="Cambiar fecha"><br />
+	</form>
+{% endblock %}
+{% block atras %}
+	<a href="{% url 'apps:sprints' proyecto.id sprint.id 0 %}">Atras</a><br />
+{% endblock %}
