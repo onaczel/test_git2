@@ -54,7 +54,7 @@ from psycopg2 import connect
 from django.db import connection
 import StringIO
 from bsddb.dbtables import _data
-from apps.commands import enviarMail, notificarNota
+from apps.commands import enviarMail, notificarNota, notificarModificacionHU
 
 
 ######################################################################################################################################################
@@ -1970,6 +1970,8 @@ def editarHu(request, proyecto_id, hu_id):
         hu.valor_Tecnico = request.POST['valortecnico']
         hu.proyecto_id = proyecto_id
         
+        #llamada a funcion que notifica a los responsables, la modificacion del hu
+        notificarModificacionHU(hu_id,proyecto_id)
         
         '''
         try:
