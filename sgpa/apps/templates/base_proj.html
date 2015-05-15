@@ -94,6 +94,7 @@
                         <h1 class="page-header">
                             {% block titulo %} {% endblock %} 
                             <small>{% block encabezado %} {% endblock %} </small>
+                          
                         </h1>
                         <ol class="breadcrumb">
                             <li>
@@ -108,6 +109,11 @@
                 </div>
                 <!-- /.row -->
 		{% block contenido %} {% endblock %}
+		<div style="text-align: center; border: 1px solid green;  height:60px; width:1095px; float:right;">
+						<h2>Equipo</h2>
+					</div>
+					{% block equipo %}
+					{% endblock %}
             </div>
             <!-- /.container-fluid -->
 
