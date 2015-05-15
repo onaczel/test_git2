@@ -3,13 +3,15 @@
 	<h1>{{proyecto.nombre}}</h1>
 {% endblock %}
 {% block encabezado %}
-	<h1>{{hu.descripcion}}</h1>
+	<h1>{{hu.nombre}}</h1>
 {% endblock %}
 <h3>Editar HU</h3>
 
 <br/>
 {% block index %}
-<a href="{% url 'apps:accionesproyecto' proyecto.id %}">Proyecto</a>
+<li>
+	<a href="{% url 'apps:accionesproyecto' proyecto.id %}"><i class="fa fa-fw fa-edit"></i>Proyecto</a>
+</li>
 {% endblock %}
 {% block contenido %}
 
@@ -18,28 +20,57 @@
 			{% csrf_token %}
 			<b>Flujo Asignado</b>&emsp;&emsp;
 			<p>{{flujo_descripcion}}</p><br><br>
-			<b>Actividad Actual</b>
-			<select name="act"  style="width:190px" sort = true>
-					{% for actividad in actividades %}
-						{% if hu.f_actividad == forloop.counter %}
-							<option selected="selected">{{actividad.descripcion}}</option>
-						{% else %}
-							<option>{{actividad.descripcion}}</option>
-						{% endif %}
-					{% endfor %} 
-			</select><br>
-
-			<b>Estado:</b>&emsp;&emsp;&emsp;&emsp;&emsp;
-			<select name="est"  style="width:190px" sort = true>
-					{% for e in estados %}
-						{% if e.id == hu.f_a_estado %}
-							<option selected="selected">{{e.descripcion}}</option>
-						{% else %}
-							<option >{{e.descripcion}}</option>
-						{% endif %}
-					{% endfor %} 
-			</select><br>
-			
+			<table border=0px>
+				<tr>
+					<td width=200><b>Actividad Actual</b></td>
+					{% if hu.f_a_estado == 3 %}
+					<td width=100>
+						<select name="act"  style="width:190px" sort = true>
+								{% for actividad in actividades %}
+									{% if hu.f_actividad == forloop.counter %}
+										<option selected="selected">{{actividad.descripcion}}</option>
+									{% else %}
+										<option>{{actividad.descripcion}}</option>
+									{% endif %}
+								{% endfor %} 
+						</select><br>
+					</td>
+					{% else %}
+						{% for actividad in actividades %}
+							{% if hu.f_actividad == forloop.counter %}
+								<td width=300>{{actividad.descripcion}}</td>
+							{% endif %}
+						{% endfor %} 
+					<select name="act"  style="width:190px; visibility:hidden" sort = true>
+							{% for actividad in actividades %}
+								{% if hu.f_actividad == forloop.counter %}
+									<option selected="selected">{{actividad.descripcion}}</option>
+								{% else %}
+									<option>{{actividad.descripcion}}</option>
+								{% endif %}
+							{% endfor %} 
+					</select><br>
+					{% endif %}
+				</tr>
+				<tr>
+					<td><b>Estado:</b></td>
+					{% if estados %}
+					<td>
+					<select name="est"  style="width:190px;" sort = true  >
+							{% for e in estados %}
+								{% if e.id == hu.f_a_estado %}
+									<option selected="selected">{{e.descripcion}}</option>
+								{% else %}
+									<option >{{e.descripcion}}</option>
+								{% endif %}
+							{% endfor %} 
+					</select><br>
+					</td>
+					{% else %}
+						<td>{{estados.descripcion}}</td>
+					{% endif %}
+				</tr>
+			</table>
 			<input type='submit' value='Guardar'/>
 		
 		

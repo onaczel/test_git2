@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block encabezado %}
+	<h1>{{proyecto.nombre}}</h1>
+	<h2>Registro de cancelacion del User Story {{userStory.codigo}}</h2>
+{% endblock %}
+<br />
+{% block contenido %}
+	<form action="{% url 'apps:sprints' proyecto.id sprint.id userStory.id %}" method="post">{% csrf_token %}
+		<textarea name="motivo_cancelacion" rows="10" cols="100"></textarea><br />
+		<input type="submit", name="cambio", value="Cancelar este user story">&emsp;<input type="submit", name="cambio", value="Cancelar esta accion">
+	</form>
+{% endblock %}

@@ -44,7 +44,13 @@ class Permisos_Roles(models.Model):
     """
     roles = models.ForeignKey(Roles)
     permisos = models.ForeignKey(Permisos)
-    
+
+class Estados_Scrum(models.Model):
+    """
+    Estados Iniciado, Asignado, No Asignado, Pendiente, Finalizado y Cancelado de los User Stories 
+    """
+    descripcion = models.CharField(max_length = 50)
+
 class Proyectos(models.Model):
     """
     Modelo para almacenar los datos de los proyectos
@@ -57,6 +63,10 @@ class Proyectos(models.Model):
     descripcion = models.CharField(max_length = 400)
     observaciones = models.CharField(max_length = 400)
     nro_sprint = models.IntegerField(null=True)
+    #los estados que puede usar son el 1 (Iniciado), 4 (Pendiente), 5 (Finalizado), 6 (Cancelado)
+    estado = models.ForeignKey(Estados_Scrum, default = 4)
+    fecha_ini_real = models.DateField(null=True)
+    fecha_fin_real = models.DateField(null=True)
     
     def __str__(self):
         return self.nombre
@@ -115,13 +125,6 @@ class Prioridad(models.Model):
     def __str__(self):
         return self.descripcion
 
-class Estados_Scrum(models.Model):
-    """
-    Estados Iniciado, Asignado, No Asignado, Pendiente, Finalizado y Cancelado de los User Stories 
-    """
-    descripcion = models.CharField(max_length = 50)
-    def __str__(self):
-        return self.descripcion
 
 class UserStory(models.Model):
     """
@@ -158,6 +161,7 @@ class UserStory(models.Model):
     finalizado = models.BooleanField(default = False)
     #notas = models.CharField(max_length = 512, null = True)
     estado_scrum = models.ForeignKey(Estados_Scrum, null = True)
+    motivo_cancelacion = models.CharField(max_length = 512, null = True)
 
 class UserStoryVersiones(models.Model):
     """
@@ -186,6 +190,7 @@ class UserStoryVersiones(models.Model):
     flujo_posicion = models.IntegerField(null = True)
     #notas = models.CharField(max_length = 512, null = True)
     estado_scrum = models.ForeignKey(Estados_Scrum, null = True)
+    motivo_cancelacion = models.CharField(max_length = 512, null = True)
     
 class UserStoryRegistro(models.Model):
     """
@@ -215,6 +220,7 @@ class UserStoryRegistro(models.Model):
     f_a_estado = models.IntegerField(default = 0)
     #notas = models.CharField(max_length = 512, null = True)
     estado_scrum = models.ForeignKey(Estados_Scrum, null = True)
+    motivo_cancelacion = models.CharField(max_length = 512, null = True)
     
 class Notas(models.Model):
     """
@@ -238,6 +244,9 @@ class Sprint(models.Model):
     #1 = esta en progreso
     #2 = finalizado
     estado = models.IntegerField(null=True)
+    fecha_ini = models.DateField(null=True)
+    fecha_est_fin = models.DateField(null=True)
+    fecha_fin = models.DateField(null=True)
 
 class Dia_Sprint(models.Model):
     """
