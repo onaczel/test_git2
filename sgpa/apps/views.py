@@ -54,6 +54,7 @@ from psycopg2 import connect
 from django.db import connection
 import StringIO
 from bsddb.dbtables import _data
+from apps.commands import enviarMail, notificarNota
 
 
 ######################################################################################################################################################
@@ -261,7 +262,12 @@ def recuperarContrasena(request):
                 
                     user.set_password(p)
                     user.save()
-                    send_mail('SGPA-Cambio de clave de accseso', 'Nueva clave de acceso para el usuario <'+usuario+'>: '+ p, 'noreply.sgpa@gmail.com', [user.email], fail_silently=False)
+                    asunto = 'SGPA-Cambio de clave de accseso'
+                    msg = 'Nueva clave de acceso para el usuario <'+usuario+'>: '+ p
+                    list = []
+                    list.append(user)
+                    
+                    enviarMail(asunto, msg, list)
                 
                     return render_to_response('apps/user_new_pwd_ok.html', {'username':usuario},context_instance=RequestContext(request))
                 
@@ -1839,6 +1845,7 @@ def agregarNotaHu(request, proyecto_id, hu_id):
         nota.user = request.user
         nota.hu = hu
         nota.save()
+        notificarNota(proyecto_id,hu_id,nota.descripcion)
         guardado = True
         return render_to_response('apps/hu_notas.html', {'proyecto':proyecto, 'hu':hu, 'misPermisos':mispermisos, 'guardado':guardado, 'notas':notas}, context_instance=RequestContext(request))
     
