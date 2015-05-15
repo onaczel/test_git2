@@ -24,9 +24,9 @@ def populate():
     
     add_flujo('Plantilla Generica')
     
-    permisos = ['Crear Usuario', 'Modificar Usuario', 'Eliminar Usuario', 'Crear Roles', 'Modificar Roles', 'Eliminar Roles','Crear Proyecto', 'Modificar Proyecto', 'Crear Plantilla de Flujos', 'Modificar Plantilla de Flujos', 'Eliminar Plantilla de Flujos', 'Asignar Participantes a Proyecto', 'Eliminar Participantes de Proyecto', 'Crear User Stories', 'Modificar User Stories', 'Eliminar User Stories', 'Planificar Sprints', 'Visualizar Proyectos', 'Crear Roles en Proyecto', 'Modificar Roles en Proyecto', 'Eliminar Roles en Proyecto']
-    tags = ['CU', 'MU', 'EU', 'CR', 'MR', 'ER', 'CP', 'MP','CPF', 'MPF', 'EPF', 'APP', 'EPP', 'CUS', 'MUS', 'EUS', 'PS', 'VP', 'CRP', 'MRP', 'ERP']
-    sistema = [True, True, True, True, True, True, True, True, True, True, True, False, False, False, False, False, False, False, False, False, False]
+    permisos = ['Crear Usuario', 'Modificar Usuario', 'Eliminar Usuario', 'Crear Roles', 'Modificar Roles', 'Eliminar Roles','Crear Proyecto', 'Modificar Proyecto', 'Crear Plantilla de Flujos', 'Modificar Plantilla de Flujos', 'Eliminar Plantilla de Flujos', 'Asignar Participantes a Proyecto', 'Eliminar Participantes de Proyecto', 'Crear User Stories', 'Modificar User Stories', 'Eliminar User Stories', 'Planificar Sprints', 'Visualizar Proyectos', 'Crear Roles en Proyecto', 'Modificar Roles en Proyecto', 'Eliminar Roles en Proyecto', 'Cambiar Estado User Story']
+    tags = ['CU', 'MU', 'EU', 'CR', 'MR', 'ER', 'CP', 'MP','CPF', 'MPF', 'EPF', 'APP', 'EPP', 'CUS', 'MUS', 'EUS', 'PS', 'VP', 'CRP', 'MRP', 'ERP', 'CEUS']
+    sistema = [True, True, True, True, True, True, True, True, True, True, True, False, False, False, False, False, False, False, False, False, False, False]
     c=1
     for p in permisos:
         add_permisos(p, tags[c-1], sistema[c-1])
@@ -36,7 +36,7 @@ def populate():
     permisos_usuario = [18]
     permisos_scrum_master = [12, 13, 14, 15, 16, 17, 18, 19, 20, 21 ]
     permisos_cliente = [18]
-    permisos_developer = [15, 18]
+    permisos_developer = [15, 18, 22]
     permisos_observador = [18]
     
     for p in permisos_usuario:
@@ -167,6 +167,7 @@ def add_proyecto(descripcion):
     proyecto.descripcion = 'una prueba de proyecto'
     proyecto.observaciones = 'ninguna'
     proyecto.save()
+    add_flujo_proyecto(proyecto.id, 1)
     
 def add_equipo(p_id, r_id, u_id):
     equipo = Equipo()
@@ -174,6 +175,17 @@ def add_equipo(p_id, r_id, u_id):
     equipo.rol_id = r_id
     equipo.usuario_id = u_id
     equipo.save()
+    
+def add_flujo_proyecto(proyecto_id, flujo_id):
+    proyecto = Proyectos.objects.get(pk=proyecto_id)
+    flujo = Flujos.objects.get(pk=flujo_id)
+    flujo_nuevo = Flujos()
+    flujo_nuevo.descripcion = flujo.descripcion
+    flujo_nuevo.estado = flujo.estado
+    flujo_nuevo.plantilla = False
+    flujo_nuevo.tamano = flujo.tamano
+    flujo_nuevo.proyecto = proyecto
+    flujo_nuevo.save()
 
 if __name__ == '__main__':
     print "Starting population script..."

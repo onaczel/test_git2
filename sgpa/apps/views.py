@@ -1344,6 +1344,7 @@ def accionesproyecto(request, proyecto_id):
     
     actividades = Actividades.objects.all()
     hus = UserStory.objects.filter(proyecto_id = proyecto_id, estado=True, sprint=proyecto.nro_sprint)
+    hu = sorted(hus, key=gethuidsort, reverse=False)
     for hu in hus:
         if hu.f_a_estado != 0 and hu.f_actividad != 0:
             hu.flujo_posicion = ((hu.f_actividad - 1)*3) + hu.f_a_estado
@@ -1641,6 +1642,14 @@ def gethuid(hu):
     @return: la fecha de creacion del User Story
     """
     return hu.fecha_creacion
+
+def gethuidsort(hu):
+    """
+    Funcion utilizada para ordenar una lista en base al id
+    @param hu: Objeto User Story
+    @return: la fecha de creacion del User Story
+    """
+    return hu.id
     
 def resumenHu(request, proyecto_id, hu_id):
     """
@@ -1955,6 +1964,7 @@ def editarHu(request, proyecto_id, hu_id):
         hu.proyecto_id = proyecto_id
         
         
+        '''
         try:
             user = User.objects.get(username = request.POST['us'])
         except: 
@@ -1976,7 +1986,7 @@ def editarHu(request, proyecto_id, hu_id):
             hu.flujo = oflujo.id
         except:
             hu.flujo = None
-            
+        '''    
         prioridad = Prioridad.objects.get(descripcion = request.POST['pri'])
         hu.prioridad = prioridad
         hu.fecha_modificacion = time.strftime("%Y-%m-%d")
@@ -2276,8 +2286,22 @@ def setEstadoHu(request, proyecto_id, hu_id):
     proyecto = get_object_or_404(Proyectos, pk = proyecto_id)
     hu = get_object_or_404(UserStory, pk = hu_id)
     flujo = Flujos.objects.get(pk = hu.flujo)
-    actividades = Actividades.objects.filter(flujo_id = hu.flujo)
-    estados = Estados.objects.all()
+    actividadeslist = Actividades.objects.filter(flujo_id = hu.flujo)
+    actividades = []
+    count = 0
+    for act in actividadeslist:
+        if count<=hu.f_actividad:
+            actividades.append(act)
+        count = count + 1
+        
+    estadoslist = Estados.objects.all()
+    estados = []
+    count = 0
+    for est in estadoslist:
+        if count<=hu.f_a_estado:
+            estados.append(est)
+        count = count + 1
+        
     mispermisos = misPermisos(request.user.id, proyecto_id)
     modificado = False
     if request.method == 'POST':

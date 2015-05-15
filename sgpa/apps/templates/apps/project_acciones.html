@@ -70,14 +70,14 @@
 {% block contenido %}
 <h1>Sprint {{proyecto.nro_sprint}}</h1>
 <br>
-<table border="1" frame="lhs" cellspacing=1 cellpadding=20 width=200%>	
+<table  border=0px  frame="lhs" cellspacing=1 cellpadding=20 width=100%>	
 	<center>
 
 	{% for f in flujo %}
 		
 		<tr>
 			<td>
-				<table border=1 cellspacing=0 cellpadding=2 bordercolor="666633" width=100%>
+				<table bgcolor="#C0C0C0" bordercolor="#888888 " border=1px cellspacing=1 cellpadding=20 width=100%>
 					<tr>
 						<strong>{{f.descripcion}}</strong>
 					</tr>
@@ -85,7 +85,7 @@
 					<tr height=30>
 						{% for actividad in actividades %}
 							{% if actividad.flujo_id == f.id%}
-								<td colspan="3" align="center"  width=200 height=50>{{actividad.descripcion}}</td>
+								<td  bgcolor="#282828 " colspan="3" align="center"  width=200 height=50><font color="#FFFFFF" style="text-transform: uppercase;">{{actividad.descripcion}}</font></td>
 							
 							{% endif %}
 						{% endfor %} 
@@ -94,7 +94,7 @@
 					<tr>
 						{% for actividad in actividades %}
 					 		{% if actividad.flujo_id == f.id%}
-								 <td width=65>To Do </td><td width=65>Doing</td><td width=65>Done</td>
+								 <td width=65  bgcolor="#D0D0D0  " >To Do </td><td  bgcolor="#D0D0D0 "  width=65>Doing</td><td  bgcolor="#D0D0D0 "  width=65>Done</td>
 							{% endif %}
 						{% endfor %} 
 					</tr>
@@ -110,10 +110,15 @@
 								
 									{% if  h.flujo == f.id and forloop.counter <= f.tamano %}
 										{% if forloop.counter == h.flujo_posicion  %}
-											<!-- <td><a href="{% url 'apps:setEstadoHu' proyecto.id h.id %}">{{h.descripcion}}</a></td> -->
-											<td height=100 valign="top"><small>{{h.nombre}}</small></td>
+											<!-- <td><a href="{% url 'apps:setEstadoHu' proyecto.id h.id %}">{{h.nombre}}</a></td> -->
+											{% if hu.prioridad_id == 1 %}
+												<td bgcolor="#A8FFFF" height=100 valign="top" border=10px><small><a href="{% url 'apps:setEstadoHu' proyecto.id h.id %}"><font color="#FFFFF"><b>{{h.nombre}}</b></font></a></small></td>
+												<!-- <td height=100 valign="top" border=10px><small><b>{{h.nombre}}</b></small></td> -->
+											{% else %}
+												<td  height=100 valign="top" border=10px><small><a href="{% url 'apps:setEstadoHu' proyecto.id h.id %}"><font color="#0000"><b>{{h.nombre}}</b></font></a></small></td>
+											{% endif %}
 										{% else %}
-											<td></td>
+											<td height=100 ></td>
 										{% endif %}
 									{% endif %}
 								{% endfor %}
