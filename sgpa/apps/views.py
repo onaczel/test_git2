@@ -2974,6 +2974,8 @@ def horas(hu_reg, hu_id):
         dia_sprint = Dia_Sprint.objects.get(fecha = datetime.today().strftime("%Y-%m-%d"), sprint_id = sprint.id)
         dia_sprint.tiempo_real = int(dia_sprint.tiempo_real) + int(hu_reg.tiempo_Real)
         dia_sprint.save()
+        if hu.tiempo_Real == 0:
+            hu.fecha_inicio = datetime.today().strftime("%Y-%m-%d")
         hu.tiempo_Real = int(hu.tiempo_Real) + int(hu_reg.tiempo_Real)
         hu.save()
     except:
