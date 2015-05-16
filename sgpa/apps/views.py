@@ -2784,16 +2784,11 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
                     #llamar a la funcion de notificar
                 ouser = User.objects.get(username = request.POST['us'])
                 if hu.usuario_Asignado != ouser.id:
-<<<<<<< HEAD
                    h = historialResponsableHU()
                    h.hu = hu
                    h.responsable = ouser
                    h.save()
                 hu.usuario_Asignado =  ouser.id
-=======
-                    hu.usuario_Asignado =  ouser.id
-                    #llamar a la funcion de Santiago (borra el 'print "hola"' de arriba
->>>>>>> branch 'master' of https://github.com/onaczel/test_git2.git
                 flujolist = Flujos.objects.filter(descripcion = request.POST['flujo'], proyecto_id = proyecto_id)
                 oflujo = flujolist.get(descripcion = request.POST['flujo'])
                 if hu.flujo != oflujo.id:
