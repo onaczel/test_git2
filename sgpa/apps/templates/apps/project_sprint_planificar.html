@@ -118,6 +118,22 @@
 												{% endfor %} 
 											{% endif %}
 										</select><br>
+									{% elif scrum.rol_id == 3 and sprint.estado == 1 and hu.estado_scrum_id == 2 %}
+										<b><font size="2">Flujo Asignado</font></b>&emsp;&emsp;
+										<select name="flujo"  style="width:190px" sort = true>
+											{% if flujo %}
+												<option>{{flujo.descripcion}}</option>
+												{% for f in flujos %}
+													{% if flujo.id != f.id %}
+														<option >{{f.descripcion}}</option>
+													{% endif %}
+												{% endfor %} 
+											{% else %}
+												{% for f in flujos %}
+													<option >{{f.descripcion}}</option>
+												{% endfor %} 
+											{% endif %}
+										</select><br>										
 									{% endif %}
 									<b><font size="2">Prioridad</font></b>&emsp;&emsp;&emsp;&emsp;&emsp;
 									<select name="pri"  style="width:190px" sort = true>

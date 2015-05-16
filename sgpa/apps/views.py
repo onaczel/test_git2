@@ -12,7 +12,8 @@ from django.views.static import serve
 from django.core.servers.basehttp import FileWrapper
 
 from apps.models import Roles, Users_Roles, Permisos, Permisos_Roles, Flujos, Actividades, Actividades_Estados, Proyectos, Equipo, UserStory, Sprint, Dia_Sprint, UserStoryVersiones, Prioridad,\
-    Estados, UserStoryRegistro, archivoAdjunto, Estados_Scrum, Notas
+    Estados, UserStoryRegistro, archivoAdjunto, Estados_Scrum, Notas,\
+    historialResponsableHU
 from django.contrib.auth.models import User
 
 
@@ -2769,16 +2770,39 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
                 hu = UserStory.objects.get(id = hu_id)
                 huv = UserStoryVersiones()
                 copiarHU(hu, huv, User.objects.get(username = request.user))
-                hu.tiempo_Estimado = request.POST['tiempo_Estimado']
-                hu.valor_Negocio = request.POST['valor_Negocio']
-                hu.valor_Tecnico = request.POST['valor_Tecnico']
-                ouser = User.objects.get(username = request.POST['us']) 
+                nuevo_tiempo_estimado = request.POST['tiempo_Estimado']
+                if hu.tiempo_Estimado != nuevo_tiempo_estimado:
+                    hu.tiempo_Estimado = nuevo_tiempo_estimado
+                    #llamar a la funcion de notificar
+                nuevo_valor_negocio = request.POST['valor_Negocio']
+                if hu.valor_Negocio != nuevo_valor_negocio:
+                    hu.valor_Negocio = nuevo_valor_negocio
+                    #llamar a la funcion de notificar
+                nuevo_valor_tecnico = request.POST['valor_Tecnico']
+                if hu.valor_Tecnico != nuevo_valor_tecnico:
+                    hu.valor_Tecnico = nuevo_valor_tecnico
+                    #llamar a la funcion de notificar
+                ouser = User.objects.get(username = request.POST['us'])
+                if hu.usuario_Asignado != ouser.id:
+<<<<<<< HEAD
+                   h = historialResponsableHU()
+                   h.hu = hu
+                   h.responsable = ouser
+                   h.save()
                 hu.usuario_Asignado =  ouser.id
+=======
+                    hu.usuario_Asignado =  ouser.id
+                    #llamar a la funcion de Santiago (borra el 'print "hola"' de arriba
+>>>>>>> branch 'master' of https://github.com/onaczel/test_git2.git
                 flujolist = Flujos.objects.filter(descripcion = request.POST['flujo'], proyecto_id = proyecto_id)
                 oflujo = flujolist.get(descripcion = request.POST['flujo'])
-                hu.flujo = oflujo.id
+                if hu.flujo != oflujo.id:
+                    hu.flujo = oflujo.id
+                    #llamar a la funcion de notificar
                 oprioridad = Prioridad.objects.get(descripcion = request.POST['pri'])
-                hu.prioridad = oprioridad
+                if hu.prioridad != oprioridad.id:
+                    hu.prioridad = oprioridad.id
+                    #llamar a la funcion de notificar
                 hu.save()
 
             if request.POST['cambio'] == "x":
