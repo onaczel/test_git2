@@ -71,13 +71,14 @@ def notificarCambioResponsableHU(new_id, old_id,hu_id, proyecto_id):
     hu = UserStory.objects.get(id = hu_id)
     proyecto = Proyectos.objects.get(id = proyecto_id)
     
-    try: 
-        Unew = User.objects.get(id = new_id)
-        list = []
-        list.append(Unew)
-        asunto = 'SGPA - Asignacion a User Story'
-        msg = 'Usuario :'+Unew.username+', se le ha asignado como responsable del user story: '+hu.nombre+' del proyecto: '+proyecto.nombre
-        enviarMail(asunto, msg, list)
+    #try: 
+    Unew = User.objects.get(id = new_id)
+    list = []
+    list.append(Unew)
+    asunto = 'SGPA - Asignacion a User Story'
+    msg = 'Usuario :'+Unew.username+', se le ha asignado como responsable del user story: '+hu.nombre+' del proyecto: '+proyecto.nombre
+    enviarMail(asunto, msg, list)
+    '''''
     except:
         Uold = User.objects.get(id = old_id)
         list = []
@@ -85,7 +86,7 @@ def notificarCambioResponsableHU(new_id, old_id,hu_id, proyecto_id):
         asunto = 'SGPA - Asignacion a User Story'
         msg = 'Usuario :'+Uold.username+', se le ha asignado como responsable del user story: '+hu.nombre+' del proyecto: '+proyecto.nombre
         enviarMail(asunto, msg, list)
-    
+    '''
     try:
         Uold = User.objects.get(id = old_id)
         l = []
