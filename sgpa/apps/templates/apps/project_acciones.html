@@ -3,31 +3,24 @@
 	<h1><b>{{proyecto.nombre}}</b></h1>
 {% endblock %}
 {% block index %}
-	{%if misPermisos.APP == True %}
-		<!-- <br><a href="{% url 'apps:listasigparticipante' proyecto.id %}">Asignar Participante</a><br /> -->
-	{% endif %}
-	{%if misPermisos.EPP == True %}
-		<!-- <br><a href="{% url 'apps:listelimparticipante' proyecto.id %}">Eliminar Participante</a><br /> -->
-	{% endif %}
-	<!-- 
-	{%if misPermisos.MP == True %}
-		<br><a href="{% url 'apps:listflujosproyectos' proyecto.id %}">Crear Flujo</a><br />
-	{% endif %}
-	{%if misPermisos.MP == True %}
-		<br><a href="{% url 'apps:listflujosproyectosMod' proyecto.id %}">Modificar Flujo</a><br />
-	{% endif %}
-	-->
-	<!--  {% if misPermisos.CUS	 %} -->
 	<li>
-		<a href="{% url 'apps:listflujosproyectosMod' proyecto.id %}"><i class="fa fa-fw fa-edit"></i>Flujos</a>
+		<a href="{% url 'apps:accionesproyecto' proyecto.id %}"><i class="fa fa-fw fa-edit"></i>{{proyecto.nombre}}</a>
 	</li>
-	<!-- {% endif %} -->
+
+
 		
+	{%if misPermisos.PS == True %}
+	<li>
+		<a href="{% url 'apps:sprints' proyecto.id 0 0 %}"><i class="fa fa-fw fa-edit"></i>Sprints</a>
+	</li>
+	{% endif %}
+	
 	{% if misPermisos.CUS or misPermisos.MUS or misPermisos.EUS %}
 	<li>
 		<a href="{% url 'apps:listhu' proyecto.id %}"><i class="fa fa-fw fa-edit"></i>Product Backlog</a>
 	</li>	
 	{% endif %}
+	<!-- 
 	{% if misPermisos.PS %}
 
 	<li>
@@ -37,7 +30,7 @@
 		
 	{% endif %}
 	 
-	
+	 -->
 	
 	{% if misPermisos.CRP or misPermisos.ERP or misPermisos.MRP %}
 
@@ -49,11 +42,11 @@
 	{% endif %}
 		
 		 
-	{%if misPermisos.PS == True %}
 	<li>
-		<a href="{% url 'apps:sprints' proyecto.id 0 0 %}"><i class="fa fa-fw fa-edit"></i>Sprints</a>
+		<a href="{% url 'apps:listflujosproyectosMod' proyecto.id %}"><i class="fa fa-fw fa-edit"></i>Flujos</a>
 	</li>
-	{% endif %}
+	
+
 	{%if misPermisos.VP %}
 	<li>
 		<a href="{% url 'apps:verCliente' proyecto.id%}"><i class="fa fa-fw fa-edit"></i>Ver cliente</a>
@@ -115,7 +108,7 @@
 												<td bgcolor="#A8FFFF" height=100 valign="top" border=10px><small><a href="{% url 'apps:setEstadoHu' proyecto.id h.id %}"><font color="#FFFFF"><b>{{h.nombre}}</b></font></a></small></td>
 												<!-- <td height=100 valign="top" border=10px><small><b>{{h.nombre}}</b></small></td> -->
 											{% else %}
-												<td  height=100 valign="top" border=10px><small><a href="{% url 'apps:setEstadoHu' proyecto.id h.id %}"><font color="#0000"><b>{{h.nombre}}</b></font></a></small></td>
+												<td  	bgcolor="#F0F0F0"  height=100 valign="top" border=10px><small><a href="{% url 'apps:setEstadoHu' proyecto.id h.id %}"><font color="#0000"><b>{{h.nombre}}</b></font></a></small></td>
 											{% endif %}
 										{% else %}
 											<td height=100 ></td>

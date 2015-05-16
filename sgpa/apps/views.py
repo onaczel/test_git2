@@ -448,7 +448,7 @@ def listrolesproj(request, proyecto_id):
     roles = Roles.objects.filter(sistema=False)
     user = request.user
     mispermisos = misPermisos(user.id, proyecto_id)
-    return render_to_response("apps/role_admin_project.html", {"roles":roles, 'proyecto_id':proyecto_id, 'misPermisos':mispermisos,  'user_logged':user.id, 'guardado':False, 'proyectonombre':proyecto.descripcion})
+    return render_to_response("apps/role_admin_project.html", {"roles":roles, 'proyecto':proyecto, 'misPermisos':mispermisos,  'user_logged':user.id, 'guardado':False, 'proyectonombre':proyecto.nombre})
 '''
 def listrolesdel(request):
     """
@@ -472,6 +472,8 @@ def rolecreateproj(request, proyecto_id):
     """
     proyectonombre = Proyectos.objects.get(pk = proyecto_id).nombre
     user = request.user
+    proyecto = Proyectos.objects.get(pk=proyecto_id)
+    mispermisos =misPermisos(request.user.id, proyecto_id)
     if request.method == 'POST':
         form = RoleModifyForm(request.POST)
         if form.is_valid():
@@ -482,11 +484,11 @@ def rolecreateproj(request, proyecto_id):
         role.save()
         role_id = role.id
         permisos = Permisos.objects.filter(sistema = False)
-        return render_to_response("apps/role_set_permisos_proj.html", {'proyecto_id':proyecto_id, "permisos":permisos, "role_id":role_id, "role_descripcion":role.descripcion, 'proyectonombre':proyectonombre}, context_instance=RequestContext(request))
+        return render_to_response("apps/role_set_permisos_proj.html", {'proyecto':proyecto, "permisos":permisos, "role_id":role_id, "role_descripcion":role.descripcion, 'proyectonombre':proyectonombre}, context_instance=RequestContext(request))
     else:
         form = RoleModifyForm()
     
-    return render_to_response('apps/role_create_proj.html' ,{'form':form, 'proyecto_id':proyecto_id, 'user_logged':user.id, 'proyecto':True, 'proyectonombre':proyectonombre}, context_instance=RequestContext(request))
+    return render_to_response('apps/role_create_proj.html' ,{'form':form, 'proyecto':proyecto, 'misPermisos':mispermisos, 'user_logged':user.id, 'proyecto_b':True, 'proyectonombre':proyectonombre}, context_instance=RequestContext(request))
 
 def asignarrolproj(request, proyecto_id, role_id):
     """
@@ -506,7 +508,8 @@ def asignarrolproj(request, proyecto_id, role_id):
     roles = Roles.objects.filter(sistema = False)
     user = request.user
     mispermisos = misPermisos(user.id, proyecto_id)
-    return render_to_response("apps/role_admin_project.html", {"roles":roles, 'proyecto_id':proyecto_id, 'misPermisos':mispermisos, 'user_logged':user.id, 'guardado':True, 'proyectonombre':proyectonombre})
+    proyecto = Proyectos.objects.get(pk=proyecto_id)
+    return render_to_response("apps/role_admin_project.html", {"roles":roles, 'proyecto':proyecto, 'misPermisos':mispermisos, 'user_logged':user.id, 'guardado':True, 'proyectonombre':proyectonombre})
 
 def rolemodifyproj(request, proyecto_id, role_id):
     """
@@ -515,7 +518,9 @@ def rolemodifyproj(request, proyecto_id, role_id):
     @param role_id: Id de un rol registrado en el sistema
     @return: render a apps/role_set_permisos_mod.html con una lista de permisos, el id y la descripcion del rol
     """
+    proyecto = Proyectos.objects.get(pk=proyecto_id)
     rol = get_object_or_404(Roles, pk=role_id)
+    mispermisos = misPermisos(request.user.id, proyecto_id)
     if request.method == 'POST':
         form = RoleModifyForm(request.POST)
         if form.is_valid():
@@ -526,7 +531,7 @@ def rolemodifyproj(request, proyecto_id, role_id):
     else:
         form = RoleModifyForm(initial={'descripcion':rol.descripcion})
     
-    return render_to_response('apps/role_modify_form.html' ,{'form':form, 'proyecto_id':proyecto_id, "rol":rol, 'user_logged':0, 'proj':True}, context_instance=RequestContext(request))
+    return render_to_response('apps/role_modify_form.html' ,{'form':form, 'proyecto_id':proyecto.id, 'proyectonombre':proyecto.nombre, 'misPermisos':mispermisos, "rol":rol, 'user_logged':0, 'proj':True}, context_instance=RequestContext(request))
     
 def roledeleteproj(request, proyecto_id, role_id):
     """
@@ -537,14 +542,16 @@ def roledeleteproj(request, proyecto_id, role_id):
     
     @return: render a apps/role_deleted.html
     """
+    proyecto = Proyectos.objects.get(pk=proyecto_id)
     r = get_object_or_404(Roles, pk=role_id)
     
     r.estado = False
     r.save()
     
     roles = Roles.objects.filter(estado = True, sistema=False)
+    mispermisos = misPermisos(request.user.id, proyecto_id)
     
-    return render_to_response("apps/role_admin_project.html", {"roles":roles, 'proyecto_id':proyecto_id, 'eliminado':True})
+    return render_to_response("apps/role_admin_project.html", {"roles":roles, 'misPermisos':mispermisos, 'proyecto':proyecto, 'eliminado':True})
 
 
 def muser(request, user_logged, user_id):
@@ -724,7 +731,7 @@ def rolemodifypermisos(request, user_logged, role_id, proyecto_id):
     @return: render a role_set_permisos_mod: con la lista de permisos, el id del rol, su descripcion, y el usuario logueado
     """
     rol = get_object_or_404(Roles, pk=role_id)
-   
+
     permisos = Permisos.objects.all()
     proles = Permisos_Roles.objects.all()
     inicializarPermisos()
@@ -741,7 +748,8 @@ def rolemodifypermisos(request, user_logged, role_id, proyecto_id):
     print user_logged
     
     if int(user_logged) == 0: 
-        return render_to_response("apps/role_set_permisos_mod_proj.html", {"permisos":permisos, 'rol':rol, 'user_logged':user_logged, 'proyecto_id':proyecto_id, 'role_id':role_id}, context_instance=RequestContext(request))
+        proyecto = Proyectos.objects.get(pk=proyecto_id)
+        return render_to_response("apps/role_set_permisos_mod_proj.html", {"permisos":permisos, 'rol':rol, 'user_logged':user_logged, 'proyecto':proyecto, 'role_id':role_id}, context_instance=RequestContext(request))
         
         
     return render_to_response("apps/role_set_permisos_mod.html", {"permisos":permisos, "role_id":role_id, "role_descripcion":rol.descripcion, 'user_logged':user_logged}, context_instance=RequestContext(request))
@@ -754,6 +762,7 @@ def asignarpermisosmod(request, user_logged, role_id, proyecto_id):
     @param role_id: Id de un rol registrado en el sistema
     @return: render a apps/role_modified.html 
     """
+    proyecto = Proyectos.objects.get(pk=proyecto_id)
     r = get_object_or_404(Roles, pk=role_id)
     #CONTROLAR!
     lista = request.POST.getlist(u'permisos')
@@ -776,7 +785,7 @@ def asignarpermisosmod(request, user_logged, role_id, proyecto_id):
     if int(user_logged) == 0:
         user = request.user
         mispermisos = misPermisos(user.id, proyecto_id)
-        return render_to_response("apps/role_admin_project.html", {"roles":roles, 'proyecto_id':proyecto_id, 'misPermisos':mispermisos, 'user_logged':user_logged, 'modificado':True}, context_instance=RequestContext(request))
+        return render_to_response("apps/role_admin_project.html", {"roles":roles, 'proyecto':proyecto, 'misPermisos':mispermisos, 'user_logged':user_logged, 'modificado':True}, context_instance=RequestContext(request))
     
     return render_to_response("apps/role_modified.html",{'user_logged':user_logged}, context_instance=RequestContext(request))
     
@@ -1184,8 +1193,8 @@ def agregarPlantilla(request, user_logged, proyecto_pk):
     proyecto = Proyectos.objects.get(id = proyecto_pk)
     
     #crearSprints(proyecto_pk)
-    
-    return render_to_response('apps/plantilla_anadida.html',{'copyFlujo':copyFlujo,'proyecto':proyecto, 'scrum':scrumMaster,'cli':cliente, 'user_logged':user_logged},context_instance=RequestContext(request))
+    mispermisos = misPermisos(request.user.id, proyecto.id)
+    return render_to_response('apps/plantilla_anadida.html',{'copyFlujo':copyFlujo,'proyecto':proyecto, 'mispermisos':mispermisos, 'scrum':scrumMaster,'cli':cliente, 'user_logged':user_logged},context_instance=RequestContext(request))
 
 #################################################################################################################################################
 
@@ -1524,8 +1533,9 @@ def listflujosproyectosMod(request, proyecto_id):
     proyecto = Proyectos.objects.get(id = proyecto_id)
     flujos = Flujos.objects.filter(proyecto_id = proyecto_id, estado = True)
     actividades = Actividades.objects.filter(plantilla = False , estado=True)
+    mispermisos = misPermisos(request.user.id, proyecto_id)
     
-    return render_to_response("apps/project_modificar_listflujo.html", {"proyecto":proyecto , "flujos":flujos, "actividades":actividades})
+    return render_to_response("apps/project_modificar_listflujo.html", {"proyecto":proyecto , "flujos":flujos, "actividades":actividades, 'misPermisos':mispermisos})
 
 def flujosproyectosRequestMod(request, proyecto_id, flujo_id, actividad_id):
     """
@@ -1724,6 +1734,7 @@ def crearHu(request, proyecto_id):
     flujos = Flujos.objects.filter(proyecto_id = proyecto_id)
     prioridades = Prioridad.objects.all()
     proyecto = Proyectos.objects.get(pk = proyecto_id)
+    mispermisos = misPermisos(request.user.id, proyecto_id)
     if request.method == 'POST':
         form = HuCreateForm(request.POST)
        
@@ -1739,6 +1750,7 @@ def crearHu(request, proyecto_id):
         hu.tiempo_Estimado = request.POST['tiempoestimado']
         hu.valor_Negocio = request.POST['valornegocio']
         hu.valor_Tecnico = request.POST['valortecnico']
+        hu.estado_scrum_id = Estados_Scrum.objects.get(pk=3)
         hu.proyecto_id = proyecto_id
         hu.fecha_creacion = time.strftime("%Y-%m-%d")
         #user = User.objects.get(username = request.POST['us']) 
@@ -1768,7 +1780,7 @@ def crearHu(request, proyecto_id):
     else:        
         form = HuCreateForm()
         
-    return render_to_response('apps/hu_create.html', {"form":form, "proyecto_id":proyecto_id, 'proyecto_nombre':proyecto.nombre, 'users':users, 'flujos':flujos, 'prioridades':prioridades}, context_instance = RequestContext(request))
+    return render_to_response('apps/hu_create.html', {"form":form, 'misPermisos':mispermisos, 'proyecto':proyecto, 'users':users, 'flujos':flujos, 'prioridades':prioridades}, context_instance = RequestContext(request))
 
 def fileAdjunto(request, proyecto_id, hu_id):
     """
@@ -1973,7 +1985,7 @@ def editarHu(request, proyecto_id, hu_id):
         #llamada a funcion que notifica a los responsables, la modificacion del hu
         notificarModificacionHU(hu_id,proyecto_id)
         
-        '''
+        
         try:
             user = User.objects.get(username = request.POST['us'])
         except: 
@@ -1983,6 +1995,7 @@ def editarHu(request, proyecto_id, hu_id):
             hu.usuario_Asignado =  user.id
         except:
             hu.usuario_Asignado = None
+        '''
         try:
             flujolist = Flujos.objects.filter(descripcion = request.POST['flujo'], proyecto_id = proyecto_id)
             oflujo = flujolist.get(descripcion = request.POST['flujo'])
@@ -2033,7 +2046,7 @@ def editarHu(request, proyecto_id, hu_id):
     else:        
         form = HuCreateForm(initial={'descripcion':hu.descripcion, 'codigo':hu.codigo, 'tiempo_Estimado':hu.tiempo_Estimado, 'valor_Tecnico':hu.valor_Tecnico, 'valor_Negocio':hu.valor_Negocio})
 
-    return render_to_response('apps/hu_modify_fields.html', {"form":form, "proyecto_id":proyecto_id, "hu_id":hu_id, "hu":hu, 'misPermisos':mispermisos, 'users':users, 'flujos':flujos, 'proyecto_nombre':proyecto.nombre, 'prioridades':prioridades, 'hu':hu}, context_instance = RequestContext(request))
+    return render_to_response('apps/hu_modify_fields.html', {"form":form, "proyecto_id":proyecto_id, "hu_id":hu_id, "hu":hu, 'misPermisos':mispermisos, 'users':users, 'flujos':flujos, 'proyecto_nombre':proyecto.nombre, 'prioridades':prioridades}, context_instance = RequestContext(request))
 
 def registroHu(request, proyecto_id, hu_id):
     """
@@ -2049,8 +2062,9 @@ def registroHu(request, proyecto_id, hu_id):
     
     hu_reg = sorted(hu_reg, key=gethudate, reverse=True)
     proyecto = Proyectos.objects.get(pk=proyecto_id)
+    mispermisos = misPermisos(request.user.id, proyecto_id)
     
-    return render_to_response('apps/hu_registro.html', {'hu_reg':hu_reg, 'hu':hu, 'proyecto':proyecto}, context_instance=RequestContext(request))
+    return render_to_response('apps/hu_registro.html', {'hu_reg':hu_reg, 'hu':hu, 'proyecto':proyecto, 'misPermisos':mispermisos}, context_instance=RequestContext(request))
 
     
 def gethudate(hu):
@@ -2253,7 +2267,8 @@ def listhuversiones(request, proyecto_id, hu_id):
     hu = UserStory.objects.get(pk = hu_id)
     huversiones = UserStoryVersiones.objects.filter(idv = hu_id)
     user_logged = request.user
-    return render_to_response('apps/hu_list_versiones.html', {'proyecto_id':proyecto_id, 'hu_id':hu_id,'hu':hu, 'hu_descripcion':hu.descripcion, 'hu_versiones':huversiones, 'user_logged':user_logged, 'proyecto':proyecto})
+    mispermisos = misPermisos(request.user.id, proyecto_id)
+    return render_to_response('apps/hu_list_versiones.html', {'proyecto_id':proyecto_id, 'misPermisos':mispermisos, 'hu_id':hu_id,'hu':hu, 'hu_versiones':huversiones, 'user_logged':user_logged, 'proyecto':proyecto})
     
 def huvcambios(request, proyecto_id, hu_id, huv_id):
     """
@@ -2384,8 +2399,9 @@ def verCliente(request, proyecto_id):
     for t in team:
         users.append(User.objects.get(id = t.usuario_id))
     proyecto = Proyectos.objects.get(id = proyecto_id, )
+    mispermisos = misPermisos(request.user.id, proyecto_id)
     
-    return render_to_response('apps/project_verCliente.html', {'users':users, 'proyecto':proyecto,'proyecto_id':proyecto_id},context_instance = RequestContext(request))
+    return render_to_response('apps/project_verCliente.html', {'users':users, 'misPermisos':mispermisos, 'proyecto':proyecto,'proyecto_id':proyecto_id},context_instance = RequestContext(request))
 
     
 def verUser(request, proyecto_id, user_id):
@@ -2404,6 +2420,7 @@ def eliminarHu(request, proyecto_id, hu_id):
     huv=UserStoryVersiones()
     hu = get_object_or_404(UserStory, pk=hu_id)
     hu.estado = False
+    hu.estado_scrum = Estados_Scrum.objects.get(pk=6)
     user_logged = User.objects.get(username = request.user)
     copiarHU(hu, huv, user_logged)
     hu.save()

@@ -1,14 +1,15 @@
 {% extends 'base.html' %}
-{% block titulo %}
-<h1>{{proyectonombre}}</h1>
+{% block uptitulo %}
+<h1>{{proyecto.nombre}}</h1>
 {% endblock %}
 {% block encabezado %}
 <h1>{{role_descripcion}}</h1>
-<h3>Seleccione los permisos a asignar al rol</h3>
-<br>
 {% endblock %}
+
 {% block contenido %}
-	<form action="{% url 'apps:asignarrolproj' proyecto_id role_id%}" method="post">{% csrf_token %}
+	<h3><font color="#888888 ">Seleccione los permisos a asignar al rol {{role_descripcion}}</font></h3>
+	<br>
+	<form action="{% url 'apps:asignarrolproj' proyecto.id role_id%}" method="post">{% csrf_token %}
 		{% if permisos %}
 			{% for p in permisos%}
 				<!-- <p>hola</p> -->

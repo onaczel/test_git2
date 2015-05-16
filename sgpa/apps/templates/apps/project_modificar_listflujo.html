@@ -1,6 +1,63 @@
 {% extends 'base.html' %}
-{% block titulo %}
+{% block uptitulo %}
 <h1>{{proyecto.nombre}}</h1>
+{% endblock %}
+{% block titulo %}
+<h1>Flujos</h1>
+{% endblock %}
+
+
+{% block index %}
+	<li>
+		<a href="{% url 'apps:accionesproyecto' proyecto.id %}"><i class="fa fa-fw fa-edit"></i>{{proyecto.nombre}}</a>
+	</li>
+
+
+		
+	{%if misPermisos.PS == True %}
+	<li>
+		<a href="{% url 'apps:sprints' proyecto.id 0 0 %}"><i class="fa fa-fw fa-edit"></i>Sprints</a>
+	</li>
+	{% endif %}
+	
+	{% if misPermisos.CUS or misPermisos.MUS or misPermisos.EUS %}
+	<li>
+		<a href="{% url 'apps:listhu' proyecto.id %}"><i class="fa fa-fw fa-edit"></i>Product Backlog</a>
+	</li>	
+	{% endif %}
+	<!-- 
+	{% if misPermisos.PS %}
+
+	<li>
+		<a href="{% url 'apps:listsprint' proyecto.id 0 %}"><i class="fa fa-fw fa-edit"></i>Sprint Backlog</a>
+	</li>	
+
+		
+	{% endif %}
+	 
+	 -->
+	
+	{% if misPermisos.CRP or misPermisos.ERP or misPermisos.MRP %}
+
+	<li>
+		<a href="{% url 'apps:listrolesproj' proyecto.id %}"><i class="fa fa-fw fa-edit"></i>Roles</a>
+	</li>
+
+	
+	{% endif %}
+		
+		 
+	<li>
+		<a href="{% url 'apps:listflujosproyectosMod' proyecto.id %}"><i class="fa fa-fw fa-edit"></i><font color="#FFFFFF">Flujos</font></a>
+	</li>
+	
+
+	{%if misPermisos.VP %}
+	<li>
+		<a href="{% url 'apps:verCliente' proyecto.id%}"><i class="fa fa-fw fa-edit"></i>Ver cliente</a>
+	</li>
+	{% endif %}
+	
 {% endblock %}
 {% block contenido %}
 
@@ -12,11 +69,11 @@
 
 <br><a href="{% url 'apps:listflujosproyectos' proyecto.id %}">Asignar Nuevo Flujo</a><br />
 
-<table border="10" frame="lhs" borderstyle= "doble" cellspacing=2 cellpadding=20 bordercolor="green">	
+<table border="0" frame="lhs" borderstyle= "doble" cellspacing=2 cellpadding=20 bordercolor="green" width=50%>	
 	{% for f in flujos %}
 		<tr>
 			<td>
-				<table border=1 cellspacing=0 cellpadding=2 bordercolor="666633">
+				<table border=1 cellspacing=0 cellpadding=2 bordercolor="666633" width=100%>
 					<tr>
 						<strong>{{f.descripcion}}</strong>
 					</tr>
@@ -24,7 +81,7 @@
 						{% if actividades %}
 							{% for actividad in actividades %}
 								{% if actividad.flujo_id == f.id%}
-									<td colspan="3">{{actividad.descripcion}}</td>
+									<td width=10%>{{actividad.descripcion}}</td>
 								{% endif %}
 							{% endfor %}
 						{% else %}
@@ -33,13 +90,14 @@
 					<tr>
 				</table>
 			</td>
-			<td>
+			<td align="right" height=50px valign="bottom">
 				<br><h5><a href="{% url 'apps:flujosproyectosRequestMod' proyecto.id f.id 0 %}">Modificar</a></h5><br />
 			</td>
-			<td>
+			<td align="right" valign="top">
 				<br><h5><a href="{% url 'apps:flowdeleteproj' proyecto.id f.id %}">Eliminar</a></h5><br />
 			</td>
 		</tr>
+		<tr height=20px></tr>
 	{% endfor %} 
 	<br><br />
 	

@@ -91,9 +91,11 @@
                 <!-- Page Heading -->
                 <div class="row">
                     <div class="col-lg-12">
+                    
                         <h1 class="page-header">
-                            {% block titulo %} {% endblock %} 
-                            <small>{% block encabezado %} {% endblock %} </small>
+                        	<font color="#B8B8B8 ">{% block uptitulo %} {% endblock %}</font>
+                            <font color="000000">{% block titulo %} {% endblock %}</font> 
+                            <small><font color="#909090  ">{% block encabezado %}  {% endblock %}</font> </small>
                         </h1>
                         <ol class="breadcrumb">
                             <li>
@@ -107,7 +109,9 @@
                     </div>
                 </div>
                 <!-- /.row -->
-		{% block contenido %} {% endblock %}
+                <div style=" height:100vh;">
+					{% block contenido %} {% endblock %}
+				</div>
             </div>
             <!-- /.container-fluid -->
 

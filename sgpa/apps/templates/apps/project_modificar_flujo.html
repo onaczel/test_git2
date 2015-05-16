@@ -1,9 +1,12 @@
 {% extends 'base.html' %}
-{% block titulo %}
-<h1>Modificar Flujo del Proyecto</h1>
+{% block uptitulo %}
+<h1>{{proyecto.nombre}}</h1>
+{% endblock %}
+{% block encabezado %}
+<h1>{{flujo.descripcion}}</h1>
 {% endblock %}
 {% block contenido %}
-<br><h1><b>{{proyecto.nombre}}</b></h1><br />
+
 
 
 {% if modificado == True %}
@@ -12,20 +15,24 @@
 	</table>
 {% endif %}
 
-<h3>Flujo</h3>
+<h3><font color="#888888">Modificar Flujo</font></h3>
+<br>
 {% if formFlujo %}
 	<form action="{% url 'apps:flujosproyectosRequestMod' proyecto.id flujo.id 0 %}" method="post">{% csrf_token %}
 		<table>{{formFlujo}}</table>
-		<input type="submit", name="cambio", value="modificar flujo">
+		<input type="submit", name="cambio", value="Modificar">
 	</form>
 	{% if actividades %}
 		<br><br/>
-		<h3>Actividades del flujo</h3>
+		<h3><font color="#888888">Actividades del Flujo</font></h3>
+		<table width=10%>
 		{% for actividad in actividades %}
-			<br />
-			<label>{{actividad.descripcion}}</label>
-			<a href="{% url 'apps:flujosproyectosRequestModAct' proyecto.id flujo.id actividad.id %}">Modificar</a><br />
+			<tr>
+				<td><label>{{actividad.descripcion}}</label></td>
+				<td><a href="{% url 'apps:flujosproyectosRequestModAct' proyecto.id flujo.id actividad.id %}">Modificar</a></td>
+			</tr>
 		{% endfor %}
+		</table>
 	{% else %}
 		<h4>No hay actividades disponibles</h4>
 	{% endif %}
@@ -34,5 +41,5 @@
 {% endif %}
 {% endblock %}
 {% block atras %}
-<a href="{% url 'apps:listflujosproyectosMod' proyecto.id %}">Volver</a>
+<a href="{% url 'apps:listflujosproyectosMod' proyecto.id %}">Atras</a>
 {% endblock %}

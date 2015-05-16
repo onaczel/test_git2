@@ -1,17 +1,69 @@
 {% extends 'base.html' %}
 
-{% block titulo %}
+{% block uptitulo %}
 <h1>{{proyecto.nombre}}</h1>
 {% endblock %}
 
+{% block titulo %}
+<h1>Cliente</h1>
+{% endblock %}
+
 {% block index %}
+	<li>
+		<a href="{% url 'apps:accionesproyecto' proyecto.id %}"><i class="fa fa-fw fa-edit"></i>{{proyecto.nombre}}</a>
+	</li>
+
+
+		
+	{%if misPermisos.PS == True %}
+	<li>
+		<a href="{% url 'apps:sprints' proyecto.id 0 0 %}"><i class="fa fa-fw fa-edit"></i>Sprints</a>
+	</li>
+	{% endif %}
 	
+	{% if misPermisos.CUS or misPermisos.MUS or misPermisos.EUS %}
+	<li>
+		<a href="{% url 'apps:listhu' proyecto.id %}"><i class="fa fa-fw fa-edit"></i>Product Backlog</a>
+	</li>	
+	{% endif %}
+	<!-- 
+	{% if misPermisos.PS %}
+
+	<li>
+		<a href="{% url 'apps:listsprint' proyecto.id 0 %}"><i class="fa fa-fw fa-edit"></i>Sprint Backlog</a>
+	</li>	
+
+		
+	{% endif %}
+	 
+	 -->
+	
+	{% if misPermisos.CRP or misPermisos.ERP or misPermisos.MRP %}
+
+	<li>
+		<a href="{% url 'apps:listrolesproj' proyecto.id %}"><i class="fa fa-fw fa-edit"></i>Roles</a>
+	</li>
+
+	
+	{% endif %}
+		
+		 
+	<li>
+		<a href="{% url 'apps:listflujosproyectosMod' proyecto.id %}"><i class="fa fa-fw fa-edit"></i>Flujos</a>
+	</li>
+	
+
+	{%if misPermisos.VP %}
+	<li>
+		<a href="{% url 'apps:verCliente' proyecto.id%}"><i class="fa fa-fw fa-edit"></i><font color="FFFFFF">Ver cliente</font></a>
+	</li>
+	{% endif %}
 	
 {% endblock %}
 <br/>
 
 {% block contenido %}
-	<h2>Clientes:</h2>
+
 	{% for u in users %}
 		<h3>{{u.username}}</h3>
 		<table>

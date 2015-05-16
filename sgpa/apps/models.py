@@ -50,6 +50,8 @@ class Estados_Scrum(models.Model):
     Estados Iniciado, Asignado, No Asignado, Pendiente, Finalizado y Cancelado de los User Stories 
     """
     descripcion = models.CharField(max_length = 50)
+    def __str__(self):
+        return self.descripcion
 
 class Proyectos(models.Model):
     """
