@@ -1123,17 +1123,16 @@ def crearProyecto(request, user_logged):
                 actividades = Actividades.objects.filter(plantilla = True)
                 
                 #Se le envia una notificacion al usuario asignado como Scrum Master
-                send_mail('SGPA-Asignacion a Proyecto',
-                       'Su usuario: '+user1.username+', ha sido asignado al proyecto: '+proyecto.nombre+', con el rol de Scrum Master',
-                       'noreply.sgpa@gmail.com',
-                        [user1.email], 
-                        fail_silently=False)
+                asunto = 'SGPA-Asignacion a Proyecto'
+                msg = 'Su usuario: '+user1.username+', ha sido asignado al proyecto: '+proyecto.nombre+', con el rol de Scrum Master'
+                l1 = []
+                l1.append(user1)                
+                enviarMail(asunto, msg, l1)
                 #Se le envia una notificacion al usuario asignado como Cliente
-                send_mail('SGPA-Asignacion a Proyecto',
-                       'Su usuario: '+user2.username+', ha sido asignado al proyecto: '+proyecto.nombre+', con el rol de Cliente',
-                       'noreply.sgpa@gmail.com',
-                        [user2.email], 
-                        fail_silently=False)
+                msg = 'Su usuario: '+user2.username+', ha sido asignado al proyecto: '+proyecto.nombre+', con el rol de Cliente'
+                l2 = []
+                l2.append(user2)
+                enviarMail(asunto, msg, l2)
             
             return render_to_response('apps/project_add_plantilla.html', {'flujo':flujo,'actividades':actividades, 'p_descripcion':proyecto.descripcion, 'idp':proyecto.id, 'user_logged':user_logged},context_instance=RequestContext(request))
             
@@ -1395,11 +1394,12 @@ def elimparticipante(request, proyecto_id, usuario_id):
     Equipo.objects.filter(usuario_id = usuario_id, proyecto_id = proyecto_id).delete()
     user = User.objects.get(id = usuario_id)
     #Se le envia una notificacion al usuario encargado del user story
-    send_mail('SGPA-Desvinculacion de proyecto',
-              'Su usuario: '+user.username+', ha sido desvinculado del proyecto: '+proyecto.nombre,
-              'noreply.sgpa@gmail.com',
-              [user.email], 
-              fail_silently=False)
+    asunto = 'SGPA-Desvinculacion de proyecto'
+    msg = 'Su usuario: '+user.username+', ha sido desvinculado del proyecto: '+proyecto.nombre
+    l = []
+    l.append(user)    
+    enviarMail(asunto, msg, l)
+    
     return render_to_response("apps/project_eliminar_participante_eliminado.html", {"proyecto":proyecto, "usuario":request.user})
 
 def asigparticipanterol(request, proyecto_id, usuario_id):
@@ -1756,12 +1756,12 @@ def crearHu(request, proyecto_id):
        
         
         #Se le envia una notificacion al usuario encargado del user story
-        send_mail('SGPA-Asignacion a User Story',
-                   'Su usuario: '+user.username+', ha sido asignado como el responsable del user story: '+ hu.descripcion+ ', del proyecto: '+proyecto.nombre,
-                   'noreply.sgpa@gmail.com',
-                    [user.email], 
-                    fail_silently=False)
+        #asunto = 'SGPA-Asignacion a User Story'
+        #msg = 'Su usuario: '+user.username+', ha sido asignado como el responsable del user story: '+ hu.descripcion+ ', del proyecto: '+proyecto.nombre
+        #l = []
+        #l.append(user)
         
+        #enviarMail(asunto, msg, l)
         return render_to_response('apps/hu_creado.html',{"proyecto_id":proyecto_id},  context_instance = RequestContext(request))
         #else:
             #return render_to_response('apps/hu_form_no_valido.html', context_instance = RequestContext(request))
@@ -2085,6 +2085,7 @@ def crearregistroHu(request, proyecto_id, hu_id):
         guardado = True
         #Asignacion de horas a los dias del sprint
         respuesta = horas(hu_reg, hu_id)
+        #aca le tengo que llamar a la notificacion <selm>
         #"respuesta" se puede manejar como sea necesario
         #termina asignacion de horas a los dias del sprint
         hu_reg = UserStoryRegistro.objects.filter(idr = hu.id)
