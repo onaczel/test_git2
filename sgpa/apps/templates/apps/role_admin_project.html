@@ -1,6 +1,61 @@
 {% extends 'base.html' %}
+{% block uptitulo %}
+	<h1>{{proyecto.nombre}}</h1>
+{% endblock %}
 {% block titulo %}
-	<h1>{{proyectonombre}}</h1>
+<h1>Roles</h1>
+{% endblock %}
+{% block index %}
+	<li>
+		<a href="{% url 'apps:accionesproyecto' proyecto.id %}"><i class="fa fa-fw fa-edit"></i>{{proyecto.nombre}}</a>
+	</li>
+
+
+		
+	{%if misPermisos.PS == True %}
+	<li>
+		<a href="{% url 'apps:sprints' proyecto.id 0 0 %}"><i class="fa fa-fw fa-edit"></i>Sprints</a>
+	</li>
+	{% endif %}
+	
+	{% if misPermisos.CUS or misPermisos.MUS or misPermisos.EUS %}
+	<li>
+		<a href="{% url 'apps:listhu' proyecto.id %}"><i class="fa fa-fw fa-edit"></i>Product Backlog</a>
+	</li>	
+	{% endif %}
+	<!-- 
+	{% if misPermisos.PS %}
+
+	<li>
+		<a href="{% url 'apps:listsprint' proyecto.id 0 %}"><i class="fa fa-fw fa-edit"></i>Sprint Backlog</a>
+	</li>	
+
+		
+	{% endif %}
+	 
+	 -->
+	
+	{% if misPermisos.CRP or misPermisos.ERP or misPermisos.MRP %}
+
+	<li>
+		<a href="{% url 'apps:listrolesproj' proyecto.id %}"><i class="fa fa-fw fa-edit"></i><font color="#FFFFFF">Roles</font></a>
+	</li>
+
+	
+	{% endif %}
+		
+		 
+	<li>
+		<a href="{% url 'apps:listflujosproyectosMod' proyecto.id %}"><i class="fa fa-fw fa-edit"></i>Flujos</a>
+	</li>
+	
+
+	{%if misPermisos.VP %}
+	<li>
+		<a href="{% url 'apps:verCliente' proyecto.id%}"><i class="fa fa-fw fa-edit"></i>Ver cliente</a>
+	</li>
+	{% endif %}
+	
 {% endblock %}
 {% block contenido %}
 	{% if guardado %}
@@ -22,29 +77,34 @@
 			</tr>
 		</table>
 	{% endif %}
-	{% if misPermisos.CRP %}
-		<a href="{% url 'apps:rolecreateproj' proyecto_id %}">Nuevo Rol</a><br />
-		<br>
-	{% endif %}
 	
+	{% if misPermisos.CRP %}
+		<a href="{% url 'apps:rolecreateproj' proyecto.id %}">Nuevo Rol</a><br />
+	{% endif %}
+	<br>
 	{% if roles %}
+	<table width = 15%>
+
+		<tr>
 		{% for r in roles %}
 			{% if r.estado == True %}
-				<label>{{r.descripcion}}</label>
+				<td><label>{{r.descripcion}}</label></td>
 				{% if misPermisos.MRP %}
-					<a href="{% url  'apps:rolemodifyproj' proyecto_id r.id %}">Modificar</a>
+					<td><a href="{% url  'apps:rolemodifyproj' proyecto.id r.id %}">Modificar</a></td>
 				{% endif %}
 				{% if misPermisos.ERP %}
-					<a href="{% url 'apps:roledeleteproj' proyecto_id r.id %}">Eliminar</a>
+					<td><a href="{% url 'apps:roledeleteproj' proyecto.id r.id %}">Eliminar</a></td>
 				{% endif %}
-				<br />
 			{% endif %}
+			</tr>
 		{% endfor %}
+		
+		</table>
 	{% else %}
 		<p>No existen roles registrados disponibles para la edicion</p>
 	{% endif %}
 	
 {% endblock %}
 {% block atras %}
-<a href="{% url 'apps:accionesproyecto' proyecto_id %}">Atras</a>
+<a href="{% url 'apps:accionesproyecto' proyecto.id %}">Atras</a>
 {% endblock %}

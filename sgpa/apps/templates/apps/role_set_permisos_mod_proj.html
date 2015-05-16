@@ -1,13 +1,13 @@
 {% extends 'base.html' %}
-{% block titulo %}
-<h1>Administrar Roles</h1>
+{% block uptitulo %}
+<h1>{{proyecto.nombre}}</h1>
 {% endblock %}
 {% block encabezado %}
-<h1>{{role_descripcion}}</h1>
+<h1>{{rol.descripcion}}</h1>
 {% endblock %}
 {% block contenido %}
 <h4>Seleccione los permisos a asignar al rol</h4>
-<form action="{% url 'apps:asignarpermisosmod'  user_logged role_id proyecto_id  %}" method="post">{% csrf_token %}
+<form action="{% url 'apps:asignarpermisosmod'  user_logged role_id proyecto.id  %}" method="post">{% csrf_token %}
 {% if permisos %}
 	{% for p in permisos%}
 		<!-- <p>hola</p> -->
@@ -26,6 +26,6 @@
  </form>
 {% endblock %}
 {% block atras %}
-	<a href="{% url  'apps:rolemodifyproj' proyecto_id role_id %}">Atras</a>
+	<a href="{% url  'apps:rolemodifyproj' proyecto.id role_id %}">Atras</a>
 	
 {% endblock %}

@@ -106,10 +106,11 @@
                         </ol>
                     </div>
                 </div>
-                <!-- /.row -->
-		{% block contenido %} {% endblock %}
-
-			<div style="text-align: center; margin:30px auto;border: 1px solid green;  height:60px; width:1095px; float:right;">
+                <!-- /.row -->                
+                <div style=" height:100vh;">
+					{% block contenido %} {% endblock %}
+				
+			<div  border=1px style="text-align: center; margin:30px auto;  height:10px; width:1095px; float:center;">
 						
 						<h2>Equipo</h2>
 			</div>
@@ -117,6 +118,7 @@
 					{% block equipo %}
 					{% endblock %}
 
+            </div>
             </div>
             <!-- /.container-fluid -->
             

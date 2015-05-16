@@ -1,14 +1,21 @@
 {% extends 'base.html' %}
-{% block titulo %}
+{% block uptitulo %}
 <h1>{{proyecto.nombre}}</h1>
 {% endblock %}
+{% block titulo %}
+<h1>Flujos</h1>
+{% endblock %}
 {% block contenido %}
-<center>
-<h2>Seleccione una plantilla</h2>
+<h3><font color="#888888">Agregar Nueva Plantilla de Flujo</font></h3>
+
+
+<br>
+{% if flujos %}
+
 
 	
-<table border="10" frame="lhs" borderstyle= "doble" cellspacing=2 cellpadding=20 bordercolor="green">	
-	<center>
+<table border="0" frame="lhs" borderstyle= "doble" cellspacing=2 cellpadding=20 bordercolor="green" width=50%>	
+	
 	<form action="{% url 'apps:agregarPlantillaProyecto' proyecto.id %}" method="post">
 	{% csrf_token %} 
 	{% for f in flujos %}
@@ -16,19 +23,20 @@
 		<tr>
 			<td><input type="checkbox" name="f[]" id="f{{ forloop.counter }}" value="{{ f.id }}" /></td>
 			<td>
-				<table border=1 cellspacing=0 cellpadding=2 bordercolor="666633">
+				<table border=1 cellspacing=0 cellpadding=2 bordercolor="666633" width=100%>
 					<tr>
 						<strong>{{f.descripcion}}</strong>
 					</tr>
-				</center>
+				
 					<tr>
 						{% for actividad in actividades %}
 							{% if actividad.flujo_id == f.id%}
-								<td colspan="3">{{actividad.descripcion}}</td>
+								<td width=20%>{{actividad.descripcion}}</td>
 							{% endif %}
 						{% endfor %} 
 					<tr>
 				</table>
+				<tr height=20px></tr>
 			</td>
 		</tr>
 	{% endfor %} 
@@ -36,8 +44,11 @@
 </table>
 <br><input id="usar" name="usar" type="submit" value="Usar Plantilla" /></br>
 </form>
-</center>
+{% else %}
+<p>No existen plantillas de flujo disponibles a agregar</p>
+{% endif %}
+
 {% endblock %}
 {% block atras %}
-<a href="{% url 'apps:accionesproyecto' proyecto.id %}">Volver</a>
+<a href="{% url 'apps:listflujosproyectosMod' proyecto.id %}">Atras</a>
 {% endblock %}
