@@ -905,7 +905,7 @@ class test_user_story(TestCase):
         
         self.assertTrue(UserStory.objects.filter(descripcion = 'test user story', codigo = 'us1_p1', tiempo_Estimado=50, prioridad=2).exists(), "La prioridad del User Story no se ha asignado correctamente")
         
-
+'''
     def test_asignar_notas(self):
         """
         prueba que las notas de un User Story se guarden correctamente
@@ -931,7 +931,7 @@ class test_user_story(TestCase):
         us.save()
         
         self.assertTrue(UserStory.objects.filter(descripcion = 'test user story', codigo = 'us1_p1', tiempo_Estimado=50, notas='Esto es una prueba de notas.').exists(), "La prioridad del User Story no se ha asignado correctamente")
-                
+'''
             
 class test_sprint(TestCase):
     

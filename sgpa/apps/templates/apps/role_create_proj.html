@@ -49,11 +49,12 @@
 	{% endif %}
 		
 		 
-	<li>
-		<a href="{% url 'apps:listflujosproyectosMod' proyecto.id %}"><i class="fa fa-fw fa-edit"></i>Flujos</a>
-	</li>
-	
-
+		
+	{% if misPermisos.AFP %}
+		<li>
+			<a href="{% url 'apps:listflujosproyectosMod' proyecto.id %}"><i class="fa fa-fw fa-edit"></i>Flujos</a>
+		</li>
+	{% endif %}
 	{%if misPermisos.VP %}
 	<li>
 		<a href="{% url 'apps:verCliente' proyecto.id%}"><i class="fa fa-fw fa-edit"></i>Ver cliente</a>

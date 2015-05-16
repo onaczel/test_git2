@@ -2334,6 +2334,7 @@ def setEstadoHu(request, proyecto_id, hu_id):
         
         actividadeslist = Actividades.objects.filter(flujo_id = hu.flujo)
         count = 0
+        ordenact = 0
         for a in actividadeslist:
             count = count + 1
             if a.descripcion == request.POST['act']:
@@ -2552,7 +2553,7 @@ def misPermisos(usuario_id, proyecto_id):
             elif permiso.tag=="ERP":
                 misPermisos.ERP = True
             elif permiso.tag=="AFP":
-                misPermisos.ERP = True
+                misPermisos.AFP = True
                 
 
     return (misPermisos)

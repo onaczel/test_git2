@@ -1,41 +1,39 @@
 from django.core.management.base import BaseCommand, CommandError
 from django.contrib.auth.models import User
 from apps.models import Users_Roles, Flujos, Roles, Actividades, Permisos, Permisos_Roles,\
-    Prioridad, Estados, Proyectos, Equipo
+    Prioridad, Estados, Proyectos, Equipo, Estados_Scrum, UserStory
 from apps.views import crearSprints
 
 class Command(BaseCommand):
 
-    def handle(self, *args, **options):
+	def handle(self, *args, **options):
 		add_roles('Administrador', True)
 		add_roles('Usuario', True)
 		add_roles('Scrum Master', False)
 		add_roles('Cliente', False)
-		add_roles('Developer', False)
-		add_roles('Observador', False)
-		
+		add_roles("developer", False)
+		add_roles("observador", False)
+
 		add_user('admin', 'a123', 'deserver123@gmail.com', 1)
-		add_user('rokkaie', 'a123', 'rokkaie@gmail.com', 2)
-		add_user('jquin', 'a123', 'jquin@gmail.com', 2)
+		add_user('jquin', 'a123', 'rokkaie@gmail.com', 2)
 		add_user('hroa', 'a123', 'hroa@gmail.com', 2)
 		add_user('jrojas', 'a123', 'jrojas@gmail.com', 2)
-		
+
 		add_flujo('Plantilla Generica')
-		
-		permisos = ['Crear Usuario', 'Modificar Usuario', 'Eliminar Usuario', 'Crear Roles', 'Modificar Roles', 'Eliminar Roles','Crear Proyecto', 'Modificar Proyecto', 'Crear Plantilla de Flujos', 'Modificar Plantilla de Flujos', 'Eliminar Plantilla de Flujos', 'Asignar Participantes a Proyecto', 'Eliminar Participantes de Proyecto', 'Crear User Stories', 'Modificar User Stories', 'Eliminar User Stories', 'Planificar Sprints', 'Visualizar Proyectos', 'Crear Roles en Proyecto', 'Modificar Roles en Proyecto', 'Eliminar Roles en Proyecto']
-		tags = ['CU', 'MU', 'EU', 'CR', 'MR', 'ER', 'CP', 'MP','CPF', 'MPF', 'EPF', 'APP', 'EPP', 'CUS', 'MUS', 'EUS', 'PS', 'VP', 'CRP', 'MRP', 'ERP']
-		sistema = [True, True, True, True, True, True, True, True, True, True, True, False, False, False, False, False, False, False, False, False, False]
+
+		permisos = ['Crear Usuario', 'Modificar Usuario', 'Eliminar Usuario', 'Crear Roles', 'Modificar Roles', 'Eliminar Roles','Crear Proyecto', 'Modificar Proyecto', 'Crear Plantilla de Flujos', 'Modificar Plantilla de Flujos', 'Eliminar Plantilla de Flujos', 'Asignar Participantes a Proyecto', 'Eliminar Participantes de Proyecto', 'Crear User Stories', 'Modificar User Stories', 'Eliminar User Stories', 'Planificar Sprints', 'Visualizar Proyectos', 'Crear Roles en Proyecto', 'Modificar Roles en Proyecto', 'Eliminar Roles en Proyecto', 'Cambiar Estado User Story', 'Administrar Flujo Proyecto']
+		tags = ['CU', 'MU', 'EU', 'CR', 'MR', 'ER', 'CP', 'MP','CPF', 'MPF', 'EPF', 'APP', 'EPP', 'CUS', 'MUS', 'EUS', 'PS', 'VP', 'CRP', 'MRP', 'ERP', 'CEUS', 'AFP']
+		sistema = [True, True, True, True, True, True, True, True, True, True, True, False, False, False, False, False, False, False, False, False, False, False, False]
 		c=1
 		for p in permisos:
-		    add_permisos(p, tags[c-1], sistema[c-1])
-		    add_permisos_roles(c, 1)
-		    c = c + 1
-		
-		    
+			add_permisos(p, tags[c-1], sistema[c-1])
+			add_permisos_roles(c, 1)
+			c = c + 1
+
 		permisos_usuario = [18]
-		permisos_scrum_master = [12, 13, 14, 15, 16, 17, 18, 19, 20, 21 ]
+		permisos_scrum_master = [12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 23 ]
 		permisos_cliente = [18]
-		permisos_developer = [15, 18]
+		permisos_developer = [15, 18, 22]
 		permisos_observador = [18]
 
 		for p in permisos_usuario:
@@ -48,19 +46,26 @@ class Command(BaseCommand):
 			add_permisos_roles(p, 5)
 		for p in permisos_observador:
 			add_permisos_roles(p, 6)
-		
+
+
 		add_prioridad('Baja')
 		add_prioridad('Media')
 		add_prioridad('Alta')
-		
+
 		add_estado('To Do')
 		add_estado('Doing')
 		add_estado('Done')
 
+		add_estado_scrum("Iniciado")
+		add_estado_scrum("Asignado")
+		add_estado_scrum("No Asignado")
+		add_estado_scrum("Pendiente")
+		add_estado_scrum("Finalizado")
+		add_estado_scrum("Cancelado")
+
 		add_proyecto("Proyecto 1")
 		add_proyecto("Proyecto 2")
 		add_proyecto("Proyecto 3")
-
 
 		add_equipo(1, 3, 1)
 		add_equipo(1, 4, 2)
@@ -75,9 +80,14 @@ class Command(BaseCommand):
 		add_equipo(3, 4, 3)
 		add_equipo(3, 5, 3)
 
-		self.stdout.write('Poblacion de Base de Datos Exitosa')
-		    
+		for h in range(1,10):
+			add_hu(1, "hu" +str(h), "User Story "+str(h), "Como usuario debo poder realizar esta funcion "+str(h))
 		
+def add_estado_scrum(descripcion):
+	estado = Estados_Scrum()
+	estado.descripcion = descripcion
+	estado.save()
+
 def add_roles(descripcion, sistema):
 	rol = Roles()
 	rol.descripcion = descripcion
@@ -107,10 +117,11 @@ def add_flujo(descripcion):
 	flujo.descripcion = descripcion
 	flujo.plantilla = True
 	flujo.estado = True
+	flujo.tamano = 15
 	flujo.save()
 	actividades = ['Analisis', 'Diseno', 'Programacion', 'Testing', 'Despliegue']
 	for act in actividades:
-	    add_actividades(act, flujo.id)
+		add_actividades(act, flujo.id)
 	return flujo
 
 def add_actividades(descripcion, flujo_id):
@@ -142,7 +153,7 @@ def add_prioridad(descripcion):
 	prioridad = Prioridad()
 	prioridad.descripcion = descripcion
 	prioridad.save()
-	
+
 def add_estado(descripcion):
 	estado = Estados()
 	estado.descripcion = descripcion
@@ -155,20 +166,41 @@ def add_proyecto(descripcion):
 	proyecto.fecha_est_fin = '2015-06-02'
 	proyecto.descripcion = 'una prueba de proyecto'
 	proyecto.observaciones = 'ninguna'
+	proyecto.nro_sprint = 0
 	proyecto.save()
-	proy = Proyectos.objects.filter(nombre = descripcion)
-	p = proy.first()
-	crearSprints(p.id)
-    
+	add_flujo_proyecto(proyecto.id, 1)
+
 def add_equipo(p_id, r_id, u_id):
 	equipo = Equipo()
 	equipo.proyecto_id = p_id
 	equipo.rol_id = r_id
 	equipo.usuario_id = u_id
 	equipo.save()
-'''
-	if __name__ == '__main__':
-		print "Starting population script..."
-		populate()
-		print "Done."
-'''
+
+def add_flujo_proyecto(proyecto_id, flujo_id):
+	proyecto = Proyectos.objects.get(pk=proyecto_id)
+	flujo = Flujos.objects.get(pk=flujo_id)
+	flujo_nuevo = Flujos()
+	flujo_nuevo.descripcion = flujo.descripcion
+	flujo_nuevo.estado = flujo.estado
+	flujo_nuevo.plantilla = False
+	flujo_nuevo.tamano = flujo.tamano
+	flujo_nuevo.proyecto = proyecto
+	flujo_nuevo.save()
+	actividades = ['Analisis', 'Diseno', 'Programacion', 'Testing', 'Despliegue']
+	for act in actividades:
+		add_actividades(act, flujo_nuevo.id)
+
+def add_hu(proyecto_id, codigo, nombre, descripcion):
+	us = UserStory()
+	us.nombre = nombre
+	us.descripcion = descripcion
+	us.codigo = codigo
+	us.tiempo_Estimado = 50
+	us.valor_Negocio = 5
+	us.valor_Tecnico = 5
+	us.prioridad = Prioridad.objects.get(pk=3)
+	us.proyecto_id = proyecto_id
+	us.estado_scrum = Estados_Scrum.objects.get(pk=3)
+	us.save()
+
