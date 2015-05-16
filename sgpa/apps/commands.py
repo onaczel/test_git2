@@ -10,7 +10,12 @@ from django.contrib.auth.models import User
 
 @async
 def enviarMail(asunto,msg,lista):
-    
+    """
+    Envia email a una lista de usuarios
+    @param asunto: Asunto del email
+    @param msg: Cuerpo del email
+    @param: lista: lista de usuarios 
+    """
     for l in lista:
         send_mail(asunto,
                   msg, 
@@ -20,7 +25,12 @@ def enviarMail(asunto,msg,lista):
 
 
 def notificarNota(proyecto_id,hu_id, nota):
-    
+    """
+    Prepara un email de notificacion de notas en un user story
+    @param proyecto_id: id de un proyecto
+    @param hu_id: id de un user story
+    @param nota: Nota que se agrego a un user story 
+    """
     hu = UserStory.objects.get(id = hu_id)
     proyecto = Proyectos.objects.get(id = proyecto_id)
     usuario = User.objects.get(id = hu.usuario_Asignado)
@@ -33,7 +43,11 @@ def notificarNota(proyecto_id,hu_id, nota):
     
 
 def notificarModificacionHU(hu_id, proyecto_id):
-    
+    """
+    Prepara un email de notificacion de cuando de modifica un  user story
+    @param proyecto_id: id de un proyecto
+    @param hu_id: id de un user story
+    """
     historial = historialResponsableHU.objects.filter(hu = hu_id)
     hu = UserStory.objects.get(id = hu_id)
     proyecto = Proyectos.objects.get(id = proyecto_id)
@@ -48,7 +62,11 @@ def notificarModificacionHU(hu_id, proyecto_id):
 
 
 def notificarRegistroTrabajo(hu_id, proyecto_id):
-    
+    """
+    Prepara un email de notificacion cuando se registra un trabajo en un user story
+    @param proyecto_id: id de un proyecto
+    @param hu_id: id de un user story
+    """
     proyecto = Proyectos.objects.get(id = proyecto_id)
     equipo = Equipo.objects.get(proyecto_id = proyecto_id, rol_id = 3)
     hu = UserStory.objects.get(id = hu_id)

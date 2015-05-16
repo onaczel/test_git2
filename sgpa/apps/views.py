@@ -54,7 +54,8 @@ from psycopg2 import connect
 from django.db import connection
 import StringIO
 from bsddb.dbtables import _data
-from apps.commands import enviarMail, notificarNota, notificarModificacionHU
+from apps.commands import enviarMail, notificarNota, notificarModificacionHU,\
+    notificarRegistroTrabajo
 
 
 ######################################################################################################################################################
@@ -2100,6 +2101,7 @@ def crearregistroHu(request, proyecto_id, hu_id):
         #Asignacion de horas a los dias del sprint
         respuesta = horas(hu_reg, hu_id)
         #aca le tengo que llamar a la notificacion <selm>
+        notificarRegistroTrabajo(hu_id, proyecto_id)
         #"respuesta" se puede manejar como sea necesario
         #termina asignacion de horas a los dias del sprint
         hu_reg = UserStoryRegistro.objects.filter(idr = hu.id)
