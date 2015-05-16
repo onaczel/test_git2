@@ -2789,11 +2789,12 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
                    h.responsable = ouser
                    h.save()
                 hu.usuario_Asignado =  ouser.id
-                flujolist = Flujos.objects.filter(descripcion = request.POST['flujo'], proyecto_id = proyecto_id)
-                oflujo = flujolist.get(descripcion = request.POST['flujo'])
-                if hu.flujo != oflujo.id:
-                    hu.flujo = oflujo.id
-                    #llamar a la funcion de notificar
+                if request.POST['flujo']:
+                    flujolist = Flujos.objects.filter(descripcion = request.POST['flujo'], proyecto_id = proyecto_id)
+                    oflujo = flujolist.get(descripcion = request.POST['flujo'])
+                    if hu.flujo != oflujo.id:
+                        hu.flujo = oflujo.id
+                        #llamar a la funcion de notificar
                 oprioridad = Prioridad.objects.get(descripcion = request.POST['pri'])
                 if hu.prioridad != oprioridad.id:
                     hu.prioridad = oprioridad.id
