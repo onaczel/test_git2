@@ -190,6 +190,8 @@ class UserStoryVersiones(models.Model):
     f_actividad = models.IntegerField(default = 0)
     f_a_estado = models.IntegerField(default = 0)
     flujo_posicion = models.IntegerField(null = True)
+    #indica si el User Story se ha finalizado 
+    finalizado = models.BooleanField(default = False)
     #notas = models.CharField(max_length = 512, null = True)
     estado_scrum = models.ForeignKey(Estados_Scrum, null = True)
     motivo_cancelacion = models.CharField(max_length = 512, null = True)

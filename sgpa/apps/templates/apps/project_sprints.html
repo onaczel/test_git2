@@ -11,7 +11,7 @@
 	{% endif %}
 	{% if proyecto.estado_id == 1 %} 
 		<form action="{% url 'apps:sprints' proyecto.id proyecto.nro_sprint 0 %}" method="post">{% csrf_token %}
-			<h3><b>Sprint actual: Sprint Numero {{proyecto.nro_sprint}}<br />
+			<b>Sprint actual: Sprint Numero {{proyecto.nro_sprint}}<br />
 			<form action="{% url 'apps:sprints' proyecto.id 0 0 %}" method="post">{% csrf_token %}
 				<br /><input type="submit", name="cambio", value="Nuevo Sprint"><br />
 			</form>
@@ -103,66 +103,32 @@
 							<ul>
 								{% if hus %}
 									{% for hu in hus %}
-										<li>
-											<form action="{% url 'apps:sprints' proyecto.id s.id hu.id %}" method="post">{% csrf_token %}
-												<h3><b><font size="3">HU {{hu.codigo}}</font>&emsp;<font size="1">Detalles</font><input type="submit", name="cambio", value="+ "><input type="submit", name="cambio", value="- "></b></h3>
-											</form>
-											{% if userStory.id == hu.id %}
+										{% if hu.estado_scrum_id == 1 or hu.estado_scrum_id == 2 %}
+											<li>
 												<form action="{% url 'apps:sprints' proyecto.id s.id hu.id %}" method="post">{% csrf_token %}
-													<table>
-														<font size="3"><b>Descripcion:</b></font>&emsp;{{detalles.descripcion.value}}<br />
-														<font size="3"><b>Codigo:</b></font>&emsp;{{detalles.codigo.value}}<br />
-														<font size="3"><b>Tiempo Estimado:</b></font>&emsp;{{detalles.tiempo_Estimado.value}}<br />
-														<font size="3"><b>Valor Negocio:</b></font>&emsp;{{detalles.valor_Negocio.value}}<br />
-														<font size="3"><b>Valor Tecnico:</b></font>&emsp;{{detalles.valor_Tecnico.value}}<br />
-													</table>
-													<table>
-														<font size="3"><b>Usuario Asignado:</b></font>&emsp;{{usuario.username}}<br />
-														<font size="3"><b>Flujo Asignado:</b></font>&emsp;{{flujo.descripcion}}<br />
-														<font size="3"><b>Prioridad:</b></font>&emsp;{{prioridad.descripcion}}<br />
-													</table>
-													<!-- {% if s.estado != 2 %}
-														<b>Usuario Asignado:</b>
-														<select name="us"  style="width:190px" sort = true>
-															<option>{{usuario.username}}</option>
-															{% for user in users %}
-																{% if usuario.id != user.id %}
-																	<option >{{user.username}}</option>
-																{% endif %}
-															{% endfor %} 
-														</select><br>
-														#No se puede modificar flujo si ya esta en progreso
-														{% if s.estado == 0 %}
-															<b>Flujo Asignado:</b>&emsp;&emsp;
-															<select name="flujo"  style="width:190px" sort = true>
-																<option>{{flujo.descripcion}}</option>
-																{% for f in flujos %}
-																	{% if flujo.id != f.id %}
-																		<option >{{f.descripcion}}</option>
-																	{% endif %}
-																{% endfor %} 
-															</select><br>
+													<h3><b><font size="3">HU {{hu.codigo}}</font>&emsp;</b></h3><font size="1">Detalles</font><input type="submit", name="cambio", value="+ "><input type="submit", name="cambio", value="- ">
+												</form>
+												{% if userStory.id == hu.id %}
+													<form action="{% url 'apps:sprints' proyecto.id s.id hu.id %}" method="post">{% csrf_token %}
+														{% if s.estado == 1 and scrum.rol_id == 3 %}
+															<input type="submit", name="cambio", value="Finalizar User Story">&emsp;<input type="submit", name="cambio", value="Cancelar User Story"><br /><br />
 														{% endif %}
-														<b>Prioridad:</b>&emsp;&emsp;&emsp;&emsp;&emsp;
-														<select name="pri"  style="width:190px" sort = true>
-															<option>{{prioridad.descripcion}}</option>
-															{% for pr in prioridades %}
-																{% if prioridad.id != pr.id %}
-																	<option >{{pr.descripcion}}</option>
-																{% endif %}
-															{% endfor %} 
-														</select><br>
-														<input type="submit" name="cambio" value="Modificar" />
-													{% else %}
+														<table>
+															<font size="3"><b>Descripcion:</b></font>&emsp;{{detalles.descripcion.value}}<br />
+															<font size="3"><b>Codigo:</b></font>&emsp;{{detalles.codigo.value}}<br />
+															<font size="3"><b>Tiempo Estimado:</b></font>&emsp;{{detalles.tiempo_Estimado.value}}<br />
+															<font size="3"><b>Valor Negocio:</b></font>&emsp;{{detalles.valor_Negocio.value}}<br />
+															<font size="3"><b>Valor Tecnico:</b></font>&emsp;{{detalles.valor_Tecnico.value}}<br />
+														</table>
 														<table>
 															<font size="3"><b>Usuario Asignado:</b></font>&emsp;{{usuario.username}}<br />
 															<font size="3"><b>Flujo Asignado:</b></font>&emsp;{{flujo.descripcion}}<br />
 															<font size="3"><b>Prioridad:</b></font>&emsp;{{prioridad.descripcion}}<br />
 														</table>
-													{% endif %} -->
-												</form>
-											{% endif %}
-										</li>
+													</form>
+												{% endif %}
+											</li>
+										{% endif %}
 									{% endfor %}
 								{% else %}
 									<li>El Sprint no tiene User Stories</li>
