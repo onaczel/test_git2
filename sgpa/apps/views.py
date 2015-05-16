@@ -2797,7 +2797,7 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
                     notificarCambioResponsableHU(hu.usuario_Asignado, ouser.id, hu_id, proyecto_id)
                     
                 hu.usuario_Asignado =  ouser.id
-                if request.POST['flujo']:
+                if request.POST.get('flujo', False):
                     flujolist = Flujos.objects.filter(descripcion = request.POST['flujo'], proyecto_id = proyecto_id)
                     oflujo = flujolist.get(descripcion = request.POST['flujo'])
                     if hu.flujo != oflujo.id:
