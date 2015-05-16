@@ -2770,19 +2770,21 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
                 hu = UserStory.objects.get(id = hu_id)
                 huv = UserStoryVersiones()
                 copiarHU(hu, huv, User.objects.get(username = request.user))
-                nuevo_tiempo_estimado = request.POST['tiempo_Estimado']
+                nuevo_tiempo_estimado = int(request.POST['tiempo_Estimado'])
                 if hu.tiempo_Estimado != nuevo_tiempo_estimado:
+                    print hu.tiempo_Estimado
+                    print nuevo_tiempo_estimado
                     hu.tiempo_Estimado = nuevo_tiempo_estimado
                     #llamar a la funcion de notificar
                     notificarModificacionHU(hu_id, proyecto_id)
                     
-                nuevo_valor_negocio = request.POST['valor_Negocio']
+                nuevo_valor_negocio = int(request.POST['valor_Negocio'])
                 if hu.valor_Negocio != nuevo_valor_negocio:
                     hu.valor_Negocio = nuevo_valor_negocio
                     #llamar a la funcion de notificar
                     notificarModificacionHU(hu_id, proyecto_id)
                     
-                nuevo_valor_tecnico = request.POST['valor_Tecnico']
+                nuevo_valor_tecnico = int(request.POST['valor_Tecnico'])
                 if hu.valor_Tecnico != nuevo_valor_tecnico:
                     hu.valor_Tecnico = nuevo_valor_tecnico
                     #llamar a la funcion de notificar
@@ -2795,8 +2797,8 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
                     h.responsable = ouser
                     h.save()
                     notificarCambioResponsableHU(hu.usuario_Asignado, ouser.id, hu_id, proyecto_id)
+                    hu.usuario_Asignado =  ouser.id
                     
-                hu.usuario_Asignado =  ouser.id
                 if request.POST.get('flujo', False):
                     flujolist = Flujos.objects.filter(descripcion = request.POST['flujo'], proyecto_id = proyecto_id)
                     oflujo = flujolist.get(descripcion = request.POST['flujo'])
