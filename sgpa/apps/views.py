@@ -2788,10 +2788,7 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
                     h.hu = hu
                     h.responsable = ouser
                     h.save()
-
-                hu.usuario_Asignado =  ouser.id
-
-
+                    hu.usuario_Asignado =  ouser.id
                 flujolist = Flujos.objects.filter(descripcion = request.POST['flujo'], proyecto_id = proyecto_id)
                 oflujo = flujolist.get(descripcion = request.POST['flujo'])
                 if hu.flujo != oflujo.id:
