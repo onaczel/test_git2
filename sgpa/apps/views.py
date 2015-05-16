@@ -2541,6 +2541,8 @@ def misPermisos(usuario_id, proyecto_id):
                 misPermisos.MRP = True
             elif permiso.tag=="ERP":
                 misPermisos.ERP = True
+            elif permiso.tag=="AFP":
+                misPermisos.ERP = True
                 
 
     return (misPermisos)
