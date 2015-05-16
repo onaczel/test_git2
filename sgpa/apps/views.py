@@ -56,7 +56,7 @@ from django.db import connection
 import StringIO
 from bsddb.dbtables import _data
 from apps.commands import enviarMail, notificarNota, notificarModificacionHU,\
-    notificarRegistroTrabajo
+    notificarRegistroTrabajo, notificarCambioResponsableHU
 
 
 ######################################################################################################################################################
@@ -2774,21 +2774,28 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
                 if hu.tiempo_Estimado != nuevo_tiempo_estimado:
                     hu.tiempo_Estimado = nuevo_tiempo_estimado
                     #llamar a la funcion de notificar
+                    notificarModificacionHU(hu_id, proyecto_id)
+                    
                 nuevo_valor_negocio = request.POST['valor_Negocio']
                 if hu.valor_Negocio != nuevo_valor_negocio:
                     hu.valor_Negocio = nuevo_valor_negocio
                     #llamar a la funcion de notificar
+                    notificarModificacionHU(hu_id, proyecto_id)
+                    
                 nuevo_valor_tecnico = request.POST['valor_Tecnico']
                 if hu.valor_Tecnico != nuevo_valor_tecnico:
                     hu.valor_Tecnico = nuevo_valor_tecnico
                     #llamar a la funcion de notificar
+                    notificarModificacionHU(hu_id, proyecto_id)
+                    
                 ouser = User.objects.get(username = request.POST['us'])
                 if hu.usuario_Asignado != ouser.id:
                     h = historialResponsableHU()
                     h.hu = hu
                     h.responsable = ouser
                     h.save()
-
+                    notificarCambioResponsableHU(hu.usuario_Asignado, ouser.id, hu_id, proyecto_id)
+                    
                 hu.usuario_Asignado =  ouser.id
                 if request.POST['flujo']:
                     flujolist = Flujos.objects.filter(descripcion = request.POST['flujo'], proyecto_id = proyecto_id)
@@ -2796,10 +2803,14 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
                     if hu.flujo != oflujo.id:
                         hu.flujo = oflujo.id
                         #llamar a la funcion de notificar
+                        notificarModificacionHU(hu_id, proyecto_id)
+                        
                 oprioridad = Prioridad.objects.get(descripcion = request.POST['pri'])
                 if hu.prioridad != oprioridad.id:
                     hu.prioridad = oprioridad.id
                     #llamar a la funcion de notificar
+                    notificarModificacionHU(hu_id, proyecto_id)
+                    
                 hu.save()
 
             if request.POST['cambio'] == "x":
