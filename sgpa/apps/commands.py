@@ -52,7 +52,7 @@ def notificarModificacionHU(hu_id, proyecto_id):
     hu = UserStory.objects.get(id = hu_id)
     proyecto = Proyectos.objects.get(id = proyecto_id)
     for h in historial:
-        user = User.objects.get(id = h.responsable)
+        user = User.objects.get(id = h.responsable.id)
         if user.is_active == True:
             list = []
             list.append(user)
@@ -66,23 +66,36 @@ def notificarCambioResponsableHU(new_id, old_id,hu_id, proyecto_id):
     @param proyecto_id: id de un proyecto
     @param hu_id: id de un user story
     """
+    
     historial = historialResponsableHU.objects.filter(hu = hu_id)
     hu = UserStory.objects.get(id = hu_id)
     proyecto = Proyectos.objects.get(id = proyecto_id)
-    Unew = User.objects.get(id = new_id)
-    Uold = User.objects.get(id = old_id) 
     
-    list = []
-    list.append(Unew)
-    asunto = 'SGPA - Asignacion a User Story'
-    msg = 'Usuario :'+Unew.username+', se le ha asignado como responsable del user story: '+hu.nombre+' del proyecto: '+proyecto.nombre
-    enviarMail(asunto, msg, list)
-    l = []
-    l.append(Uold)
-    asunto = 'SGPA - Desasignacion de User Story'
-    msg = 'Usuario :'+Unew.username+', ha desasignado como responsable del user story: '+hu.nombre+' del proyecto: '+proyecto.nombre
-    enviarMail(asunto, msg, l)
+    try: 
+        Unew = User.objects.get(id = new_id)
+        list = []
+        list.append(Unew)
+        asunto = 'SGPA - Asignacion a User Story'
+        msg = 'Usuario :'+Unew.username+', se le ha asignado como responsable del user story: '+hu.nombre+' del proyecto: '+proyecto.nombre
+        enviarMail(asunto, msg, list)
+    except:
+        Uold = User.objects.get(id = old_id)
+        list = []
+        list.append(Uold)
+        asunto = 'SGPA - Asignacion a User Story'
+        msg = 'Usuario :'+Uold.username+', se le ha asignado como responsable del user story: '+hu.nombre+' del proyecto: '+proyecto.nombre
+        enviarMail(asunto, msg, list)
     
+    try:
+        Uold = User.objects.get(id = old_id)
+        l = []
+        l.append(Uold)
+        asunto = 'SGPA - Desasignacion de User Story'
+        msg = 'Usuario :'+Unew.username+', ha desasignado como responsable del user story: '+hu.nombre+' del proyecto: '+proyecto.nombre
+        enviarMail(asunto, msg, l)
+   
+    except:
+        pass
 
 def notificarRegistroTrabajo(hu_id, proyecto_id):
     """
