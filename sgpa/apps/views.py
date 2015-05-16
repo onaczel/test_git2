@@ -1372,9 +1372,17 @@ def accionesproyecto(request, proyecto_id):
         tamanolista.append(act)
         tamanolista.append(act)
         
+    user_logged = request.user
+    
+    
+       
+    scrum = False
+    usereq = Equipo.objects.filter(proyecto_id = proyecto_id, usuario_id=user_logged.id, rol_id = 3)
+    if len(usereq):
+        scrum = True
     
         
-    return render_to_response("apps/project_acciones.html", {"proyecto":proyecto, "usuario":request.user, "misPermisos":mispermisos, 'equipo':uroles,'users':users, 'roles':roles, 'flujo':flujo, 'actividades':actividades, 'hus':hus, 'tamanolista':tamanolista})
+    return render_to_response("apps/project_acciones.html", {"proyecto":proyecto, 'scrum':scrum, 'user_logged':user_logged, "usuario":request.user, "misPermisos":mispermisos, 'equipo':uroles,'users':users, 'roles':roles, 'flujo':flujo, 'actividades':actividades, 'hus':hus, 'tamanolista':tamanolista})
 
 def is_in_list(list, o_id):
     """
@@ -1950,11 +1958,17 @@ def editarHu(request, proyecto_id, hu_id):
     @return: render a hu_form_no_valido.html 
     @return: hu_modify_fields.html con el id y la descripcion del User Story, el id del proyecto donde se encuentra y el formulario de edicion
     """
+
     proyecto = Proyectos.objects.get(pk = proyecto_id)
     mispermisos = misPermisos(request.user.id, proyecto_id)
     hu = get_object_or_404(UserStory, pk=hu_id)
     huv = UserStoryVersiones()
-  
+    userasig = False
+    try:
+        if hu.usuario_Asignado == request.user.id:
+            userasig = True
+    except:
+        userasig = False
     users = []           
     equipos = Equipo.objects.filter(proyecto_id = proyecto_id)
     for equipo in equipos:
@@ -1996,6 +2010,8 @@ def editarHu(request, proyecto_id, hu_id):
             hu.usuario_Asignado =  user.id
         except:
             hu.usuario_Asignado = None
+        
+
         '''
         try:
             flujolist = Flujos.objects.filter(descripcion = request.POST['flujo'], proyecto_id = proyecto_id)
@@ -2047,7 +2063,7 @@ def editarHu(request, proyecto_id, hu_id):
     else:        
         form = HuCreateForm(initial={'descripcion':hu.descripcion, 'codigo':hu.codigo, 'tiempo_Estimado':hu.tiempo_Estimado, 'valor_Tecnico':hu.valor_Tecnico, 'valor_Negocio':hu.valor_Negocio})
 
-    return render_to_response('apps/hu_modify_fields.html', {"form":form, "proyecto_id":proyecto_id, "hu_id":hu_id, "hu":hu, 'misPermisos':mispermisos, 'users':users, 'flujos':flujos, 'proyecto_nombre':proyecto.nombre, 'proyecto':proyecto, 'prioridades':prioridades}, context_instance = RequestContext(request))
+    return render_to_response('apps/hu_modify_fields.html', {"form":form, "proyecto_id":proyecto_id, "hu_id":hu_id, "hu":hu, 'misPermisos':mispermisos, 'users':users, 'flujos':flujos, 'proyecto_nombre':proyecto.nombre, 'proyecto':proyecto, 'prioridades':prioridades, 'userasig':userasig}, context_instance = RequestContext(request))
 
 def registroHu(request, proyecto_id, hu_id):
     """

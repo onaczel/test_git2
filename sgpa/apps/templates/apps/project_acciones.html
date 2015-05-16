@@ -107,12 +107,11 @@
 									{% if  h.flujo == f.id and forloop.counter <= f.tamano %}
 										{% if forloop.counter == h.flujo_posicion  %}
 											<!-- <td><a href="{% url 'apps:setEstadoHu' proyecto.id h.id %}">{{h.nombre}}</a></td> -->
-											{% if hu.prioridad_id == 1 %}
-												<td bgcolor="#A8FFFF" height=100 valign="top" border=10px><small><a href="{% url 'apps:editarHu' proyecto.id h.id %}"><font color="#FFFFF"><b>{{h.nombre}}</b></font></a></small></td>
-												<!-- <td height=100 valign="top" border=10px><small><b>{{h.nombre}}</b></small></td> -->
-											{% else %}
-												<td  	bgcolor="#F0F0F0"  height=100 valign="top" border=10px><small><a href="{% url 'apps:editarHu' proyecto.id h.id %}"><font color="#0000"><b>{{h.nombre}}</b></font></a></small></td>
-											{% endif %}
+											{% if scrum or user_logged.id == h.usuario_Asignado %}
+										 		<td  bgcolor="#F0F0F0"  height=100 valign="top" border=10px><small><a href="{% url 'apps:editarHu' proyecto.id h.id %}"><font color="#0000"><b>{{h.nombre}}</b></font></a></small></td>
+										 	{% else %}
+										 		<td  bgcolor="#F0F0F0"  height=100 valign="top" border=10px><small><font color="#0000"><b>{{h.nombre}}</b></font></small></td>
+										 	{% endif %}
 										{% else %}
 											<td height=100 ></td>
 										{% endif %}

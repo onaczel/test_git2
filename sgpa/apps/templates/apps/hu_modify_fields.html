@@ -14,7 +14,7 @@
               <a href="{% url 'apps:editarHu' proyecto_id hu.id %}"></i><font color="FFFFFF">{{hu.codigo}} {{hu.nombre}}</font></a>          
         </li>	
 	{% if misPermisos.MUS %}
-		{% if  hu.sprint == proyecto.nro_sprint and misPermisos.CEUS %}
+		{% if  hu.sprint == proyecto.nro_sprint and userasig %}
 		<li>
               <a href="{% url 'apps:setEstadoHu' proyecto_id hu_id  %}"><i class="fa fa-fw fa-edit"></i> Cambiar Estado</a>          
         </li>			
@@ -102,7 +102,7 @@
 				</table>
 			{% endif %}
 			<br>
-			
+			{% if misPermisos.MUS %}
 			<form action="{% url 'apps:editarHu' proyecto_id hu_id %}" method="post">
 				{% csrf_token %}
 				<table border=0px>
@@ -172,6 +172,8 @@
 		
 		
 		</form>
+		
+		{% endif %}
 	{% endif %}
 {% endblock %}
 {% block atras %}
