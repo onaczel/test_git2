@@ -2790,11 +2790,14 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
                     
                 ouser = User.objects.get(username = request.POST['us'])
                 if hu.usuario_Asignado != ouser.id:
-                    h = historialResponsableHU()
-                    h.hu = hu
-                    h.responsable = ouser
-                    h.save()
-                    notificarCambioResponsableHU(hu.usuario_Asignado, ouser.id, hu_id, proyecto_id)
+                    if historialResponsableHU.objects.filter(hu = hu, responsable = ouser).exists():
+                        notificarCambioResponsableHU(hu.usuario_Asignado, ouser.id, hu_id, proyecto_id)
+                    else:    
+                        h = historialResponsableHU()
+                        h.hu = hu
+                        h.responsable = ouser
+                        h.save()
+                        notificarCambioResponsableHU(hu.usuario_Asignado, ouser.id, hu_id, proyecto_id)
                     
                 hu.usuario_Asignado =  ouser.id
                 if request.POST.get('flujo', False):
