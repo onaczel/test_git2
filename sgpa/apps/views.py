@@ -1755,7 +1755,7 @@ def crearHu(request, proyecto_id):
         hu.proyecto_id = proyecto_id
         hu.fecha_creacion = time.strftime("%Y-%m-%d")
         #user = User.objects.get(username = request.POST['us']) 
-        hu.usuario_Asignado =  user.id
+        #hu.usuario_Asignado =  user.id
         #flujolist = Flujos.objects.filter(descripcion = request.POST['flujo'], proyecto_id = proyecto_id)
         #oflujo = flujolist.get(descripcion = request.POST['flujo'])
         #hu.flujo = oflujo.id
@@ -2210,7 +2210,7 @@ def volverHU(hu, huv):
     hu.tiempo_Estimado = huv.tiempo_Estimado
     hu.tiempo_Real = huv.tiempo_Real
     #No puede volver al sprint anterior
-    #hu.sprint = huv.sprint
+    hu.sprint = huv.sprint
     hu.usuario_Asignado = huv.usuario_Asignado
     #hu.flujo
     #hu.proyecto
@@ -2221,7 +2221,10 @@ def volverHU(hu, huv):
     hu.f_actividad = huv.f_actividad
     hu.f_a_estado = huv.f_a_estado
     hu.flujo_posicion = huv.flujo_posicion
-    hu.finalizado = hu.finalizado
+    hu.finalizado = huv.finalizado
+    hu.estado_scrum_id = huv.estado_scrum_id
+    hu.motivo_cancelacion = huv.motivo_cancelacion
+    
     hu.save()
 
 def copiarHU(hu, huv, user):
@@ -2254,6 +2257,10 @@ def copiarHU(hu, huv, user):
     huv.usercambio = user
     huv.f_actividad = hu.f_actividad
     huv.f_a_estado = hu.f_a_estado
+    huv.flujo_posicion = hu.flujo_posicion
+    huv.estado_scrum_id = hu.estado_scrum_id
+    huv.finalizado = hu.finalizado
+    huv.motivo_cancelacion = hu.motivo_cancelacion
     huv.save()
 
 def listhuversiones(request, proyecto_id, hu_id):
@@ -2331,6 +2338,7 @@ def setEstadoHu(request, proyecto_id, hu_id):
         
     mispermisos = misPermisos(request.user.id, proyecto_id)
     modificado = False
+    ordenact = 0
     if request.method == 'POST':
         #actlist = Actividades.objects.filter(descripcion = request.POST['act'], flujo_id = hu.flujo)
         
@@ -2578,6 +2586,7 @@ def getSprintNro(sprint):
     """
     return sprint.nro_sprint
 
+
 def sprints(request, proyecto_id, sprint_id, hu_id):
     """
     retorna los sprints de cada proyecto
@@ -2612,6 +2621,9 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
     f_a_estado = [] #nro del estado de la actividad de flujo en que se encuentra el hu (ex: Doing de Desarrollo de Flujo 1)
     fecha_fin_sprint = [] 
     cancelar_hu = False #bandera que te permite acceder a la interfaz de cancelacion de User Story
+    users = [] #Equipo del proyecto
+    flujos = [] #flujos del proyecto
+    prioridades = []
     try:
         sprints = Sprint.objects.filter(proyecto_id = proyecto_id)
         sprints = sorted(sprints, key = getSprintNro, reverse = False)
@@ -2628,9 +2640,27 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
             if(primer_sprint):
                 mensaje = "Antes de iniciar el proyecto debe tener por lo menos un Sprint"
             else:
-                proyecto.fecha_ini_real = datetime.today().strftime("%Y-%m-%d")
-                mensaje = iniciarSprint(proyecto_id, 1)
-                proyecto = Proyectos.objects.get(id = proyecto_id)
+                hus_proyecto = UserStory.objects.filter(proyecto_id = proyecto_id, sprint = 1)
+                if hus_proyecto:
+                    us = True
+                    flu = True
+                    for hu_proyecto in hus_proyecto:
+                        if hu_proyecto.flujo <= 0:
+                            mensaje = "No se olvide de asignarle un flujo al User Story: " + str(hu_proyecto.nombre)
+                            flu = False
+                            break
+                        if hu_proyecto.usuario_Asignado <= 0:
+                            mensaje = "No se olvide de asignarle un usuario responsable al User Story: " + str(hu_proyecto.nombre)
+                            us = False
+                            break
+                    if us and flu:
+                        proyecto.fecha_ini_real = datetime.today().strftime("%Y-%m-%d")
+                        mensaje = iniciarSprint(proyecto_id, 1)
+                        proyecto = Proyectos.objects.get(id = proyecto_id)
+                        sprints = Sprint.objects.filter(proyecto_id = proyecto_id)
+                        sprints = sorted(sprints, key = getSprintNro, reverse = False)
+                else:
+                    mensaje = "Asigne algun User Story al sprint 1 antes de iniciar el proyecto"
 
         elif request.POST['cambio'] == "Nuevo Sprint":
             crearSprint(proyecto_id)
@@ -2667,19 +2697,137 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
             if request.POST['cambio'] == "+ ":
                 userStory = UserStory.objects.get(id = hu_id)
                 detalles = HuCreateForm(initial = {"descripcion":userStory.descripcion, "codigo":userStory.codigo, "tiempo_Estimado":userStory.tiempo_Estimado, "valor_Negocio":userStory.valor_Negocio, "valor_Tecnico":userStory.valor_Tecnico})
-                usuario = User.objects.get(id = userStory.usuario_Asignado)
-                flujo = Flujos.objects.get(id = userStory.flujo)
+                try:
+                    usuario = User.objects.get(id = userStory.usuario_Asignado)
+                except:
+                    usuario = []
+                try:
+                    flujo = Flujos.objects.get(id = userStory.flujo)
+                except:
+                    flujo = []
                 prioridad = Prioridad.objects.get(id = userStory.prioridad_id)
 
             if request.POST['cambio'] == "Iniciar Sprint":
-                mensaje = iniciarSprint(proyecto_id, sprint.nro_sprint)
-                sprint = []
-                sprints = Sprint.objects.filter(proyecto_id = proyecto_id)
+                hus_proyecto = UserStory.objects.filter(proyecto_id = proyecto_id, sprint = sprint.nro_sprint)
+                if hus_proyecto:
+                    us = True
+                    flu = True
+                    for hu_proyecto in hus_proyecto:
+                        if hu_proyecto.flujo < 0:
+                            mensaje = "No se olvide de asignarle un flujo al User Story: " + str(hu_proyecto.nombre)
+                            flu = False
+                            break
+                        if hu_proyecto.usuario_Asignado < 0:
+                            mensaje = "No se olvide de asignarle un usuario responsable al User Story: " + str(hu_proyecto.nombre)
+                            us = False
+                            break
+                    if us and flu:
+                        mensaje = iniciarSprint(proyecto_id, sprint.nro_sprint)
+                        sprint = []
+                        sprints = Sprint.objects.filter(proyecto_id = proyecto_id)
+                        sprints = sorted(sprints, key = getSprintNro, reverse = False)
+                else:
+                    mensaje = "Asigne algun User Story al sprint " + str(sprint.nro_sprint) + " antes de iniciar el proyecto"
 
-        elif request.POST['cambio'] == "Planificar":
+        elif request.POST['cambio'] == "Planificar" or request.POST['cambio'] == "x" or request.POST['cambio'] == " + " or request.POST['cambio'] == " - " or request.POST['cambio'] == "Modificar " or request.POST['cambio'] == "Asignar User Stories":
             sprint = Sprint.objects.get(id = sprint_id)
             planificar = True
-            #continuar
+            if request.POST['cambio'] == "Asignar User Stories":
+                user_stories_id = request.POST.getlist(u'hus[]')
+                for user_story_id in user_stories_id:
+                    try:
+                        hu = UserStory.objects.get(pk=user_story_id)
+                        huv = UserStoryVersiones()
+                        copiarHU(hu, huv, User.objects.get(username = request.user))
+                    except:
+                        hu = None
+                    hu.sprint = sprint.nro_sprint
+                    hu.f_actividad = 1
+                    hu.f_a_estado = 1
+                    hu.estado_scrum_id = 2
+                    hu.save()
+
+            if request.POST['cambio'] == "Modificar ":
+                hu = UserStory.objects.get(id = hu_id)
+                huv = UserStoryVersiones()
+                copiarHU(hu, huv, User.objects.get(username = request.user))
+                hu.tiempo_Estimado = request.POST['tiempo_Estimado']
+                hu.valor_Negocio = request.POST['valor_Negocio']
+                hu.valor_Tecnico = request.POST['valor_Tecnico']
+                ouser = User.objects.get(username = request.POST['us']) 
+                hu.usuario_Asignado =  ouser.id
+                flujolist = Flujos.objects.filter(descripcion = request.POST['flujo'], proyecto_id = proyecto_id)
+                oflujo = flujolist.get(descripcion = request.POST['flujo'])
+                hu.flujo = oflujo.id
+                oprioridad = Prioridad.objects.get(descripcion = request.POST['pri'])
+                hu.prioridad = oprioridad
+                hu.save()
+
+            if request.POST['cambio'] == "x":
+                hu = UserStory.objects.get(id = hu_id)
+                huv = UserStoryVersiones()
+                copiarHU(hu, huv, User.objects.get(username = request.user))
+                hu_version_anterior = UserStoryVersiones()
+                hu_versiones = UserStoryVersiones.objects.filter(idv = hu.id)
+                for hu_version in hu_versiones:
+                    if hu_version.sprint != sprint.nro_sprint:
+                        hu_version_anterior = hu_version
+                        break
+                for hu_version in hu_versiones:
+                    if hu_version.sprint != sprint.nro_sprint:
+                        if hu_version.version > hu_version_anterior.version:
+                            hu_version_anterior = hu_version
+                #hu_version_anterior es la version mas reciente antes de que el sprint actual se apodere de este User Story
+                volverHU(hu, hu_version_anterior)
+
+            if request.POST['cambio'] == " + ":
+                userStory = UserStory.objects.get(id = hu_id)
+                detalles = HuCreateForm(initial = {"descripcion":userStory.descripcion, "codigo":userStory.codigo, "tiempo_Estimado":userStory.tiempo_Estimado, "valor_Negocio":userStory.valor_Negocio, "valor_Tecnico":userStory.valor_Tecnico})
+                equipos = Equipo.objects.filter(proyecto_id = proyecto_id)
+                for equipo in equipos:
+                    user = User.objects.get(id = equipo.usuario_id)
+                    se_encuentra = False
+                    for u in users:
+                        if u.id == user.id:
+                            se_encuentra = True
+                    if se_encuentra == False:
+                        users.append(user)
+                flujos = Flujos.objects.filter(proyecto_id = proyecto_id)
+                prioridades = Prioridad.objects.all()
+                try:
+                    usuario = User.objects.get(id = userStory.usuario_Asignado)
+                except:
+                    usuario = []
+                try:
+                    flujo = Flujos.objects.get(id = userStory.flujo)
+                except:
+                    flujo = []
+                try:
+                    prioridad = Prioridad.objects.get(id = userStory.prioridad_id)
+                except:
+                    prioridad = []
+                f_actividad = userStory.f_actividad
+                try:
+                    f_a_estado = Estados.objects.get(id = userStory.f_a_estado)
+                except:
+                    f_a_estado = []
+                try:
+                    hus_registros = UserStoryRegistro.objects.filter(idr = userStory.id)
+                    for hu_registro in hus_registros:
+                        tiempo_hu_registrado = tiempo_hu_registrado + hu_registro.tiempo_Real
+                except:
+                    tiempo_hu_registrado = 0
+
+            hus2 = UserStory.objects.filter(proyecto_id = proyecto_id, estado_scrum_id = 2)
+            hus3 = UserStory.objects.filter(proyecto_id = proyecto_id, estado_scrum_id = 3)
+            hus4 = UserStory.objects.filter(proyecto_id = proyecto_id, estado_scrum_id = 4)
+            listHus = []
+            listHus.append(hus2)
+            listHus.append(hus3)
+            listHus.append(hus4)
+            for huN in listHus:
+                for hu in huN:
+                    hus.append(hu)
 
         elif request.POST['cambio'] == "Cambiar Fecha":
             sprint = Sprint.objects.get(id = sprint_id)
@@ -2729,17 +2877,25 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
                 sprint.fecha_fin = datetime.today().strftime("%Y-%m-%d")
                 sprint.save()
                 for hu in hus:
-                    hu.estado_scrum_id = 4
-                    hu.save()
+                    if hu.estado_scrum_id != 5 and hu.estado_scrum_id != 6:
+                        huv = UserStoryVersiones()
+                        copiarHU(hu, huv, User.objects.get(username = request.user))
+                        hu.estado_scrum_id = 4
+                        hu.save()
                 sprint = Sprint.objects.get(id = sprint_id)
                 hus = UserStory.objects.filter(proyecto_id = proyecto_id, sprint = sprint.nro_sprint)
+
             if request.POST['cambio'] == "Finalizar User Story":
                 hu = UserStory.objects.get(id = hu_id)
+                huv = UserStoryVersiones()
+                copiarHU(hu, huv, User.objects.get(username = request.user))
                 hu.estado_scrum_id = 5
                 hu.save()
                 hus = UserStory.objects.filter(proyecto_id = proyecto_id, sprint = sprint.nro_sprint)
             if request.POST['cambio'] == "Cancelar este user story":
                 hu = UserStory.objects.get(id = hu_id)
+                huv = UserStoryVersiones()
+                copiarHU(hu, huv, User.objects.get(username = request.user))
                 hu.estado_scrum_id = 6
                 hu.motivo_cancelacion = request.POST['motivo_cancelacion']
                 hu.save()
@@ -2764,22 +2920,14 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
             cancelar_hu = True
             sprint = Sprint.objects.get(id = sprint_id)
             userStory = UserStory.objects.get(id = hu_id)
-            
-    #############Viejo
+
     #El Scrum Master del proyecto "rol_id = 3"
     scrum = []
     try:
         scrum = Equipo.objects.get(proyecto_id = proyecto_id, usuario_id = request.user.id, rol_id = 3)
     except:
         scrum = Equipo()
-    #
-    #if pasar_sprint:
-        #return render_to_response('apps/project_sprints_pasarhu.html', {"proyecto":proyecto, "hus_sprint_actual":hus, "nuevo_sprint":nuevo_sprint, "sprint":sprint}, context_instance = RequestContext(request))
-    #elif planificar:
-        #return render_to_response('apps/project_sprint_planificar.html', {"proyecto":proyecto, "sprints":sprints, "hus":hus, "sprint":sprint, "userStory":userStory, "usuario":usuario, "users":users, "flujos":flujos, "prioridades":prioridades, "flujo":flujo, 'prioridad':prioridad, "detalles":detalles, "fmayor":fmayor, "fmenor":fmenor}, context_instance = RequestContext(request))
-    #else:
-        #return render_to_response('apps/project_sprints.html', {"proyecto":proyecto, "sprint":sprint, "sprints":sprints, "mensaje":mensaje, "duracion_semanas":duracion_semanas, "duracion_horas":duracion_horas, "hus":hus, "userStory":userStory, "usuario":usuario, "users":users, "flujos":flujos, "prioridades":prioridades, "flujo":flujo, 'prioridad':prioridad, "detalles":detalles, "fmayor":fmayor, "fmenor":fmenor, "mensaje_planificar_iniciado":mensaje_planificar_iniciado, "mensaje_planificar_finalizado":mensaje_planificar_finalizado, "horas_consumidas":horas_consumidas, "scrum":scrum}, context_instance = RequestContext(request))
-    #####################################termina viejo
+
     if cancelar_hu:
         return render_to_response('apps/project_sprint_cancelar_hu.html', {"proyecto":proyecto, "userStory":userStory, "sprint":sprint}, context_instance = RequestContext(request))
     elif finalizar_sprint:
@@ -2787,7 +2935,7 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
     elif cambiar_fecha:
         return render_to_response('apps/project_sprint_fecha_fin.html', {"proyecto":proyecto, "sprint":sprint, "fecha_est_fin":fecha_est_fin}, context_instance = RequestContext(request))
     elif planificar:
-        return render_to_response('apps/project_sprint_planificar.html', {"proyecto":proyecto, "sprint":sprint}, context_instance = RequestContext(request))
+        return render_to_response('apps/project_sprint_planificar.html', {"proyecto":proyecto, "sprint":sprint, "hus":hus, "userStory":userStory, "detalles":detalles, "usuario":usuario, "flujo":flujo, "prioridad":prioridad, "f_actividad":f_actividad, "f_a_estado":f_a_estado, "tiempo_hu_registrado":tiempo_hu_registrado, "users":users, "flujos":flujos, "prioridades":prioridades}, context_instance = RequestContext(request))
     else:
         return render_to_response('apps/project_sprints.html', {"proyecto":proyecto, "scrum":scrum, "mensaje":mensaje, "sprints":sprints, "sprint":sprint, "fmayor":fmayor, "fmenor":fmenor, "tiempo_sprint_dias":tiempo_sprint_dias, "tiempo_sprint_horas":tiempo_sprint_horas, "hus":hus, "tiempo_hu_estimado":tiempo_hu_estimado, "tiempo_hu_registrado":tiempo_hu_registrado, "detalles":detalles, "userStory":userStory, "usuario":usuario, "flujo":flujo, "prioridad":prioridad, "fecha_fin_sprint":fecha_fin_sprint}, context_instance = RequestContext(request))
     
@@ -3004,6 +3152,7 @@ def horas(hu_reg, hu_id):
         dia_sprint.save()
         if hu.tiempo_Real == 0:
             hu.fecha_inicio = datetime.today().strftime("%Y-%m-%d")
+            hu.estado_scrum_id = 1
         hu.tiempo_Real = int(hu.tiempo_Real) + int(hu_reg.tiempo_Real)
         hu.save()
     except:
