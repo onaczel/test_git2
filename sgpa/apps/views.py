@@ -12,7 +12,8 @@ from django.views.static import serve
 from django.core.servers.basehttp import FileWrapper
 
 from apps.models import Roles, Users_Roles, Permisos, Permisos_Roles, Flujos, Actividades, Actividades_Estados, Proyectos, Equipo, UserStory, Sprint, Dia_Sprint, UserStoryVersiones, Prioridad,\
-    Estados, UserStoryRegistro, archivoAdjunto, Estados_Scrum, Notas
+    Estados, UserStoryRegistro, archivoAdjunto, Estados_Scrum, Notas,\
+    historialResponsableHU
 from django.contrib.auth.models import User
 
 
@@ -2758,8 +2759,10 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
                 hu.valor_Tecnico = request.POST['valor_Tecnico']
                 ouser = User.objects.get(username = request.POST['us'])
                 if hu.usuario_Asignado != ouser.id:
-                    print "hola"
-                    #llamar a la funcion de Santiago (borra el 'print "hola"' de arriba
+                   h = historialResponsableHU()
+                   h.hu = hu
+                   h.responsable = ouser
+                   h.save()
                 hu.usuario_Asignado =  ouser.id
                 flujolist = Flujos.objects.filter(descripcion = request.POST['flujo'], proyecto_id = proyecto_id)
                 oflujo = flujolist.get(descripcion = request.POST['flujo'])
