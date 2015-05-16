@@ -2756,7 +2756,10 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
                 hu.tiempo_Estimado = request.POST['tiempo_Estimado']
                 hu.valor_Negocio = request.POST['valor_Negocio']
                 hu.valor_Tecnico = request.POST['valor_Tecnico']
-                ouser = User.objects.get(username = request.POST['us']) 
+                ouser = User.objects.get(username = request.POST['us'])
+                if hu.usuario_Asignado != ouser.id:
+                    print "hola"
+                    #llamar a la funcion de Santiago (borra el 'print "hola"' de arriba
                 hu.usuario_Asignado =  ouser.id
                 flujolist = Flujos.objects.filter(descripcion = request.POST['flujo'], proyecto_id = proyecto_id)
                 oflujo = flujolist.get(descripcion = request.POST['flujo'])
