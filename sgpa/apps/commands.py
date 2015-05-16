@@ -37,7 +37,7 @@ def notificarNota(proyecto_id,hu_id, nota):
     list = []
     list.append(usuario)
     asunto = 'SGPA - Nueva nota en User Story'
-    msg = 'Usuario :'+usuario.username+', se ha agregado una nueva nota al user story: '+hu.nombre+' del proyecto: '+proyecto.nombre+'\n\nNota: \n'+nota 
+    msg = 'Usuario: '+usuario.username+', se ha agregado una nueva nota al user story: '+hu.nombre+' del proyecto: '+proyecto.nombre+'\n\nNota: \n'+nota 
     enviarMail(asunto, msg, list)
     
     
