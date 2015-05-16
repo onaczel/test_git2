@@ -14,7 +14,7 @@
               <a href="{% url 'apps:editarHu' proyecto_id hu.id %}"></i><font color="FFFFFF">{{hu.codigo}} {{hu.nombre}}</font></a>          
         </li>	
 	{% if misPermisos.MUS %}
-		{% if hu.estado == True and hu.sprint != 0 %}
+		{% if  hu.sprint == proyecto.nro_sprint and misPermisos.CEUS %}
 		<li>
               <a href="{% url 'apps:setEstadoHu' proyecto_id hu_id  %}"><i class="fa fa-fw fa-edit"></i> Cambiar Estado</a>          
         </li>			

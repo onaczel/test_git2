@@ -1755,7 +1755,7 @@ def crearHu(request, proyecto_id):
         hu.proyecto_id = proyecto_id
         hu.fecha_creacion = time.strftime("%Y-%m-%d")
         #user = User.objects.get(username = request.POST['us']) 
-        hu.usuario_Asignado =  user.id
+        #hu.usuario_Asignado =  user.id
         #flujolist = Flujos.objects.filter(descripcion = request.POST['flujo'], proyecto_id = proyecto_id)
         #oflujo = flujolist.get(descripcion = request.POST['flujo'])
         #hu.flujo = oflujo.id
@@ -2047,7 +2047,7 @@ def editarHu(request, proyecto_id, hu_id):
     else:        
         form = HuCreateForm(initial={'descripcion':hu.descripcion, 'codigo':hu.codigo, 'tiempo_Estimado':hu.tiempo_Estimado, 'valor_Tecnico':hu.valor_Tecnico, 'valor_Negocio':hu.valor_Negocio})
 
-    return render_to_response('apps/hu_modify_fields.html', {"form":form, "proyecto_id":proyecto_id, "hu_id":hu_id, "hu":hu, 'misPermisos':mispermisos, 'users':users, 'flujos':flujos, 'proyecto_nombre':proyecto.nombre, 'prioridades':prioridades}, context_instance = RequestContext(request))
+    return render_to_response('apps/hu_modify_fields.html', {"form":form, "proyecto_id":proyecto_id, "hu_id":hu_id, "hu":hu, 'misPermisos':mispermisos, 'users':users, 'flujos':flujos, 'proyecto_nombre':proyecto.nombre, 'proyecto':proyecto, 'prioridades':prioridades}, context_instance = RequestContext(request))
 
 def registroHu(request, proyecto_id, hu_id):
     """
@@ -2556,6 +2556,8 @@ def misPermisos(usuario_id, proyecto_id):
                 misPermisos.ERP = True
             elif permiso.tag=="AFP":
                 misPermisos.AFP = True
+            elif permiso.tag=="CEUS":
+                misPermisos.CEUS = True
                 
 
     return (misPermisos)

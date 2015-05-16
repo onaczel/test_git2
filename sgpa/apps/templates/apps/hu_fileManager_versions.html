@@ -24,10 +24,10 @@
               <a href="{% url 'apps:editarHu' proyecto_id hu_id %}"></i><font color="FFFFFF">{{hu.codigo}} {{hu.nombre}}</font></a>          
         </li>	
 		
-		{% if hu.estado == True %}
+		{% if  hu.sprint == proyecto.nro_sprint and misPermisos.CEUS %}
 		<li>
-			<a href="{% url 'apps:setEstadoHu' proyecto_id hu_id  %}"><i class="fa fa-fw fa-edit"></i> Cambiar Estado</a>
-		</li>
+              <a href="{% url 'apps:setEstadoHu' proyecto_id hu_id  %}"><i class="fa fa-fw fa-edit"></i> Cambiar Estado</a>          
+        </li>			
 		{% endif %}
 		<li>
 			<a href="{% url 'apps:listhuversiones' proyecto_id hu_id  %}"><i class="fa fa-fw fa-edit"></i>Versiones</a>

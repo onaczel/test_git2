@@ -1,17 +1,20 @@
 {% extends 'base.html' %}
-{% block titulo %}
+{% block uptitulo %}
 	<h1>{{proyecto.nombre}}</h1>
 {% endblock %}
-
-
-{% block contenido %}
+{% block titulo %}
 	<table>
 		<tr>
-			<td width=120><h2>{{hu.codigo}}</h2></td>
-			<td><h2>{{hu.nombre}}</h2></td>
+		
+			<td width=125px><h2><font color="#686868">{{hu.codigo}}</font></h2></td>
+			<td ><h2>{{hu.nombre}}</h2></td>
 		</tr>
 	</table>
-	<h3>Agregar Nota</h3>
+{% endblock %}
+
+{% block contenido %}
+
+	<legend><h3><font color="#888888">Agregar Nota</font></h3></legend>
 	{% if misPermisos.MUS %}
 			
 				
@@ -51,5 +54,5 @@
 {% endblock %}
 
 {% block atras %}
-	<a href="{% url 'apps:editarHu' proyecto.id hu.id %}">Volver</a>
+	<a href="{% url 'apps:notasHu' proyecto.id hu.id %}">Volver</a>
 {% endblock %}
