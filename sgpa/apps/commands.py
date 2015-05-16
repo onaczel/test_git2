@@ -60,6 +60,29 @@ def notificarModificacionHU(hu_id, proyecto_id):
             msg = 'Usuario :'+user.username+', se ha modificado el  user story: '+hu.nombre+' del proyecto: '+proyecto.nombre
             enviarMail(asunto, msg, list)
 
+def notificarCambioResponsableHU(new_id, old_id,hu_id, proyecto_id):
+    """
+    Prepara un email de notificacion de cuando de modifica un  user story
+    @param proyecto_id: id de un proyecto
+    @param hu_id: id de un user story
+    """
+    historial = historialResponsableHU.objects.filter(hu = hu_id)
+    hu = UserStory.objects.get(id = hu_id)
+    proyecto = Proyectos.objects.get(id = proyecto_id)
+    Unew = User.objects.get(id = new_id)
+    Uold = User.objects.get(id = old_id) 
+    
+    list = []
+    list.append(Unew)
+    asunto = 'SGPA - Asignacion a User Story'
+    msg = 'Usuario :'+Unew.username+', se le ha asignado como responsable del user story: '+hu.nombre+' del proyecto: '+proyecto.nombre
+    enviarMail(asunto, msg, list)
+    l = []
+    l.append(Uold)
+    asunto = 'SGPA - Desasignacion de User Story'
+    msg = 'Usuario :'+Unew.username+', ha desasignado como responsable del user story: '+hu.nombre+' del proyecto: '+proyecto.nombre
+    enviarMail(asunto, msg, l)
+    
 
 def notificarRegistroTrabajo(hu_id, proyecto_id):
     """
