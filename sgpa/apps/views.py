@@ -2806,8 +2806,8 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
                         notificarModificacionHU(hu_id, proyecto_id)
                         
                 oprioridad = Prioridad.objects.get(descripcion = request.POST['pri'])
-                if hu.prioridad != oprioridad.id:
-                    hu.prioridad = oprioridad.id
+                if hu.prioridad != oprioridad:
+                    hu.prioridad = oprioridad
                     #llamar a la funcion de notificar
                     notificarModificacionHU(hu_id, proyecto_id)
                     
