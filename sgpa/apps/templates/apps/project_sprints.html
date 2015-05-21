@@ -10,22 +10,18 @@
 		</table>
 	{% endif %}
 	{% if proyecto.estado_id == 1 %} 
-		<form action="{% url 'apps:sprints' proyecto.id proyecto.nro_sprint 0 %}" method="post">{% csrf_token %}
 			<b>Sprint actual: Sprint Numero {{proyecto.nro_sprint}}<br />
 			<form action="{% url 'apps:sprints' proyecto.id 0 0 %}" method="post">{% csrf_token %}
 				<br /><input type="submit", name="cambio", value="Nuevo Sprint"><br />
 			</form>
-		</form>
 	{% elif proyecto.estado_id == 5 %}
 		<h2><b>Finalizado</b></h2><br />
 	{% elif proyecto.estado_id == 4 %}
-		{% if proyecto.nro_sprint == 0 %}
-			<form action="{% url 'apps:sprints' proyecto.id 0 0 %}" method="post">{% csrf_token %}
-				{% if scrum.rol_id == 3 %}
-					<br /><input type="submit", name="cambio", value="Iniciar Proyecto"><br />
-				{% endif %}
-			</form>
-		{% endif %}
+		<form action="{% url 'apps:sprints' proyecto.id 0 0 %}" method="post">{% csrf_token %}
+			{% if scrum.rol_id == 3 %}
+				<br /><input type="submit", name="cambio", value="Iniciar Proyecto"><br />
+			{% endif %}
+		</form>
 		<form action="{% url 'apps:sprints' proyecto.id 0 0 %}" method="post">{% csrf_token %}
 			<br /><input type="submit", name="cambio", value="Nuevo Sprint"><br />
 		</form>
@@ -44,9 +40,8 @@
 						<input type="submit", name="cambio", value="Planificar">&emsp;
 					{% elif s.estado == 1 %}
 						{% if scrum.rol_id == 3 %}
-							<input type="submit", name="cambio", value="Planificar">
+							<input type="submit", name="cambio", value="Finalizar">
 						{% endif %}
-						&emsp;<input type="submit", name="cambio", value="Finalizar">
 					{% endif %}
 				</form>
 				{% if sprint.nro_sprint == s.nro_sprint %}
@@ -69,15 +64,6 @@
 						</table>
 						<h2>Fecha de finalizacion del sprint:&emsp;<font size="5">"{{fecha_fin_sprint}}"</font></h2>
 					{% endif %}
-					{% if mensaje_planificar_iniciado %}
-						<center>
-							<h4>{{mensaje_planificar_iniciado}}</h4>
-						</center>
-					{% elif mensaje_planificar_finalizado %}
-						<center>
-							<h4>{{mensaje_planificar_finalizado}}</h4>
-						</center>
-					{% endif %}
 					<ul>
 						{% if tiempo_hu_estimado %}
 							<li><h4>Tiempo disponible en el Sprint: {{tiempo_sprint_dias}} dias&emsp;({{tiempo_sprint_horas}} horas)</h4></li>
@@ -92,7 +78,7 @@
 								<h5>
 									Fecha estimada de finalizacion del sprint:&emsp;<font size="4">"{{fmayor.fecha}}"</font>
 									<form action="{% url 'apps:sprints' proyecto.id s.id 0 %}" method="post">{% csrf_token %}
-										{% if scrum.rol_id == 3 and s.estado != 2 %}
+										{% if scrum.rol_id == 3 and s.estado == 1 %}
 											<input type="submit", name="cambio", value="Cambiar Fecha"><br />
 										{% endif %}
 									</form>
@@ -111,7 +97,7 @@
 												{% if userStory.id == hu.id %}
 													<form action="{% url 'apps:sprints' proyecto.id s.id hu.id %}" method="post">{% csrf_token %}
 														{% if s.estado == 1 and scrum.rol_id == 3 %}
-															<input type="submit", name="cambio", value="Finalizar User Story">&emsp;<input type="submit", name="cambio", value="Cancelar User Story"><br /><br />
+															<input type="submit", name="cambio", value="Cancelar User Story"><br /><br />
 														{% endif %}
 														<table>
 															<font size="3"><b>Descripcion:</b></font>&emsp;{{detalles.descripcion.value}}<br />

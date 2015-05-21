@@ -1,10 +1,121 @@
-{% extends 'base.html' %}
+{% extends 'base_proj.html' %}
 {% block encabezado %}
 	<h1>{{proyecto.nombre}}</h1>
 	<h2>Planificacion del Sprint {{sprint.nro_sprint}}</h2>
 {% endblock %}
 <br />
 {% block contenido %}
+	<div style="clear: left;">
+		<h3>User Stories</h3>
+		{% if hus %}
+			<table width=100%>
+				<tr>
+					<td></td><td><b>Codigo</b></td><td><b>Nombre</b></td><td><b>Fecha Creacion</b></td><td><b>Valor de Negocio</b></td><td><b>Valor Tecnico</b></td><td><b>Prioridad</b></td><td><b>Tiempo Consumido</b></td><td><b>ESTADO</b></td><td><b>SPRINT</b></td>
+				</tr>
+				{% for hu in hus %}
+					<form action="{% url 'apps:sprints' proyecto.id sprint.id hu.id %}" method="post">{% csrf_token %}
+						{% if userStory.id == hu.id %}
+							{% if hu.sprint == sprint.nro_sprint %}
+								<tr style="border-bottom: dotted; border-bottom-color: red;"><td><br /></td></tr>
+							{% else %}
+								<tr style="border-bottom: dotted; border-bottom-color: green;"><td><br /></td></tr>
+							{% endif %}
+						{% endif %}
+						<tr>
+							<td>
+								{% if hu.sprint == sprint.nro_sprint %}
+									<input type="checkbox" name="hus[]" id="option{{hu.id}}" value={{hu.id}} checked="checked" />
+								{% else %}
+									<input type="checkbox" name="hus[]" id="option{{hu.id}}" value={{hu.id}} />
+								{% endif %}
+								<label for="option{{hu.id}}">
+							</td>
+							<!-- <form action="{% url 'apps:sprints' proyecto.id sprint.id hu.id %}" method="post">{% csrf_token %} -->
+								<td>
+									{{hu.codigo}}<font size="1"><input type="submit", name="cambio", value=" + "><input type="submit", name="cambio", value=" - "></font>
+								</td>
+							<!-- </form> -->
+							<td>{{hu.nombre}}</td><td>&emsp;{{hu.fecha_creacion}}</td><td>&emsp;{{hu.valor_Negocio}}</td><td>&emsp;{{hu.valor_Tecnico}}</td><td>&emsp;{{hu.prioridad}}</td>
+							<td>
+								{% if hu.tiempo_Real %}
+									&emsp;{{hu.tiempo_Real}} Horas
+								{% else %}
+									&emsp;0 Horas
+								{% endif %}
+							</td>
+							<td>
+								<b>
+									{% if hu.estado_scrum_id == 2 %}
+										Asignado
+									{% elif hu.estado_scrum_id == 3 %}
+										No Asignado
+									{% elif hu.estado_scrum_id == 4 %}
+										Pendiente
+									{% endif %}
+								</b>
+							</td>
+							<td>
+								<b>
+									{% if hu.sprint %}
+										&emsp;{{hu.sprint}}
+									{% endif %}
+								</b>
+							</td>
+						</tr>
+						{% if userStory.id == hu.id %}
+							<tr"><td><br /></td></tr>
+							<tr><td></td><td><b>Tiempo Estimado</b></td><td><b>Usuario Asignado</b></td><td><b>Fecha de inicio</b></td><td><b>Ult. fecha Mod.</b></td><td><b>Flujo</b></td><td><b>Actividad</b></td><td><b>Estado Act.</b></td></tr>
+							{% if hu.sprint == sprint.nro_sprint %}
+								<tr style="border-bottom: dotted; border-bottom-color: red;"><td></td><td>{{detalles.tiempo_Estimado.value}} Horas</td>
+								<td>
+									<select name="us"  style="width:190px" sort = true>
+										{% if usuario %}
+											<option>{{usuario.username}}</option>
+											{% for user in users %}
+												{% if usuario.id != user.id %}
+													<option >{{user.username}}</option>
+												{% endif %}
+											{% endfor %}
+										{% else %}
+	 										{% for user in users %}
+												<option >{{user.username}}</option>
+											{% endfor %} 
+										{% endif %}
+									</select>
+								</td>
+								<td>{{hu.fecha_inicio}}<td>{{hu.fecha_modificacion}}</td>
+								<td>
+									{% if flujo %}
+										<!-- <option>{{flujo.descripcion}}</option>
+										{% for f in flujos %}
+											{% if flujo.id != f.id %}
+												<option >{{f.descripcion}}</option>
+											{% endif %}
+										{% endfor %}--> 
+									{% else %}
+										{% for f in flujos %}
+											<option >{{f.descripcion}}</option>
+										{% endfor %} 
+									{% endif %}
+								</td>
+								<td>{{f_actividad}}</td><td>{{f_a_estado.descripcion}}</td></tr>
+							{% else %}
+								<tr style="border-bottom: dotted; border-bottom-color: green;"><td></td><td>{{detalles.tiempo_Estimado.value}} Horas</td><td>{{usuario.username}}</td><td>{{hu.fecha_inicio}}<td>{{hu.fecha_modificacion}}</td><td>{{flujo.descripcion}}</td><td>{{f_actividad}}</td><td>{{f_a_estado.descripcion}}</td></tr>
+							{% endif %}
+							<tr><td><br /></td></tr>
+							<tr>
+								<td></td><td><b>Codigo</b></td><td><b>Nombre</b></td><td><b>Fecha Creacion</b></td><td><b>Valor de Negocio</b></td><td><b>Valor Tecnico</b></td><td><b>Prioridad</b></td><td><b>Tiempo Consumido</b></td><td><b>ESTADO</b></td><td><b>SPRINT</b></td>
+							</tr>
+						{% endif %}
+				{% endfor %}
+						<div style="float: right;">
+							<input type="submit" name="cambio" value="Guardar Cambios"/><br /><br />
+						</div>
+					</form>
+			</table>
+		{% endif %}
+	</div>
+	<!-- 
 	<div style="float: left;">
 		<h3>User Stories&emsp;&emsp;&emsp;&emsp;&emsp;</h3>
 		{% if hus %}
@@ -25,7 +136,7 @@
 						</li>
 						
 							<font size="1">Detalles</font><input type="submit", name="cambio", value=" + "><input type="submit", name="cambio", value=" - "></b></label><br /><br />
-						
+						>{{userStory.id}} {{hu.id}}<
 						{% if userStory.id == hu.id %}
 							<table>
 								<font size="3"><b>Descripcion:</b></font>&emsp;{{detalles.descripcion.value}}<br />
@@ -160,6 +271,47 @@
 			</ul>
 		{% endif %}
 	</div>
+	 -->
+{% endblock %}
+{% block equipo %}
+	<center>
+		<table border=1px width=66%>
+			<tr>
+				<td><b>Usuario</b></td><td><b>Ult. fecha Mod.</b></td><td><b>horas</b></b></td><td></td>
+			</tr>
+			{% if users %}
+				{% for us in users %}
+					{% if us.is_active == True %}
+						<tr>
+							<td><a href="{% url 'apps:verUser' proyecto.id us.id %}">{{us.username}}</a></td>
+							<td>
+								{% for u in users %}
+									{% if u.id == us.id %}
+										{% if us.is_active == True %}
+											{{us.last_login}}
+										{% endif %}
+									{% endif %}
+								{% endfor %}  
+							</td>
+							<td>
+								<form action="{% url 'apps:horasUsuarioSprint' proyecto.id sprint.id us.id %}" method="post">{% csrf_token %}
+									{% for hora_sprint_usuario in horas_sprint_usuario %}
+										{% if hora_sprint_usuario.usuario_id == us.id %}
+											{% if hora_sprint_usuario.horas > 0%}
+												<h5><input type="text" id="horas1" value="{{hora_sprint_usuario.horas}}" name="horas" style="width:190px" disabled/></h5>
+											{% else %}
+												<h5><input type="text" id="horas1" value="" name="horas" style="width:190px"/><input type="submit", name="cambio", value="Establecer Horas"></h5>
+											{% endif %}
+										{% endif %}
+									{% endfor %}
+								</form>
+							</td>
+						</tr>
+					{% endif %}
+				{% endfor %}
+			{% endif %}
+		</table>
+	</center>
 {% endblock %}
 {% block atras %}
 	<a href="{% url 'apps:sprints' proyecto.id 0 0 %}">Volver</a>

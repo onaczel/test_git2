@@ -92,11 +92,10 @@ urlpatterns = patterns('',
     url(r'^(?P<proyecto_id>\d+)/(?P<flujo_id>\d+)/(?P<actividad_id>\d+)/modproyecto/accionesproyecto/listflujosproyectos/modificarFlujoProyectoMod$', views.flujosproyectosRequestMod, name='flujosproyectosRequestMod'),
     url(r'^(?P<proyecto_id>\d+)/(?P<flujo_id>\d+)/(?P<actividad_id>\d+)/modproyecto/accionesproyecto/listflujosproyectos/modificarFlujoProyectoModAct$', views.flujosproyectosRequestModAct, name='flujosproyectosRequestModAct'),
     url(r'^(?P<proyecto_id>\d+)/(?P<sprint_id>\d+)/(?P<hu_id>\d+)/modproyecto/accionesproyecto/sprints$', views.sprints, name='sprints'),
+    url(r'^(?P<proyecto_id>\d+)/(?P<sprint_id>\d+)/(?P<usu_id>\d+)/horasUsuarioSprint$', views.horasUsuarioSprint, name='horasUsuarioSprint'),
     url(r'^(?P<proyecto_id>\d+)/(?P<hu_id>\d+)/modproyecto/accionesproyecto/adminhu/editar/assignUser$', views.userToHU, name='userToHU'),
     url(r'^(?P<proyecto_id>\d+)/modproyecto/accionesproyecto/verCliente$', views.verCliente, name='verCliente'),
     url(r'^(?P<proyecto_id>\d+)/modproyecto/accionesproyecto/(?P<user_id>\d+)/verUsuario$', views.verUser, name='verUser'),
-    url(r'^(?P<proyecto_id>\d+)/(?P<hu_id>\d+)/sprint/analizarHu$', views.analizarhus, name='analizarhus'),
-    url(r'^(?P<proyecto_id>\d+)/(?P<sprint_id>\d+)/sprint/nuevoSprint$', views.nuevoSprint, name='nuevoSprint'),
   
 
     url(r'^(?P<hu_id>\d+)/AgregarHoras/$', views.horas, name='horas'),

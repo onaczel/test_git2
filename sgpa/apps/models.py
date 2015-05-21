@@ -286,3 +286,8 @@ class archivoAdjunto(models.Model):
 class historialResponsableHU(models.Model):
     hu = models.ForeignKey(UserStory)
     responsable = models.ForeignKey(User)
+
+class horas_usuario_sprint(models.Model):
+    horas = models.IntegerField(default = 0)
+    usuario = models.ForeignKey(User)
+    Sprint = models.ForeignKey(Sprint)
