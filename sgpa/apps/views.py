@@ -3200,6 +3200,7 @@ def horas(hu_reg, hu_id):
             hu.save()
         else:
             mensaje = "No es posible realizar esta accion hoy, revise su calendario para ver los dias habiles"
+        
     except:
         mensaje = "Error: No se sumaron las horas, revise los estados del user story o el rango de fechas del sprint en el cual se encuentra"
 
