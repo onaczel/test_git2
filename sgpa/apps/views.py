@@ -2759,7 +2759,11 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
             sprint = Sprint.objects.get(id = sprint_id)
             planificar = True
             if request.POST['cambio'] == "Establecer Duracion":
-                sprint.duracion = request.POST.get('duracion', False)
+                try:
+                    duracion = int(request.POST.get('duracion', False))
+                except:
+                    duracion = 0
+                sprint.duracion = duracion
                 sprint.save()
                 sprint = Sprint.objects.get(id = sprint_id) 
             if request.POST['cambio'] == "Guardar Cambios":
@@ -3123,7 +3127,17 @@ def iniciarSprint(proyecto_id, nro_sprint):
                 iniciar = False
                 mensaje = "Antes de iniciar el Sprint " + str(nro_sprint) + " debe finalizar los anteriores"
                 break
-            
+    if sprint.duracion == 0:
+        mensaje = "Establezca la duracion del Sprint " + str(nro_sprint) + " antes de iniciarlo"
+        iniciar = False
+    hora_usuario_sprint = horas_usuario_sprint.objects.filter(Sprint_id = sprint.id)
+    horas = 0
+    for hos in hora_usuario_sprint: 
+        horas = horas + int(hos.horas)
+    if horas == 0:
+        mensaje = "Establezca horas de trabajo para los usuarios en el sprint " + str(nro_sprint)
+        iniciar = False 
+        
     if(iniciar):
         sprint.fecha_ini = datetime.today().strftime("%Y-%m-%d")
         sprint.save()
