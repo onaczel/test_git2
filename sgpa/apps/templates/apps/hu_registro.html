@@ -57,10 +57,16 @@
 
 {% block contenido %}
 	<legend><font color="888888">Registro de Actividades</font></legend>
-	{% if guardado %}
-		<table border=1 bordercolor="green" width=100%>
-			<tr><td align="center"><font color="green"><p>Mensaje: El registro se ha guardado correctamente.</p></font></td></tr>
+	{% if respuesta %}
+		<table border=1 bordercolor="red" width=100%>
+			<tr><td align="center"><font color="red"><p>Mensaje: {{respuesta}}</p></font></td></tr>
 		</table>
+	{% else %}
+		{% if guardado %}
+			<table border=1 bordercolor="green" width=100%>
+				<tr><td align="center"><font color="green"><p>Mensaje: El registro se ha guardado correctamente.</p></font></td></tr>
+			</table>
+		{% endif %}
 	{% endif %}
 	<br>
 	<!-- Pero debe ser: Si el User Story esta "Iniciado" entonces se pueden sumar las horas -->

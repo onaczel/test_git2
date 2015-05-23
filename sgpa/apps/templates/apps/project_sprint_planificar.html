@@ -5,6 +5,23 @@
 {% endblock %}
 <br />
 {% block contenido %}
+	<div style= "clear : both;">
+		<form action="{% url 'apps:sprints' proyecto.id sprint.id 0 %}" method="post">{% csrf_token %}
+			{% if scrum.rol_id == 3 and proyecto.estado_id == 1%}
+				<br /><input type="submit", name="cambio", value="Iniciar Sprint"><br />
+			{% endif %}
+		</form>
+		<h3>Duracion del Sprint</h3>
+		{% if hora_sprint_usuario.usuario_id == us.id %}
+			{% if sprint.estado != 0%}
+				<h5><input type="text" id="duracion1" value="{{sprint.duracion}}" name="duracion" style="width:190px" disabled/> Semanas</h5><br />
+			{% else %}
+				<form action="{% url 'apps:sprints' proyecto.id sprint.id 0 %}" method="post">{% csrf_token %}
+					<h5><input type="text" id="duracion1" value="{{sprint.duracion}}" name="duracion" style="width:190px"/><input type="submit", name="cambio", value="Establecer Duracion"> (En Semanas)</h5><br />
+				</form>
+			{% endif %}
+		{% endif %}
+	</div>
 	<div style="clear: left;">
 		<h3>User Stories</h3>
 		{% if hus %}
@@ -297,10 +314,10 @@
 								<form action="{% url 'apps:horasUsuarioSprint' proyecto.id sprint.id us.id %}" method="post">{% csrf_token %}
 									{% for hora_sprint_usuario in horas_sprint_usuario %}
 										{% if hora_sprint_usuario.usuario_id == us.id %}
-											{% if hora_sprint_usuario.horas > 0%}
+											{% if sprint.estado != 0%}
 												<h5><input type="text" id="horas1" value="{{hora_sprint_usuario.horas}}" name="horas" style="width:190px" disabled/></h5>
 											{% else %}
-												<h5><input type="text" id="horas1" value="" name="horas" style="width:190px"/><input type="submit", name="cambio", value="Establecer Horas"></h5>
+												<h5><input type="text" id="horas1" value="{{hora_sprint_usuario.horas}}" name="horas" style="width:190px"/><input type="submit", name="cambio", value="Establecer Horas"></h5>
 											{% endif %}
 										{% endif %}
 									{% endfor %}

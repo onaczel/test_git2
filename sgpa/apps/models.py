@@ -251,6 +251,8 @@ class Sprint(models.Model):
     fecha_ini = models.DateField(null=True)
     fecha_est_fin = models.DateField(null=True)
     fecha_fin = models.DateField(null=True)
+    #duracion en semanas
+    duracion = models.IntegerField(default = 0)
 
 class Dia_Sprint(models.Model):
     """

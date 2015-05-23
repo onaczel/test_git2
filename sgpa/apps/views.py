@@ -2117,12 +2117,15 @@ def crearregistroHu(request, proyecto_id, hu_id):
         guardado = True
         #Asignacion de horas a los dias del sprint
         respuesta = horas(hu_reg, hu_id)
+        if respuesta:
+            hu_reg.delete()
+            guardado = False
         #aca le tengo que llamar a la notificacion <selm>
         notificarRegistroTrabajo(hu_id, proyecto_id)
         #"respuesta" se puede manejar como sea necesario
         #termina asignacion de horas a los dias del sprint
         hu_reg = UserStoryRegistro.objects.filter(idr = hu.id)
-        return render_to_response('apps/hu_registro.html', {'hu':hu, 'proyecto':proyecto, 'guardado':guardado, 'hu_reg':hu_reg}, context_instance=RequestContext(request))
+        return render_to_response('apps/hu_registro.html', {'hu':hu, 'proyecto':proyecto, 'guardado':guardado, 'hu_reg':hu_reg, "respuesta":respuesta}, context_instance=RequestContext(request))
     
     return render_to_response('apps/hu_registro_nuevo.html', {'hu':hu, 'proyecto':proyecto, 'guardado':guardado}, context_instance=RequestContext(request))
 
@@ -2752,9 +2755,13 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
                 else:
                     mensaje = "Asigne algun User Story al sprint " + str(sprint.nro_sprint) + " antes de iniciar el proyecto"
         #elif request.POST['cambio'] == "Planificar" or request.POST['cambio'] == "x" or request.POST['cambio'] == " + " or request.POST['cambio'] == " - " or request.POST['cambio'] == "Modificar " or request.POST['cambio'] == "Asignar User Stories":
-        elif request.POST['cambio'] == "Guardar Cambios" or request.POST['cambio'] == "Planificar" or request.POST['cambio'] == " + " or request.POST['cambio'] == " - " or request.POST['cambio'] == "Modificar ":
+        elif request.POST['cambio'] == "Establecer Duracion" or request.POST['cambio'] == "Guardar Cambios" or request.POST['cambio'] == "Planificar" or request.POST['cambio'] == " + " or request.POST['cambio'] == " - " or request.POST['cambio'] == "Modificar ":
             sprint = Sprint.objects.get(id = sprint_id)
             planificar = True
+            if request.POST['cambio'] == "Establecer Duracion":
+                sprint.duracion = request.POST.get('duracion', False)
+                sprint.save()
+                sprint = Sprint.objects.get(id = sprint_id) 
             if request.POST['cambio'] == "Guardar Cambios":
                 user_stories_id = request.POST.getlist(u'hus[]')
                 hus_sprint = UserStory.objects.filter(proyecto_id = proyecto_id, sprint = sprint.nro_sprint)
@@ -2914,7 +2921,7 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
                     except:
                         sp = None
                     if sp:
-                        if sp.estado == 0:
+                        if sp.estado != 1:
                             hus.append(hu)
                     else:
                         hus.append(hu)
@@ -3122,7 +3129,8 @@ def iniciarSprint(proyecto_id, nro_sprint):
         sprint.save()
         
         d1 = datetime.strptime(sprint.fecha_ini, "%Y-%m-%d")
-        for i in range(1, 21):
+        print sprint.duracion*7
+        for i in range(1, sprint.duracion*7):
             d2 = d1 + timedelta(days=i)
         sprint.fecha_est_fin = d2.strftime("%Y-%m-%d")
         sprint.estado = 1
@@ -3132,12 +3140,29 @@ def iniciarSprint(proyecto_id, nro_sprint):
         dia = 1
         for i in range(delta.days + 1):
             nuevo_dia_sprint = Dia_Sprint()
-            nuevo_dia_sprint.tiempo_estimado = 8
             nuevo_dia_sprint.tiempo_real = 0
             nuevo_dia_sprint.dia = dia
             nuevo_dia_sprint.sprint_id = sprint.id
             dia = dia + 1
-            nuevo_dia_sprint.fecha = d1 + timedelta(days=i)
+            d = d1 + timedelta(days=i)
+            nuevo_dia_sprint.fecha = d
+            if datetime.weekday(d) != 5 and datetime.weekday(d) != 6:
+                users = []
+                equipos = Equipo.objects.filter(proyecto_id = proyecto_id, rol_id = 5)
+                for equipo in equipos:
+                    user = User.objects.get(id = equipo.usuario_id)
+                    se_encuentra = False
+                    for u in users:
+                        if u.id == user.id:
+                            se_encuentra = True
+                    if se_encuentra == False:
+                        users.append(user)
+                nuevo_dia_sprint.tiempo_estimado = 0
+                for user in users:
+                    hora_usuario_sprint = horas_usuario_sprint.objects.get(usuario_id = user.id, Sprint_id = sprint.id)
+                    nuevo_dia_sprint.tiempo_estimado = nuevo_dia_sprint.tiempo_estimado + hora_usuario_sprint.horas
+            else:
+                nuevo_dia_sprint.tiempo_estimado = 0
             nuevo_dia_sprint.save()
         
         proyecto = Proyectos.objects.get(id = proyecto_id)
@@ -3162,17 +3187,19 @@ def horas(hu_reg, hu_id):
     mensaje = ""
     
     hu = UserStory.objects.get(id = hu_id)
-    
     try:
         sprint = Sprint.objects.get(nro_sprint = hu.sprint, proyecto_id = hu.proyecto_id)
         dia_sprint = Dia_Sprint.objects.get(fecha = datetime.today().strftime("%Y-%m-%d"), sprint_id = sprint.id)
-        dia_sprint.tiempo_real = int(dia_sprint.tiempo_real) + int(hu_reg.tiempo_Real)
-        dia_sprint.save()
-        if hu.tiempo_Real == 0:
-            hu.fecha_inicio = datetime.today().strftime("%Y-%m-%d")
-            hu.estado_scrum_id = 1
-        hu.tiempo_Real = int(hu.tiempo_Real) + int(hu_reg.tiempo_Real)
-        hu.save()
+        if datetime.weekday(dia_sprint.fecha) != 5 and datetime.weekday(dia_sprint.fecha) != 6:
+            dia_sprint.tiempo_real = int(dia_sprint.tiempo_real) + int(hu_reg.tiempo_Real)
+            dia_sprint.save()
+            if hu.tiempo_Real == 0:
+                hu.fecha_inicio = datetime.today().strftime("%Y-%m-%d")
+                hu.estado_scrum_id = 1
+            hu.tiempo_Real = int(hu.tiempo_Real) + int(hu_reg.tiempo_Real)
+            hu.save()
+        else:
+            mensaje = "No es posible realizar esta accion hoy, revise su calendario para ver los dias habiles"
     except:
         mensaje = "Error: No se sumaron las horas, revise los estados del user story o el rango de fechas del sprint en el cual se encuentra"
 
