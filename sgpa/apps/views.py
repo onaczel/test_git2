@@ -3290,3 +3290,10 @@ def horasUsuarioSprint(request, proyecto_id, sprint_id, usu_id):
         scrum = Equipo()
     
     return render_to_response('apps/project_sprint_planificar.html', {"proyecto":proyecto, "sprint":sprint, "hus":hus, "users":users, "scrum":scrum, "horas_sprint_usuario":horas_sprint_usuario}, context_instance = RequestContext(request))
+
+
+
+
+def sprint_burndownChart(request):
+
+    return render_to_response('apps/sprint_burndownChart.html',context_instance = RequestContext(request))
