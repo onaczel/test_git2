@@ -85,43 +85,107 @@
 								</h5>
 							</li>
 						{% endif %}
-						<li><h3>User Stories</h3>
-							<ul>
-								{% if hus %}
-									{% for hu in hus %}
-										{% if hu.estado_scrum_id == 1 or hu.estado_scrum_id == 2 %}
-											<li>
-												<form action="{% url 'apps:sprints' proyecto.id s.id hu.id %}" method="post">{% csrf_token %}
-													<h3><b><font size="3">HU {{hu.codigo}}</font>&emsp;</b></h3><font size="1">Detalles</font><input type="submit", name="cambio", value="+ "><input type="submit", name="cambio", value="- ">
-												</form>
-												{% if userStory.id == hu.id %}
-													<form action="{% url 'apps:sprints' proyecto.id s.id hu.id %}" method="post">{% csrf_token %}
-														{% if s.estado == 1 and scrum.rol_id == 3 %}
-															<input type="submit", name="cambio", value="Cancelar User Story"><br /><br />
-														{% endif %}
-														<table>
-															<font size="3"><b>Descripcion:</b></font>&emsp;{{detalles.descripcion.value}}<br />
-															<font size="3"><b>Codigo:</b></font>&emsp;{{detalles.codigo.value}}<br />
-															<font size="3"><b>Tiempo Estimado:</b></font>&emsp;{{detalles.tiempo_Estimado.value}}<br />
-															<font size="3"><b>Valor Negocio:</b></font>&emsp;{{detalles.valor_Negocio.value}}<br />
-															<font size="3"><b>Valor Tecnico:</b></font>&emsp;{{detalles.valor_Tecnico.value}}<br />
-														</table>
-														<table>
-															<font size="3"><b>Usuario Asignado:</b></font>&emsp;{{usuario.username}}<br />
-															<font size="3"><b>Flujo Asignado:</b></font>&emsp;{{flujo.descripcion}}<br />
-															<font size="3"><b>Prioridad:</b></font>&emsp;{{prioridad.descripcion}}<br />
-														</table>
-													</form>
-												{% endif %}
-											</li>
-										{% endif %}
-									{% endfor %}
-								{% else %}
-									<li>El Sprint no tiene User Stories</li>
-								{% endif %}
-							</ul>
-						</li>
 					</ul>
+					<div style="clear: left;">
+						<h3>User Stories</h3>
+						{% if hus %}
+							<table width=100%>
+								<tr>
+									<td><b>Codigo</b></td><td><b>Nombre</b></td><td><b>Fecha Creacion</b></td><td><b>Valor de Negocio</b></td><td><b>Valor Tecnico</b></td><td><b>Prioridad</b></td><td><b>Tiempo Consumido</b></td><td><b>ESTADO</b></td><td><b>SPRINT</b></td>
+								</tr>
+								{% for hu in hus %}
+									<form action="{% url 'apps:sprints' proyecto.id sprint.id hu.id %}" method="post">{% csrf_token %}
+										{% if userStory.id == hu.id %}
+											<tr style="border-bottom: dotted; border-bottom-color: green;"><td><br /></td></tr>
+										{% endif %}
+										<tr>
+											<form action="{% url 'apps:sprints' proyecto.id sprint.id hu.id %}" method="post">{% csrf_token %}
+												<td>
+													{{hu.codigo}}<font size="1"><input type="submit", name="cambio", value="+ "><input type="submit", name="cambio", value="- "></font>
+												</td>
+											</form>
+											<td>{{hu.nombre}}</td><td>&emsp;{{hu.fecha_creacion}}</td><td>&emsp;{{hu.valor_Negocio}}</td><td>&emsp;{{hu.valor_Tecnico}}</td><td>&emsp;{{hu.prioridad}}</td>
+											<td>
+												&emsp;{{hu.tiempo_Real}} Horas
+											</td>
+											<td>
+												<b>
+													{% if hu.estado_scrum_id == 1 %}
+														Iniciado
+													{% elif hu.estado_scrum_id == 2 %}
+														Asignado
+													{% elif hu.estado_scrum_id == 5 %}
+														Finalizado
+													{% elif hu.estado_scrum_id == 6 %}
+														Cancelado
+													{% endif %}
+												</b>
+											</td>
+											<td>
+												<b>
+													{% if hu.sprint %}
+														&emsp;{{hu.sprint}}
+													{% endif %}
+												</b>
+											</td>
+										</tr>
+										{% if userStory.id == hu.id %}
+											<tr><td><br /></td></tr>
+											<tr><td><b>Tiempo Estimado</b></td><td><b>Usuario Asignado</b></td><td><b>Fecha de inicio</b></td><td><b>Ult. fecha Mod.</b></td><td><b>Flujo</b></td><td><b>Actividad</b></td><td><b>Estado Act.</b></td></tr>
+											<tr style="border-bottom: dotted; border-bottom-color: green;"><td>{{hu.tiempo_Estimado}} Horas</td>
+												<form action="{% url 'apps:sprints' proyecto.id s.id hu.id %}" method="post">{% csrf_token %}
+													<td>
+														<select name="us"  style="width:90px">
+															{% if usuario %}
+																<option>{{usuario.username}}</option>
+																{% for user in users %}
+																	{% if usuario.id != user.id %}
+																		<option >{{user.username}}</option>
+																	{% endif %}
+																{% endfor %}
+															{% else %}
+						 										{% for user in users %}
+																	<option >{{user.username}}</option>
+																{% endfor %} 
+															{% endif %}
+														</select>
+													</td>
+													<td>{{hu.fecha_inicio}}<td>{{hu.fecha_modificacion}}</td><td>{{flujo.descripcion}}</td><td>&emsp;&emsp;{{f_actividad}}</td><td>&emsp;&emsp;{{f_a_estado.descripcion}}</td>
+													{% if hu.estado_scrum_id == 1 or hu.estado_scrum_id == 2 %}
+														<td>
+															<input type="submit" name="cambio" value="Asignar Usuario" />
+														</td>
+													{% elif hu.estado_scrum_id == 6 %}
+														<td>
+															<select name="flujo"  style="width:90px">
+																<option>hu.motivo_cancelacion</option>
+															</select>
+														</td>
+													{% endif %}
+												</form>
+											</tr>
+											<tr><td><br /></td></tr>
+											<tr>
+												<td><b>Codigo</b></td><td><b>Nombre</b></td><td><b>Fecha Creacion</b></td><td><b>Valor de Negocio</b></td><td><b>Valor Tecnico</b></td><td><b>Prioridad</b></td><td><b>Tiempo Consumido</b></td><td><b>ESTADO</b></td><td><b>SPRINT</b></td>
+											</tr>
+										{% endif %}
+									</form>
+								{% endfor %}
+								{% if sprint.estado == 1 %}
+									<tr><td><br /></td></tr>
+									<tr>
+										<form action="{% url 'apps:sprints' proyecto.id sprint.id 0 %}" method="post">{% csrf_token %}
+											<td><input type="submit" name="cambio" value="Mas detalles" /></td>
+										</form>
+									</tr>
+								{% endif %}
+							</table>
+						{% else %}
+							<table border=1 bordercolor="green" width=100%>
+								<tr><td align="center"><font color="green"><p><h4>No hay User Stories para analizar</h4></p></font></td></tr>
+							</table>
+						{% endif%}
+					</div>
 				{% endif %}
 			</div>
 		{% endfor %}
