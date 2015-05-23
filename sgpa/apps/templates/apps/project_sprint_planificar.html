@@ -7,19 +7,17 @@
 {% block contenido %}
 	<div style= "clear : both;">
 		<form action="{% url 'apps:sprints' proyecto.id sprint.id 0 %}" method="post">{% csrf_token %}
-			{% if scrum.rol_id == 3 and proyecto.estado_id == 1%}
+			{% if scrum.rol_id == 3 and proyecto.estado_id == 1 and sprint.estado == 0 %}
 				<br /><input type="submit", name="cambio", value="Iniciar Sprint"><br />
 			{% endif %}
 		</form>
 		<h3>Duracion del Sprint</h3>
-		{% if hora_sprint_usuario.usuario_id == us.id %}
-			{% if sprint.estado != 0%}
-				<h5><input type="text" id="duracion1" value="{{sprint.duracion}}" name="duracion" style="width:190px" disabled/> Semanas</h5><br />
-			{% else %}
-				<form action="{% url 'apps:sprints' proyecto.id sprint.id 0 %}" method="post">{% csrf_token %}
-					<h5><input type="text" id="duracion1" value="{{sprint.duracion}}" name="duracion" style="width:190px"/><input type="submit", name="cambio", value="Establecer Duracion"> (En Semanas)</h5><br />
-				</form>
-			{% endif %}
+		{% if sprint.estado != 0%}
+			<h5><input type="text" id="duracion1" value="{{sprint.duracion}}" name="duracion" style="width:190px" disabled/> Semanas</h5><br />
+		{% else %}
+			<form action="{% url 'apps:sprints' proyecto.id sprint.id 0 %}" method="post">{% csrf_token %}
+				<h5><input type="text" id="duracion1" value="{{sprint.duracion}}" name="duracion" style="width:190px"/><input type="submit", name="cambio", value="Establecer Duracion"> (En Semanas)</h5><br />
+			</form>
 		{% endif %}
 	</div>
 	<div style="clear: left;">
@@ -32,33 +30,35 @@
 				{% for hu in hus %}
 					<form action="{% url 'apps:sprints' proyecto.id sprint.id hu.id %}" method="post">{% csrf_token %}
 						{% if userStory.id == hu.id %}
-							{% if hu.sprint == sprint.nro_sprint %}
+							{% if hu.sprint == sprint.nro_sprint and sprint.estado == 0%}
 								<tr style="border-bottom: dotted; border-bottom-color: red;"><td><br /></td></tr>
 							{% else %}
 								<tr style="border-bottom: dotted; border-bottom-color: green;"><td><br /></td></tr>
 							{% endif %}
 						{% endif %}
 						<tr>
-							<td>
-								{% if hu.sprint == sprint.nro_sprint %}
-									<input type="checkbox" name="hus[]" id="option{{hu.id}}" value={{hu.id}} checked="checked" />
-								{% else %}
-									<input type="checkbox" name="hus[]" id="option{{hu.id}}" value={{hu.id}} />
-								{% endif %}
-								<label for="option{{hu.id}}">
-							</td>
+							{% if sprint.estado == 0 %}
+								<td>
+									{% if hu.sprint == sprint.nro_sprint %}
+										<input type="checkbox" name="hus[]" id="option{{hu.id}}" value={{hu.id}} checked="checked" />
+									{% else %}
+										<input type="checkbox" name="hus[]" id="option{{hu.id}}" value={{hu.id}} />
+									{% endif %}
+									<label for="option{{hu.id}}">
+								</td>
+							{% else %}
+								<td></td>
+							{% endif %}
 							<!-- <form action="{% url 'apps:sprints' proyecto.id sprint.id hu.id %}" method="post">{% csrf_token %} -->
 								<td>
 									{{hu.codigo}}<font size="1"><input type="submit", name="cambio", value=" + "><input type="submit", name="cambio", value=" - "></font>
 								</td>
-							<!-- </form> -->
+{% if sprint.estado != 0 %}
+	</form>
+{% endif %}
 							<td>{{hu.nombre}}</td><td>&emsp;{{hu.fecha_creacion}}</td><td>&emsp;{{hu.valor_Negocio}}</td><td>&emsp;{{hu.valor_Tecnico}}</td><td>&emsp;{{hu.prioridad}}</td>
 							<td>
-								{% if hu.tiempo_Real %}
-									&emsp;{{hu.tiempo_Real}} Horas
-								{% else %}
-									&emsp;0 Horas
-								{% endif %}
+								&emsp;{{hu.tiempo_Real}} Horas
 							</td>
 							<td>
 								<b>
@@ -80,44 +80,52 @@
 							</td>
 						</tr>
 						{% if userStory.id == hu.id %}
-							<tr"><td><br /></td></tr>
+							<tr><td><br /></td></tr>
 							<tr><td></td><td><b>Tiempo Estimado</b></td><td><b>Usuario Asignado</b></td><td><b>Fecha de inicio</b></td><td><b>Ult. fecha Mod.</b></td><td><b>Flujo</b></td><td><b>Actividad</b></td><td><b>Estado Act.</b></td></tr>
-							{% if hu.sprint == sprint.nro_sprint %}
-								<tr style="border-bottom: dotted; border-bottom-color: red;"><td></td><td>{{detalles.tiempo_Estimado.value}} Horas</td>
-								<td>
-									<select name="us"  style="width:190px" sort = true>
-										{% if usuario %}
-											<option>{{usuario.username}}</option>
-											{% for user in users %}
-												{% if usuario.id != user.id %}
-													<option >{{user.username}}</option>
+							{% if hu.sprint == sprint.nro_sprint and sprint.estado == 0%}
+								<form action="{% url 'apps:sprints' proyecto.id sprint.id hu.id %}" method="post">{% csrf_token %}
+									<tr style="border-bottom: dotted; border-bottom-color: red;"><td></td><td>{{hu.tiempo_Estimado}} Horas</td>
+										<td>
+											<select name="us"  style="width:90px">
+												{% if usuario %}
+													<option>{{usuario.username}}</option>
+													{% for user in users %}
+														{% if usuario.id != user.id %}
+															<option >{{user.username}}</option>
+														{% endif %}
+													{% endfor %}
+												{% else %}
+			 										{% for user in users %}
+														<option >{{user.username}}</option>
+													{% endfor %} 
 												{% endif %}
-											{% endfor %}
-										{% else %}
-	 										{% for user in users %}
-												<option >{{user.username}}</option>
-											{% endfor %} 
-										{% endif %}
-									</select>
-								</td>
-								<td>{{hu.fecha_inicio}}<td>{{hu.fecha_modificacion}}</td>
-								<td>
-									{% if flujo %}
-										<!-- <option>{{flujo.descripcion}}</option>
-										{% for f in flujos %}
-											{% if flujo.id != f.id %}
-												<option >{{f.descripcion}}</option>
-											{% endif %}
-										{% endfor %}--> 
-									{% else %}
-										{% for f in flujos %}
-											<option >{{f.descripcion}}</option>
-										{% endfor %} 
-									{% endif %}
-								</td>
-								<td>{{f_actividad}}</td><td>{{f_a_estado.descripcion}}</td></tr>
+											</select>
+										</td>
+										<td>{{hu.fecha_inicio}}<td>{{hu.fecha_modificacion}}</td>
+										<td>
+											<select name="flujo"  style="width:90px">
+												{% if flujo %}
+													<option>{{flujo.descripcion}}</option>
+													{% for f in flujos %}
+														{% if flujo.id != f.id %}
+															<option >{{f.descripcion}}</option>
+														{% endif %}
+													{% endfor %}
+												{% else %}
+													{% for f in flujos %}
+														<option >{{f.descripcion}}</option>
+													{% endfor %} 
+												{% endif %}
+											</select>
+										</td>
+										<td>&emsp;&emsp;{{f_actividad}}</td><td>&emsp;&emsp;{{f_a_estado.descripcion}}</td>
+										<td>
+											<input type="submit" name="cambio" value="Modificar " />
+										</td>
+									</tr>
+								</form>
 							{% else %}
-								<tr style="border-bottom: dotted; border-bottom-color: green;"><td></td><td>{{detalles.tiempo_Estimado.value}} Horas</td><td>{{usuario.username}}</td><td>{{hu.fecha_inicio}}<td>{{hu.fecha_modificacion}}</td><td>{{flujo.descripcion}}</td><td>{{f_actividad}}</td><td>{{f_a_estado.descripcion}}</td></tr>
+								<tr style="border-bottom: dotted; border-bottom-color: green;"><td></td><td>{{hu.tiempo_Estimado}} Horas</td><td>{{usuario.username}}</td><td>{{hu.fecha_inicio}}<td>{{hu.fecha_modificacion}}</td><td>{{flujo.descripcion}}</td><td>&emsp;&emsp;{{f_actividad}}</td><td>&emsp;&emsp;{{f_a_estado.descripcion}}</td></tr>
 							{% endif %}
 							<tr><td><br /></td></tr>
 							<tr>
@@ -125,170 +133,15 @@
 							</tr>
 						{% endif %}
 				{% endfor %}
-						<div style="float: right;">
-							<input type="submit" name="cambio" value="Guardar Cambios"/><br /><br />
-						</div>
+						{% if sprint.estado == 0 %}
+							<div style="float: right;">
+								<input type="submit" name="cambio" value="Guardar Cambios"/><br /><br />
+							</div>
+						{% endif %}
 					</form>
 			</table>
 		{% endif %}
 	</div>
-	<!-- 
-	<div style="float: left;">
-		<h3>User Stories&emsp;&emsp;&emsp;&emsp;&emsp;</h3>
-		{% if hus %}
-			<ul>
-				{% for hu in hus %}
-					{% if hu.sprint != sprint.nro_sprint %}
-						<form action="{% url 'apps:sprints' proyecto.id sprint.id hu.id %}" method="post">{% csrf_token %}
-						<li>
-								<input type="checkbox" name="hus[]" id="option{{hu.id}}" value={{hu.id}} />
-								<label for="option{{hu.id}}"><b>{{hu.codigo}}
-								{% if hu.estado_scrum_id == 2 %}
-									&emsp;Asignado al sprint {{hu.sprint}}
-								{% elif hu.estado_scrum_id == 3 %}
-									&emsp;No Asignado
-								{% elif hu.estado_scrum_id == 4 %}
-									&emsp;Pendiente
-								{% endif %}
-						</li>
-						
-							<font size="1">Detalles</font><input type="submit", name="cambio", value=" + "><input type="submit", name="cambio", value=" - "></b></label><br /><br />
-						>{{userStory.id}} {{hu.id}}<
-						{% if userStory.id == hu.id %}
-							<table>
-								<font size="3"><b>Descripcion:</b></font>&emsp;{{detalles.descripcion.value}}<br />
-								<font size="3"><b>Codigo:</b></font>&emsp;{{detalles.codigo.value}}<br /><br />
-								<font size="3"><b>Tiempo Estimado:</b></font>&emsp;{{detalles.tiempo_Estimado.value}}<br />
-								<font size="3"><b>Tiempo Consumido por el User Story:</b></font>&emsp;{{tiempo_hu_registrado}}<br /><br />
-								<font size="3"><b>Valor Negocio:</b></font>&emsp;{{detalles.valor_Negocio.value}}<br />
-								<font size="3"><b>Valor Tecnico:</b></font>&emsp;{{detalles.valor_Tecnico.value}}<br />
-							</table>
-							<table>
-								<font size="3"><b>Prioridad:</b></font>&emsp;{{prioridad.descripcion}}<br /><br />
-								<font size="3"><b>Usuario Asignado:</b></font>&emsp;{{usuario.username}}<br /><br />
-								<font size="3"><b>fecha de creacion:</b></font>&emsp;{{hu.fecha_creacion}}<br />
-								<font size="3"><b>fecha de inicio:</b></font>&emsp;{{hu.fecha_inicio}}<br />
-								<font size="3"><b>Ultima fecha de modificacion:</b></font>&emsp;{{hu.fecha_modificacion}}<br /><br />
-								<font size="3"><b>Flujo Asignado:</b></font>&emsp;{{flujo.descripcion}}<br />
-								<font size="3"><b>Actividad:</b></font>&emsp;{{f_actividad}}<br />
-								<font size="3"><b>Estado de la actividad:</b></font>&emsp;{{f_a_estado.descripcion}}<br /><br />
-								{% if hu.finalizado %}
-									<font size="3"><b>Estado segun el usuario Asignado:</b></font>&emsp;hu.Finalizado<br />
-								{% endif %}
-							</table>
-						{% endif %}
-					{% endif %}
-				{% endfor %}
-			</ul>
-		{% endif %}
-	</div>
-	<div style="float: left; width:300px">
-			<center>
-				<input type="submit" name="cambio" value="Asignar User Stories"/><br /><br />
-				<a href="{% url 'apps:sprints' proyecto.id 0 0 %}">Hecho</a>
-			</center>
-						</form>
-	</div>
-	<div style="float: left;">
-		<center>
-			<h3>User Stories del Sprint {{sprint.nro_sprint}}</h3>
-		</center>
-		{% if hus %}
-			<ul>
-				{% for hu in hus %}
-					{% if hu.sprint == sprint.nro_sprint %}	
-						<li>
-							<form action="{% url 'apps:sprints' proyecto.id sprint.id hu.id %}" method="post">{% csrf_token %}
-								<b>
-								{% if sprint.estado == 0 %}
-									<input type="submit", name="cambio", value="x">
-								{% endif %}
-								<font size="2">&emsp;HU {{hu.codigo}}</font>&emsp;<font size="1">Detalles</font><input type="submit", name="cambio", value=" + "><input type="submit", name="cambio", value=" - "></b><br />
-							</form>
-							{% if userStory.id == hu.id %}
-								<br />
-								<form action="{% url 'apps:sprints' proyecto.id sprint.id hu.id %}" method="post">{% csrf_token %}
-									<table>
-										<font size="2"><b>Descripcion:</b></font>&emsp;{{detalles.descripcion.value}}<br />
-										<font size="2"><b>Codigo:</b></font>&emsp;{{detalles.codigo.value}}<br />
-										<font size="2"><b>Tiempo Estimado:</b></font>&emsp;{{detalles.tiempo_Estimado}}<br />
-										<font size="2"><b>Valor Negocio:</b></font>&emsp;{{detalles.valor_Negocio}}<br />
-										<font size="2"><b>Valor Tecnico:</b></font>&emsp;{{detalles.valor_Tecnico}}<br />
-									</table>
-									<b><font size="2">Usuario Asignado:</font></b>
-									<select name="us"  style="width:190px" sort = true>
-										{% if usuario %}
-											<option>{{usuario.username}}</option>
-											{% for user in users %}
-												{% if usuario.id != user.id %}
-													<option >{{user.username}}</option>
-												{% endif %}
-											{% endfor %}
-										{% else %}
-	 										{% for user in users %}
-												<option >{{user.username}}</option>
-											{% endfor %} 
-										{% endif %}
-									</select><br>
-									{% if sprint.estado == 0 %}									
-										<b><font size="2">Flujo Asignado</font></b>&emsp;&emsp;
-										<select name="flujo"  style="width:190px" sort = true>
-											{% if flujo %}
-												<option>{{flujo.descripcion}}</option>
-												{% for f in flujos %}
-													{% if flujo.id != f.id %}
-														<option >{{f.descripcion}}</option>
-													{% endif %}
-												{% endfor %} 
-											{% else %}
-												{% for f in flujos %}
-													<option >{{f.descripcion}}</option>
-												{% endfor %} 
-											{% endif %}
-										</select><br>
-									{% elif scrum.rol_id == 3 and sprint.estado == 1 and hu.estado_scrum_id == 2 %}
-										<b><font size="2">Flujo Asignado</font></b>&emsp;&emsp;
-										<select name="flujo"  style="width:190px" sort = true>
-											{% if flujo %}
-												<option>{{flujo.descripcion}}</option>
-												{% for f in flujos %}
-													{% if flujo.id != f.id %}
-														<option >{{f.descripcion}}</option>
-													{% endif %}
-												{% endfor %} 
-											{% else %}
-												{% for f in flujos %}
-													<option >{{f.descripcion}}</option>
-												{% endfor %} 
-											{% endif %}
-										</select><br>										
-									{% endif %}
-									<b><font size="2">Prioridad</font></b>&emsp;&emsp;&emsp;&emsp;&emsp;
-									<select name="pri"  style="width:190px" sort = true>
-										{% if prioridad %}
-											<option>{{prioridad.descripcion}}</option>
-											{% for pr in prioridades %}
-												{% if prioridad.id != pr.id %}
-													<option >{{pr.descripcion}}</option>
-												{% endif %}
-											{% endfor %}
-										{% else %}
-											{% for pr in prioridades %}
-												<option >{{pr.descripcion}}</option>
-											{% endfor %}
-										{% endif %} 
-									</select><br>
-									<input type="submit" name="cambio" value="Modificar " />
-								</form>
-								<br />
-							{% endif %}
-						</li>
-					{% endif %}
-				{% endfor %}
-			</ul>
-		{% endif %}
-	</div>
-	 -->
 {% endblock %}
 {% block equipo %}
 	<center>
@@ -331,5 +184,7 @@
 	</center>
 {% endblock %}
 {% block atras %}
-	<a href="{% url 'apps:sprints' proyecto.id 0 0 %}">Volver</a>
+	<form action="{% url 'apps:sprints' proyecto.id sprint.id 0 %}" method="post">{% csrf_token %}
+		<input type="submit" name="cambio" value="Volver" />
+	</form>
 {% endblock %}
