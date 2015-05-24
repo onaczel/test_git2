@@ -27,8 +27,8 @@
 				<tr>
 					<td></td><td><b>Codigo</b></td><td><b>Nombre</b></td><td><b>Fecha Creacion</b></td><td><b>Valor de Negocio</b></td><td><b>Valor Tecnico</b></td><td><b>Prioridad</b></td><td><b>Tiempo Consumido</b></td><td><b>ESTADO</b></td><td><b>SPRINT</b></td>
 				</tr>
-				{% for hu in hus %}
-					<form action="{% url 'apps:sprints' proyecto.id sprint.id hu.id %}" method="post">{% csrf_token %}
+				<form action="{% url 'apps:sprints' proyecto.id sprint.id 0 %}" method="post">{% csrf_token %}
+					{% for hu in hus %}
 						{% if userStory.id == hu.id %}
 							{% if hu.sprint == sprint.nro_sprint and sprint.estado == 0%}
 								<tr style="border-bottom: dotted; border-bottom-color: red;"><td><br /></td></tr>
@@ -49,13 +49,9 @@
 							{% else %}
 								<td></td>
 							{% endif %}
-							<!-- <form action="{% url 'apps:sprints' proyecto.id sprint.id hu.id %}" method="post">{% csrf_token %} -->
-								<td>
-									{{hu.codigo}}<font size="1"><input type="submit", name="cambio", value=" + "><input type="submit", name="cambio", value=" - "></font>
-								</td>
-{% if sprint.estado != 0 %}
-	</form>
-{% endif %}
+							<td>
+								{{hu.codigo}}<a href="{% url 'apps:sprintsMas' proyecto.id sprint.id hu.id %}"> + </a><font size="1"><input type="submit", name="cambio", value=" - "></font>
+							</td>
 							<td>{{hu.nombre}}</td><td>&emsp;{{hu.fecha_creacion}}</td><td>&emsp;{{hu.valor_Negocio}}</td><td>&emsp;{{hu.valor_Tecnico}}</td><td>&emsp;{{hu.prioridad}}</td>
 							<td>
 								&emsp;{{hu.tiempo_Real}} Horas
@@ -83,7 +79,7 @@
 							<tr><td><br /></td></tr>
 							<tr><td></td><td><b>Tiempo Estimado</b></td><td><b>Usuario Asignado</b></td><td><b>Fecha de inicio</b></td><td><b>Ult. fecha Mod.</b></td><td><b>Flujo</b></td><td><b>Actividad</b></td><td><b>Estado Act.</b></td></tr>
 							{% if hu.sprint == sprint.nro_sprint and sprint.estado == 0%}
-								<form action="{% url 'apps:sprints' proyecto.id sprint.id hu.id %}" method="post">{% csrf_token %}
+								<!-- <form action="{% url 'apps:sprints' proyecto.id sprint.id hu.id %}" method="post">{% csrf_token %} -->
 									<tr style="border-bottom: dotted; border-bottom-color: red;"><td></td><td>{{hu.tiempo_Estimado}} Horas</td>
 										<td>
 											<select name="us"  style="width:90px">
@@ -121,9 +117,12 @@
 										<td>&emsp;&emsp;{{f_actividad}}</td><td>&emsp;&emsp;{{f_a_estado.descripcion}}</td>
 										<td>
 											<input type="submit" name="cambio" value="Modificar " />
+											<select name="hu_id" style="visibility:hidden">
+												<option >{{hu.id}}</option>
+											</select>
 										</td>
 									</tr>
-								</form>
+								<!-- </form> -->
 							{% else %}
 								<tr style="border-bottom: dotted; border-bottom-color: green;"><td></td><td>{{hu.tiempo_Estimado}} Horas</td><td>{{usuario.username}}</td><td>{{hu.fecha_inicio}}<td>{{hu.fecha_modificacion}}</td><td>{{flujo.descripcion}}</td><td>&emsp;&emsp;{{f_actividad}}</td><td>&emsp;&emsp;{{f_a_estado.descripcion}}</td></tr>
 							{% endif %}
@@ -132,13 +131,13 @@
 								<td></td><td><b>Codigo</b></td><td><b>Nombre</b></td><td><b>Fecha Creacion</b></td><td><b>Valor de Negocio</b></td><td><b>Valor Tecnico</b></td><td><b>Prioridad</b></td><td><b>Tiempo Consumido</b></td><td><b>ESTADO</b></td><td><b>SPRINT</b></td>
 							</tr>
 						{% endif %}
-				{% endfor %}
-						{% if sprint.estado == 0 %}
-							<div style="float: right;">
-								<input type="submit" name="cambio" value="Guardar Cambios"/><br /><br />
-							</div>
-						{% endif %}
-					</form>
+					{% endfor %}
+					{% if sprint.estado == 0 %}
+						<div style="float: right;">
+							<input type="submit" name="cambio" value="Guardar Cambios"/><br /><br />
+						</div>
+					{% endif %}
+				</form>
 			</table>
 		{% endif %}
 	</div>
