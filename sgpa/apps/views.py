@@ -3354,8 +3354,43 @@ def horasUsuarioSprint(request, proyecto_id, sprint_id, usu_id):
     return render_to_response('apps/project_sprint_planificar.html', {"proyecto":proyecto, "sprint":sprint, "hus":hus, "users":users, "scrum":scrum, "horas_sprint_usuario":horas_sprint_usuario}, context_instance = RequestContext(request))
 
 
-
+    
 
 def sprint_burndownChart(request):
+    planeado = []
+    no_planeado = []
+    
+    lista = Dia_Sprint.objects.filter(sprint_id = 1)
+    h_planeadas = 0
+    # se obtiene el total de las horas planeadas
+    for l in lista:
+        h_planeadas = h_planeadas + l.tiempo_estimado
+    
+    aux = h_planeadas
+    
+    planeado.append(h_planeadas)
+    for l in lista:
+        planeado.append(aux-l.tiempo_estimado)    
+        aux = aux - l.tiempo_estimado
+    
+    aux = h_planeadas
+    no_planeado.append(h_planeadas)
+    for l in lista:
+        no_planeado.append(aux-l.tiempo_real)    
+        aux = aux - l.tiempo_real
+    
+        
+    return render_to_response('apps/sprint_burndownChart.html',{"planeado":planeado,"nplaneado":no_planeado,"horasp":h_planeadas},context_instance = RequestContext(request))
 
-    return render_to_response('apps/sprint_burndownChart.html',context_instance = RequestContext(request))
+
+
+
+
+
+
+
+
+
+
+
+
