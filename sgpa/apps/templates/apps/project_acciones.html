@@ -2,6 +2,11 @@
 {% block titulo %}
 	<h1><b>{{proyecto.nombre}}</b></h1>
 {% endblock %}
+
+{% block script %}
+	
+ 
+{% endblock %}
 {% block index %}
 	<li>
 		<a href="{% url 'apps:accionesproyecto' proyecto.id %}"><i class="fa fa-fw fa-edit"></i>{{proyecto.nombre}}</a>
@@ -46,7 +51,9 @@
 			<a href="{% url 'apps:listflujosproyectosMod' proyecto.id %}"><i class="fa fa-fw fa-edit"></i>Flujos</a>
 		</li>
 	{% endif %}
-	
+	<li>
+		<a href="{% url 'apps:sprint_burndownChart'%}"><i class="fa fa-fw fa-edit"></i>Sprint Burndown Charts</a>
+	</li>
 
 	{%if misPermisos.VP %}
 	<li>
@@ -130,6 +137,7 @@
 	{% endfor %} 
 	
 </table>
+
 {% endblock %}
 
 {% block equipo %}
