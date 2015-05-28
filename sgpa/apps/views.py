@@ -2669,8 +2669,8 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
     """
     Calcular estos dos de abajo!
     """
-    tiempo_sprint_dias = 3*5
-    tiempo_sprint_horas = 3*5*24
+    tiempo_sprint_dias = []
+    tiempo_sprint_horas = 0
     hus = []
     tiempo_hu_estimado = 0
     tiempo_hu_registrado = 0
@@ -2839,6 +2839,12 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
                         sprints = sorted(sprints, key = getSprintNro, reverse = False)
                 else:
                     mensaje = "Asigne algun User Story al sprint " + str(sprint.nro_sprint) + " antes de iniciar el proyecto"
+
+            horas_por_dia = horas_usuario_sprint.objects.filter(Sprint_id = sprint.id)
+            for hora_por_dia in horas_por_dia:
+                horas_por_sprint_por_usuario = int(hora_por_dia.horas)*int(sprint.duracion)*5
+                tiempo_sprint_horas = tiempo_sprint_horas + horas_por_sprint_por_usuario
+
         #elif request.POST['cambio'] == "Planificar" or request.POST['cambio'] == "x" or request.POST['cambio'] == " + " or request.POST['cambio'] == " - " or request.POST['cambio'] == "Modificar " or request.POST['cambio'] == "Asignar User Stories":
         elif request.POST['cambio'] == "Mas detalles" or request.POST['cambio'] == "Establecer Duracion" or request.POST['cambio'] == "Guardar Cambios" or request.POST['cambio'] == "Planificar" or request.POST['cambio'] == " + " or request.POST['cambio'] == " - " or request.POST['cambio'] == "Modificar ":
             sprint = Sprint.objects.get(id = sprint_id)
