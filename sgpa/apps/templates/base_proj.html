@@ -30,7 +30,8 @@
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-
+	{% block script %}
+	{% endblock %}
 </head>
 
 <body>
@@ -106,6 +107,7 @@
                 <!-- /.row -->                
                 <div style=" height:200vh;">
 					{% block contenido %} {% endblock %}
+					
 				
 			<div  border=1px style="text-align: center; margin:30px auto;  height:10px; width:1095px; float:center;">
 						
@@ -114,8 +116,8 @@
 					
 					{% block equipo %}
 					{% endblock %}
-
-            </div>
+			
+            
             </div>
             <!-- /.container-fluid -->
             
