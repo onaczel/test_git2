@@ -77,11 +77,11 @@
 							<li>
 								<h5>
 									Fecha estimada de finalizacion del sprint:&emsp;<font size="4">"{{fmayor.fecha}}"</font>
-									<form action="{% url 'apps:sprints' proyecto.id s.id 0 %}" method="post">{% csrf_token %}
+									<!-- <form action="{% url 'apps:sprints' proyecto.id s.id 0 %}" method="post">{% csrf_token %}
 										{% if scrum.rol_id == 3 and s.estado == 1 %}
 											<input type="submit", name="cambio", value="Cambiar Fecha"><br />
 										{% endif %}
-									</form>
+									</form> -->
 								</h5>
 							</li>
 						{% endif %}
@@ -114,6 +114,8 @@
 														Iniciado
 													{% elif hu.estado_scrum_id == 2 %}
 														Asignado
+													{% elif hu.estado_scrum_id == 4 %}
+														Pendiente
 													{% elif hu.estado_scrum_id == 5 %}
 														Finalizado
 													{% elif hu.estado_scrum_id == 6 %}
@@ -131,25 +133,33 @@
 										</tr>
 										{% if userStory.id == hu.id %}
 											<tr><td><br /></td></tr>
-											<tr><td><b>Tiempo Estimado</b></td><td><b>Usuario Asignado</b></td><td><b>Fecha de inicio</b></td><td><b>Ult. fecha Mod.</b></td><td><b>Flujo</b></td><td><b>Actividad</b></td><td><b>Estado Act.</b></td></tr>
+											<tr><td><b>Tiempo Estimado</b></td><td><b>Usuario Asignado</b></td><td><b>Fecha de inicio</b></td><td><b>Ult. fecha Mod.</b></td><td><b>Flujo</b></td><td><b>Actividad</b></td><td><b>Estado Act.</b></td>
+												{% if hu.estado_scrum_id == 6 %}
+													<td><b>Motivo</b></td>
+												{% endif %}
+											</tr>
 											<tr style="border-bottom: dotted; border-bottom-color: green;"><td>{{hu.tiempo_Estimado}} Horas</td>
 												<form action="{% url 'apps:sprints' proyecto.id s.id hu.id %}" method="post">{% csrf_token %}
-													<td>
-														<select name="us"  style="width:90px">
-															{% if usuario %}
-																<option>{{usuario.username}}</option>
-																{% for user in users %}
-																	{% if usuario.id != user.id %}
+													{% if sprint.estado != 2 %}
+														<td>
+															<select name="us"  style="width:90px">
+																{% if usuario %}
+																	<option>{{usuario.username}}</option>
+																	{% for user in users %}
+																		{% if usuario.id != user.id %}
+																			<option >{{user.username}}</option>
+																		{% endif %}
+																	{% endfor %}
+																{% else %}
+							 										{% for user in users %}
 																		<option >{{user.username}}</option>
-																	{% endif %}
-																{% endfor %}
-															{% else %}
-						 										{% for user in users %}
-																	<option >{{user.username}}</option>
-																{% endfor %} 
-															{% endif %}
-														</select>
-													</td>
+																	{% endfor %} 
+																{% endif %}
+															</select>
+														</td>
+													{% else %}
+														<td>{{user.username}}</td>
+													{% endif %}
 													<td>{{hu.fecha_inicio}}<td>{{hu.fecha_modificacion}}</td><td>{{flujo.descripcion}}</td><td>&emsp;&emsp;{{f_actividad}}</td><td>&emsp;&emsp;{{f_a_estado.descripcion}}</td>
 													{% if hu.estado_scrum_id == 1 or hu.estado_scrum_id == 2 %}
 														<td>
@@ -158,7 +168,7 @@
 													{% elif hu.estado_scrum_id == 6 %}
 														<td>
 															<select name="flujo"  style="width:90px">
-																<option>hu.motivo_cancelacion</option>
+																<option>{{hu.motivo_cancelacion}}</option>
 															</select>
 														</td>
 													{% endif %}
@@ -182,7 +192,7 @@
 							</table>
 						{% else %}
 							<table border=1 bordercolor="green" width=100%>
-								<tr><td align="center"><font color="green"><p><h4>No hay User Stories para analizar</h4></p></font></td></tr>
+								<tr><td align="center"><font color="green"><p><h4>No hay User Stories</h4></p></font></td></tr>
 							</table>
 						{% endif%}
 					</div>
