@@ -59,6 +59,10 @@
 
 {% block contenido %}
 	<legend><font color="#888888">Cambiar Estado</font></legend>
+	{% if hu.finalizado %}
+		<h4><font color="#FF0000">El User Story esta actualmente en revision</font></h4>
+	{% endif %}
+	<br>
 	{% if misPermisos.MUS %}
 		<form action="{% url 'apps:setEstadoHu' proyecto.id hu.id %}" method="post">
 			{% csrf_token %}
@@ -67,9 +71,9 @@
 			<table border=0px>
 				<tr>
 					<td width=200><b>Actividad Actual</b></td>
-					{% if hu.f_a_estado == 3 %}
-					<td width=100>
-						<select name="act"  style="width:190px" sort = true>
+					{% if hu.finalizado == True and hu.usuario_Asignado == user_logged %}
+						<td width=100>
+						<select disabled name="act"  style="width:190px;" sort = true>
 								{% for actividad in actividades %}
 									{% if hu.f_actividad == forloop.counter %}
 										<option selected="selected">{{actividad.descripcion}}</option>
@@ -78,44 +82,79 @@
 									{% endif %}
 								{% endfor %} 
 						</select>
-					</td>
+						</td>
 					{% else %}
-						{% for actividad in actividades %}
-							{% if hu.f_actividad == forloop.counter %}
-								<td width=300>{{actividad.descripcion}}</td>
-							{% endif %}
-						{% endfor %} 
-					<select name="act"  style="width:190px; visibility:hidden" sort = true>
+						{% if hu.f_a_estado == 3 %}
+						<td width=100>
+							<select name="act"  style="width:190px" sort = true>
+									{% for actividad in actividades %}
+										{% if hu.f_actividad == forloop.counter %}
+											<option selected="selected">{{actividad.descripcion}}</option>
+										{% else %}
+											<option>{{actividad.descripcion}}</option>
+										{% endif %}
+									{% endfor %} 
+							</select>
+						</td>
+						{% else %}
 							{% for actividad in actividades %}
 								{% if hu.f_actividad == forloop.counter %}
-									<option selected="selected">{{actividad.descripcion}}</option>
-								{% else %}
-									<option>{{actividad.descripcion}}</option>
+									<td width=300>{{actividad.descripcion}}</td>
 								{% endif %}
 							{% endfor %} 
-					</select>
+						<select name="act"  style="width:190px; visibility:hidden" sort = true>
+								{% for actividad in actividades %}
+									{% if hu.f_actividad == forloop.counter %}
+										<option selected="selected">{{actividad.descripcion}}</option>
+									{% else %}
+										<option>{{actividad.descripcion}}</option>
+									{% endif %}
+								{% endfor %} 
+						</select>
+						{% endif %}
 					{% endif %}
 				</tr>
 				<tr>
 					<td><b>Estado:</b></td>
-					{% if estados %}
-					<td>
-					<select name="est"  style="width:190px;" sort = true  >
-							{% for e in estados %}
-								{% if e.id == hu.f_a_estado %}
-									<option selected="selected">{{e.descripcion}}</option>
-								{% else %}
-									<option >{{e.descripcion}}</option>
-								{% endif %}
-							{% endfor %} 
-					</select>
-					</td>
+					{% if hu.finalizado and hu.usuario_Asignado == user_logged %}
+						<td>
+						<select disabled name="est"  style="width:190px;" sort = true  >
+								{% for e in estados %}
+									{% if e.id == hu.f_a_estado %}
+										<option selected="selected">{{e.descripcion}}</option>
+									{% else %}
+										<option >{{e.descripcion}}</option>
+									{% endif %}
+								{% endfor %} 
+						</select>
+						</td>
 					{% else %}
-						<td>{{estados.descripcion}}</td>
+						{% if estados %}
+						<td>
+						<select name="est"  style="width:190px;" sort = true  >
+								{% for e in estados %}
+									{% if e.id == hu.f_a_estado %}
+										<option selected="selected">{{e.descripcion}}</option>
+									{% else %}
+										<option >{{e.descripcion}}</option>
+									{% endif %}
+								{% endfor %} 
+						</select>
+						</td>
+						{% else %}
+							<td>{{estados.descripcion}}</td>
+						{% endif %}
 					{% endif %}
 				</tr>
 			</table>
-			<input type='submit' value='Guardar'/>
+			{% if hu.finalizado == True and hu.usuario_Asignado == user_logged %}
+				<input disabled type='submit' value='Guardar' name='submit'/>
+			{% else %}
+				<input type='submit' value='Guardar' name='submit'/>
+			{% endif %}	
+			{% if finalizar and hu.finalizado == False %}
+				<input type='submit' value='Finalizar' name='submit'/>
+			{% endif %}
 		
 		
 		</form>

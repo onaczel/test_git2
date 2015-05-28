@@ -16,7 +16,7 @@
 		
 	{%if misPermisos.PS == True %}
 	<li>
-		<a href="{% url 'apps:sprints' proyecto.id 0 0 %}"><i class="fa fa-fw fa-edit"></i>Sprints</a>
+		<a href="{% url 'apps:sprints' proyecto.id 0 0 %}"><i class="fa fa-ful fa-edit"></i>Sprints</a>
 	</li>
 	{% endif %}
 	
@@ -115,7 +115,27 @@
 										{% if forloop.counter == h.flujo_posicion  %}
 											<!-- <td><a href="{% url 'apps:setEstadoHu' proyecto.id h.id %}">{{h.nombre}}</a></td> -->
 											{% if scrum or user_logged.id == h.usuario_Asignado %}
-										 		<td  bgcolor="#F0F0F0"  height=100 valign="top" border=10px><small><a href="{% url 'apps:editarHu' proyecto.id h.id %}"><font color="#0000"><b>{{h.nombre}}</b></font></a></small></td>
+										 		<td  bgcolor="#F0F0F0"  height=100 valign="top" border=10px><small><a href="{% url 'apps:editarHu' proyecto.id h.id %}"><font color="#0000"><b>{{h.nombre}}</b></font></a></small>
+										 			<table>
+										 			<tr height=50px></tr>
+										 			<tr>
+										 				{% if user_logged.id == h.usuario_Asignado %}
+											 				<td>
+											 					<a href="{% url 'apps:setEstadoHu' proyecto.id h.id  %}"><font title="Cambiar Estado" color="#0000"><i class="fa fa-fw fa-calendar"></i></font></a>
+											 				</td>
+										 				{% endif %}
+										 				{% if user_logged.id == h.usuario_Asignado %}
+											 				<td>
+											 					<a href="{% url 'apps:registroHu' proyecto.id h.id  %}"><font title="Registrar Horas" color="#0000"><i class="fa fa-fw fa-tasks"></i></font></a>
+											 				</td>
+										 				{% endif %}
+										 				<td>
+										 					<a href="{% url 'apps:notasHu' proyecto.id h.id %}"><font title="Agregar Notas" color="#0000"><i class="fa fa-fw fa-tablet"></i></font></a>
+										 				</td>
+										 			</tr>
+										 			</table>
+					
+										 		</td>
 										 	{% else %}
 										 		<td  bgcolor="#F0F0F0"  height=100 valign="top" border=10px><small><font color="#0000"><b>{{h.nombre}}</b></font></small></td>
 										 	{% endif %}

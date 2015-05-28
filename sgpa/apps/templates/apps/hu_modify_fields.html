@@ -62,6 +62,12 @@
 {% endblock %}
 {% block contenido %}
 
+	{% if marcado %}
+		<p>El User Story ha sido marcado como finalizado por el desarrollador</p>
+		<a href="{% url 'apps:finalizarHu' proyecto_id hu.id  %}">Terminar User Story</a>
+		<a href="{% url 'apps:setEstadoHu' proyecto_id hu_id  %}">Cambiar Estado</a>    
+	{% endif %}
+
 	{% if misPermisos.MUS %}
 			{% if hu.sprint == 0 %}
 				<table>

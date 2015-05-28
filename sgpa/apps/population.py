@@ -50,10 +50,14 @@ def populate():
     for p in permisos_observador:
         add_permisos_roles(p, 6)
     
-    
+    '''
     add_prioridad('Baja')
     add_prioridad('Media')
     add_prioridad('Alta')
+    '''
+        
+    for i in range(1,10):
+        add_prioridad(i)
     
     add_estado('To Do')
     add_estado('Doing')
