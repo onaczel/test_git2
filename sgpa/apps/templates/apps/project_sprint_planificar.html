@@ -127,9 +127,11 @@
 								<tr style="border-bottom: dotted; border-bottom-color: green;"><td></td><td>{{hu.tiempo_Estimado}} Horas</td><td>{{usuario.username}}</td><td>{{hu.fecha_inicio}}<td>{{hu.fecha_modificacion}}</td><td>{{flujo.descripcion}}</td><td>&emsp;&emsp;{{f_actividad}}</td><td>&emsp;&emsp;{{f_a_estado.descripcion}}</td></tr>
 							{% endif %}
 							<tr><td><br /></td></tr>
-							<tr>
-								<td></td><td><b>Codigo</b></td><td><b>Nombre</b></td><td><b>Fecha Creacion</b></td><td><b>Valor de Negocio</b></td><td><b>Valor Tecnico</b></td><td><b>Prioridad</b></td><td><b>Tiempo Consumido</b></td><td><b>ESTADO</b></td><td><b>SPRINT</b></td>
-							</tr>
+							{% if forloop.counter < cant_hus %}
+								<tr>
+									<td></td><td><b>Codigo</b></td><td><b>Nombre</b></td><td><b>Fecha Creacion</b></td><td><b>Valor de Negocio</b></td><td><b>Valor Tecnico</b></td><td><b>Prioridad</b></td><td><b>Tiempo Consumido</b></td><td><b>ESTADO</b></td><td><b>SPRINT</b></td>
+								</tr>
+							{% endif %}
 						{% endif %}
 					{% endfor %}
 					{% if sprint.estado == 0 %}

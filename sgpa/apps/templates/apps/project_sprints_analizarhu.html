@@ -61,9 +61,11 @@
 								</td>
 							</tr>
 							<tr><td><br /></td></tr>
-							<tr>
-								<td><b>Codigo</b></td><td><b>Nombre</b></td><td><b>Fecha Creacion</b></td><td><b>Valor de Negocio</b></td><td><b>Valor Tecnico</b></td><td><b>Prioridad</b></td><td><b>Tiempo Consumido</b></td><td><b>ESTADO</b></td><td><b>SPRINT</b></td>
-							</tr>
+							{% if forloop.counter < cant_hus %}
+								<tr>
+									<td><b>Codigo</b></td><td><b>Nombre</b></td><td><b>Fecha Creacion</b></td><td><b>Valor de Negocio</b></td><td><b>Valor Tecnico</b></td><td><b>Prioridad</b></td><td><b>Tiempo Consumido</b></td><td><b>ESTADO</b></td><td><b>SPRINT</b></td>
+								</tr>
+							{% endif %}
 						{% endif %}
 				{% endfor %}
 					</form>

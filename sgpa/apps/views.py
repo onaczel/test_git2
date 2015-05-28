@@ -1680,7 +1680,7 @@ def gethuid(hu):
 
 def gethuidsort(hu):
     """
-    Funcion utilizada para ordenar una lista en base al id
+    Funcion utilizada para ordenar una lista en base al id del User Story
     @param hu: Objeto User Story
     @return: la fecha de creacion del User Story
     """
@@ -2669,7 +2669,6 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
     """
     Calcular estos dos de abajo!
     """
-    tiempo_sprint_dias = []
     tiempo_sprint_horas = 0
     hus = []
     tiempo_hu_estimado = 0
@@ -2754,13 +2753,15 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
                     fmenor = dia_sprint_actual
                 elif (int(fmenor.fecha.year) == int(dia_sprint_actual.fecha.year)) and (int(fmenor.fecha.month) == int(dia_sprint_actual.fecha.month)) and (int(fmenor.fecha.day) > int(dia_sprint_actual.fecha.day)):
                     fmenor = dia_sprint_actual
+
             hus = UserStory.objects.filter(proyecto_id = proyecto_id, sprint = sprint.nro_sprint)
             hus = sorted(hus, key=gethuidsort, reverse=False)
-            for hu in hus:
-                tiempo_hu_estimado = tiempo_hu_estimado + hu.tiempo_Estimado
             hus_registros = UserStoryRegistro.objects.filter(proyecto_id = proyecto_id, sprint = sprint.nro_sprint)
+
             for hu_registro in hus_registros:
                 tiempo_hu_registrado = tiempo_hu_registrado + hu_registro.tiempo_Real
+            for hu in hus:
+                tiempo_hu_estimado = tiempo_hu_estimado + hu.tiempo_Estimado
 
             if request.POST['cambio'] == "+ " or request.POST['cambio'] == "Asignar Usuario":
                 userStory = UserStory.objects.get(id = hu_id)
@@ -2839,11 +2840,11 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
                         sprints = sorted(sprints, key = getSprintNro, reverse = False)
                 else:
                     mensaje = "Asigne algun User Story al sprint " + str(sprint.nro_sprint) + " antes de iniciar el proyecto"
-
-            horas_por_dia = horas_usuario_sprint.objects.filter(Sprint_id = sprint.id)
-            for hora_por_dia in horas_por_dia:
-                horas_por_sprint_por_usuario = int(hora_por_dia.horas)*int(sprint.duracion)*5
-                tiempo_sprint_horas = tiempo_sprint_horas + horas_por_sprint_por_usuario
+            if sprint:
+                horas_por_dia = horas_usuario_sprint.objects.filter(Sprint_id = sprint.id)
+                for hora_por_dia in horas_por_dia:
+                    horas_por_sprint_por_usuario = int(hora_por_dia.horas)*int(sprint.duracion)*5
+                    tiempo_sprint_horas = tiempo_sprint_horas + horas_por_sprint_por_usuario
 
         #elif request.POST['cambio'] == "Planificar" or request.POST['cambio'] == "x" or request.POST['cambio'] == " + " or request.POST['cambio'] == " - " or request.POST['cambio'] == "Modificar " or request.POST['cambio'] == "Asignar User Stories":
         elif request.POST['cambio'] == "Mas detalles" or request.POST['cambio'] == "Establecer Duracion" or request.POST['cambio'] == "Guardar Cambios" or request.POST['cambio'] == "Planificar" or request.POST['cambio'] == " + " or request.POST['cambio'] == " - " or request.POST['cambio'] == "Modificar ":
@@ -3137,7 +3138,11 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
             cancelar_hu = True
             sprint = Sprint.objects.get(id = sprint_id)
             userStory = UserStory.objects.get(id = hu_id)
-
+    
+    cant_hus = 0 #permite saber cuantos User Stories estoy enviando
+    for hu in hus:
+        cant_hus = cant_hus + 1
+    
     #El Scrum Master del proyecto "rol_id = 3"
     scrum = []
     try:
@@ -3148,13 +3153,13 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
     if cancelar_hu:
         return render_to_response('apps/project_sprint_cancelar_hu.html', {"proyecto":proyecto, "userStory":userStory, "sprint":sprint}, context_instance = RequestContext(request))
     elif finalizar_sprint:
-        return render_to_response('apps/project_sprints_analizarhu.html', {"proyecto":proyecto, "sprint":sprint,"hus":hus, "userStory":userStory, "detalles":detalles, "usuario":usuario, "flujo":flujo, "prioridad":prioridad, "f_actividad":f_actividad, "f_a_estado":f_a_estado, "tiempo_hu_registrado":tiempo_hu_registrado, "scrum":scrum}, context_instance = RequestContext(request))
+        return render_to_response('apps/project_sprints_analizarhu.html', {"proyecto":proyecto, "sprint":sprint,"hus":hus, "userStory":userStory, "detalles":detalles, "usuario":usuario, "flujo":flujo, "prioridad":prioridad, "f_actividad":f_actividad, "f_a_estado":f_a_estado, "tiempo_hu_registrado":tiempo_hu_registrado, "scrum":scrum, "cant_hus":cant_hus}, context_instance = RequestContext(request))
     #elif cambiar_fecha:
         #return render_to_response('apps/project_sprint_fecha_fin.html', {"proyecto":proyecto, "sprint":sprint, "fecha_est_fin":fecha_est_fin}, context_instance = RequestContext(request))
     elif planificar:
-        return render_to_response('apps/project_sprint_planificar.html', {"proyecto":proyecto, "sprint":sprint, "hus":hus, "userStory":userStory, "usuario":usuario, "flujo":flujo, "prioridad":prioridad, "f_actividad":f_actividad, "f_a_estado":f_a_estado, "users":users, "flujos":flujos, "prioridades":prioridades, "scrum":scrum, "horas_sprint_usuario":horas_sprint_usuario}, context_instance = RequestContext(request))
+        return render_to_response('apps/project_sprint_planificar.html', {"proyecto":proyecto, "sprint":sprint, "hus":hus, "userStory":userStory, "usuario":usuario, "flujo":flujo, "prioridad":prioridad, "f_actividad":f_actividad, "f_a_estado":f_a_estado, "users":users, "flujos":flujos, "prioridades":prioridades, "scrum":scrum, "horas_sprint_usuario":horas_sprint_usuario, "cant_hus":cant_hus}, context_instance = RequestContext(request))
     else:
-        return render_to_response('apps/project_sprints.html', {"proyecto":proyecto, "scrum":scrum, "mensaje":mensaje, "sprints":sprints, "sprint":sprint, "fmayor":fmayor, "fmenor":fmenor, "tiempo_sprint_dias":tiempo_sprint_dias, "tiempo_sprint_horas":tiempo_sprint_horas, "hus":hus, "tiempo_hu_estimado":tiempo_hu_estimado, "tiempo_hu_registrado":tiempo_hu_registrado, "userStory":userStory, "usuario":usuario, "users":users, "flujo":flujo, "prioridad":prioridad, "f_actividad":f_actividad, "f_a_estado":f_a_estado, "users":users, "fecha_fin_sprint":fecha_fin_sprint}, context_instance = RequestContext(request))
+        return render_to_response('apps/project_sprints.html', {"proyecto":proyecto, "scrum":scrum, "mensaje":mensaje, "sprints":sprints, "sprint":sprint, "fmayor":fmayor, "fmenor":fmenor, "tiempo_sprint_horas":tiempo_sprint_horas, "hus":hus, "tiempo_hu_estimado":tiempo_hu_estimado, "tiempo_hu_registrado":tiempo_hu_registrado, "userStory":userStory, "usuario":usuario, "users":users, "flujo":flujo, "prioridad":prioridad, "f_actividad":f_actividad, "f_a_estado":f_a_estado, "users":users, "fecha_fin_sprint":fecha_fin_sprint, "cant_hus":cant_hus}, context_instance = RequestContext(request))
 
 def sprintsMas(request, proyecto_id, sprint_id, hu_id):
     """
@@ -3242,13 +3247,18 @@ def sprintsMas(request, proyecto_id, sprint_id, hu_id):
                 users.append(user)
 
     horas_sprint_usuario = horas_usuario_sprint.objects.filter(Sprint_id = sprint_id)
+    
+    cant_hus = 0 #permite saber cuantos User Stories estoy enviando
+    for hu in hus:
+        cant_hus = cant_hus + 1
+    
     #El Scrum Master del proyecto "rol_id = 3"
     scrum = []
     try:
         scrum = Equipo.objects.get(proyecto_id = proyecto_id, usuario_id = request.user.id, rol_id = 3)
     except:
         scrum = Equipo()
-    return render_to_response('apps/project_sprint_planificar.html', {"proyecto":proyecto, "sprint":sprint, "hus":hus, "userStory":userStory, "usuario":usuario, "flujo":flujo, "prioridad":prioridad, "f_actividad":f_actividad, "f_a_estado":f_a_estado, "users":users, "flujos":flujos, "prioridades":prioridades, "scrum":scrum, "horas_sprint_usuario":horas_sprint_usuario}, context_instance = RequestContext(request))
+    return render_to_response('apps/project_sprint_planificar.html', {"proyecto":proyecto, "sprint":sprint, "hus":hus, "userStory":userStory, "usuario":usuario, "flujo":flujo, "prioridad":prioridad, "f_actividad":f_actividad, "f_a_estado":f_a_estado, "users":users, "flujos":flujos, "prioridades":prioridades, "scrum":scrum, "horas_sprint_usuario":horas_sprint_usuario, "cant_hus":cant_hus}, context_instance = RequestContext(request))
 
 def crearSprint(proyecto_id):
     """
@@ -3473,10 +3483,11 @@ def horasUsuarioSprint(request, proyecto_id, sprint_id, usu_id):
             except:
                 sp = None
             if sp:
-                if sp.estado == 0:
+                if sp.estado != 1:
                     hus.append(hu)
             else:
                 hus.append(hu)
+
     hus = sorted(hus, key=gethuidsort, reverse=False)
     equipos = Equipo.objects.filter(proyecto_id = proyecto_id, rol_id = 5)
     for equipo in equipos:
@@ -3498,4 +3509,9 @@ def horasUsuarioSprint(request, proyecto_id, sprint_id, usu_id):
     except:
         scrum = Equipo()
     
-    return render_to_response('apps/project_sprint_planificar.html', {"proyecto":proyecto, "sprint":sprint, "hus":hus, "users":users, "scrum":scrum, "horas_sprint_usuario":horas_sprint_usuario}, context_instance = RequestContext(request))
+    cant_hus = 0 #permite saber cuantos User Stories estoy enviando
+    for hu in hus:
+        cant_hus = cant_hus + 1
+    
+    
+    return render_to_response('apps/project_sprint_planificar.html', {"proyecto":proyecto, "sprint":sprint, "hus":hus, "users":users, "scrum":scrum, "horas_sprint_usuario":horas_sprint_usuario, "cant_hus":cant_hus}, context_instance = RequestContext(request))
