@@ -162,9 +162,11 @@
 													{% endif %}
 													<td>{{hu.fecha_inicio}}<td>{{hu.fecha_modificacion}}</td><td>{{flujo.descripcion}}</td><td>&emsp;&emsp;{{f_actividad}}</td><td>&emsp;&emsp;{{f_a_estado.descripcion}}</td>
 													{% if hu.estado_scrum_id == 1 or hu.estado_scrum_id == 2 %}
-														<td>
-															<input type="submit" name="cambio" value="Asignar Usuario" />
-														</td>
+														{% if sprint.estado != 2 %}
+															<td>
+																<input type="submit" name="cambio" value="Asignar Usuario" />
+															</td>
+														{% endif %}
 													{% elif hu.estado_scrum_id == 6 %}
 														<td>
 															<select name="flujo"  style="width:90px">
