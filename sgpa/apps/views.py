@@ -2851,6 +2851,33 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
         elif request.POST['cambio'] == "Mas detalles" or request.POST['cambio'] == "Establecer Duracion" or request.POST['cambio'] == "Guardar Cambios" or request.POST['cambio'] == "Planificar" or request.POST['cambio'] == " + " or request.POST['cambio'] == " - " or request.POST['cambio'] == "Modificar ":
             sprint = Sprint.objects.get(id = sprint_id)
             planificar = True
+            ##seccion de codigo que prepara datos para el chart##
+         
+            planeado = []
+            no_planeado = []
+            if Dia_Sprint.objects.filter(sprint_id = 1).exists():
+                mylista = Dia_Sprint.objects.filter(sprint_id = 1)
+                h_planeadas = 0
+                # se obtiene el total de las horas planeadas
+                for l in mylista:
+                    h_planeadas = h_planeadas + l.tiempo_estimado
+        
+                    aux = h_planeadas
+        
+                planeado.append(h_planeadas)
+                for l in mylista:
+                    planeado.append(aux-l.tiempo_estimado)    
+                    aux = aux - l.tiempo_estimado
+        
+                aux = h_planeadas
+                no_planeado.append(h_planeadas)
+                for l in mylista:
+                    no_planeado.append(aux-l.tiempo_real)    
+                    aux = aux - l.tiempo_real
+    
+        
+                       
+            ###fin de la seccion##
             
             if request.POST['cambio'] == "Establecer Duracion":
                 try:
@@ -3184,7 +3211,7 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
     #elif cambiar_fecha:
         #return render_to_response('apps/project_sprint_fecha_fin.html', {"proyecto":proyecto, "sprint":sprint, "fecha_est_fin":fecha_est_fin}, context_instance = RequestContext(request))
     elif planificar:
-        return render_to_response('apps/project_sprint_planificar.html', {"proyecto":proyecto, "sprint":sprint, "hus":hus, "userStory":userStory, "usuario":usuario, "flujo":flujo, "prioridad":prioridad, "f_actividad":f_actividad, "f_a_estado":f_a_estado, "users":users, "flujos":flujos, "prioridades":prioridades, "scrum":scrum, "horas_sprint_usuario":horas_sprint_usuario, "cant_hus":cant_hus}, context_instance = RequestContext(request))
+        return render_to_response('apps/project_sprint_planificar.html', {"planeado":planeado,"nplaneado":no_planeado,"horasp":h_planeadas,"proyecto":proyecto, "sprint":sprint, "hus":hus, "userStory":userStory, "usuario":usuario, "flujo":flujo, "prioridad":prioridad, "f_actividad":f_actividad, "f_a_estado":f_a_estado, "users":users, "flujos":flujos, "prioridades":prioridades, "scrum":scrum, "horas_sprint_usuario":horas_sprint_usuario, "cant_hus":cant_hus}, context_instance = RequestContext(request))
     else:
         return render_to_response('apps/project_sprints.html', {"proyecto":proyecto, "scrum":scrum, "mensaje":mensaje, "sprints":sprints, "sprint":sprint, "fmayor":fmayor, "fmenor":fmenor, "tiempo_sprint_horas":tiempo_sprint_horas, "hus":hus, "tiempo_hu_estimado":tiempo_hu_estimado, "tiempo_hu_registrado":tiempo_hu_registrado, "userStory":userStory, "usuario":usuario, "users":users, "flujo":flujo, "prioridad":prioridad, "f_actividad":f_actividad, "f_a_estado":f_a_estado, "users":users, "fecha_fin_sprint":fecha_fin_sprint, "cant_hus":cant_hus}, context_instance = RequestContext(request))
 
