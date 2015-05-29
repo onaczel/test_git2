@@ -198,6 +198,9 @@ class UserStoryVersiones(models.Model):
     #notas = models.CharField(max_length = 512, null = True)
     estado_scrum = models.ForeignKey(Estados_Scrum, null = True)
     motivo_cancelacion = models.CharField(max_length = 512, null = True)
+    fecha_creacion = models.DateField(null = True)
+    fecha_inicio = models.DateField(null = True)
+    fecha_modificacion = models.DateField(null = True)
     
 class UserStoryRegistro(models.Model):
     """

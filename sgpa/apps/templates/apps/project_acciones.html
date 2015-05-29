@@ -14,7 +14,7 @@
 
 
 		
-	{%if misPermisos.PS == True %}
+	{%if misPermisos.PS == True or misPermisos.VP == True %}
 	<li>
 		<a href="{% url 'apps:sprints' proyecto.id 0 0 %}"><i class="fa fa-ful fa-edit"></i>Sprints</a>
 	</li>
