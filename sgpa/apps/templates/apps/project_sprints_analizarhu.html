@@ -17,7 +17,7 @@
 					<td><b>Codigo</b></td><td><b>Nombre</b></td><td><b>Fecha Creacion</b></td><td><b>Valor de Negocio</b></td><td><b>Valor Tecnico</b></td><td><b>Prioridad</b></td><td><b>Tiempo Consumido</b></td><td><b>ESTADO</b></td><td><b>SPRINT</b></td>
 				</tr>
 				{% for hu in hus %}
-					<form action="{% url 'apps:sprints' proyecto.id sprint.id hu.id %}" method="post">{% csrf_token %}
+					{% if hu.estado_scrum_id != 5 and hu.estado_scrum_id != 6 %}
 						{% if userStory.id == hu.id %}
 							<tr style="border-bottom: dotted; border-bottom-color: green;"><td><br /></td></tr>
 						{% endif %}
@@ -67,8 +67,8 @@
 								</tr>
 							{% endif %}
 						{% endif %}
+					{% endif %}
 				{% endfor %}
-					</form>
 			</table>
 		{% else %}
 			<table border=1 bordercolor="green" width=100%>

@@ -308,6 +308,9 @@ class historialResponsableHU(models.Model):
     responsable = models.ForeignKey(User)
 
 class horas_usuario_sprint(models.Model):
+    """
+    Modelo que permite relacionar un usuario y sus horas de trabajo con un sprint
+    """
     horas = models.IntegerField(default = 0)
     usuario = models.ForeignKey(User)
     Sprint = models.ForeignKey(Sprint)
@@ -315,3 +318,10 @@ class horas_usuario_sprint(models.Model):
 class hu_sprint(models.Model):
     sprint = models.ForeignKey(Sprint)
     hu = models.ForeignKey(UserStoryVersiones)
+    
+class huVersion_sprint(models.Model):
+    """
+    Modelo que relaciona un Sprint de un proyecto con una version de un User Story
+    """
+    sprint = models.ForeignKey(Sprint)
+    userStoryVersiones = models.ForeignKey(UserStoryVersiones)
