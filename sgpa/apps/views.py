@@ -2866,14 +2866,16 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
         
                 planeado.append(h_planeadas)
                 for l in mylista:
-                    planeado.append(aux-l.tiempo_estimado)    
-                    aux = aux - l.tiempo_estimado
+                    if l.tiempo_estimado != 0:
+                        planeado.append(aux-l.tiempo_estimado)    
+                        aux = aux - l.tiempo_estimado
         
                 aux = h_planeadas
                 no_planeado.append(h_planeadas)
                 for l in mylista:
-                    no_planeado.append(aux-l.tiempo_real)    
-                    aux = aux - l.tiempo_real
+                    if l.tiempo_estimado != 0:
+                        no_planeado.append(aux-l.tiempo_real)    
+                        aux = aux - l.tiempo_real
     
         
                        
