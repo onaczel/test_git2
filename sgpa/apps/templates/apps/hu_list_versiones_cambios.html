@@ -1,14 +1,34 @@
 {% extends 'base.html' %}
-{% block titulo %}
+{% block uptitulo %}
 	<h1>{{proyecto.nombre}}</h1>
 {% endblock %}
-{% block encabezado %}
-	<h1>{{hu.nombre}}</h1>
+{% block titulo %}
+	<table>
+		<tr>
+		
+			<td width=125px><h2><font color="#686868">{{hu.codigo}}</font></h2></td>
+			<td ><h2>{{hu.nombre}}</h2></td>
+		</tr>
+	</table>
 {% endblock %}
+
+
+{% block index %}
+	<li>
+		<a href="{% url 'apps:accionesproyecto' proyecto.id %}"><i class="fa fa-fw fa-edit"></i>{{proyecto.nombre}}</a>
+	</li>
+	
+	<li>
+		<a href="{% url 'apps:huprincipal' proyecto.id hu.id %}"></i><font color="FFFFFF">{{hu.codigo}} {{hu.nombre}}</font></a>          
+	</li>	
+
+	
+{% endblock %}
+
 {% block contenido %}
 	<center>
 		<table border=1 width=99%  >
-				<tr><td width=30%></td><td align=center height=20 width=30%><b>Version Actual</b><td width=30% align=center><b>Versionn {{huv.version}}</b></td></tr>
+				<tr><td width=30%></td><td align=center height=20 width=30%><b>Version Actual</b><td width=30% align=center><b>Version {{huv.version}}</b></td></tr>
 				<tr><td><b>Nombre</b></td><td align=center><p><b>{{hu.nombre}}</b> </p></td><td align=center><p> {{huv.nombre}}</p></td></tr>
 				<tr><td><b>Descripcion</b></td><td align=center><p><b>{{hu.descripcion}}</b> </p></td><td align=center><p> {{huv.descripcion}}</p></td></tr>
 				<tr><td><b>Codigo</b></td><td align=center><p><b>{{hu.codigo}}</b> </p></td><td align=center><p> {{huv.codigo}}</p></td></tr>
@@ -26,7 +46,7 @@
 		</table>
 	</center>
 	<br>
-	{% if misPermisos.EUS %}
+	{% if misPermisos.MUS %}
 		<a href="{% url 'apps:volverVersionHU' proyecto_id hu.id huv.id %}">Volver a Version {{huv.version}}</a>
 	{% endif %} 
 {% endblock %}

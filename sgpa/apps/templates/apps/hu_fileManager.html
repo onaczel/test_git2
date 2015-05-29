@@ -21,9 +21,10 @@
 	</li>
 	
 		<li>
-              <a href="{% url 'apps:editarHu' proyecto_id hu_id %}"></i><font color="FFFFFF">{{hu.codigo}} {{hu.nombre}}</font></a>          
+              <a href="{% url 'apps:huprincipal' proyecto_id hu_id %}"></i><font color="FFFFFF">{{hu.codigo}} {{hu.nombre}}</font></a>          
         </li>	
 		
+		<!-- 
 		{% if  hu.sprint == proyecto.nro_sprint and misPermisos.CEUS %}
 		<li>
               <a href="{% url 'apps:setEstadoHu' proyecto_id hu_id  %}"><i class="fa fa-fw fa-edit"></i> Cambiar Estado</a>          
@@ -56,6 +57,7 @@
 		<a href="{% url 'apps:eliminarHu' proyecto_id hu_id %}"><i class="fa fa-fw fa-edit"></i>Eliminar User Story</a>
 	</li>
 	{% endif %}
+	 -->
 {% endblock %}
 <br/>
 
@@ -107,5 +109,5 @@
 	
 {% endblock %}
 {% block atras %}
-	<a href="{% url 'apps:editarHu' proyecto_id hu.id %}">Volver</a>
+	<a href="{% url 'apps:huprincipal' proyecto_id hu.id %}">Volver</a>
 {% endblock %}

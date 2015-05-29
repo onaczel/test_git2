@@ -1,10 +1,72 @@
 {% extends 'base.html' %}
+{% block uptitulo %}
+	<h1>{{proyecto.nombre}}</h1>
+{% endblock %}
 {% block titulo %}
-<h1>{{proyecto.nombre}}</h1>
+	<table>
+		<tr>
+		
+			<td width=125px><h2><font color="#686868">{{hu.codigo}}</font></h2></td>
+			<td ><h2>{{hu.nombre}}</h2></td>
+		</tr>
+	</table>
 {% endblock %}
-{% block encabezado %}
-<h1>{{hu.nombre}}</h1>
+
+
+{% block index %}
+	
+	<li>
+		<a href="{% url 'apps:accionesproyecto' proyecto.id %}"><i class="fa fa-fw fa-edit"></i>{{proyecto.nombre}}</a>
+	</li>
+	
+		<li>
+              <a href="{% url 'apps:huprincipal' proyecto.id hu.id %}"></i><font color="FFFFFF">{{hu.codigo}} {{hu.nombre}}</font></a>          
+        </li>	
+	<!-- 
+	{% if misPermisos.MUS %}
+		{% if  hu.sprint == proyecto.nro_sprint and userasig %}
+		<li>
+              <a href="{% url 'apps:setEstadoHu' proyecto_id hu_id  %}"><i class="fa fa-fw fa-edit"></i> Cambiar Estado</a>          
+        </li>			
+		{% endif %}
+		<li>
+		
+		<a href="{% url 'apps:listhuversiones' proyecto_id hu_id  %}"><i class="fa fa-fw fa-edit"></i>Versiones</a>
+		</li>
+		
+		<li>
+			<a href="{% url 'apps:registroHu' proyecto_id hu_id  %}"><i class="fa fa-fw fa-edit"></i>Registros</a>
+		</li>
+	{% endif %}
+	
+
+	{% if misPermisos.MUS and hu.estado == True %}
+	<li>
+		<a href="{% url 'apps:fileAdjunto' proyecto_id hu_id %}"><i class="fa fa-fw fa-edit"></i>Archivos Adjuntos</a>
+	</li>
+	{% endif %}
+	
+	{% if misPermisos.MUS %}
+	<li>
+		<a href="{% url 'apps:notasHu' proyecto_id hu_id %}"><i class="fa fa-fw fa-edit"></i>Notas</a>
+	</li>
+	{% endif %}
+	
+	{% if misPermisos.EUS and hu.estado == True %}
+	<li>
+		<a href="{% url 'apps:eliminarHu' proyecto_id hu_id %}"><i class="fa fa-fw fa-edit"></i>Eliminar User Story</a>
+	</li>
+	{% endif %}
+	
+	{% if misPermisos.MUS and hu.estado == True %}
+	<li>
+		<a href="{% url 'apps:hulog' proyecto_id hu_id %}"><i class="fa fa-fw fa-edit"></i>Log</a>
+	</li>
+	{% endif %}
+	 -->
+	
 {% endblock %}
+
 {% block contenido %}
 	
 	<form action="" method="post">

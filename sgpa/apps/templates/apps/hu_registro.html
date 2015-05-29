@@ -18,8 +18,9 @@
 	</li>
 	
 		<li>
-              <a href="{% url 'apps:editarHu' proyecto.id hu.id %}"></i><font color="FFFFFF">{{hu.codigo}} {{hu.nombre}}</font></a>          
+              <a href="{% url 'apps:huprincipal' proyecto.id hu.id %}"></i><font color="FFFFFF">{{hu.codigo}} {{hu.nombre}}</font></a>          
         </li>	
+	<!-- 
 	{% if misPermisos.MUS %}
 		{% if hu.estado == True and hu.sprint != 0 %}
 		<li>
@@ -53,6 +54,7 @@
 		<a href="{% url 'apps:eliminarHu' proyecto.id hu.id %}"><i class="fa fa-fw fa-edit"></i>Eliminar User Story</a>
 	</li>
 	{% endif %}
+	 -->
 {% endblock %}
 
 {% block contenido %}
@@ -113,5 +115,5 @@
 	
 {% endblock %}
 {% block atras %}
-	<a href="{% url 'apps:editarHu' proyecto.id hu.id %}">Volver</a>
+	<a href="{% url 'apps:huprincipal' proyecto.id hu.id %}">Volver</a>
 {% endblock %}

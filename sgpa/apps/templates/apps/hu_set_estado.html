@@ -28,7 +28,7 @@
         </li>			
 		{% endif %}
 		<li>
-		
+		<!-- 
 		<a href="{% url 'apps:listhuversiones' proyecto.id hu.id  %}"><i class="fa fa-fw fa-edit"></i>Versiones</a>
 		</li>
 		
@@ -54,13 +54,16 @@
 		<a href="{% url 'apps:eliminarHu' proyecto.id hu.id %}"><i class="fa fa-fw fa-edit"></i>Eliminar User Story</a>
 	</li>
 	{% endif %}
+	-->
 {% endblock %}
 
 
 {% block contenido %}
 	<legend><font color="#888888">Cambiar Estado</font></legend>
-	{% if hu.finalizado %}
+	{% if hu.finalizado and hu.estado_scrum.id != 5 %}
 		<h4><font color="#FF0000">El User Story esta actualmente en revision</font></h4>
+	{% elif hu.estado_scrum.id == 5 %}
+		<h4><font color="#50A850">El User Story ha Finalizado</font></h4>
 	{% endif %}
 	<br>
 	{% if misPermisos.MUS %}
@@ -72,6 +75,18 @@
 				<tr>
 					<td width=200><b>Actividad Actual</b></td>
 					{% if hu.finalizado == True and hu.usuario_Asignado == user_logged %}
+						<td width=100>
+						<select disabled name="act"  style="width:190px;" sort = true>
+								{% for actividad in actividades %}
+									{% if hu.f_actividad == forloop.counter %}
+										<option selected="selected">{{actividad.descripcion}}</option>
+									{% else %}
+										<option>{{actividad.descripcion}}</option>
+									{% endif %}
+								{% endfor %} 
+						</select>
+						</td>
+					{% elif hu.estado_scrum.id == 5 %}
 						<td width=100>
 						<select disabled name="act"  style="width:190px;" sort = true>
 								{% for actividad in actividades %}
@@ -128,6 +143,18 @@
 								{% endfor %} 
 						</select>
 						</td>
+					{% elif hu.estado_scrum.id == 5 %}
+						<td>
+						<select disabled name="est"  style="width:190px;" sort = true  >
+								{% for e in estados %}
+									{% if e.id == hu.f_a_estado %}
+										<option selected="selected">{{e.descripcion}}</option>
+									{% else %}
+										<option >{{e.descripcion}}</option>
+									{% endif %}
+								{% endfor %} 
+						</select>
+						</td>
 					{% else %}
 						{% if estados %}
 						<td>
@@ -149,6 +176,8 @@
 			</table>
 			{% if hu.finalizado == True and hu.usuario_Asignado == user_logged %}
 				<input disabled type='submit' value='Guardar' name='submit'/>
+			{% elif hu.estado_scrum.id == 5 %}
+				<input disabled type='submit' value='Guardar' name='submit'/>
 			{% else %}
 				<input type='submit' value='Guardar' name='submit'/>
 			{% endif %}	
@@ -164,5 +193,5 @@
 	{% endif %}
 {% endblock %}
 {% block atras %}
-	<a href="{% url 'apps:editarHu' proyecto.id hu.id %}">Volver</a>
+	<a href="{% url 'apps:huprincipal' proyecto.id hu.id %}">Atras</a>
 {% endblock %}

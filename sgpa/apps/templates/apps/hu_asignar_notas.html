@@ -12,6 +12,18 @@
 	</table>
 {% endblock %}
 
+{% block index %}
+	<li>
+		<a href="{% url 'apps:accionesproyecto' proyecto.id %}"><i class="fa fa-fw fa-edit"></i>{{proyecto.nombre}}</a>
+	</li>
+	
+	<li>
+		<a href="{% url 'apps:huprincipal' proyecto.id hu.id %}"></i><font color="FFFFFF">{{hu.codigo}} {{hu.nombre}}</font></a>          
+	</li>	
+
+	
+{% endblock %}
+
 {% block contenido %}
 
 	<legend><h3><font color="#888888">Agregar Nota</font></h3></legend>

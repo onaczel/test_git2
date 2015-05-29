@@ -115,7 +115,7 @@
 										{% if forloop.counter == h.flujo_posicion  %}
 											<!-- <td><a href="{% url 'apps:setEstadoHu' proyecto.id h.id %}">{{h.nombre}}</a></td> -->
 											{% if scrum or user_logged.id == h.usuario_Asignado %}
-										 		<td  bgcolor="#F0F0F0"  height=100 valign="top" border=10px><small><a href="{% url 'apps:editarHu' proyecto.id h.id %}"><font color="#0000"><b>{{h.nombre}}</b></font></a></small>
+										 		<td  bgcolor="#F0F0F0"  height=100 valign="top" border=10px><small><a href="{% url 'apps:huprincipal' proyecto.id h.id %}"><font color="#0000"><b>{{h.nombre}}</b></font></a></small>
 										 			<table>
 										 			<tr height=50px></tr>
 										 			<tr>

@@ -96,8 +96,28 @@
 		</tr>
 		<tr>
 			<td><input type="number" name="tiempoestimado" rows="1" cols="20"></textarea></td>
-			<td><input type="number" name="valortecnico" rows="1" cols="20"></textarea></td>
-			<td><input type="number" name="valornegocio" rows="1" cols="20"></textarea></td>
+			<td>
+				<select name="valortecnico"  style="width:190px" sort = true>
+					{% for r in rango %}
+							{% if r == hu.valor_Tecnico %}
+									<option selected="selected">{{r}}</option>
+								{% else %}
+									<option >{{r}}</option>
+							{% endif %}
+					{% endfor %} 
+				</select>
+			</td>
+			<td>
+				<select name="valornegocio"  style="width:190px" sort = true>
+					{% for r in rango %}
+							{% if r == hu.valor_Negocio %}
+									<option selected="selected">{{r}}</option>
+								{% else %}
+									<option >{{r}}</option>
+							{% endif %}
+					{% endfor %} 
+				</select>
+			</td>
 			<td>
 				<select name="pri"  style="width:190px" sort = true>
 				{% for pr in prioridades %}
