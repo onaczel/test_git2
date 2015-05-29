@@ -17,12 +17,25 @@ def populate():
     add_roles("developer", False)
     add_roles("observador", False)
     
-    add_user('admin', 'a123', 'deserver123@gmail.com', 1)
-    add_user('jquin', 'a123', 'rokkaie@gmail.com', 2)
-    add_user('lastdeo', 'a123', 'lastdeo@gmail.com', 2)
-    add_user('jrojas', 'a123', 'jrojas@gmail.com', 2)
+    add_user('Administrador', 'General', 'admin', 'a123', 'deserver123@gmail.com', 1)
+    add_user('Joaquin', 'Quintana', 'jquin', 'a123', 'rokkaie@gmail.com', 2)
+    add_user('Ariel', 'Diaz', 'lastdeo', 'a123', 'lastdeo@gmail.com', 2)
+    add_user('Jorge', 'Rojas', 'jrojas', 'a123', 'jrojas@gmail.com', 2)
+    add_user('Raul', 'Bobadilla', 'rbob', 'a123', 'rbob@gmail.com', 2)
+    add_user('Hector', 'Roa', 'hroa', 'a123', 'hroa@gmail.com', 2)
+    add_user('Victor', 'Figueredo', 'vfir', 'a123', 'vfif@gmail.com', 2)
+    add_user('Gregory', 'Andaluz', 'gram', 'a123', 'gram@gmail.com', 2)
+    add_user('Walter', 'Amarilla', 'wam', 'a123', 'wam@gmail.com', 2)
+    add_user('Horacio', 'Gimenez', 'hgim', 'a123', 'hgim@gmail.com', 2)
+    add_user('German', 'Gonzalez', 'ggon', 'a123', 'ggon@gmail.com', 2)
+    add_user('Karina', 'Franco', 'kfran', 'a123', 'kfran@gmail.com', 2)
+    add_user('Claudia', 'Rios', 'crios', 'a123', 'crios@gmail.com', 2)
+    add_user('Natalia', 'Aguero', 'nag', 'a123', 'nag@gmail.com', 2)
     
     add_flujo('Plantilla Generica')
+    add_flujo('Plantilla Generica 2')
+    add_flujo('Plantilla Generica 3')
+    
     
     permisos = ['Crear Usuario', 'Modificar Usuario', 'Eliminar Usuario', 'Crear Roles', 'Modificar Roles', 'Eliminar Roles','Crear Proyecto', 'Modificar Proyecto', 'Crear Plantilla de Flujos', 'Modificar Plantilla de Flujos', 'Eliminar Plantilla de Flujos', 'Asignar Participantes a Proyecto', 'Eliminar Participantes de Proyecto', 'Crear User Stories', 'Modificar User Stories', 'Eliminar User Stories', 'Planificar Sprints', 'Visualizar Proyectos', 'Crear Roles en Proyecto', 'Modificar Roles en Proyecto', 'Eliminar Roles en Proyecto', 'Cambiar Estado User Story', 'Administrar Flujo Proyecto']
     tags = ['CU', 'MU', 'EU', 'CR', 'MR', 'ER', 'CP', 'MP','CPF', 'MPF', 'EPF', 'APP', 'EPP', 'CUS', 'MUS', 'EUS', 'PS', 'VP', 'CRP', 'MRP', 'ERP', 'CEUS', 'AFP']
@@ -78,17 +91,29 @@ def populate():
     add_equipo(1, 4, 2)
     add_equipo(1, 5, 3)
     add_equipo(1, 6, 4)
+    add_equipo(1, 5, 5)
+    add_equipo(1, 5, 6)
+    add_equipo(1, 5, 7)
+    add_equipo(1, 5, 8)
     
     add_equipo(2, 3, 2)
     add_equipo(2, 4, 3)
     add_equipo(2, 5, 3)
+    add_equipo(2, 5, 9)
+    add_equipo(2, 5, 10)
     
     add_equipo(3, 3, 2)
     add_equipo(3, 4, 3)
     add_equipo(3, 5, 3)
+    add_equipo(3, 5, 8)
+    add_equipo(3, 5, 10)
+    add_equipo(3, 5, 11)
+    add_equipo(3, 5, 12)
     
     for h in range(1,10):
         add_hu(1, "hu" +str(h), "User Story "+str(h), "Como usuario debo poder realizar esta funcion "+str(h))
+        add_hu(2, "hu" +str(h), "User Story "+str(h), "Como usuario debo poder realizar esta funcion "+str(h))
+        add_hu(3, "hu" +str(h), "User Story "+str(h), "Como usuario debo poder realizar esta funcion "+str(h))
         
 def add_estado_scrum(descripcion):
     estado = Estados_Scrum()
@@ -103,8 +128,10 @@ def add_roles(descripcion, sistema):
     rol.save()
     return rol
 
-def add_user(username, password, email, role):
+def add_user(fname, lname, username, password, email, role):
     user = User()
+    user.first_name = fname
+    user.last_name = lname
     user.username = username
     user.set_password(password)
     user.email = email
