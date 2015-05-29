@@ -3351,16 +3351,15 @@ def sprintsMas(request, proyecto_id, sprint_id, hu_id):
         hus = UserStory.objects.filter(proyecto_id = proyecto_id, sprint = sprint.nro_sprint)
     hus = sorted(hus, key=gethuidsort, reverse=False)
     equipos = Equipo.objects.filter(proyecto_id = proyecto_id, rol_id = 5)
-    se_encuentra = False
     for equipo in equipos:
         user = User.objects.get(id = equipo.usuario_id)
         se_encuentra = False
         for u in users:
             if u.id == user.id:
                 se_encuentra = True
-    if se_encuentra == False:
-        if user.is_active:
-            users.append(user)
+        if se_encuentra == False:
+            if user.is_active:
+                users.append(user)
     horas_sprint_usuario = horas_usuario_sprint.objects.filter(Sprint_id = sprint_id)
     
     cant_hus = 0 #permite saber cuantos User Stories estoy enviando
