@@ -2744,6 +2744,7 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
     flujos = [] #flujos del proyecto
     prioridades = []
     horas_sprint_usuario = [] #horas que puede trabajar un usuario por sprint
+    h_planeadas = 0
     try:
         sprints = Sprint.objects.filter(proyecto_id = proyecto_id)
         sprints = sorted(sprints, key = getSprintNro, reverse = False)
