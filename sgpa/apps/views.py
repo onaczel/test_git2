@@ -2839,6 +2839,33 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
                     userStory = UserStoryVersiones.objects.get(id = hu_id)
                 else:
                     userStory = UserStory.objects.get(id = hu_id)
+                if request.POST['cambio'] == "Asignar Usuario":
+                    hu = UserStory.objects.get(id = hu_id)
+                    huCopia = UserStory.objects.get(id = hu_id)
+                    cambio = False
+                    ouser = User.objects.get(username = request.POST['us'])
+                    if int(hu.usuario_Asignado) != int(ouser.id):
+                        if historialResponsableHU.objects.filter(hu = hu, responsable = ouser).exists():
+                            notificarCambioResponsableHU(hu.usuario_Asignado, ouser.id, hu_id, proyecto_id)
+                        else:    
+                            h = historialResponsableHU()
+                            h.hu = hu
+                            h.responsable = ouser
+                            h.save()
+                            notificarCambioResponsableHU(hu.usuario_Asignado, ouser.id, hu_id, proyecto_id)
+                        hu.usuario_Asignado =  ouser.id
+                        mensaje = "Usuario " + str(ouser.username) + " asignado al User Story: " + str(hu.nombre)
+                        cambio = True
+                        
+                    if cambio:
+                        huv = UserStoryVersiones()
+                        copiarHU(huCopia, huv, User.objects.get(username = request.user))
+                        notificarModificacionHU(hu_id, proyecto_id)
+                        hu.save()
+                if sprint.estado == 2:
+                    userStory = UserStoryVersiones.objects.get(id = hu_id)
+                else:
+                    userStory = UserStory.objects.get(id = hu_id)
                 flujos = Flujos.objects.filter(proyecto_id = proyecto_id)
                 prioridades = Prioridad.objects.all()
                 try:
@@ -2868,31 +2895,6 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
                     if se_encuentra == False:
                         if user.is_active:
                             users.append(user)
-                if request.POST['cambio'] == "Asignar Usuario":
-                    hu = UserStory.objects.get(id = hu_id)
-                    huCopia = UserStory.objects.get(id = hu_id)
-                    cambio = False
-                    ouser = User.objects.get(username = request.POST['us'])
-                    if str(hu.usuario_Asignado) != str(ouser.id):
-                        if historialResponsableHU.objects.filter(hu = hu, responsable = ouser).exists():
-                            notificarCambioResponsableHU(hu.usuario_Asignado, ouser.id, hu_id, proyecto_id)
-                        else:    
-                            h = historialResponsableHU()
-                            h.hu = hu
-                            h.responsable = ouser
-                            h.save()
-                            notificarCambioResponsableHU(hu.usuario_Asignado, ouser.id, hu_id, proyecto_id)
-                        hu.usuario_Asignado =  ouser.id
-                        mensaje = "Usuario " + str(ouser.username) + " asignado al User Story: " + str(hu.nombre)
-                        cambio = True
-                        
-                    if cambio:
-                        huv = UserStoryVersiones()
-                        copiarHU(huCopia, huv, User.objects.get(username = request.user))
-                        notificarModificacionHU(hu_id, proyecto_id)
-                       
-                    hu.save()
-
             if request.POST['cambio'] == "Iniciar Sprint":
                 hus_proyecto = UserStory.objects.filter(proyecto_id = proyecto_id, sprint = sprint.nro_sprint)
                 if hus_proyecto:
@@ -2966,10 +2968,10 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
             if request.POST['cambio'] == "Guardar Cambios":
                 user_stories_id = request.POST.getlist(u'hus[]')
                 hus_sprint = UserStory.objects.filter(proyecto_id = proyecto_id, sprint = sprint.nro_sprint)
-                se_encuentra = False
                 for hu_sprint in hus_sprint:
+                    se_encuentra = False
                     for user_story_id in user_stories_id:
-                        if hu_sprint.id == user_story_id:
+                        if int(hu_sprint.id) == int(user_story_id):
                             se_encuentra = True
                             break
                     if se_encuentra == False:
@@ -2993,7 +2995,7 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
                         huv = UserStoryVersiones()
                         copiarHU(hu, huv, User.objects.get(username = request.user))
                     except:
-                        hu = None
+                        hu = UserStory()
                     if hu.sprint != sprint.nro_sprint:
                         hu.sprint = sprint.nro_sprint
                         hu.f_actividad = 1
