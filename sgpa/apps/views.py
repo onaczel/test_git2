@@ -2914,11 +2914,12 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
             sprint = Sprint.objects.get(id = sprint_id)
             planificar = True
             ##seccion de codigo que prepara datos para el chart##
-         
+            print "id sprint ="
+            print sprint_id
             planeado = []
             no_planeado = []
-            if Dia_Sprint.objects.filter(sprint_id = 1).exists():
-                mylista = Dia_Sprint.objects.filter(sprint_id = 1)
+            if Dia_Sprint.objects.filter(sprint_id = sprint_id).exists():
+                mylista = Dia_Sprint.objects.filter(sprint_id = sprint_id)
                 h_planeadas = 0
                 # se obtiene el total de las horas planeadas
                 for l in mylista:
@@ -2934,14 +2935,19 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
         
                 aux = h_planeadas
                 no_planeado.append(h_planeadas)
+                
                 for l in mylista:
-                    if l.tiempo_estimado != 0:
+                    print l.fecha
+                    print  l.tiempo_real
+                    if l.tiempo_real > 0 :
                         no_planeado.append(aux-l.tiempo_real)    
                         aux = aux - l.tiempo_real
-    
-        
-                       
-            ###fin de la seccion##
+                    
+                    elif  l.tiempo_estimado != 0 and l.fecha.strftime("%y/%m/%d") < time.strftime("%y/%m/%d"): 
+                        no_planeado.append(aux-l.tiempo_real)    
+                        aux = aux - l.tiempo_real
+                    
+                ###fin de la seccion##
             
             if request.POST['cambio'] == "Establecer Duracion":
                 try:
@@ -3630,28 +3636,3 @@ def horasUsuarioSprint(request, proyecto_id, sprint_id, usu_id):
     
     return render_to_response('apps/project_sprint_planificar.html', {"proyecto":proyecto, "sprint":sprint, "hus":hus, "users":users, "scrum":scrum, "horas_sprint_usuario":horas_sprint_usuario, "cant_hus":cant_hus}, context_instance = RequestContext(request))
 
-def sprint_burndownChart(request):
-    planeado = []
-    no_planeado = []
-    
-    lista = Dia_Sprint.objects.filter(sprint_id = 1)
-    h_planeadas = 0
-    # se obtiene el total de las horas planeadas
-    for l in lista:
-        h_planeadas = h_planeadas + l.tiempo_estimado
-    
-    aux = h_planeadas
-    
-    planeado.append(h_planeadas)
-    for l in lista:
-        planeado.append(aux-l.tiempo_estimado)    
-        aux = aux - l.tiempo_estimado
-    
-    aux = h_planeadas
-    no_planeado.append(h_planeadas)
-    for l in lista:
-        no_planeado.append(aux-l.tiempo_real)    
-        aux = aux - l.tiempo_real
-    
-        
-    return render_to_response('apps/sprint_burndownChart.html',{"planeado":planeado,"nplaneado":no_planeado,"horasp":h_planeadas},context_instance = RequestContext(request))
