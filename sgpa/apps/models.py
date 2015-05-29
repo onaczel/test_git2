@@ -94,6 +94,9 @@ class Flujos(models.Model):
     plantilla = models.BooleanField(default = True)    
     estado = models.BooleanField(default = True)
     tamano = models.IntegerField(null = True)
+    def __str__(self):
+        return self.descripcion
+    
 
 class Actividades(models.Model):
     """
@@ -142,7 +145,7 @@ class UserStory(models.Model):
     tiempo_Estimado = models.IntegerField(default = 0)
     tiempo_Real = models.IntegerField(default = 0)
     sprint = models.IntegerField(default = 0)
-    usuario_Asignado = models.IntegerField(default = 0)
+    usuario_Asignado = models.IntegerField(default = 0, null = True)
     flujo = models.IntegerField(default = 0)
     proyecto = models.ForeignKey(Proyectos, null = True)
     #indica si el hu esta activo o inactivo
@@ -181,7 +184,7 @@ class UserStoryVersiones(models.Model):
     tiempo_Estimado = models.IntegerField(default = 0)
     tiempo_Real = models.IntegerField(default = 0)
     sprint = models.IntegerField(null = True)
-    usuario_Asignado = models.IntegerField(default = 0)
+    usuario_Asignado = models.IntegerField(default = 0, null = True)
     flujo = models.IntegerField(default = 0)
     proyecto = models.ForeignKey(Proyectos, null = True)
     estado = models.BooleanField(default = True)
@@ -195,6 +198,9 @@ class UserStoryVersiones(models.Model):
     #notas = models.CharField(max_length = 512, null = True)
     estado_scrum = models.ForeignKey(Estados_Scrum, null = True)
     motivo_cancelacion = models.CharField(max_length = 512, null = True)
+    fecha_creacion = models.DateField(null = True)
+    fecha_inicio = models.DateField(null = True)
+    fecha_modificacion = models.DateField(null = True)
     
 class UserStoryRegistro(models.Model):
     """
@@ -214,7 +220,7 @@ class UserStoryRegistro(models.Model):
     tiempo_Estimado = models.IntegerField(default = 0)
     tiempo_Real = models.IntegerField(default = 0)
     sprint = models.IntegerField(null = True)
-    usuario_Asignado = models.IntegerField(default = 0)
+    usuario_Asignado = models.IntegerField(default = 0, null = True)
     flujo = models.IntegerField(default = 0)
     proyecto = models.ForeignKey(Proyectos, null = True)
     estado = models.BooleanField(default = True)
@@ -226,6 +232,21 @@ class UserStoryRegistro(models.Model):
     estado_scrum = models.ForeignKey(Estados_Scrum, null = True)
     motivo_cancelacion = models.CharField(max_length = 512, null = True)
     
+class UserStoryLog(models.Model):
+    
+    idl = models.ForeignKey(UserStory)
+    nombre = models.CharField(max_length = 50, null = True)
+    descripcion = models.CharField(max_length = 120, null = True)
+    codigo = models.CharField(max_length = 30)
+    flujo = models.ForeignKey(Flujos, null = True)
+    f_actividad = models.IntegerField(default = 0)
+    f_a_estado = models.IntegerField(default = 0)
+    flujo_posicion = models.IntegerField(null = True)
+    fechahora = models.DateTimeField(null = True)
+    tiempoEstado = models.DateTimeField(null = True)
+    usuario_Asignado = models.IntegerField(default = 0, null = True)
+    sprint = models.IntegerField(null = True)
+
 class Notas(models.Model):
     """
     Model para almacenar las notas de un User Story

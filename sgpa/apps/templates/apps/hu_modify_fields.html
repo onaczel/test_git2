@@ -2,6 +2,15 @@
 {% block uptitulo %}
 	<h1>{{proyecto_nombre}}</h1>
 {% endblock %}
+{% block titulo %}
+	<table>
+		<tr>
+		
+			<td width=125px><h2><font color="#686868">{{hu.codigo}}</font></h2></td>
+			<td ><h2>{{hu.nombre}}</h2></td>
+		</tr>
+	</table>
+{% endblock %}
 
 <h3>Editar HU</h3>
 {% block index %}
@@ -11,8 +20,9 @@
 	</li>
 	
 		<li>
-              <a href="{% url 'apps:editarHu' proyecto_id hu.id %}"></i><font color="FFFFFF">{{hu.codigo}} {{hu.nombre}}</font></a>          
+              <a href="{% url 'apps:huprincipal' proyecto_id hu.id %}"></i><font color="FFFFFF">{{hu.codigo}} {{hu.nombre}}</font></a>          
         </li>	
+	<!-- 
 	{% if misPermisos.MUS %}
 		{% if  hu.sprint == proyecto.nro_sprint and userasig %}
 		<li>
@@ -48,18 +58,17 @@
 	</li>
 	{% endif %}
 	
+	{% if misPermisos.MUS and hu.estado == True %}
+	<li>
+		<a href="{% url 'apps:hulog' proyecto_id hu_id %}"><i class="fa fa-fw fa-edit"></i>Log</a>
+	</li>
+	{% endif %}
+	 -->
+	
 {% endblock %}
 <br/>
 
-{% block titulo %}
-	<table>
-		<tr>
-		
-			<td width=125px><h2><font color="#686868">{{hu.codigo}}</font></h2></td>
-			<td ><h2>{{hu.nombre}}</h2></td>
-		</tr>
-	</table>
-{% endblock %}
+
 {% block contenido %}
 
 	{% if marcado %}
@@ -80,12 +89,13 @@
 			{% else %}
 				<h4> <b>Sprint:</b> {{hu.sprint}}</h4>
 			{% endif %}
-						
+			{% if misPermisos.MUS %}
+			<form action="{% url 'apps:editarHu' proyecto_id hu_id %}" method="post">
 			{% if hu.sprint != 0 %}
 				<table>
 					<tr>
 						<td><b>Usuario Asignado:</b>
-						<select name="us"  style="width:190px" sort = true>
+						<select name="username"  style="width:190px" sort = true>
 							{% for user in users %}
 									{% if user.id == hu.usuario_Asignado %}
 											<option selected="selected">{{user.username}}</option>
@@ -108,8 +118,7 @@
 				</table>
 			{% endif %}
 			<br>
-			{% if misPermisos.MUS %}
-			<form action="{% url 'apps:editarHu' proyecto_id hu_id %}" method="post">
+			
 				{% csrf_token %}
 				<table border=0px>
 				<tr>
@@ -144,8 +153,30 @@
 				</tr>
 				<tr>
 					<td><input type="number" name="tiempoestimado" rows="1" cols="20" value="{{hu.tiempo_Estimado}}"></textarea></td>
-					<td><input type="number" name="valortecnico" rows="1" cols="20" value="{{hu.valor_Tecnico}}"></textarea></td>
-					<td><input type="number" name="valornegocio" rows="1" cols="20" value="{{hu.valor_Negocio}}"></textarea></td>
+					
+					<td>
+						<select name="valortecnico"  style="width:190px" sort = true>
+							{% for r in rango %}
+									{% if r == hu.valor_Tecnico %}
+											<option selected="selected">{{r}}</option>
+										{% else %}
+											<option >{{r}}</option>
+									{% endif %}
+							{% endfor %} 
+						</select>
+					</td>
+					
+					<td>
+						<select name="valornegocio"  style="width:190px" sort = true>
+							{% for r in rango %}
+									{% if r == hu.valor_Negocio %}
+											<option selected="selected">{{r}}</option>
+										{% else %}
+											<option >{{r}}</option>
+									{% endif %}
+							{% endfor %} 
+						</select>
+					</td>
 					<td>
 						<select name="pri"  style="width:190px" sort = true>
 						{% for pr in prioridades %}
@@ -183,5 +214,5 @@
 	{% endif %}
 {% endblock %}
 {% block atras %}
-	<a href="{% url 'apps:listhu' proyecto_id %}">Volver</a>
+	<a href="{% url 'apps:huprincipal' proyecto_id hu.id %}">Volver</a>
 {% endblock %}

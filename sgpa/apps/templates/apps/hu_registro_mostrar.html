@@ -1,12 +1,19 @@
 {% extends 'base.html' %}
+{% block uptitulo %}
+	<h1>{{proyecto.nombre}}</h1>
+{% endblock %}
 {% block titulo %}
-<h1>{{proyecto.nombre}}</h1>
+	<table>
+		<tr>
+		
+			<td width=125px><h2><font color="#686868">{{hu.codigo}}</font></h2></td>
+			<td ><h2>{{hu.nombre}}</h2></td>
+		</tr>
+	</table>
 {% endblock %}
-{% block encabezado %}
-<h1>Registro de Actividades</h1>
-{% endblock %}
+
 {% block contenido %}
-	<h2>{{hu_reg.descripcion}}</h2>
+	<legend><font color="888888">Registro de Actividades</font></legend>
 
 	<table border=0px bordercolor="green" width=100%>
 		

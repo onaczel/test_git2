@@ -13,7 +13,7 @@ from django.core.servers.basehttp import FileWrapper
 
 from apps.models import Roles, Users_Roles, Permisos, Permisos_Roles, Flujos, Actividades, Actividades_Estados, Proyectos, Equipo, UserStory, Sprint, Dia_Sprint, UserStoryVersiones, Prioridad,\
     Estados, UserStoryRegistro, archivoAdjunto, Estados_Scrum, Notas,\
-    historialResponsableHU, horas_usuario_sprint, huVersion_sprint
+    historialResponsableHU, horas_usuario_sprint, UserStoryLog, huVersion_sprint
 from django.contrib.auth.models import User
 
 
@@ -1713,7 +1713,60 @@ def listhuflujo(request, proyecto_id, hu_id):
     actividades = Actividades.objects.all()
     return render_to_response('apps/hu_add_flujo.html', {'proyecto_id':proyecto_id, 'hu_id':hu_id, 'flujo':flujo, 'hu_descripcion':hu.descripcion, 'actividades':actividades}, RequestContext(request))
     
+def huprincipal(request, proyecto_id, hu_id):
+    hu = UserStory.objects.get(pk=hu_id)
+    proyecto= Proyectos.objects.get(pk=proyecto_id)
+    user_logged = request.user.id
+    mispermisos = misPermisos(user_logged, proyecto.id)
+    prioridades = Prioridad.objects.all()
+    flujos = Flujos.objects.all()
+    try:
+        userA = User.objects.get(pk = hu.usuario_Asignado).username
+    except:
+        userA = "No Asignado"
+    rango = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    return render_to_response('apps/hu_principal.html', {'hu':hu, 'proyecto':proyecto, 'user_logged':user_logged, 'misPermisos':mispermisos, 'userA':userA, 'rango':rango, 'prioridades':prioridades, 'flujos':flujos}, context_instance=RequestContext(request))
 
+def hulog(request, proyecto_id, hu_id):
+    proyecto = Proyectos.objects.get(pk=proyecto_id)
+    hu = UserStory.objects.get(pk=hu_id)
+    listlog = UserStoryLog.objects.filter(idl_id = hu.id)
+    listlog = sorted(listlog, key=gethulog, reverse=False)
+    
+    users = User.objects.all()
+    estados = Estados.objects.all()
+    actividades = Actividades.objects.filter(flujo_id = hu.flujo)
+    
+    return render_to_response('apps/hu_log.html', {'hu':hu, 'proyecto':proyecto, 'listlog':listlog, 'users':users, 'estados':estados, 'actividades':actividades})
+    
+
+def gethulog(hulog):
+    """
+    Funcion utilizada para ordenar una lista en base al id
+    @param hu: Objeto User Story
+    @return: la fecha de creacion del User Story
+    """
+    return hulog.id
+
+def setlog(hu_id):
+    hu = UserStory.objects.get(pk=hu_id)
+    hulog = UserStoryLog()
+    hulog.idl = hu
+    hulog.codigo = hu.codigo
+    hulog.nombre = hu.nombre
+    hulog.descripcion = hu.descripcion
+    hulog.flujo = Flujos.objects.get(pk = hu.flujo)
+    hulog.f_a_estado = hu.f_a_estado
+    hulog.f_actividad = hu.f_actividad
+    hulog.flujo_posicion = hu.flujo_posicion
+    try:
+        hulog.fechahora =  datetime.now() - hulog.fechahora
+    except:
+        hulog.fechahora = datetime.now()
+    hulog.usuario_Asignado = hu.usuario_Asignado
+    hulog.sprint = hu.sprint
+    hulog.save()
+    
 class HuCreateForm(forms.ModelForm):
     """
     formulario de crecion de User Story
@@ -1755,6 +1808,7 @@ def crearHu(request, proyecto_id):
     prioridades = Prioridad.objects.all()
     proyecto = Proyectos.objects.get(pk = proyecto_id)
     mispermisos = misPermisos(request.user.id, proyecto_id)
+    rango = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
     if request.method == 'POST':
         form = HuCreateForm(request.POST)
        
@@ -1800,7 +1854,7 @@ def crearHu(request, proyecto_id):
     else:        
         form = HuCreateForm()
         
-    return render_to_response('apps/hu_create.html', {"form":form, 'misPermisos':mispermisos, 'proyecto':proyecto, 'users':users, 'flujos':flujos, 'prioridades':prioridades}, context_instance = RequestContext(request))
+    return render_to_response('apps/hu_create.html', {"form":form, 'misPermisos':mispermisos, 'proyecto':proyecto, 'users':users, 'flujos':flujos, 'prioridades':prioridades, 'rango':rango}, context_instance = RequestContext(request))
 
 def fileAdjunto(request, proyecto_id, hu_id):
     """
@@ -2001,7 +2055,8 @@ def editarHu(request, proyecto_id, hu_id):
     
     if hu.finalizado == True and hu.estado_scrum != Estados_Scrum.objects.get(pk=5) and scrum:
         marcado = True
-    
+    rango = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
     if request.method == 'POST':
         form = HuCreateForm(request.POST)
         #if form.is_valid():
@@ -2019,12 +2074,13 @@ def editarHu(request, proyecto_id, hu_id):
         
         #llamada a funcion que notifica a los responsables, la modificacion del hu
         notificarModificacionHU(hu_id,proyecto_id)
-        
+        print  request.POST['username']
         
         try:
-            user = User.objects.get(username = request.POST['us'])
+            user = User.objects.get(username = request.POST['username'])
         except: 
             user = None
+        
         oldUser = hu.usuario_Asignado
         try:
             hu.usuario_Asignado =  user.id
@@ -2083,7 +2139,7 @@ def editarHu(request, proyecto_id, hu_id):
     else:        
         form = HuCreateForm(initial={'descripcion':hu.descripcion, 'codigo':hu.codigo, 'tiempo_Estimado':hu.tiempo_Estimado, 'valor_Tecnico':hu.valor_Tecnico, 'valor_Negocio':hu.valor_Negocio})
 
-    return render_to_response('apps/hu_modify_fields.html', {"form":form, "proyecto_id":proyecto_id, "hu_id":hu_id, "hu":hu, 'misPermisos':mispermisos, 'users':users, 'flujos':flujos, 'proyecto_nombre':proyecto.nombre, 'proyecto':proyecto, 'prioridades':prioridades, 'userasig':userasig, 'marcado':marcado}, context_instance = RequestContext(request))
+    return render_to_response('apps/hu_modify_fields.html', {"form":form, "proyecto_id":proyecto_id, "hu_id":hu_id, "hu":hu, 'misPermisos':mispermisos, 'users':users, 'flujos':flujos, 'proyecto_nombre':proyecto.nombre, 'proyecto':proyecto, 'prioridades':prioridades, 'userasig':userasig, 'marcado':marcado, 'rango':rango}, context_instance = RequestContext(request))
 
 def finalizarHu(request, proyecto_id, hu_id):
     proyecto = Proyectos.objects.get(pk=proyecto_id)
@@ -2306,6 +2362,9 @@ def copiarHU(hu, huv, user):
     huv.estado_scrum_id = hu.estado_scrum_id
     huv.finalizado = hu.finalizado
     huv.motivo_cancelacion = hu.motivo_cancelacion
+    huv.fecha_creacion = hu.fecha_creacion
+    huv.fecha_inicio = hu.fecha_inicio
+    huv.fecha_modificacion = hu.fecha_modificacion
     huv.save()
 
 def listhuversiones(request, proyecto_id, hu_id):
@@ -2390,6 +2449,7 @@ def setEstadoHu(request, proyecto_id, hu_id):
         finalizar = True
     
     ordenact = 0
+    
     if request.method == 'POST':
         if request.POST['submit'] == "Guardar":
             #actlist = Actividades.objects.filter(descripcion = request.POST['act'], flujo_id = hu.flujo)
@@ -2409,6 +2469,7 @@ def setEstadoHu(request, proyecto_id, hu_id):
             hu.f_a_estado = Estados.objects.get(descripcion = request.POST['est']).id
             hu.finalizado = False
             hu.save()
+            setlog(hu.id)
             modificado = True
             return render_to_response('apps/hu_set_estado.html', {'proyecto':proyecto, 'hu':hu, 'actividades':actividades, 'estados':estados, 'flujo_descripcion':flujo.descripcion, 'misPermisos':mispermisos, 'modificado':modificado, 'user_logged':user_logged}, context_instance = RequestContext(request))
         elif request.POST['submit'] == "Finalizar":
@@ -3206,16 +3267,18 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
     except:
         scrum = Equipo()
         
+    mispermisos = misPermisos(request.user.id, proyecto_id)
+    
     if cancelar_hu:
-        return render_to_response('apps/project_sprint_cancelar_hu.html', {"proyecto":proyecto, "userStory":userStory, "sprint":sprint}, context_instance = RequestContext(request))
+        return render_to_response('apps/project_sprint_cancelar_hu.html', {"proyecto":proyecto, "userStory":userStory, "sprint":sprint, "mispermisos":mispermisos}, context_instance = RequestContext(request))
     elif finalizar_sprint:
-        return render_to_response('apps/project_sprints_analizarhu.html', {"proyecto":proyecto, "sprint":sprint,"hus":hus, "userStory":userStory, "detalles":detalles, "usuario":usuario, "flujo":flujo, "prioridad":prioridad, "f_actividad":f_actividad, "f_a_estado":f_a_estado, "tiempo_hu_registrado":tiempo_hu_registrado, "scrum":scrum, "cant_hus":cant_hus}, context_instance = RequestContext(request))
+        return render_to_response('apps/project_sprints_analizarhu.html', {"proyecto":proyecto, "sprint":sprint,"hus":hus, "userStory":userStory, "detalles":detalles, "usuario":usuario, "flujo":flujo, "prioridad":prioridad, "f_actividad":f_actividad, "f_a_estado":f_a_estado, "tiempo_hu_registrado":tiempo_hu_registrado, "scrum":scrum, "cant_hus":cant_hus, "mispermisos":mispermisos}, context_instance = RequestContext(request))
     #elif cambiar_fecha:
         #return render_to_response('apps/project_sprint_fecha_fin.html', {"proyecto":proyecto, "sprint":sprint, "fecha_est_fin":fecha_est_fin}, context_instance = RequestContext(request))
     elif planificar:
-        return render_to_response('apps/project_sprint_planificar.html', {"planeado":planeado,"nplaneado":no_planeado,"horasp":h_planeadas,"proyecto":proyecto, "sprint":sprint, "hus":hus, "userStory":userStory, "usuario":usuario, "flujo":flujo, "prioridad":prioridad, "f_actividad":f_actividad, "f_a_estado":f_a_estado, "users":users, "flujos":flujos, "prioridades":prioridades, "scrum":scrum, "horas_sprint_usuario":horas_sprint_usuario, "cant_hus":cant_hus}, context_instance = RequestContext(request))
+        return render_to_response('apps/project_sprint_planificar.html', {"planeado":planeado,"nplaneado":no_planeado,"horasp":h_planeadas,"proyecto":proyecto, "sprint":sprint, "hus":hus, "userStory":userStory, "usuario":usuario, "flujo":flujo, "prioridad":prioridad, "f_actividad":f_actividad, "f_a_estado":f_a_estado, "users":users, "flujos":flujos, "prioridades":prioridades, "scrum":scrum, "horas_sprint_usuario":horas_sprint_usuario, "cant_hus":cant_hus, "mispermisos":mispermisos}, context_instance = RequestContext(request))
     else:
-        return render_to_response('apps/project_sprints.html', {"proyecto":proyecto, "scrum":scrum, "mensaje":mensaje, "sprints":sprints, "sprint":sprint, "fmayor":fmayor, "fmenor":fmenor, "tiempo_sprint_horas":tiempo_sprint_horas, "hus":hus, "tiempo_hu_estimado":tiempo_hu_estimado, "tiempo_hu_registrado":tiempo_hu_registrado, "userStory":userStory, "usuario":usuario, "users":users, "flujo":flujo, "prioridad":prioridad, "f_actividad":f_actividad, "f_a_estado":f_a_estado, "users":users, "fecha_fin_sprint":fecha_fin_sprint, "cant_hus":cant_hus}, context_instance = RequestContext(request))
+        return render_to_response('apps/project_sprints.html', {"proyecto":proyecto, "scrum":scrum, "mensaje":mensaje, "sprints":sprints, "sprint":sprint, "fmayor":fmayor, "fmenor":fmenor, "tiempo_sprint_horas":tiempo_sprint_horas, "hus":hus, "tiempo_hu_estimado":tiempo_hu_estimado, "tiempo_hu_registrado":tiempo_hu_registrado, "userStory":userStory, "usuario":usuario, "users":users, "flujo":flujo, "prioridad":prioridad, "f_actividad":f_actividad, "f_a_estado":f_a_estado, "users":users, "fecha_fin_sprint":fecha_fin_sprint, "cant_hus":cant_hus, "mispermisos":mispermisos}, context_instance = RequestContext(request))
 
 def sprintsMas(request, proyecto_id, sprint_id, hu_id):
     """

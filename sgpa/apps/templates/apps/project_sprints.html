@@ -11,9 +11,11 @@
 	{% endif %}
 	{% if proyecto.estado_id == 1 %} 
 			<b>Sprint actual: Sprint Numero {{proyecto.nro_sprint}}<br />
-			<form action="{% url 'apps:sprints' proyecto.id 0 0 %}" method="post">{% csrf_token %}
-				<br /><input type="submit", name="cambio", value="Nuevo Sprint"><br />
-			</form>
+			{% if mispermisos.PS == True %}
+				<form action="{% url 'apps:sprints' proyecto.id 0 0 %}" method="post">{% csrf_token %}
+					<br /><input type="submit", name="cambio", value="Nuevo Sprint"><br />
+				</form>
+			{% endif %}
 	{% elif proyecto.estado_id == 5 %}
 		<h2><b>Finalizado</b></h2><br />
 	{% elif proyecto.estado_id == 4 %}
@@ -22,9 +24,11 @@
 				<br /><input type="submit", name="cambio", value="Iniciar Proyecto"><br />
 			{% endif %}
 		</form>
-		<form action="{% url 'apps:sprints' proyecto.id 0 0 %}" method="post">{% csrf_token %}
-			<br /><input type="submit", name="cambio", value="Nuevo Sprint"><br />
-		</form>
+		{% if mispermisos.PS == True %}
+			<form action="{% url 'apps:sprints' proyecto.id 0 0 %}" method="post">{% csrf_token %}
+				<br /><input type="submit", name="cambio", value="Nuevo Sprint"><br />
+			</form>
+		{% endif %}
 	{% elif proyecto.estado_id == 6 %}
 		<h2><b>Cancelado</b></h2><br />
 	{% endif %}
@@ -36,7 +40,7 @@
 			<div style="clear:both">
 				<form action="{% url 'apps:sprints' proyecto.id s.id 0 %}" method="post">{% csrf_token %}
 					<br><input type="submit", name="cambio", value="+">&emsp;<input type="submit", name="cambio", value="-">&emsp;<label>Sprint Numero {{s.nro_sprint}}</label>&emsp;
-					{% if s.estado == 0 %}
+					{% if s.estado == 0 and mispermisos.PS == True %}
 						<input type="submit", name="cambio", value="Planificar">&emsp;
 					{% elif s.estado == 1 %}
 						{% if scrum.rol_id == 3 %}
@@ -140,7 +144,7 @@
 											</tr>
 											<tr style="border-bottom: dotted; border-bottom-color: green;"><td>{{hu.tiempo_Estimado}} Horas</td>
 												<form action="{% url 'apps:sprints' proyecto.id s.id hu.id %}" method="post">{% csrf_token %}
-													{% if sprint.estado != 2 %}
+													{% if sprint.estado != 2 and scrum.rol_id == 3 %}
 														<td>
 															<select name="us"  style="width:90px">
 																{% if usuario %}
@@ -163,9 +167,11 @@
 													<td>{{hu.fecha_inicio}}<td>{{hu.fecha_modificacion}}</td><td>{{flujo.descripcion}}</td><td>&emsp;&emsp;{{f_actividad}}</td><td>&emsp;&emsp;{{f_a_estado.descripcion}}</td>
 													{% if hu.estado_scrum_id == 1 or hu.estado_scrum_id == 2 %}
 														{% if sprint.estado != 2 %}
-															<td>
-																<input type="submit" name="cambio" value="Asignar Usuario" />
-															</td>
+															{% if scrum.rol_id == 3 %}
+																<td>
+																	<input type="submit" name="cambio" value="Asignar Usuario" />
+																</td>
+															{% endif %}
 														{% endif %}
 													{% elif hu.estado_scrum_id == 6 %}
 														<td>
@@ -185,7 +191,7 @@
 										{% endif %}
 									</form>
 								{% endfor %}
-								{% if sprint.estado == 1 %}
+								{% if sprint.estado != 0%}
 									<tr><td><br /></td></tr>
 									<tr>
 										<form action="{% url 'apps:sprints' proyecto.id sprint.id 0 %}" method="post">{% csrf_token %}

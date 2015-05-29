@@ -135,7 +135,7 @@
 		 	<tr>
 		 		<td>{{h.codigo}}</td>
 		 		{% if scrum or user_logged.id == h.usuario_Asignado %}
-			 		<td><a href="{% url 'apps:editarHu' proyecto.id h.id %}">{{h.nombre}}</a><br></td>
+			 		<td><a href="{% url 'apps:huprincipal' proyecto.id h.id %}">{{h.nombre}}</a><br></td>
 			 	{% else %}
 			 		<td>{{h.nombre}}<br></td>
 			 	{% endif %}
