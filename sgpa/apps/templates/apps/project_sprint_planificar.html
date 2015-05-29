@@ -3,6 +3,65 @@
 	<h1>{{proyecto.nombre}}</h1>
 	<h2>Planificacion del Sprint {{sprint.nro_sprint}}</h2>
 {% endblock %}
+{% block script %}
+	
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+      google.load('visualization', '1', {packages: ['corechart', 'line']});
+google.setOnLoadCallback(drawCurveTypes);
+
+function drawCurveTypes() {
+      
+      var data = new google.visualization.DataTable();
+      data.addColumn('number', 'X');
+      data.addColumn('number', 'horas planificadas');
+      
+      
+	  {% for p in planeado %}
+	  	
+    	data.addRows([
+    	[{{forloop.counter0}},{{p}}],
+        
+       
+      ]);
+	 {% endfor %}
+      
+     data.addColumn('number', 'horas reales');
+
+	{% for np in nplaneado %}
+	  
+    	data.addRows([
+    	[{{forloop.counter0}},,{{np}}],
+        
+       
+      ]);
+	 {% endfor %}
+	 
+	 
+      var options = {
+        hAxis: {
+          title: 'Dias'
+        },
+        vAxis: {
+          title: 'Horas'
+        },
+        pointSize: 3,
+        maxValue: 500,
+      
+      };
+
+      var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+      chart.draw(data, options);
+     
+    }
+    </script>
+
+
+{% endblock %}
+
+
+
+
 <br />
 {% block contenido %}
 	<div style= "clear : both;">
@@ -47,7 +106,7 @@
 									<label for="option{{hu.id}}">
 								</td>
 							{% else %}
-								<td></td>
+							<td></td>
 							{% endif %}
 							<td>
 								{{hu.codigo}}<a href="{% url 'apps:sprintsMas' proyecto.id sprint.id hu.id %}"> + </a><font size="1"><input type="submit", name="cambio", value=" - "></font>
@@ -165,7 +224,13 @@
 								{% endfor %}  
 							</td>
 							<td>
-								<form action="{% url 'apps:horasUsuarioSprint' proyecto.id sprint.id us.id %}" method="post">{% csrf_token %}
+	
+			
+					
+					
+					
+
+            </div>		<form action="{% url 'apps:horasUsuarioSprint' proyecto.id sprint.id us.id %}" method="post">{% csrf_token %}
 									{% for hora_sprint_usuario in horas_sprint_usuario %}
 										{% if hora_sprint_usuario.usuario_id == us.id %}
 											{% if sprint.estado != 0%}
@@ -184,6 +249,33 @@
 		</table>
 	</center>
 {% endblock %}
+{% block chart %}
+   <div style=" height:100vh;">
+					
+				<div class="row">
+                    <div class="col-lg-12">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <h3 class="panel-title"><i class="fa fa-bar-chart-o"></i>  Sprint BurnDown Chart</h3>
+                            </div>
+                            <div class="panel-body">
+                                <div class="flot-chart">
+                                    <div id="chart_div" class="flot-chart-content" id="flot-line-chart">
+                                    
+                                    
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+			
+					
+					
+					
+
+   </div>
+ {% endblock %}
 {% block atras %}
 	<form action="{% url 'apps:sprints' proyecto.id sprint.id 0 %}" method="post">{% csrf_token %}
 		<input type="submit" name="cambio" value="Volver" />
