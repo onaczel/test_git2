@@ -58,12 +58,18 @@
 							</td>
 							<td>
 								<b>
-									{% if hu.estado_scrum_id == 2 %}
+									{% if hu.estado_scrum_id == 1 %}
+										Iniciado
+									{% elif hu.estado_scrum_id == 2 %}
 										Asignado
 									{% elif hu.estado_scrum_id == 3 %}
 										No Asignado
 									{% elif hu.estado_scrum_id == 4 %}
 										Pendiente
+									{% elif hu.estado_scrum_id == 5 %}
+										Finalizado
+									{% elif hu.estado_scrum_id == 6 %}
+										Cancelado por el Scrum
 									{% endif %}
 								</b>
 							</td>

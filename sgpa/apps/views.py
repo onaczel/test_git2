@@ -13,7 +13,7 @@ from django.core.servers.basehttp import FileWrapper
 
 from apps.models import Roles, Users_Roles, Permisos, Permisos_Roles, Flujos, Actividades, Actividades_Estados, Proyectos, Equipo, UserStory, Sprint, Dia_Sprint, UserStoryVersiones, Prioridad,\
     Estados, UserStoryRegistro, archivoAdjunto, Estados_Scrum, Notas,\
-    historialResponsableHU, horas_usuario_sprint
+    historialResponsableHU, horas_usuario_sprint, huVersion_sprint
 from django.contrib.auth.models import User
 
 
@@ -2746,7 +2746,14 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
                     fmenor = dia_sprint_actual
                 elif (int(fmenor.fecha.year) == int(dia_sprint_actual.fecha.year)) and (int(fmenor.fecha.month) == int(dia_sprint_actual.fecha.month)) and (int(fmenor.fecha.day) > int(dia_sprint_actual.fecha.day)):
                     fmenor = dia_sprint_actual
-            hus = UserStory.objects.filter(proyecto_id = proyecto_id, sprint = sprint.nro_sprint)
+            if sprint.estado == 2:
+                hus = []
+                husVersionFinal = huVersion_sprint.objects.filter(sprint_id = sprint.id)
+                for huVersionFinal in husVersionFinal:
+                    versionFinal = UserStoryVersiones.objects.get(id = huVersionFinal.userStoryVersiones_id)
+                    hus.append(versionFinal)
+            else:
+                hus = UserStory.objects.filter(proyecto_id = proyecto_id, sprint = sprint.nro_sprint)
             hus = sorted(hus, key=gethuidsort, reverse=False)
             for hu in hus:
                 tiempo_hu_estimado = tiempo_hu_estimado + hu.tiempo_Estimado
@@ -2755,7 +2762,10 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
                 tiempo_hu_registrado = tiempo_hu_registrado + hu_registro.tiempo_Real
 
             if request.POST['cambio'] == "+ " or request.POST['cambio'] == "Asignar Usuario":
-                userStory = UserStory.objects.get(id = hu_id)
+                if sprint.estado == 2:
+                    userStory = UserStoryVersiones.objects.get(id = hu_id)
+                else:
+                    userStory = UserStory.objects.get(id = hu_id)
                 flujos = Flujos.objects.filter(proyecto_id = proyecto_id)
                 prioridades = Prioridad.objects.all()
                 try:
@@ -3082,10 +3092,21 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
                 sprint.save()
                 for hu in hus:
                     if hu.estado_scrum_id != 5 and hu.estado_scrum_id != 6:
-                        huv = UserStoryVersiones()
-                        copiarHU(hu, huv, User.objects.get(username = request.user))
                         hu.estado_scrum_id = 4
                         hu.save()
+                        huv = UserStoryVersiones()
+                        copiarHU(hu, huv, User.objects.get(username = request.user))
+                        huversion_sprint = huVersion_sprint()
+                        huversion_sprint.sprint_id = sprint.id
+                        huversion_sprint.userStoryVersiones_id = huv.id
+                        huversion_sprint.save()
+                    else:
+                        huv = UserStoryVersiones()
+                        copiarHU(hu, huv, User.objects.get(username = request.user))
+                        huversion_sprint = huVersion_sprint()
+                        huversion_sprint.sprint_id = sprint.id
+                        huversion_sprint.userStoryVersiones_id = huv.id
+                        huversion_sprint.save()
                 sprint = Sprint.objects.get(id = sprint_id)
                 hus = UserStory.objects.filter(proyecto_id = proyecto_id, sprint = sprint.nro_sprint)
                 hus = sorted(hus, key=gethuidsort, reverse=False)
@@ -3105,6 +3126,22 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
                 hu.estado_scrum_id = 6
                 hu.motivo_cancelacion = request.POST['motivo_cancelacion']
                 hu.save()
+                huv = UserStoryVersiones()
+                copiarHU(hu, huv, User.objects.get(username = request.user))
+                huversion_sprint = huVersion_sprint()
+                huversion_sprint.sprint_id = sprint.id
+                huversion_sprint.userStoryVersiones_id = huv.id
+                try:
+                    hu_versiones_finales = huVersion_sprint.objects.filter(sprint_id = sprint.id)
+                    for hu_version_final in hu_versiones_finales:
+                        version_hu_final = UserStoryVersiones.objects.get(id = hu_version_final.userStoryVersiones_id)
+                        if version_hu_final.idv == hu.id:
+                            hu_version_final.delete()
+                    huversion_sprint.save()
+                    print "guardo"
+                except:
+                    huversion_sprint.save()
+                    print "guardo en el otro"
                 hus = UserStory.objects.filter(proyecto_id = proyecto_id, sprint = sprint.nro_sprint, estado_scrum_id = 4)
                 hus = sorted(hus, key=gethuidsort, reverse=False)
 
@@ -3222,6 +3259,7 @@ def sprintsMas(request, proyecto_id, sprint_id, hu_id):
         hus = UserStory.objects.filter(proyecto_id = proyecto_id, sprint = sprint.nro_sprint)
     hus = sorted(hus, key=gethuidsort, reverse=False)
     equipos = Equipo.objects.filter(proyecto_id = proyecto_id, rol_id = 5)
+    se_encuentra = False
     for equipo in equipos:
         user = User.objects.get(id = equipo.usuario_id)
         se_encuentra = False
