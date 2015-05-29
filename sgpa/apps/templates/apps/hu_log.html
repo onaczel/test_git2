@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% block uptitulo %}
+	<h1>{{proyecto.nombre}}</h1>
+{% endblock %}
+{% block titulo %}
+	<table>
+		<tr>
+		
+			<td width=125px><h2><font color="#686868">{{hu.codigo}}</font></h2></td>
+			<td ><h2>{{hu.nombre}}</h2></td>
+		</tr>
+	</table>
+{% endblock %}
+
+
+{% block index %}
+	<!-- <a href="{% url 'apps:editarHu' proyecto.id hu.id %}">Modificar Campos</a><br/> -->
+	<li>
+		<a href="{% url 'apps:accionesproyecto' proyecto.id %}"><i class="fa fa-fw fa-edit"></i>{{proyecto.nombre}}</a>
+	</li>
+	
+		<li>
+              <a href="{% url 'apps:huprincipal' proyecto.id hu.id %}"></i><font color="FFFFFF">{{hu.codigo}} {{hu.nombre}}</font></a>          
+        </li>	
+        
+	<!-- 
+	{% if misPermisos.MUS %}
+		{% if True %}
+		<li>
+              <a href="{% url 'apps:editarHu' proyecto.id hu.id  %}"><i class="fa fa-fw fa-edit"></i> Editar</a>          
+        </li>			
+		{% endif %}
+		{% if  hu.sprint == proyecto.nro_sprint and userasig %}
+		<li>
+              <a href="{% url 'apps:setEstadoHu' proyecto.id hu.id  %}"><i class="fa fa-fw fa-edit"></i> Cambiar Estado</a>          
+        </li>			
+		{% endif %}
+		<li>
+		
+		<a href="{% url 'apps:listhuversiones' proyecto.id hu.id  %}"><i class="fa fa-fw fa-edit"></i>Versiones</a>
+		</li>
+		
+		<li>
+			<a href="{% url 'apps:registroHu' proyecto.id hu.id  %}"><i class="fa fa-fw fa-edit"></i>Registros</a>
+		</li>
+	{% endif %}
+	
+
+	{% if misPermisos.MUS and hu.estado == True %}
+	<li>
+		<a href="{% url 'apps:fileAdjunto' proyecto.id hu.id %}"><i class="fa fa-fw fa-edit"></i>Archivos Adjuntos</a>
+	</li>
+	{% endif %}
+	
+	{% if misPermisos.MUS %}
+	<li>
+		<a href="{% url 'apps:notasHu' proyecto.id hu.id %}"><i class="fa fa-fw fa-edit"></i>Notas</a>
+	</li>
+	{% endif %}
+	
+	{% if misPermisos.EUS and hu.estado == True %}
+	<li>
+		<a href="{% url 'apps:eliminarHu' proyecto.id hu.id %}"><i class="fa fa-fw fa-edit"></i>Eliminar User Story</a>
+	</li>
+	{% endif %}
+	 -->
+{% endblock %}
+<br/>
+
+
+
+{% block contenido %}
+
+	{% if listlog %}
+	<table width=100%>
+		<tr>
+			<td><b>Codigo</b></td><td><b>Nombre</b></td><td><b>Sprint</b></td><td><b>Usuario Asignado</b></td><td><b>Flujo</b></td>
+			<td><b>Actividad</b></td><td><b>Estado</b></td>
+			<td><b>Fecha</b></td>
+		</tr>
+		<tr height=10px ></tr>
+		{% for hulog in listlog %}
+		<tr>
+			<td>{{hulog.codigo}}</td><td>{{hulog.nombre}}</td><td>{{hulog.sprint}}</td>
+			{% for u in users %}
+				{% if u.id == hulog.usuario_Asignado %}
+					<td>{{u.username}}</td>
+				{% endif %}
+			{% endfor %}
+			<td>{{hulog.flujo}}</td>
+			{% for a in actividades %}
+				{% if forloop.counter == hulog.f_actividad %}
+					<!-- <td>{{hulog.f_actividad}}</td> -->
+					<td>{{a.descripcion}}</td>
+				{% endif %}
+			{% endfor %}
+			{% for e in estados %}
+				{% if forloop.counter == hulog.f_a_estado %}
+					<!-- <td>{{hulog.f_a_estado}}</td> -->
+					<td>{{e.descripcion}}</td>
+				{% endif %}	
+			{% endfor %}
+			<td>{{hulog.fechahora}}</td>
+		</tr>
+		{% endfor %}
+	
+	</table>
+	{% else %}
+		<p>No existen registros</p>
+	{% endif %}
+{% endblock %}
+
+{% block atras %}
+	<a href="{% url 'apps:listhu' proyecto.id %}">Volver</a>
+{% endblock %}

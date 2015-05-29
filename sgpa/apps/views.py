@@ -1725,7 +1725,18 @@ def huprincipal(request, proyecto_id, hu_id):
     except:
         userA = "No Asignado"
     rango = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-    return render_to_response('apps/hu_principal.html', {'hu':hu, 'proyecto':proyecto, 'user_logged':user_logged, 'misPermisos':mispermisos, 'userA':userA, 'rango':rango, 'prioridades':prioridades, 'flujos':flujos}, context_instance=RequestContext(request))
+    userasig = False
+    if (request.user.id == hu.usuario_Asignado):
+        userasig = True
+    
+    marcado = scrum = False
+    
+    if len(Equipo.objects.filter(proyecto_id = proyecto_id, rol_id=3, usuario_id=request.user.id)) != 0:
+        scrum = True
+    
+    if hu.finalizado == True and hu.estado_scrum != Estados_Scrum.objects.get(pk=5) and scrum:
+        marcado = True
+    return render_to_response('apps/hu_principal.html', {'hu':hu, 'proyecto':proyecto, 'user_logged':user_logged, 'misPermisos':mispermisos, 'userA':userA, 'rango':rango, 'prioridades':prioridades, 'flujos':flujos, 'userasig':userasig, 'marcado':marcado}, context_instance=RequestContext(request))
 
 def hulog(request, proyecto_id, hu_id):
     proyecto = Proyectos.objects.get(pk=proyecto_id)
@@ -2035,7 +2046,7 @@ def editarHu(request, proyecto_id, hu_id):
     except:
         userasig = False
     users = []           
-    equipos = Equipo.objects.filter(proyecto_id = proyecto_id)
+    equipos = Equipo.objects.filter(proyecto_id = proyecto_id, rol_id = 5)
     for equipo in equipos:
         user = User.objects.get(id = equipo.usuario_id)
         se_encuentra = False
@@ -2888,6 +2899,7 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
                     us = True
                     flu = True
                     for hu_proyecto in hus_proyecto:
+                        setlog(hu_proyecto.id)
                         if hu_proyecto.flujo < 0:
                             mensaje = "No se olvide de asignarle un flujo al User Story: " + str(hu_proyecto.nombre)
                             flu = False

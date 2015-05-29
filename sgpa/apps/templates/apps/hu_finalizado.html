@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% block uptitulo %}
+	<h1>{{proyecto.nombre}}</h1>
+{% endblock %}
+{% block titulo %}
+	<table>
+		<tr>
+		
+			<td width=125px><h2><font color="#686868">{{hu.codigo}}</font></h2></td>
+			<td ><h2>{{hu.nombre}}</h2></td>
+		</tr>
+	</table>
+{% endblock %}
+<h3>Editar HU</h3>
+{% block index %}
+	<!-- <a href="{% url 'apps:editarHu' proyecto.id hu.id %}">Modificar Campos</a><br/> -->
+	<li>
+		<a href="{% url 'apps:accionesproyecto' proyecto.id %}"><i class="fa fa-fw fa-edit"></i>{{proyecto.nombre}}</a>
+	</li>
+	
+		<li>
+              <a href="{% url 'apps:editarHu' proyecto.id hu.id %}"></i><font color="FFFFFF">{{hu.codigo}} {{hu.nombre}}</font></a>          
+        </li>	
+	<!-- 
+	{% if misPermisos.MUS %}
+		{% if  hu.sprint == proyecto.nro_sprint and userasig %}
+		<li>
+              <a href="{% url 'apps:setEstadoHu' proyecto.id hu.id  %}"><i class="fa fa-fw fa-edit"></i> Cambiar Estado</a>          
+        </li>			
+		{% endif %}
+		<li>
+		
+		<a href="{% url 'apps:listhuversiones' proyecto.id hu.id  %}"><i class="fa fa-fw fa-edit"></i>Versiones</a>
+		</li>
+		
+		<li>
+			<a href="{% url 'apps:registroHu' proyecto.id hu.id  %}"><i class="fa fa-fw fa-edit"></i>Registros</a>
+		</li>
+	{% endif %}
+	
+
+	{% if misPermisos.MUS and hu.estado == True %}
+	<li>
+		<a href="{% url 'apps:fileAdjunto' proyecto.id hu.id %}"><i class="fa fa-fw fa-edit"></i>Archivos Adjuntos</a>
+	</li>
+	{% endif %}
+	
+	{% if misPermisos.MUS %}
+	<li>
+		<a href="{% url 'apps:notasHu' proyecto.id hu.id %}"><i class="fa fa-fw fa-edit"></i>Notas</a>
+	</li>
+	{% endif %}
+	
+	{% if misPermisos.EUS and hu.estado == True %}
+	<li>
+		<a href="{% url 'apps:eliminarHu' proyecto.id hu.id %}"><i class="fa fa-fw fa-edit"></i>Eliminar User Story</a>
+	</li>
+	{% endif %}
+	 -->
+{% endblock %}
+<br/>
+
+{% block contenido %}
+
+	<h2>El User Story se ha marcado como finalizado</h2>
+	<br />
+	<a href="{% url 'apps:accionesproyecto' proyecto.id %}"><i class="fa fa-fw fa-edit"></i>Volver al proyecto</a>
+{% endblock %}
+
+
+
+{% block atras %}
+	<a href="{% url 'apps:listhu' proyecto.id %}">Volver</a>
+{% endblock %}

@@ -1,0 +1,197 @@
+{% extends 'base.html' %}
+{% block uptitulo %}
+	<h1>{{proyecto.nombre}}</h1>
+{% endblock %}
+
+<h3>Editar HU</h3>
+{% block index %}
+	<!-- <a href="{% url 'apps:editarHu' proyecto.id hu.id %}">Modificar Campos</a><br/> -->
+	<li>
+		<a href="{% url 'apps:accionesproyecto' proyecto.id %}"><i class="fa fa-fw fa-edit"></i>{{proyecto.nombre}}</a>
+	</li>
+	
+		<li>
+              <a href="{% url 'apps:huprincipal' proyecto.id hu.id %}"></i><font color="FFFFFF">{{hu.codigo}} {{hu.nombre}}</font></a>          
+        </li>	
+	{% if misPermisos.MUS %}
+		{% if hu.estado_scrum.id != 5 %}
+		<li>
+              <a href="{% url 'apps:editarHu' proyecto.id hu.id  %}"><i class="fa fa-fw fa-edit"></i> Editar</a>          
+        </li>			
+		{% endif %}
+		{% if  hu.sprint == proyecto.nro_sprint and userasig %}
+		<li>
+              <a href="{% url 'apps:setEstadoHu' proyecto.id hu.id  %}"><i class="fa fa-fw fa-edit"></i> Cambiar Estado</a>          
+        </li>			
+		{% endif %}
+		<li>
+		
+		<a href="{% url 'apps:listhuversiones' proyecto.id hu.id  %}"><i class="fa fa-fw fa-edit"></i>Versiones</a>
+		</li>
+		
+		<li>
+			<a href="{% url 'apps:registroHu' proyecto.id hu.id  %}"><i class="fa fa-fw fa-edit"></i>Registros</a>
+		</li>
+	{% endif %}
+	
+
+	{% if misPermisos.MUS and hu.estado == True %}
+	<li>
+		<a href="{% url 'apps:fileAdjunto' proyecto.id hu.id %}"><i class="fa fa-fw fa-edit"></i>Archivos Adjuntos</a>
+	</li>
+	{% endif %}
+	
+	{% if misPermisos.MUS %}
+	<li>
+		<a href="{% url 'apps:notasHu' proyecto.id hu.id %}"><i class="fa fa-fw fa-edit"></i>Notas</a>
+	</li>
+	{% endif %}
+	
+	{% if misPermisos.EUS and hu.estado == True %}
+	<li>
+		<a href="{% url 'apps:eliminarHu' proyecto.id hu.id %}"><i class="fa fa-fw fa-edit"></i>Cancelar User Story</a>
+	</li>
+	{% endif %}
+	
+		
+	{% if misPermisos.MUS and hu.estado == True %}
+	<li>
+		<a href="{% url 'apps:hulog' proyecto.id hu.id %}"><i class="fa fa-fw fa-edit"></i>Log</a>
+	</li>
+	{% endif %}
+	
+{% endblock %}
+<br/>
+
+{% block titulo %}
+	<table>
+		<tr>
+		
+			<td width=125px><h2><font color="#686868">{{hu.codigo}}</font></h2></td>
+			<td ><h2>{{hu.nombre}}</h2></td>
+		</tr>
+	</table>
+{% endblock %}
+{% block contenido %}
+
+	{% if marcado %}
+		<p>El User Story ha sido marcado como finalizado por el desarrollador</p>
+		<a href="{% url 'apps:finalizarHu' proyecto.id hu.id  %}">Terminar User Story</a>
+		<a href="{% url 'apps:setEstadoHu' proyecto.id hu.id  %}">Cambiar Estado</a>    
+	{% endif %}
+
+{% if misPermisos.MUS %}
+		{% if hu.sprint == 0 %}
+			<table>
+				<tr>
+				<td><h4>Sprint:</h4></td>
+				<td>El User Story aun no se ha planificado</td>
+				</tr>
+			</table>
+			
+		{% else %}
+			<h4> <b>Sprint:</b> {{hu.sprint}}</h4>
+		{% endif %}
+					
+		{% if hu.sprint != 0 %}
+			<table>
+				<tr>
+					<td><b>Usuario Asignado:</b>
+					{{userA}}
+					</td>
+				</tr>
+				<tr>
+					<td><b>Flujo:</b>
+						{% for f in flujos %}
+								{% if f.id == hu.flujo %}
+									{{f.descripcion}}
+								{% endif %}
+							{% endfor %} 
+					</td>
+				</tr>
+			</table>
+		{% endif %}
+		<br>
+		{% if misPermisos.MUS %}
+	
+			<form action="{% url 'apps:editarHu' proyecto.id hu.id %}" method="post">
+				{% csrf_token %}
+				<table border=0px>
+				<tr>
+					<td valign="center" width=150px><label><b>Codigo:</b></label></td>
+				</tr>
+				<tr>
+					<td><textarea disabled name="codigo" rows="1" cols="10" style="font-size:18px;">{{hu.codigo}}</textarea></td>
+				</tr>
+				<tr height=10px></tr>
+				<tr>
+					<td valign="center" width=150px><label><b>Nombre:</b></label></td>
+				</tr>
+				<tr>
+					<td><textarea disabled name="nombre" rows="1" cols="80" style="font-size:18px;">{{hu.nombre}}</textarea></td>
+				</tr>
+				<tr height=10px></tr>
+				<tr>
+					<td valign="center" width=150px><label><b>Descripcion:</b></label></td>
+				</tr>
+				<tr>
+					<td><textarea disabled name="descripcion" rows="10" cols="80" style="font-size:18px;">{{hu.descripcion}}</textarea></td>
+				</tr>
+				<tr height=20px></tr>
+			</table>
+			<table width=50%>
+				<tr>
+					<td valign="center" width=280px><label><b>Horas Estimadas:</b></label></td>
+					<td valign="center" width=280px><label><b>Valor Tecnico:</b></label></td>
+					<td valign="center" width=280px><label><b>Valor de Negocio:</b></label></td>
+					<td valign="center" width=280px><label><b>Prioridad:</b></label></td>
+					
+				</tr>
+				<tr>
+					<td><input disabled type="number" name="tiempoestimado" rows="1" cols="20" value="{{hu.tiempo_Estimado}}"></input></td>
+					
+					<td>
+						<select disabled name="valortecnico"  style="width:190px" sort = true>
+							{% for r in rango %}
+									{% if r == hu.valor_Tecnico %}
+											<option selected="selected">{{r}}</option>
+										{% else %}
+											<option >{{r}}</option>
+									{% endif %}
+							{% endfor %} 
+						</select>
+					</td>
+					
+					<td>
+						<select disabled name="valornegocio"  style="width:190px" sort = true>
+							{% for r in rango %}
+									{% if r == hu.valor_Negocio %}
+											<option selected="selected">{{r}}</option>
+										{% else %}
+											<option >{{r}}</option>
+									{% endif %}
+							{% endfor %} 
+						</select>
+					</td>
+					<td>
+						<select disabled name="pri"  style="width:190px" sort = true>
+						{% for pr in prioridades %}
+							{% if pr.id == hu.prioridad_id %}
+								<option selected="selected">{{pr.descripcion}}</option>
+							{% else %}
+								<option >{{pr.descripcion}}</option>
+							{% endif %}
+						{% endfor %} 
+						</select>
+					</td>
+				</tr>
+			</table>
+
+			</form>
+		
+		{% endif %}
+	{% endif %}
+{% endblock %}
+{% block atras %}
+	<a href="{% url 'apps:listhu' proyecto.id %}">Volver</a>
+{% endblock %}
