@@ -3,7 +3,7 @@
           "DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-  <title>apps.tests.test_sprint</title>
+  <title>apps.models.Estados_Scrum</title>
   <link rel="stylesheet" href="epydoc.css" type="text/css" />
   <script type="text/javascript" src="epydoc.js"></script>
 </head>
@@ -38,8 +38,8 @@
     <td width="100%">
       <span class="breadcrumbs">
         <a href="apps-module.html">Package&nbsp;apps</a> ::
-        <a href="apps.tests-module.html">Module&nbsp;tests</a> ::
-        Class&nbsp;test_sprint
+        <a href="apps.models-module.html">Module&nbsp;models</a> ::
+        Class&nbsp;Estados_Scrum
       </span>
     </td>
     <td>
@@ -49,21 +49,24 @@
     onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
         <tr><td align="right"><span class="options"
             >[<a href="frames.html" target="_top">frames</a
-            >]&nbsp;|&nbsp;<a href="apps.tests.test_sprint-class.html"
+            >]&nbsp;|&nbsp;<a href="apps.models.Estados_Scrum-class.html"
             target="_top">no&nbsp;frames</a>]</span></td></tr>
       </table>
     </td>
   </tr>
 </table>
 <!-- ==================== CLASS DESCRIPTION ==================== -->
-<h1 class="epydoc">Class test_sprint</h1><p class="nomargin-top"><span class="codelink"><a href="apps.tests-pysrc.html#test_sprint">source&nbsp;code</a></span></p>
+<h1 class="epydoc">Class Estados_Scrum</h1><p class="nomargin-top"><span class="codelink"><a href="apps.models-pysrc.html#Estados_Scrum">source&nbsp;code</a></span></p>
 <pre class="base-tree">
-django.test.TestCase --+
-                       |
-                      <strong class="uidshort">test_sprint</strong>
+django.db.models.Model --+
+                         |
+                        <strong class="uidshort">Estados_Scrum</strong>
 </pre>
 
 <hr />
+<p>Estados Iniciado, Asignado, No Asignado, Pendiente, Finalizado y 
+  Cancelado de los User Stories</p>
+
 <!-- ==================== INSTANCE METHODS ==================== -->
 <a name="section-InstanceMethods"></a>
 <table class="summary" border="1" cellpadding="3"
@@ -87,10 +90,9 @@ django.test.TestCase --+
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a name="test_crear_sprints"></a><span class="summary-sig-name">test_crear_sprints</span>(<span class="summary-sig-arg">self</span>)</span><br />
-      prueba que los sprints de un proyecto nuevo se hayan creado</td>
+          <td><span class="summary-sig"><a name="__str__"></a><span class="summary-sig-name">__str__</span>(<span class="summary-sig-arg">self</span>)</span></td>
           <td align="right" valign="top">
-            <span class="codelink"><a href="apps.tests-pysrc.html#test_sprint.test_crear_sprints">source&nbsp;code</a></span>
+            <span class="codelink"><a href="apps.models-pysrc.html#Estados_Scrum.__str__">source&nbsp;code</a></span>
             
           </td>
         </tr>
@@ -98,38 +100,29 @@ django.test.TestCase --+
       
     </td>
   </tr>
+</table>
+<!-- ==================== CLASS VARIABLES ==================== -->
+<a name="section-ClassVariables"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Class Variables</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-ClassVariables"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
 <tr>
     <td width="15%" align="right" valign="top" class="summary">
       <span class="summary-type">&nbsp;</span>
     </td><td class="summary">
-      <table width="100%" cellpadding="0" cellspacing="0" border="0">
-        <tr>
-          <td><span class="summary-sig"><a name="test_crear_dia_sprint"></a><span class="summary-sig-name">test_crear_dia_sprint</span>(<span class="summary-sig-arg">self</span>)</span><br />
-      prueba si crea los dias del sprint</td>
-          <td align="right" valign="top">
-            <span class="codelink"><a href="apps.tests-pysrc.html#test_sprint.test_crear_dia_sprint">source&nbsp;code</a></span>
-            
-          </td>
-        </tr>
-      </table>
-      
-    </td>
-  </tr>
-<tr>
-    <td width="15%" align="right" valign="top" class="summary">
-      <span class="summary-type">&nbsp;</span>
-    </td><td class="summary">
-      <table width="100%" cellpadding="0" cellspacing="0" border="0">
-        <tr>
-          <td><span class="summary-sig"><a name="test_agregar_horas"></a><span class="summary-sig-name">test_agregar_horas</span>(<span class="summary-sig-arg">self</span>)</span><br />
-      prueba si las horas se suman en un dia</td>
-          <td align="right" valign="top">
-            <span class="codelink"><a href="apps.tests-pysrc.html#test_sprint.test_agregar_horas">source&nbsp;code</a></span>
-            
-          </td>
-        </tr>
-      </table>
-      
+        <a name="descripcion"></a><span class="summary-name">descripcion</span> = <code title="models.CharField(max_length= 50)">models.CharField(max_length= 50)</code>
     </td>
   </tr>
 </table>
@@ -159,7 +152,7 @@ django.test.TestCase --+
 <table border="0" cellpadding="0" cellspacing="0" width="100%%">
   <tr>
     <td align="left" class="footer">
-    Generated by Epydoc 3.0.1 on Sat May  2 00:06:31 2015
+    Generated by Epydoc 3.0.1 on Fri May 29 22:57:12 2015
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"
