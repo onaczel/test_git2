@@ -3542,13 +3542,19 @@ def iniciarSprint(proyecto_id, nro_sprint):
         mensaje = "Establezca la duracion del Sprint " + str(nro_sprint) + " antes de iniciarlo"
         iniciar = False
     hora_usuario_sprint = horas_usuario_sprint.objects.filter(Sprint_id = sprint.id)
+    for hos in hora_usuario_sprint:
+        if int(hos.horas) == 0:
+            mensaje = "Establezca horas de trabajo para los usuarios en el sprint " + str(nro_sprint)
+            iniciar = False
+            break
+    """
     horas = 0
     for hos in hora_usuario_sprint: 
         horas = horas + int(hos.horas)
     if horas == 0:
         mensaje = "Establezca horas de trabajo para los usuarios en el sprint " + str(nro_sprint)
         iniciar = False 
-        
+    """ 
     if(iniciar):
         sprint.fecha_ini = datetime.today().strftime("%Y-%m-%d")
         sprint.save()
