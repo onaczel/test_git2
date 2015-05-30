@@ -2083,9 +2083,8 @@ def editarHu(request, proyecto_id, hu_id):
         hu.valor_Tecnico = request.POST['valortecnico']
         hu.proyecto_id = proyecto_id
         
-        #llamada a funcion que notifica a los responsables, la modificacion del hu
-        notificarModificacionHU(hu_id,proyecto_id)
-        print  request.POST['username']
+        
+        
         
         try:
             user = User.objects.get(username = request.POST['username'])
@@ -2118,6 +2117,11 @@ def editarHu(request, proyecto_id, hu_id):
         hu.fecha_modificacion = time.strftime("%Y-%m-%d")
         #hu.notas = request.POST.get('notas', False)
         hu.save()
+        #llamada a funcion que notifica a los responsables, la modificacion del hu
+        try:
+            notificarModificacionHU(hu.id,proyecto_id)
+        except :
+            pass  
         '''
         #se envian notificaciones si se ha cambiado de responsable del user story
         if oldUser != hu.usuario_Asignado:
@@ -2213,7 +2217,10 @@ def crearregistroHu(request, proyecto_id, hu_id):
             hu_reg.delete()
             guardado = False
         #aca le tengo que llamar a la notificacion <selm>
-        notificarRegistroTrabajo(hu_id, proyecto_id,hu_reg.descripcion_tarea, hu_reg.tiempo_Real)
+        try:
+            notificarRegistroTrabajo(hu_id, proyecto_id,hu_reg.descripcion_tarea, hu_reg.tiempo_Real)
+        except :
+            pass  
         #"respuesta" se puede manejar como sea necesario
         #termina asignacion de horas a los dias del sprint
         hu_reg = UserStoryRegistro.objects.filter(idr = hu.id)
@@ -2860,8 +2867,14 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
                     if cambio:
                         huv = UserStoryVersiones()
                         copiarHU(huCopia, huv, User.objects.get(username = request.user))
-                        notificarModificacionHU(hu_id, proyecto_id)
+                        
+                        
                         hu.save()
+                        
+                        try:
+                            notificarModificacionHU(hu_id, proyecto_id)
+                        except :
+                            pass  
                 if sprint.estado == 2:
                     userStory = UserStoryVersiones.objects.get(id = hu_id)
                 else:
@@ -3064,10 +3077,13 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
                 if cambio:
                     huv = UserStoryVersiones()
                     copiarHU(huCopia, huv, User.objects.get(username = request.user))
-                    notificarModificacionHU(request.POST['hu_id'], proyecto_id)
+                    
                        
                 hu.save()
-
+                try:
+                    notificarModificacionHU(hu.id, proyecto_id)
+                except :
+                    pass  
             #if request.POST['cambio'] == "x":
                 #hu = UserStory.objects.get(id = hu_id)
                 #huv = UserStoryVersiones()
