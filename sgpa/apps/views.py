@@ -2213,7 +2213,7 @@ def crearregistroHu(request, proyecto_id, hu_id):
             hu_reg.delete()
             guardado = False
         #aca le tengo que llamar a la notificacion <selm>
-        notificarRegistroTrabajo(hu_id, proyecto_id)
+        notificarRegistroTrabajo(hu_id, proyecto_id,hu_reg.descripcion_tarea, hu_reg.tiempo_Real)
         #"respuesta" se puede manejar como sea necesario
         #termina asignacion de horas a los dias del sprint
         hu_reg = UserStoryRegistro.objects.filter(idr = hu.id)
@@ -2932,6 +2932,7 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
             print sprint_id
             planeado = []
             no_planeado = []
+            
             if Dia_Sprint.objects.filter(sprint_id = sprint_id).exists():
                 mylista = Dia_Sprint.objects.filter(sprint_id = sprint_id)
                 h_planeadas = 0
