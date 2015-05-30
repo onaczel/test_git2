@@ -51,35 +51,40 @@ def notificarModificacionHU(hu_id, proyecto_id):
     @param hu_id: id de un user story
     """
     try:
-        huv1 = UserStoryVersiones.objects.filter(idv = hu_id)
-        huv = huv1.aggregate(Max('version'))
+        huv = UserStoryVersiones.objects.filter(idv = hu_id).latest('version')
+        
     except :
-        pass
+        pass  
+      
     historial = historialResponsableHU.objects.filter(hu = hu_id)
     hu = UserStory.objects.get(id = hu_id)
     proyecto = Proyectos.objects.get(id = proyecto_id)
     for h in historial:
+        list = []
         user = User.objects.get(id = h.responsable.id)
         if user.is_active == True:
-            list = []
-            list.append(user)
-    asunto = 'SGPA - Modificacion de User Story'
+            print 'usuario'  
+            print user.email 
             
-    msg = 'Usuario: '+user.username+', se ha modificado el  user story: '+hu.nombre+' del proyecto: '+proyecto.nombre
-    msg = msg + '\n\nDetalles: \n'
-    #version actual
-    msg = msg + '\n\nVersion actual: \n' 
-    msg = '\nNombre: '+hu.nombre +'\nDescripcion: '+hu.descripcion+'\nCodigo: '+str(hu.codigo) +'\nValor Negocio: '+str(hu.valor_Negocio)
-    msg = msg + '\nValor Tecnico: '+str(hu.valor_Tecnico) +'\nTiempo Estimado: '+str(hu.tiempo_Estimado) +'\nPrioridad: '+str(hu.prioridad_id)    
+            list.append(user)
+            asunto = 'SGPA - Modificacion de User Story'
+            
+            msg = 'Usuario: '+user.username+', se ha modificado el  user story: '+hu.nombre+' del proyecto: '+proyecto.nombre
+            msg = msg + '\n\nDetalles: \n'
+            #version actual
+            msg = msg + '\n\nVersion actual: \n' 
+            msg = msg + '\nNombre: '+hu.nombre +'\nDescripcion: '+hu.descripcion+'\nCodigo: '+str(hu.codigo) +'\nValor Negocio: '+str(hu.valor_Negocio)
+            msg = msg + '\nValor Tecnico: '+str(hu.valor_Tecnico) +'\nTiempo Estimado: '+str(hu.tiempo_Estimado) +'\nPrioridad: '+str(hu.prioridad_id)    
     
-    try:        
-        #Version anterior
-        msg = msg + '\n\nVersion anterior: \n' 
-        msg = msg + '\nNombre: '+huv.nombre +'\nDescripcion: '+huv.descripcion+'\nCodigo: '+str(huv.codigo) +'\nValor Negocio: '+str(huv.valor_Negocio)
-        msg = msg + '\nValor Tecnico: '+str(huv.valor_Tecnico) +'\nTiempo Estimado: '+str(huv.tiempo_Estimado) +'\nPrioridad: '+str(huv.prioridad_id)
-    except :
-        pass    
-    enviarMail(asunto, msg, list)
+            try:        
+                #Version anterior
+                msg = msg + '\n\nVersion anterior: \n' 
+                msg = msg + '\nNombre: '+huv.nombre +'\nDescripcion: '+huv.descripcion+'\nCodigo: '+str(huv.codigo) +'\nValor Negocio: '+str(huv.valor_Negocio)
+                msg = msg + '\nValor Tecnico: '+str(huv.valor_Tecnico) +'\nTiempo Estimado: '+str(huv.tiempo_Estimado) +'\nPrioridad: '+str(huv.prioridad_id)
+            except :
+                pass    
+            print msg
+            enviarMail(asunto, msg, list)
 
 def notificarCambioResponsableHU(old_id, new_id,hu_id, proyecto_id):
     """
