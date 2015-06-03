@@ -65,354 +65,849 @@
 <a name="L7"></a><tt class="py-lineno">  7</tt>  <tt class="py-line"> </tt>
 <a name="L8"></a><tt class="py-lineno">  8</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">django</tt><tt class="py-op">.</tt><tt class="py-name">contrib</tt><tt class="py-op">.</tt><tt class="py-name">auth</tt><tt class="py-op">.</tt><tt id="link-0" class="py-name" targets="Module apps.models=apps.models-module.html"><a title="apps.models" class="py-name" href="#" onclick="return doclink('link-0', 'models', 'link-0');">models</a></tt> <tt class="py-keyword">import</tt> <tt class="py-name">User</tt> </tt>
 <a name="L9"></a><tt class="py-lineno">  9</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-1" class="py-name" targets="Package apps=apps-module.html"><a title="apps" class="py-name" href="#" onclick="return doclink('link-1', 'apps', 'link-1');">apps</a></tt><tt class="py-op">.</tt><tt id="link-2" class="py-name"><a title="apps.models" class="py-name" href="#" onclick="return doclink('link-2', 'models', 'link-0');">models</a></tt> <tt class="py-keyword">import</tt> <tt id="link-3" class="py-name" targets="Class apps.models.Users_Roles=apps.models.Users_Roles-class.html"><a title="apps.models.Users_Roles" class="py-name" href="#" onclick="return doclink('link-3', 'Users_Roles', 'link-3');">Users_Roles</a></tt><tt class="py-op">,</tt> <tt id="link-4" class="py-name" targets="Class apps.models.Flujos=apps.models.Flujos-class.html"><a title="apps.models.Flujos" class="py-name" href="#" onclick="return doclink('link-4', 'Flujos', 'link-4');">Flujos</a></tt><tt class="py-op">,</tt> <tt id="link-5" class="py-name" targets="Class apps.models.Roles=apps.models.Roles-class.html"><a title="apps.models.Roles" class="py-name" href="#" onclick="return doclink('link-5', 'Roles', 'link-5');">Roles</a></tt><tt class="py-op">,</tt> <tt id="link-6" class="py-name" targets="Class apps.models.Actividades=apps.models.Actividades-class.html"><a title="apps.models.Actividades" class="py-name" href="#" onclick="return doclink('link-6', 'Actividades', 'link-6');">Actividades</a></tt><tt class="py-op">,</tt> <tt id="link-7" class="py-name" targets="Class apps.models.Permisos=apps.models.Permisos-class.html"><a title="apps.models.Permisos" class="py-name" href="#" onclick="return doclink('link-7', 'Permisos', 'link-7');">Permisos</a></tt><tt class="py-op">,</tt> <tt id="link-8" class="py-name" targets="Class apps.models.Permisos_Roles=apps.models.Permisos_Roles-class.html"><a title="apps.models.Permisos_Roles" class="py-name" href="#" onclick="return doclink('link-8', 'Permisos_Roles', 'link-8');">Permisos_Roles</a></tt><tt class="py-op">,</tt>\ </tt>
-<a name="L10"></a><tt class="py-lineno"> 10</tt>  <tt class="py-line">    <tt id="link-9" class="py-name" targets="Class apps.models.Prioridad=apps.models.Prioridad-class.html"><a title="apps.models.Prioridad" class="py-name" href="#" onclick="return doclink('link-9', 'Prioridad', 'link-9');">Prioridad</a></tt><tt class="py-op">,</tt> <tt id="link-10" class="py-name" targets="Class apps.models.Estados=apps.models.Estados-class.html"><a title="apps.models.Estados" class="py-name" href="#" onclick="return doclink('link-10', 'Estados', 'link-10');">Estados</a></tt> </tt>
+<a name="L10"></a><tt class="py-lineno"> 10</tt>  <tt class="py-line">    <tt id="link-9" class="py-name" targets="Class apps.models.Prioridad=apps.models.Prioridad-class.html"><a title="apps.models.Prioridad" class="py-name" href="#" onclick="return doclink('link-9', 'Prioridad', 'link-9');">Prioridad</a></tt><tt class="py-op">,</tt> <tt id="link-10" class="py-name" targets="Class apps.models.Estados=apps.models.Estados-class.html"><a title="apps.models.Estados" class="py-name" href="#" onclick="return doclink('link-10', 'Estados', 'link-10');">Estados</a></tt><tt class="py-op">,</tt> <tt id="link-11" class="py-name" targets="Class apps.models.Proyectos=apps.models.Proyectos-class.html"><a title="apps.models.Proyectos" class="py-name" href="#" onclick="return doclink('link-11', 'Proyectos', 'link-11');">Proyectos</a></tt><tt class="py-op">,</tt> <tt id="link-12" class="py-name" targets="Class apps.models.Equipo=apps.models.Equipo-class.html"><a title="apps.models.Equipo" class="py-name" href="#" onclick="return doclink('link-12', 'Equipo', 'link-12');">Equipo</a></tt><tt class="py-op">,</tt> <tt id="link-13" class="py-name" targets="Class apps.models.Estados_Scrum=apps.models.Estados_Scrum-class.html"><a title="apps.models.Estados_Scrum" class="py-name" href="#" onclick="return doclink('link-13', 'Estados_Scrum', 'link-13');">Estados_Scrum</a></tt><tt class="py-op">,</tt> <tt id="link-14" class="py-name" targets="Class apps.models.UserStory=apps.models.UserStory-class.html"><a title="apps.models.UserStory" class="py-name" href="#" onclick="return doclink('link-14', 'UserStory', 'link-14');">UserStory</a></tt> </tt>
 <a name="L11"></a><tt class="py-lineno"> 11</tt>  <tt class="py-line"> </tt>
 <a name="populate"></a><div id="populate-def"><a name="L12"></a><tt class="py-lineno"> 12</tt> <a class="py-toggle" href="#" id="populate-toggle" onclick="return toggle('populate');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="apps.population-module.html#populate">populate</a><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
-</div><div id="populate-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="populate-expanded"><a name="L13"></a><tt class="py-lineno"> 13</tt>  <tt class="py-line">    <tt id="link-11" class="py-name" targets="Function apps.management.commands.population.add_roles()=apps.management.commands.population-module.html#add_roles,Function apps.population.add_roles()=apps.population-module.html#add_roles"><a title="apps.management.commands.population.add_roles
-apps.population.add_roles" class="py-name" href="#" onclick="return doclink('link-11', 'add_roles', 'link-11');">add_roles</a></tt><tt class="py-op">(</tt><tt class="py-string">'Administrador'</tt><tt class="py-op">,</tt> <tt class="py-name">True</tt><tt class="py-op">)</tt> </tt>
-<a name="L14"></a><tt class="py-lineno"> 14</tt>  <tt class="py-line">    <tt id="link-12" class="py-name"><a title="apps.management.commands.population.add_roles
-apps.population.add_roles" class="py-name" href="#" onclick="return doclink('link-12', 'add_roles', 'link-11');">add_roles</a></tt><tt class="py-op">(</tt><tt class="py-string">'Usuario'</tt><tt class="py-op">,</tt> <tt class="py-name">True</tt><tt class="py-op">)</tt> </tt>
-<a name="L15"></a><tt class="py-lineno"> 15</tt>  <tt class="py-line">    <tt id="link-13" class="py-name"><a title="apps.management.commands.population.add_roles
-apps.population.add_roles" class="py-name" href="#" onclick="return doclink('link-13', 'add_roles', 'link-11');">add_roles</a></tt><tt class="py-op">(</tt><tt class="py-string">'Scrum Master'</tt><tt class="py-op">,</tt> <tt class="py-name">False</tt><tt class="py-op">)</tt> </tt>
-<a name="L16"></a><tt class="py-lineno"> 16</tt>  <tt class="py-line">    <tt id="link-14" class="py-name"><a title="apps.management.commands.population.add_roles
-apps.population.add_roles" class="py-name" href="#" onclick="return doclink('link-14', 'add_roles', 'link-11');">add_roles</a></tt><tt class="py-op">(</tt><tt class="py-string">'Cliente'</tt><tt class="py-op">,</tt> <tt class="py-name">False</tt><tt class="py-op">)</tt> </tt>
-<a name="L17"></a><tt class="py-lineno"> 17</tt>  <tt class="py-line">     </tt>
-<a name="L18"></a><tt class="py-lineno"> 18</tt>  <tt class="py-line">    <tt id="link-15" class="py-name" targets="Function apps.management.commands.population.add_user()=apps.management.commands.population-module.html#add_user,Function apps.population.add_user()=apps.population-module.html#add_user"><a title="apps.management.commands.population.add_user
-apps.population.add_user" class="py-name" href="#" onclick="return doclink('link-15', 'add_user', 'link-15');">add_user</a></tt><tt class="py-op">(</tt><tt class="py-string">'admin'</tt><tt class="py-op">,</tt> <tt class="py-string">'a123'</tt><tt class="py-op">,</tt> <tt class="py-string">'deserver123@gmail.com'</tt><tt class="py-op">,</tt> <tt class="py-number">1</tt><tt class="py-op">)</tt> </tt>
-<a name="L19"></a><tt class="py-lineno"> 19</tt>  <tt class="py-line">    <tt id="link-16" class="py-name"><a title="apps.management.commands.population.add_user
-apps.population.add_user" class="py-name" href="#" onclick="return doclink('link-16', 'add_user', 'link-15');">add_user</a></tt><tt class="py-op">(</tt><tt class="py-string">'jquin'</tt><tt class="py-op">,</tt> <tt class="py-string">'a123'</tt><tt class="py-op">,</tt> <tt class="py-string">'jquin@gmail.com'</tt><tt class="py-op">,</tt> <tt class="py-number">2</tt><tt class="py-op">)</tt> </tt>
-<a name="L20"></a><tt class="py-lineno"> 20</tt>  <tt class="py-line">    <tt id="link-17" class="py-name"><a title="apps.management.commands.population.add_user
-apps.population.add_user" class="py-name" href="#" onclick="return doclink('link-17', 'add_user', 'link-15');">add_user</a></tt><tt class="py-op">(</tt><tt class="py-string">'hroa'</tt><tt class="py-op">,</tt> <tt class="py-string">'a123'</tt><tt class="py-op">,</tt> <tt class="py-string">'hroa@gmail.com'</tt><tt class="py-op">,</tt> <tt class="py-number">2</tt><tt class="py-op">)</tt> </tt>
-<a name="L21"></a><tt class="py-lineno"> 21</tt>  <tt class="py-line">    <tt id="link-18" class="py-name"><a title="apps.management.commands.population.add_user
-apps.population.add_user" class="py-name" href="#" onclick="return doclink('link-18', 'add_user', 'link-15');">add_user</a></tt><tt class="py-op">(</tt><tt class="py-string">'jrojas'</tt><tt class="py-op">,</tt> <tt class="py-string">'a123'</tt><tt class="py-op">,</tt> <tt class="py-string">'jrojas@gmail.com'</tt><tt class="py-op">,</tt> <tt class="py-number">2</tt><tt class="py-op">)</tt> </tt>
-<a name="L22"></a><tt class="py-lineno"> 22</tt>  <tt class="py-line">     </tt>
-<a name="L23"></a><tt class="py-lineno"> 23</tt>  <tt class="py-line">    <tt id="link-19" class="py-name" targets="Function apps.management.commands.population.add_flujo()=apps.management.commands.population-module.html#add_flujo,Function apps.population.add_flujo()=apps.population-module.html#add_flujo"><a title="apps.management.commands.population.add_flujo
-apps.population.add_flujo" class="py-name" href="#" onclick="return doclink('link-19', 'add_flujo', 'link-19');">add_flujo</a></tt><tt class="py-op">(</tt><tt class="py-string">'Plantilla Generica'</tt><tt class="py-op">)</tt> </tt>
-<a name="L24"></a><tt class="py-lineno"> 24</tt>  <tt class="py-line">     </tt>
-<a name="L25"></a><tt class="py-lineno"> 25</tt>  <tt class="py-line">    <tt id="link-20" class="py-name" targets="Variable apps.models.Permisos_Roles.permisos=apps.models.Permisos_Roles-class.html#permisos"><a title="apps.models.Permisos_Roles.permisos" class="py-name" href="#" onclick="return doclink('link-20', 'permisos', 'link-20');">permisos</a></tt> <tt class="py-op">=</tt> <tt class="py-op">[</tt><tt class="py-string">'Crear Usuario'</tt><tt class="py-op">,</tt> <tt class="py-string">'Modificar Usuario'</tt><tt class="py-op">,</tt> <tt class="py-string">'Eliminar Usuario'</tt><tt class="py-op">,</tt> <tt class="py-string">'Crear Roles'</tt><tt class="py-op">,</tt> <tt class="py-string">'Modificar Roles'</tt><tt class="py-op">,</tt> <tt class="py-string">'Eliminar Roles'</tt><tt class="py-op">,</tt><tt class="py-string">'Crear Proyecto'</tt><tt class="py-op">,</tt> <tt class="py-string">'Modificar Proyecto'</tt><tt class="py-op">,</tt> <tt class="py-string">'Crear Plantilla de Flujos'</tt><tt class="py-op">,</tt> <tt class="py-string">'Modificar Plantilla de Flujos'</tt><tt class="py-op">,</tt> <tt class="py-string">'Eliminar Plantilla de Flujos'</tt><tt class="py-op">,</tt> <tt class="py-string">'Asignar Participantes a Proyecto'</tt><tt class="py-op">,</tt> <tt class="py-string">'Eliminar Participantes de Proyecto'</tt><tt class="py-op">,</tt> <tt class="py-string">'Crear User Stories'</tt><tt class="py-op">,</tt> <tt class="py-string">'Modificar User Stories'</tt><tt class="py-op">,</tt> <tt class="py-string">'Eliminar User Stories'</tt><tt class="py-op">,</tt> <tt class="py-string">'Planificar Sprints'</tt><tt class="py-op">,</tt> <tt class="py-string">'Visualizar Proyectos'</tt><tt class="py-op">,</tt> <tt class="py-string">'Crear Roles en Proyecto'</tt><tt class="py-op">,</tt> <tt class="py-string">'Modificar Roles en Proyecto'</tt><tt class="py-op">,</tt> <tt class="py-string">'Eliminar Roles en Proyecto'</tt><tt class="py-op">]</tt> </tt>
-<a name="L26"></a><tt class="py-lineno"> 26</tt>  <tt class="py-line">    <tt class="py-name">tags</tt> <tt class="py-op">=</tt> <tt class="py-op">[</tt><tt class="py-string">'CU'</tt><tt class="py-op">,</tt> <tt class="py-string">'MU'</tt><tt class="py-op">,</tt> <tt class="py-string">'EU'</tt><tt class="py-op">,</tt> <tt class="py-string">'CR'</tt><tt class="py-op">,</tt> <tt class="py-string">'MR'</tt><tt class="py-op">,</tt> <tt class="py-string">'ER'</tt><tt class="py-op">,</tt> <tt class="py-string">'CP'</tt><tt class="py-op">,</tt> <tt class="py-string">'MP'</tt><tt class="py-op">,</tt><tt class="py-string">'CPF'</tt><tt class="py-op">,</tt> <tt class="py-string">'MPF'</tt><tt class="py-op">,</tt> <tt class="py-string">'EPF'</tt><tt class="py-op">,</tt> <tt class="py-string">'APP'</tt><tt class="py-op">,</tt> <tt class="py-string">'EPP'</tt><tt class="py-op">,</tt> <tt class="py-string">'CUS'</tt><tt class="py-op">,</tt> <tt class="py-string">'MUS'</tt><tt class="py-op">,</tt> <tt class="py-string">'EUS'</tt><tt class="py-op">,</tt> <tt class="py-string">'PS'</tt><tt class="py-op">,</tt> <tt class="py-string">'VP'</tt><tt class="py-op">,</tt> <tt class="py-string">'CRP'</tt><tt class="py-op">,</tt> <tt class="py-string">'MRP'</tt><tt class="py-op">,</tt> <tt class="py-string">'ERP'</tt><tt class="py-op">]</tt> </tt>
-<a name="L27"></a><tt class="py-lineno"> 27</tt>  <tt class="py-line">    <tt id="link-21" class="py-name" targets="Variable apps.models.Permisos.sistema=apps.models.Permisos-class.html#sistema,Variable apps.models.Roles.sistema=apps.models.Roles-class.html#sistema"><a title="apps.models.Permisos.sistema
-apps.models.Roles.sistema" class="py-name" href="#" onclick="return doclink('link-21', 'sistema', 'link-21');">sistema</a></tt> <tt class="py-op">=</tt> <tt class="py-op">[</tt><tt class="py-name">True</tt><tt class="py-op">,</tt> <tt class="py-name">True</tt><tt class="py-op">,</tt> <tt class="py-name">True</tt><tt class="py-op">,</tt> <tt class="py-name">True</tt><tt class="py-op">,</tt> <tt class="py-name">True</tt><tt class="py-op">,</tt> <tt class="py-name">True</tt><tt class="py-op">,</tt> <tt class="py-name">True</tt><tt class="py-op">,</tt> <tt class="py-name">True</tt><tt class="py-op">,</tt> <tt class="py-name">True</tt><tt class="py-op">,</tt> <tt class="py-name">True</tt><tt class="py-op">,</tt> <tt class="py-name">True</tt><tt class="py-op">,</tt> <tt class="py-name">False</tt><tt class="py-op">,</tt> <tt class="py-name">False</tt><tt class="py-op">,</tt> <tt class="py-name">False</tt><tt class="py-op">,</tt> <tt class="py-name">False</tt><tt class="py-op">,</tt> <tt class="py-name">False</tt><tt class="py-op">,</tt> <tt class="py-name">False</tt><tt class="py-op">,</tt> <tt class="py-name">False</tt><tt class="py-op">,</tt> <tt class="py-name">False</tt><tt class="py-op">,</tt> <tt class="py-name">False</tt><tt class="py-op">,</tt> <tt class="py-name">False</tt><tt class="py-op">]</tt> </tt>
-<a name="L28"></a><tt class="py-lineno"> 28</tt>  <tt class="py-line">    <tt class="py-name">c</tt><tt class="py-op">=</tt><tt class="py-number">1</tt> </tt>
-<a name="L29"></a><tt class="py-lineno"> 29</tt>  <tt class="py-line">    <tt class="py-keyword">for</tt> <tt class="py-name">p</tt> <tt class="py-keyword">in</tt> <tt id="link-22" class="py-name"><a title="apps.models.Permisos_Roles.permisos" class="py-name" href="#" onclick="return doclink('link-22', 'permisos', 'link-20');">permisos</a></tt><tt class="py-op">:</tt> </tt>
-<a name="L30"></a><tt class="py-lineno"> 30</tt>  <tt class="py-line">        <tt id="link-23" class="py-name" targets="Function apps.management.commands.population.add_permisos()=apps.management.commands.population-module.html#add_permisos,Function apps.population.add_permisos()=apps.population-module.html#add_permisos"><a title="apps.management.commands.population.add_permisos
-apps.population.add_permisos" class="py-name" href="#" onclick="return doclink('link-23', 'add_permisos', 'link-23');">add_permisos</a></tt><tt class="py-op">(</tt><tt class="py-name">p</tt><tt class="py-op">,</tt> <tt class="py-name">tags</tt><tt class="py-op">[</tt><tt class="py-name">c</tt><tt class="py-op">-</tt><tt class="py-number">1</tt><tt class="py-op">]</tt><tt class="py-op">,</tt> <tt id="link-24" class="py-name"><a title="apps.models.Permisos.sistema
-apps.models.Roles.sistema" class="py-name" href="#" onclick="return doclink('link-24', 'sistema', 'link-21');">sistema</a></tt><tt class="py-op">[</tt><tt class="py-name">c</tt><tt class="py-op">-</tt><tt class="py-number">1</tt><tt class="py-op">]</tt><tt class="py-op">)</tt> </tt>
-<a name="L31"></a><tt class="py-lineno"> 31</tt>  <tt class="py-line">        <tt id="link-25" class="py-name" targets="Function apps.management.commands.population.add_permisos_roles()=apps.management.commands.population-module.html#add_permisos_roles,Function apps.population.add_permisos_roles()=apps.population-module.html#add_permisos_roles"><a title="apps.management.commands.population.add_permisos_roles
-apps.population.add_permisos_roles" class="py-name" href="#" onclick="return doclink('link-25', 'add_permisos_roles', 'link-25');">add_permisos_roles</a></tt><tt class="py-op">(</tt><tt class="py-name">c</tt><tt class="py-op">,</tt> <tt class="py-number">1</tt><tt class="py-op">)</tt> </tt>
-<a name="L32"></a><tt class="py-lineno"> 32</tt>  <tt class="py-line">        <tt class="py-name">c</tt> <tt class="py-op">=</tt> <tt class="py-name">c</tt> <tt class="py-op">+</tt> <tt class="py-number">1</tt> </tt>
-<a name="L33"></a><tt class="py-lineno"> 33</tt>  <tt class="py-line">     </tt>
-<a name="L34"></a><tt class="py-lineno"> 34</tt>  <tt class="py-line">    <tt class="py-name">permisos_usuario</tt> <tt class="py-op">=</tt> <tt class="py-op">[</tt><tt class="py-number">18</tt><tt class="py-op">]</tt> </tt>
-<a name="L35"></a><tt class="py-lineno"> 35</tt>  <tt class="py-line">    <tt class="py-name">permisos_scrum_master</tt> <tt class="py-op">=</tt> <tt class="py-op">[</tt><tt class="py-number">12</tt><tt class="py-op">,</tt> <tt class="py-number">13</tt><tt class="py-op">,</tt> <tt class="py-number">14</tt><tt class="py-op">,</tt> <tt class="py-number">15</tt><tt class="py-op">,</tt> <tt class="py-number">16</tt><tt class="py-op">,</tt> <tt class="py-number">17</tt><tt class="py-op">,</tt> <tt class="py-number">18</tt><tt class="py-op">,</tt> <tt class="py-number">19</tt><tt class="py-op">,</tt> <tt class="py-number">20</tt><tt class="py-op">,</tt> <tt class="py-number">21</tt> <tt class="py-op">]</tt> </tt>
-<a name="L36"></a><tt class="py-lineno"> 36</tt>  <tt class="py-line">    <tt class="py-name">permisos_cliente</tt> <tt class="py-op">=</tt> <tt class="py-op">[</tt><tt class="py-number">18</tt><tt class="py-op">]</tt> </tt>
-<a name="L37"></a><tt class="py-lineno"> 37</tt>  <tt class="py-line">     </tt>
-<a name="L38"></a><tt class="py-lineno"> 38</tt>  <tt class="py-line">    <tt class="py-keyword">for</tt> <tt class="py-name">p</tt> <tt class="py-keyword">in</tt> <tt class="py-name">permisos_usuario</tt><tt class="py-op">:</tt> </tt>
-<a name="L39"></a><tt class="py-lineno"> 39</tt>  <tt class="py-line">        <tt id="link-26" class="py-name"><a title="apps.management.commands.population.add_permisos_roles
-apps.population.add_permisos_roles" class="py-name" href="#" onclick="return doclink('link-26', 'add_permisos_roles', 'link-25');">add_permisos_roles</a></tt><tt class="py-op">(</tt><tt class="py-name">p</tt><tt class="py-op">,</tt> <tt class="py-number">2</tt><tt class="py-op">)</tt> </tt>
-<a name="L40"></a><tt class="py-lineno"> 40</tt>  <tt class="py-line">    <tt class="py-keyword">for</tt> <tt class="py-name">p</tt> <tt class="py-keyword">in</tt> <tt class="py-name">permisos_scrum_master</tt><tt class="py-op">:</tt> </tt>
-<a name="L41"></a><tt class="py-lineno"> 41</tt>  <tt class="py-line">        <tt id="link-27" class="py-name"><a title="apps.management.commands.population.add_permisos_roles
-apps.population.add_permisos_roles" class="py-name" href="#" onclick="return doclink('link-27', 'add_permisos_roles', 'link-25');">add_permisos_roles</a></tt><tt class="py-op">(</tt><tt class="py-name">p</tt><tt class="py-op">,</tt> <tt class="py-number">3</tt><tt class="py-op">)</tt> </tt>
-<a name="L42"></a><tt class="py-lineno"> 42</tt>  <tt class="py-line">    <tt class="py-keyword">for</tt> <tt class="py-name">p</tt> <tt class="py-keyword">in</tt> <tt class="py-name">permisos_cliente</tt><tt class="py-op">:</tt> </tt>
-<a name="L43"></a><tt class="py-lineno"> 43</tt>  <tt class="py-line">        <tt id="link-28" class="py-name"><a title="apps.management.commands.population.add_permisos_roles
-apps.population.add_permisos_roles" class="py-name" href="#" onclick="return doclink('link-28', 'add_permisos_roles', 'link-25');">add_permisos_roles</a></tt><tt class="py-op">(</tt><tt class="py-name">p</tt><tt class="py-op">,</tt> <tt class="py-number">4</tt><tt class="py-op">)</tt> </tt>
-<a name="L44"></a><tt class="py-lineno"> 44</tt>  <tt class="py-line">     </tt>
-<a name="L45"></a><tt class="py-lineno"> 45</tt>  <tt class="py-line">    <tt id="link-29" class="py-name" targets="Function apps.management.commands.population.add_prioridad()=apps.management.commands.population-module.html#add_prioridad,Function apps.population.add_prioridad()=apps.population-module.html#add_prioridad"><a title="apps.management.commands.population.add_prioridad
-apps.population.add_prioridad" class="py-name" href="#" onclick="return doclink('link-29', 'add_prioridad', 'link-29');">add_prioridad</a></tt><tt class="py-op">(</tt><tt class="py-string">'Baja'</tt><tt class="py-op">)</tt> </tt>
-<a name="L46"></a><tt class="py-lineno"> 46</tt>  <tt class="py-line">    <tt id="link-30" class="py-name"><a title="apps.management.commands.population.add_prioridad
-apps.population.add_prioridad" class="py-name" href="#" onclick="return doclink('link-30', 'add_prioridad', 'link-29');">add_prioridad</a></tt><tt class="py-op">(</tt><tt class="py-string">'Media'</tt><tt class="py-op">)</tt> </tt>
-<a name="L47"></a><tt class="py-lineno"> 47</tt>  <tt class="py-line">    <tt id="link-31" class="py-name"><a title="apps.management.commands.population.add_prioridad
-apps.population.add_prioridad" class="py-name" href="#" onclick="return doclink('link-31', 'add_prioridad', 'link-29');">add_prioridad</a></tt><tt class="py-op">(</tt><tt class="py-string">'Alta'</tt><tt class="py-op">)</tt> </tt>
+</div><div id="populate-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="populate-expanded"><a name="L13"></a><tt class="py-lineno"> 13</tt>  <tt class="py-line">    <tt id="link-15" class="py-name" targets="Function apps.management.commands.population.add_roles()=apps.management.commands.population-module.html#add_roles,Function apps.population.add_roles()=apps.population-module.html#add_roles"><a title="apps.management.commands.population.add_roles
+apps.population.add_roles" class="py-name" href="#" onclick="return doclink('link-15', 'add_roles', 'link-15');">add_roles</a></tt><tt class="py-op">(</tt><tt class="py-string">'Administrador'</tt><tt class="py-op">,</tt> <tt class="py-name">True</tt><tt class="py-op">)</tt> </tt>
+<a name="L14"></a><tt class="py-lineno"> 14</tt>  <tt class="py-line">    <tt id="link-16" class="py-name"><a title="apps.management.commands.population.add_roles
+apps.population.add_roles" class="py-name" href="#" onclick="return doclink('link-16', 'add_roles', 'link-15');">add_roles</a></tt><tt class="py-op">(</tt><tt class="py-string">'Usuario'</tt><tt class="py-op">,</tt> <tt class="py-name">True</tt><tt class="py-op">)</tt> </tt>
+<a name="L15"></a><tt class="py-lineno"> 15</tt>  <tt class="py-line">    <tt id="link-17" class="py-name"><a title="apps.management.commands.population.add_roles
+apps.population.add_roles" class="py-name" href="#" onclick="return doclink('link-17', 'add_roles', 'link-15');">add_roles</a></tt><tt class="py-op">(</tt><tt class="py-string">'Scrum Master'</tt><tt class="py-op">,</tt> <tt class="py-name">False</tt><tt class="py-op">)</tt> </tt>
+<a name="L16"></a><tt class="py-lineno"> 16</tt>  <tt class="py-line">    <tt id="link-18" class="py-name"><a title="apps.management.commands.population.add_roles
+apps.population.add_roles" class="py-name" href="#" onclick="return doclink('link-18', 'add_roles', 'link-15');">add_roles</a></tt><tt class="py-op">(</tt><tt class="py-string">'Cliente'</tt><tt class="py-op">,</tt> <tt class="py-name">False</tt><tt class="py-op">)</tt> </tt>
+<a name="L17"></a><tt class="py-lineno"> 17</tt>  <tt class="py-line">    <tt id="link-19" class="py-name"><a title="apps.management.commands.population.add_roles
+apps.population.add_roles" class="py-name" href="#" onclick="return doclink('link-19', 'add_roles', 'link-15');">add_roles</a></tt><tt class="py-op">(</tt><tt class="py-string">"developer"</tt><tt class="py-op">,</tt> <tt class="py-name">False</tt><tt class="py-op">)</tt> </tt>
+<a name="L18"></a><tt class="py-lineno"> 18</tt>  <tt class="py-line">    <tt id="link-20" class="py-name"><a title="apps.management.commands.population.add_roles
+apps.population.add_roles" class="py-name" href="#" onclick="return doclink('link-20', 'add_roles', 'link-15');">add_roles</a></tt><tt class="py-op">(</tt><tt class="py-string">"observador"</tt><tt class="py-op">,</tt> <tt class="py-name">False</tt><tt class="py-op">)</tt> </tt>
+<a name="L19"></a><tt class="py-lineno"> 19</tt>  <tt class="py-line">     </tt>
+<a name="L20"></a><tt class="py-lineno"> 20</tt>  <tt class="py-line">    <tt id="link-21" class="py-name" targets="Function apps.management.commands.population.add_user()=apps.management.commands.population-module.html#add_user,Function apps.population.add_user()=apps.population-module.html#add_user"><a title="apps.management.commands.population.add_user
+apps.population.add_user" class="py-name" href="#" onclick="return doclink('link-21', 'add_user', 'link-21');">add_user</a></tt><tt class="py-op">(</tt><tt class="py-string">'Administrador'</tt><tt class="py-op">,</tt> <tt class="py-string">'General'</tt><tt class="py-op">,</tt> <tt class="py-string">'admin'</tt><tt class="py-op">,</tt> <tt class="py-string">'a123'</tt><tt class="py-op">,</tt> <tt class="py-string">'deserver123@gmail.com'</tt><tt class="py-op">,</tt> <tt class="py-number">1</tt><tt class="py-op">)</tt> </tt>
+<a name="L21"></a><tt class="py-lineno"> 21</tt>  <tt class="py-line">    <tt id="link-22" class="py-name"><a title="apps.management.commands.population.add_user
+apps.population.add_user" class="py-name" href="#" onclick="return doclink('link-22', 'add_user', 'link-21');">add_user</a></tt><tt class="py-op">(</tt><tt class="py-string">'Joaquin'</tt><tt class="py-op">,</tt> <tt class="py-string">'Quintana'</tt><tt class="py-op">,</tt> <tt class="py-string">'jquin'</tt><tt class="py-op">,</tt> <tt class="py-string">'a123'</tt><tt class="py-op">,</tt> <tt class="py-string">'rokkaie@gmail.com'</tt><tt class="py-op">,</tt> <tt class="py-number">2</tt><tt class="py-op">)</tt> </tt>
+<a name="L22"></a><tt class="py-lineno"> 22</tt>  <tt class="py-line">    <tt id="link-23" class="py-name"><a title="apps.management.commands.population.add_user
+apps.population.add_user" class="py-name" href="#" onclick="return doclink('link-23', 'add_user', 'link-21');">add_user</a></tt><tt class="py-op">(</tt><tt class="py-string">'Ariel'</tt><tt class="py-op">,</tt> <tt class="py-string">'Diaz'</tt><tt class="py-op">,</tt> <tt class="py-string">'lastdeo'</tt><tt class="py-op">,</tt> <tt class="py-string">'a123'</tt><tt class="py-op">,</tt> <tt class="py-string">'lastdeo@gmail.com'</tt><tt class="py-op">,</tt> <tt class="py-number">2</tt><tt class="py-op">)</tt> </tt>
+<a name="L23"></a><tt class="py-lineno"> 23</tt>  <tt class="py-line">    <tt id="link-24" class="py-name"><a title="apps.management.commands.population.add_user
+apps.population.add_user" class="py-name" href="#" onclick="return doclink('link-24', 'add_user', 'link-21');">add_user</a></tt><tt class="py-op">(</tt><tt class="py-string">'Jorge'</tt><tt class="py-op">,</tt> <tt class="py-string">'Rojas'</tt><tt class="py-op">,</tt> <tt class="py-string">'jrojas'</tt><tt class="py-op">,</tt> <tt class="py-string">'a123'</tt><tt class="py-op">,</tt> <tt class="py-string">'jrojas@gmail.com'</tt><tt class="py-op">,</tt> <tt class="py-number">2</tt><tt class="py-op">)</tt> </tt>
+<a name="L24"></a><tt class="py-lineno"> 24</tt>  <tt class="py-line">    <tt id="link-25" class="py-name"><a title="apps.management.commands.population.add_user
+apps.population.add_user" class="py-name" href="#" onclick="return doclink('link-25', 'add_user', 'link-21');">add_user</a></tt><tt class="py-op">(</tt><tt class="py-string">'Raul'</tt><tt class="py-op">,</tt> <tt class="py-string">'Bobadilla'</tt><tt class="py-op">,</tt> <tt class="py-string">'rbob'</tt><tt class="py-op">,</tt> <tt class="py-string">'a123'</tt><tt class="py-op">,</tt> <tt class="py-string">'rbob@gmail.com'</tt><tt class="py-op">,</tt> <tt class="py-number">2</tt><tt class="py-op">)</tt> </tt>
+<a name="L25"></a><tt class="py-lineno"> 25</tt>  <tt class="py-line">    <tt id="link-26" class="py-name"><a title="apps.management.commands.population.add_user
+apps.population.add_user" class="py-name" href="#" onclick="return doclink('link-26', 'add_user', 'link-21');">add_user</a></tt><tt class="py-op">(</tt><tt class="py-string">'Hector'</tt><tt class="py-op">,</tt> <tt class="py-string">'Roa'</tt><tt class="py-op">,</tt> <tt class="py-string">'hroa'</tt><tt class="py-op">,</tt> <tt class="py-string">'a123'</tt><tt class="py-op">,</tt> <tt class="py-string">'hroa@gmail.com'</tt><tt class="py-op">,</tt> <tt class="py-number">2</tt><tt class="py-op">)</tt> </tt>
+<a name="L26"></a><tt class="py-lineno"> 26</tt>  <tt class="py-line">    <tt id="link-27" class="py-name"><a title="apps.management.commands.population.add_user
+apps.population.add_user" class="py-name" href="#" onclick="return doclink('link-27', 'add_user', 'link-21');">add_user</a></tt><tt class="py-op">(</tt><tt class="py-string">'Victor'</tt><tt class="py-op">,</tt> <tt class="py-string">'Figueredo'</tt><tt class="py-op">,</tt> <tt class="py-string">'vfir'</tt><tt class="py-op">,</tt> <tt class="py-string">'a123'</tt><tt class="py-op">,</tt> <tt class="py-string">'vfif@gmail.com'</tt><tt class="py-op">,</tt> <tt class="py-number">2</tt><tt class="py-op">)</tt> </tt>
+<a name="L27"></a><tt class="py-lineno"> 27</tt>  <tt class="py-line">    <tt id="link-28" class="py-name"><a title="apps.management.commands.population.add_user
+apps.population.add_user" class="py-name" href="#" onclick="return doclink('link-28', 'add_user', 'link-21');">add_user</a></tt><tt class="py-op">(</tt><tt class="py-string">'Gregory'</tt><tt class="py-op">,</tt> <tt class="py-string">'Andaluz'</tt><tt class="py-op">,</tt> <tt class="py-string">'gram'</tt><tt class="py-op">,</tt> <tt class="py-string">'a123'</tt><tt class="py-op">,</tt> <tt class="py-string">'gram@gmail.com'</tt><tt class="py-op">,</tt> <tt class="py-number">2</tt><tt class="py-op">)</tt> </tt>
+<a name="L28"></a><tt class="py-lineno"> 28</tt>  <tt class="py-line">    <tt id="link-29" class="py-name"><a title="apps.management.commands.population.add_user
+apps.population.add_user" class="py-name" href="#" onclick="return doclink('link-29', 'add_user', 'link-21');">add_user</a></tt><tt class="py-op">(</tt><tt class="py-string">'Walter'</tt><tt class="py-op">,</tt> <tt class="py-string">'Amarilla'</tt><tt class="py-op">,</tt> <tt class="py-string">'wam'</tt><tt class="py-op">,</tt> <tt class="py-string">'a123'</tt><tt class="py-op">,</tt> <tt class="py-string">'wam@gmail.com'</tt><tt class="py-op">,</tt> <tt class="py-number">2</tt><tt class="py-op">)</tt> </tt>
+<a name="L29"></a><tt class="py-lineno"> 29</tt>  <tt class="py-line">    <tt id="link-30" class="py-name"><a title="apps.management.commands.population.add_user
+apps.population.add_user" class="py-name" href="#" onclick="return doclink('link-30', 'add_user', 'link-21');">add_user</a></tt><tt class="py-op">(</tt><tt class="py-string">'Horacio'</tt><tt class="py-op">,</tt> <tt class="py-string">'Gimenez'</tt><tt class="py-op">,</tt> <tt class="py-string">'hgim'</tt><tt class="py-op">,</tt> <tt class="py-string">'a123'</tt><tt class="py-op">,</tt> <tt class="py-string">'hgim@gmail.com'</tt><tt class="py-op">,</tt> <tt class="py-number">2</tt><tt class="py-op">)</tt> </tt>
+<a name="L30"></a><tt class="py-lineno"> 30</tt>  <tt class="py-line">    <tt id="link-31" class="py-name"><a title="apps.management.commands.population.add_user
+apps.population.add_user" class="py-name" href="#" onclick="return doclink('link-31', 'add_user', 'link-21');">add_user</a></tt><tt class="py-op">(</tt><tt class="py-string">'German'</tt><tt class="py-op">,</tt> <tt class="py-string">'Gonzalez'</tt><tt class="py-op">,</tt> <tt class="py-string">'ggon'</tt><tt class="py-op">,</tt> <tt class="py-string">'a123'</tt><tt class="py-op">,</tt> <tt class="py-string">'ggon@gmail.com'</tt><tt class="py-op">,</tt> <tt class="py-number">2</tt><tt class="py-op">)</tt> </tt>
+<a name="L31"></a><tt class="py-lineno"> 31</tt>  <tt class="py-line">    <tt id="link-32" class="py-name"><a title="apps.management.commands.population.add_user
+apps.population.add_user" class="py-name" href="#" onclick="return doclink('link-32', 'add_user', 'link-21');">add_user</a></tt><tt class="py-op">(</tt><tt class="py-string">'Karina'</tt><tt class="py-op">,</tt> <tt class="py-string">'Franco'</tt><tt class="py-op">,</tt> <tt class="py-string">'kfran'</tt><tt class="py-op">,</tt> <tt class="py-string">'a123'</tt><tt class="py-op">,</tt> <tt class="py-string">'kfran@gmail.com'</tt><tt class="py-op">,</tt> <tt class="py-number">2</tt><tt class="py-op">)</tt> </tt>
+<a name="L32"></a><tt class="py-lineno"> 32</tt>  <tt class="py-line">    <tt id="link-33" class="py-name"><a title="apps.management.commands.population.add_user
+apps.population.add_user" class="py-name" href="#" onclick="return doclink('link-33', 'add_user', 'link-21');">add_user</a></tt><tt class="py-op">(</tt><tt class="py-string">'Claudia'</tt><tt class="py-op">,</tt> <tt class="py-string">'Rios'</tt><tt class="py-op">,</tt> <tt class="py-string">'crios'</tt><tt class="py-op">,</tt> <tt class="py-string">'a123'</tt><tt class="py-op">,</tt> <tt class="py-string">'crios@gmail.com'</tt><tt class="py-op">,</tt> <tt class="py-number">2</tt><tt class="py-op">)</tt> </tt>
+<a name="L33"></a><tt class="py-lineno"> 33</tt>  <tt class="py-line">    <tt id="link-34" class="py-name"><a title="apps.management.commands.population.add_user
+apps.population.add_user" class="py-name" href="#" onclick="return doclink('link-34', 'add_user', 'link-21');">add_user</a></tt><tt class="py-op">(</tt><tt class="py-string">'Natalia'</tt><tt class="py-op">,</tt> <tt class="py-string">'Aguero'</tt><tt class="py-op">,</tt> <tt class="py-string">'nag'</tt><tt class="py-op">,</tt> <tt class="py-string">'a123'</tt><tt class="py-op">,</tt> <tt class="py-string">'nag@gmail.com'</tt><tt class="py-op">,</tt> <tt class="py-number">2</tt><tt class="py-op">)</tt> </tt>
+<a name="L34"></a><tt class="py-lineno"> 34</tt>  <tt class="py-line">     </tt>
+<a name="L35"></a><tt class="py-lineno"> 35</tt>  <tt class="py-line">    <tt id="link-35" class="py-name" targets="Function apps.management.commands.population.add_flujo()=apps.management.commands.population-module.html#add_flujo,Function apps.population.add_flujo()=apps.population-module.html#add_flujo"><a title="apps.management.commands.population.add_flujo
+apps.population.add_flujo" class="py-name" href="#" onclick="return doclink('link-35', 'add_flujo', 'link-35');">add_flujo</a></tt><tt class="py-op">(</tt><tt class="py-string">'Plantilla Generica'</tt><tt class="py-op">)</tt> </tt>
+<a name="L36"></a><tt class="py-lineno"> 36</tt>  <tt class="py-line">    <tt id="link-36" class="py-name"><a title="apps.management.commands.population.add_flujo
+apps.population.add_flujo" class="py-name" href="#" onclick="return doclink('link-36', 'add_flujo', 'link-35');">add_flujo</a></tt><tt class="py-op">(</tt><tt class="py-string">'Plantilla Generica 2'</tt><tt class="py-op">)</tt> </tt>
+<a name="L37"></a><tt class="py-lineno"> 37</tt>  <tt class="py-line">    <tt id="link-37" class="py-name"><a title="apps.management.commands.population.add_flujo
+apps.population.add_flujo" class="py-name" href="#" onclick="return doclink('link-37', 'add_flujo', 'link-35');">add_flujo</a></tt><tt class="py-op">(</tt><tt class="py-string">'Plantilla Generica 3'</tt><tt class="py-op">)</tt> </tt>
+<a name="L38"></a><tt class="py-lineno"> 38</tt>  <tt class="py-line">     </tt>
+<a name="L39"></a><tt class="py-lineno"> 39</tt>  <tt class="py-line">     </tt>
+<a name="L40"></a><tt class="py-lineno"> 40</tt>  <tt class="py-line">    <tt id="link-38" class="py-name" targets="Variable apps.models.Permisos_Roles.permisos=apps.models.Permisos_Roles-class.html#permisos"><a title="apps.models.Permisos_Roles.permisos" class="py-name" href="#" onclick="return doclink('link-38', 'permisos', 'link-38');">permisos</a></tt> <tt class="py-op">=</tt> <tt class="py-op">[</tt><tt class="py-string">'Crear Usuario'</tt><tt class="py-op">,</tt> <tt class="py-string">'Modificar Usuario'</tt><tt class="py-op">,</tt> <tt class="py-string">'Eliminar Usuario'</tt><tt class="py-op">,</tt> <tt class="py-string">'Crear Roles'</tt><tt class="py-op">,</tt> <tt class="py-string">'Modificar Roles'</tt><tt class="py-op">,</tt> <tt class="py-string">'Eliminar Roles'</tt><tt class="py-op">,</tt><tt class="py-string">'Crear Proyecto'</tt><tt class="py-op">,</tt> <tt class="py-string">'Modificar Proyecto'</tt><tt class="py-op">,</tt> <tt class="py-string">'Crear Plantilla de Flujos'</tt><tt class="py-op">,</tt> <tt class="py-string">'Modificar Plantilla de Flujos'</tt><tt class="py-op">,</tt> <tt class="py-string">'Eliminar Plantilla de Flujos'</tt><tt class="py-op">,</tt> <tt class="py-string">'Asignar Participantes a Proyecto'</tt><tt class="py-op">,</tt> <tt class="py-string">'Eliminar Participantes de Proyecto'</tt><tt class="py-op">,</tt> <tt class="py-string">'Crear User Stories'</tt><tt class="py-op">,</tt> <tt class="py-string">'Modificar User Stories'</tt><tt class="py-op">,</tt> <tt class="py-string">'Eliminar User Stories'</tt><tt class="py-op">,</tt> <tt class="py-string">'Planificar Sprints'</tt><tt class="py-op">,</tt> <tt class="py-string">'Visualizar Proyectos'</tt><tt class="py-op">,</tt> <tt class="py-string">'Crear Roles en Proyecto'</tt><tt class="py-op">,</tt> <tt class="py-string">'Modificar Roles en Proyecto'</tt><tt class="py-op">,</tt> <tt class="py-string">'Eliminar Roles en Proyecto'</tt><tt class="py-op">,</tt> <tt class="py-string">'Cambiar Estado User Story'</tt><tt class="py-op">,</tt> <tt class="py-string">'Administrar Flujo Proyecto'</tt><tt class="py-op">]</tt> </tt>
+<a name="L41"></a><tt class="py-lineno"> 41</tt>  <tt class="py-line">    <tt class="py-name">tags</tt> <tt class="py-op">=</tt> <tt class="py-op">[</tt><tt class="py-string">'CU'</tt><tt class="py-op">,</tt> <tt class="py-string">'MU'</tt><tt class="py-op">,</tt> <tt class="py-string">'EU'</tt><tt class="py-op">,</tt> <tt class="py-string">'CR'</tt><tt class="py-op">,</tt> <tt class="py-string">'MR'</tt><tt class="py-op">,</tt> <tt class="py-string">'ER'</tt><tt class="py-op">,</tt> <tt class="py-string">'CP'</tt><tt class="py-op">,</tt> <tt class="py-string">'MP'</tt><tt class="py-op">,</tt><tt class="py-string">'CPF'</tt><tt class="py-op">,</tt> <tt class="py-string">'MPF'</tt><tt class="py-op">,</tt> <tt class="py-string">'EPF'</tt><tt class="py-op">,</tt> <tt class="py-string">'APP'</tt><tt class="py-op">,</tt> <tt class="py-string">'EPP'</tt><tt class="py-op">,</tt> <tt class="py-string">'CUS'</tt><tt class="py-op">,</tt> <tt class="py-string">'MUS'</tt><tt class="py-op">,</tt> <tt class="py-string">'EUS'</tt><tt class="py-op">,</tt> <tt class="py-string">'PS'</tt><tt class="py-op">,</tt> <tt class="py-string">'VP'</tt><tt class="py-op">,</tt> <tt class="py-string">'CRP'</tt><tt class="py-op">,</tt> <tt class="py-string">'MRP'</tt><tt class="py-op">,</tt> <tt class="py-string">'ERP'</tt><tt class="py-op">,</tt> <tt class="py-string">'CEUS'</tt><tt class="py-op">,</tt> <tt class="py-string">'AFP'</tt><tt class="py-op">]</tt> </tt>
+<a name="L42"></a><tt class="py-lineno"> 42</tt>  <tt class="py-line">    <tt id="link-39" class="py-name" targets="Variable apps.models.Permisos.sistema=apps.models.Permisos-class.html#sistema,Variable apps.models.Roles.sistema=apps.models.Roles-class.html#sistema"><a title="apps.models.Permisos.sistema
+apps.models.Roles.sistema" class="py-name" href="#" onclick="return doclink('link-39', 'sistema', 'link-39');">sistema</a></tt> <tt class="py-op">=</tt> <tt class="py-op">[</tt><tt class="py-name">True</tt><tt class="py-op">,</tt> <tt class="py-name">True</tt><tt class="py-op">,</tt> <tt class="py-name">True</tt><tt class="py-op">,</tt> <tt class="py-name">True</tt><tt class="py-op">,</tt> <tt class="py-name">True</tt><tt class="py-op">,</tt> <tt class="py-name">True</tt><tt class="py-op">,</tt> <tt class="py-name">True</tt><tt class="py-op">,</tt> <tt class="py-name">True</tt><tt class="py-op">,</tt> <tt class="py-name">True</tt><tt class="py-op">,</tt> <tt class="py-name">True</tt><tt class="py-op">,</tt> <tt class="py-name">True</tt><tt class="py-op">,</tt> <tt class="py-name">False</tt><tt class="py-op">,</tt> <tt class="py-name">False</tt><tt class="py-op">,</tt> <tt class="py-name">False</tt><tt class="py-op">,</tt> <tt class="py-name">False</tt><tt class="py-op">,</tt> <tt class="py-name">False</tt><tt class="py-op">,</tt> <tt class="py-name">False</tt><tt class="py-op">,</tt> <tt class="py-name">False</tt><tt class="py-op">,</tt> <tt class="py-name">False</tt><tt class="py-op">,</tt> <tt class="py-name">False</tt><tt class="py-op">,</tt> <tt class="py-name">False</tt><tt class="py-op">,</tt> <tt class="py-name">False</tt><tt class="py-op">,</tt> <tt class="py-name">False</tt><tt class="py-op">]</tt> </tt>
+<a name="L43"></a><tt class="py-lineno"> 43</tt>  <tt class="py-line">    <tt class="py-name">c</tt><tt class="py-op">=</tt><tt class="py-number">1</tt> </tt>
+<a name="L44"></a><tt class="py-lineno"> 44</tt>  <tt class="py-line">    <tt class="py-keyword">for</tt> <tt class="py-name">p</tt> <tt class="py-keyword">in</tt> <tt id="link-40" class="py-name"><a title="apps.models.Permisos_Roles.permisos" class="py-name" href="#" onclick="return doclink('link-40', 'permisos', 'link-38');">permisos</a></tt><tt class="py-op">:</tt> </tt>
+<a name="L45"></a><tt class="py-lineno"> 45</tt>  <tt class="py-line">        <tt id="link-41" class="py-name" targets="Function apps.management.commands.population.add_permisos()=apps.management.commands.population-module.html#add_permisos,Function apps.population.add_permisos()=apps.population-module.html#add_permisos"><a title="apps.management.commands.population.add_permisos
+apps.population.add_permisos" class="py-name" href="#" onclick="return doclink('link-41', 'add_permisos', 'link-41');">add_permisos</a></tt><tt class="py-op">(</tt><tt class="py-name">p</tt><tt class="py-op">,</tt> <tt class="py-name">tags</tt><tt class="py-op">[</tt><tt class="py-name">c</tt><tt class="py-op">-</tt><tt class="py-number">1</tt><tt class="py-op">]</tt><tt class="py-op">,</tt> <tt id="link-42" class="py-name"><a title="apps.models.Permisos.sistema
+apps.models.Roles.sistema" class="py-name" href="#" onclick="return doclink('link-42', 'sistema', 'link-39');">sistema</a></tt><tt class="py-op">[</tt><tt class="py-name">c</tt><tt class="py-op">-</tt><tt class="py-number">1</tt><tt class="py-op">]</tt><tt class="py-op">)</tt> </tt>
+<a name="L46"></a><tt class="py-lineno"> 46</tt>  <tt class="py-line">        <tt id="link-43" class="py-name" targets="Function apps.management.commands.population.add_permisos_roles()=apps.management.commands.population-module.html#add_permisos_roles,Function apps.population.add_permisos_roles()=apps.population-module.html#add_permisos_roles"><a title="apps.management.commands.population.add_permisos_roles
+apps.population.add_permisos_roles" class="py-name" href="#" onclick="return doclink('link-43', 'add_permisos_roles', 'link-43');">add_permisos_roles</a></tt><tt class="py-op">(</tt><tt class="py-name">c</tt><tt class="py-op">,</tt> <tt class="py-number">1</tt><tt class="py-op">)</tt> </tt>
+<a name="L47"></a><tt class="py-lineno"> 47</tt>  <tt class="py-line">        <tt class="py-name">c</tt> <tt class="py-op">=</tt> <tt class="py-name">c</tt> <tt class="py-op">+</tt> <tt class="py-number">1</tt> </tt>
 <a name="L48"></a><tt class="py-lineno"> 48</tt>  <tt class="py-line">     </tt>
-<a name="L49"></a><tt class="py-lineno"> 49</tt>  <tt class="py-line">    <tt id="link-32" class="py-name" targets="Function apps.management.commands.population.add_estado()=apps.management.commands.population-module.html#add_estado,Function apps.population.add_estado()=apps.population-module.html#add_estado"><a title="apps.management.commands.population.add_estado
-apps.population.add_estado" class="py-name" href="#" onclick="return doclink('link-32', 'add_estado', 'link-32');">add_estado</a></tt><tt class="py-op">(</tt><tt class="py-string">'To Do'</tt><tt class="py-op">)</tt> </tt>
-<a name="L50"></a><tt class="py-lineno"> 50</tt>  <tt class="py-line">    <tt id="link-33" class="py-name"><a title="apps.management.commands.population.add_estado
-apps.population.add_estado" class="py-name" href="#" onclick="return doclink('link-33', 'add_estado', 'link-32');">add_estado</a></tt><tt class="py-op">(</tt><tt class="py-string">'Doing'</tt><tt class="py-op">)</tt> </tt>
-<a name="L51"></a><tt class="py-lineno"> 51</tt>  <tt class="py-line">    <tt id="link-34" class="py-name"><a title="apps.management.commands.population.add_estado
-apps.population.add_estado" class="py-name" href="#" onclick="return doclink('link-34', 'add_estado', 'link-32');">add_estado</a></tt><tt class="py-op">(</tt><tt class="py-string">'Done'</tt><tt class="py-op">)</tt> </tt>
-</div><a name="L52"></a><tt class="py-lineno"> 52</tt>  <tt class="py-line">         </tt>
-<a name="L53"></a><tt class="py-lineno"> 53</tt>  <tt class="py-line">     </tt>
-<a name="add_roles"></a><div id="add_roles-def"><a name="L54"></a><tt class="py-lineno"> 54</tt> <a class="py-toggle" href="#" id="add_roles-toggle" onclick="return toggle('add_roles');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="apps.population-module.html#add_roles">add_roles</a><tt class="py-op">(</tt><tt class="py-param">descripcion</tt><tt class="py-op">,</tt> <tt class="py-param">sistema</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
-</div><div id="add_roles-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="add_roles-expanded"><a name="L55"></a><tt class="py-lineno"> 55</tt>  <tt class="py-line">    <tt id="link-35" class="py-name" targets="Variable apps.models.Equipo.rol=apps.models.Equipo-class.html#rol"><a title="apps.models.Equipo.rol" class="py-name" href="#" onclick="return doclink('link-35', 'rol', 'link-35');">rol</a></tt> <tt class="py-op">=</tt> <tt id="link-36" class="py-name"><a title="apps.models.Roles" class="py-name" href="#" onclick="return doclink('link-36', 'Roles', 'link-5');">Roles</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
-<a name="L56"></a><tt class="py-lineno"> 56</tt>  <tt class="py-line">    <tt id="link-37" class="py-name"><a title="apps.models.Equipo.rol" class="py-name" href="#" onclick="return doclink('link-37', 'rol', 'link-35');">rol</a></tt><tt class="py-op">.</tt><tt id="link-38" class="py-name" targets="Variable apps.models.Actividades.descripcion=apps.models.Actividades-class.html#descripcion,Variable apps.models.Estados.descripcion=apps.models.Estados-class.html#descripcion,Variable apps.models.Flujos.descripcion=apps.models.Flujos-class.html#descripcion,Variable apps.models.Permisos.descripcion=apps.models.Permisos-class.html#descripcion,Variable apps.models.Prioridad.descripcion=apps.models.Prioridad-class.html#descripcion,Variable apps.models.Proyectos.descripcion=apps.models.Proyectos-class.html#descripcion,Variable apps.models.Roles.descripcion=apps.models.Roles-class.html#descripcion,Variable apps.models.UserStory.descripcion=apps.models.UserStory-class.html#descripcion,Variable apps.models.UserStoryRegistro.descripcion=apps.models.UserStoryRegistro-class.html#descripcion,Variable apps.models.UserStoryVersiones.descripcion=apps.models.UserStoryVersiones-class.html#descripcion"><a title="apps.models.Actividades.descripcion
-apps.models.Estados.descripcion
-apps.models.Flujos.descripcion
-apps.models.Permisos.descripcion
-apps.models.Prioridad.descripcion
-apps.models.Proyectos.descripcion
-apps.models.Roles.descripcion
-apps.models.UserStory.descripcion
-apps.models.UserStoryRegistro.descripcion
-apps.models.UserStoryVersiones.descripcion" class="py-name" href="#" onclick="return doclink('link-38', 'descripcion', 'link-38');">descripcion</a></tt> <tt class="py-op">=</tt> <tt id="link-39" class="py-name"><a title="apps.models.Actividades.descripcion
-apps.models.Estados.descripcion
-apps.models.Flujos.descripcion
-apps.models.Permisos.descripcion
-apps.models.Prioridad.descripcion
-apps.models.Proyectos.descripcion
-apps.models.Roles.descripcion
-apps.models.UserStory.descripcion
-apps.models.UserStoryRegistro.descripcion
-apps.models.UserStoryVersiones.descripcion" class="py-name" href="#" onclick="return doclink('link-39', 'descripcion', 'link-38');">descripcion</a></tt> </tt>
-<a name="L57"></a><tt class="py-lineno"> 57</tt>  <tt class="py-line">    <tt id="link-40" class="py-name"><a title="apps.models.Equipo.rol" class="py-name" href="#" onclick="return doclink('link-40', 'rol', 'link-35');">rol</a></tt><tt class="py-op">.</tt><tt id="link-41" class="py-name" targets="Variable apps.models.Actividades.estado=apps.models.Actividades-class.html#estado,Variable apps.models.Flujos.estado=apps.models.Flujos-class.html#estado,Variable apps.models.Permisos.estado=apps.models.Permisos-class.html#estado,Variable apps.models.Roles.estado=apps.models.Roles-class.html#estado,Variable apps.models.Sprint.estado=apps.models.Sprint-class.html#estado,Variable apps.models.UserStory.estado=apps.models.UserStory-class.html#estado,Variable apps.models.UserStoryRegistro.estado=apps.models.UserStoryRegistro-class.html#estado,Variable apps.models.UserStoryVersiones.estado=apps.models.UserStoryVersiones-class.html#estado"><a title="apps.models.Actividades.estado
+<a name="L49"></a><tt class="py-lineno"> 49</tt>  <tt class="py-line">    <tt class="py-name">permisos_usuario</tt> <tt class="py-op">=</tt> <tt class="py-op">[</tt><tt class="py-number">18</tt><tt class="py-op">]</tt> </tt>
+<a name="L50"></a><tt class="py-lineno"> 50</tt>  <tt class="py-line">    <tt class="py-name">permisos_scrum_master</tt> <tt class="py-op">=</tt> <tt class="py-op">[</tt><tt class="py-number">12</tt><tt class="py-op">,</tt> <tt class="py-number">13</tt><tt class="py-op">,</tt> <tt class="py-number">14</tt><tt class="py-op">,</tt> <tt class="py-number">15</tt><tt class="py-op">,</tt> <tt class="py-number">16</tt><tt class="py-op">,</tt> <tt class="py-number">17</tt><tt class="py-op">,</tt> <tt class="py-number">18</tt><tt class="py-op">,</tt> <tt class="py-number">19</tt><tt class="py-op">,</tt> <tt class="py-number">20</tt><tt class="py-op">,</tt> <tt class="py-number">21</tt><tt class="py-op">,</tt> <tt class="py-number">23</tt> <tt class="py-op">]</tt> </tt>
+<a name="L51"></a><tt class="py-lineno"> 51</tt>  <tt class="py-line">    <tt class="py-name">permisos_cliente</tt> <tt class="py-op">=</tt> <tt class="py-op">[</tt><tt class="py-number">18</tt><tt class="py-op">]</tt> </tt>
+<a name="L52"></a><tt class="py-lineno"> 52</tt>  <tt class="py-line">    <tt class="py-name">permisos_developer</tt> <tt class="py-op">=</tt> <tt class="py-op">[</tt><tt class="py-number">15</tt><tt class="py-op">,</tt> <tt class="py-number">18</tt><tt class="py-op">,</tt> <tt class="py-number">22</tt><tt class="py-op">]</tt> </tt>
+<a name="L53"></a><tt class="py-lineno"> 53</tt>  <tt class="py-line">    <tt class="py-name">permisos_observador</tt> <tt class="py-op">=</tt> <tt class="py-op">[</tt><tt class="py-number">18</tt><tt class="py-op">]</tt> </tt>
+<a name="L54"></a><tt class="py-lineno"> 54</tt>  <tt class="py-line">     </tt>
+<a name="L55"></a><tt class="py-lineno"> 55</tt>  <tt class="py-line">    <tt class="py-keyword">for</tt> <tt class="py-name">p</tt> <tt class="py-keyword">in</tt> <tt class="py-name">permisos_usuario</tt><tt class="py-op">:</tt> </tt>
+<a name="L56"></a><tt class="py-lineno"> 56</tt>  <tt class="py-line">        <tt id="link-44" class="py-name"><a title="apps.management.commands.population.add_permisos_roles
+apps.population.add_permisos_roles" class="py-name" href="#" onclick="return doclink('link-44', 'add_permisos_roles', 'link-43');">add_permisos_roles</a></tt><tt class="py-op">(</tt><tt class="py-name">p</tt><tt class="py-op">,</tt> <tt class="py-number">2</tt><tt class="py-op">)</tt> </tt>
+<a name="L57"></a><tt class="py-lineno"> 57</tt>  <tt class="py-line">    <tt class="py-keyword">for</tt> <tt class="py-name">p</tt> <tt class="py-keyword">in</tt> <tt class="py-name">permisos_scrum_master</tt><tt class="py-op">:</tt> </tt>
+<a name="L58"></a><tt class="py-lineno"> 58</tt>  <tt class="py-line">        <tt id="link-45" class="py-name"><a title="apps.management.commands.population.add_permisos_roles
+apps.population.add_permisos_roles" class="py-name" href="#" onclick="return doclink('link-45', 'add_permisos_roles', 'link-43');">add_permisos_roles</a></tt><tt class="py-op">(</tt><tt class="py-name">p</tt><tt class="py-op">,</tt> <tt class="py-number">3</tt><tt class="py-op">)</tt> </tt>
+<a name="L59"></a><tt class="py-lineno"> 59</tt>  <tt class="py-line">    <tt class="py-keyword">for</tt> <tt class="py-name">p</tt> <tt class="py-keyword">in</tt> <tt class="py-name">permisos_cliente</tt><tt class="py-op">:</tt> </tt>
+<a name="L60"></a><tt class="py-lineno"> 60</tt>  <tt class="py-line">        <tt id="link-46" class="py-name"><a title="apps.management.commands.population.add_permisos_roles
+apps.population.add_permisos_roles" class="py-name" href="#" onclick="return doclink('link-46', 'add_permisos_roles', 'link-43');">add_permisos_roles</a></tt><tt class="py-op">(</tt><tt class="py-name">p</tt><tt class="py-op">,</tt> <tt class="py-number">4</tt><tt class="py-op">)</tt> </tt>
+<a name="L61"></a><tt class="py-lineno"> 61</tt>  <tt class="py-line">    <tt class="py-keyword">for</tt> <tt class="py-name">p</tt> <tt class="py-keyword">in</tt> <tt class="py-name">permisos_developer</tt><tt class="py-op">:</tt> </tt>
+<a name="L62"></a><tt class="py-lineno"> 62</tt>  <tt class="py-line">        <tt id="link-47" class="py-name"><a title="apps.management.commands.population.add_permisos_roles
+apps.population.add_permisos_roles" class="py-name" href="#" onclick="return doclink('link-47', 'add_permisos_roles', 'link-43');">add_permisos_roles</a></tt><tt class="py-op">(</tt><tt class="py-name">p</tt><tt class="py-op">,</tt> <tt class="py-number">5</tt><tt class="py-op">)</tt> </tt>
+<a name="L63"></a><tt class="py-lineno"> 63</tt>  <tt class="py-line">    <tt class="py-keyword">for</tt> <tt class="py-name">p</tt> <tt class="py-keyword">in</tt> <tt class="py-name">permisos_observador</tt><tt class="py-op">:</tt> </tt>
+<a name="L64"></a><tt class="py-lineno"> 64</tt>  <tt class="py-line">        <tt id="link-48" class="py-name"><a title="apps.management.commands.population.add_permisos_roles
+apps.population.add_permisos_roles" class="py-name" href="#" onclick="return doclink('link-48', 'add_permisos_roles', 'link-43');">add_permisos_roles</a></tt><tt class="py-op">(</tt><tt class="py-name">p</tt><tt class="py-op">,</tt> <tt class="py-number">6</tt><tt class="py-op">)</tt> </tt>
+<a name="L65"></a><tt class="py-lineno"> 65</tt>  <tt class="py-line">     </tt>
+<a name="L66"></a><tt class="py-lineno"> 66</tt>  <tt class="py-line">    <tt class="py-string">'''</tt> </tt>
+<a name="L67"></a><tt class="py-lineno"> 67</tt>  <tt class="py-line"><tt class="py-string">    add_prioridad('Baja')</tt> </tt>
+<a name="L68"></a><tt class="py-lineno"> 68</tt>  <tt class="py-line"><tt class="py-string">    add_prioridad('Media')</tt> </tt>
+<a name="L69"></a><tt class="py-lineno"> 69</tt>  <tt class="py-line"><tt class="py-string">    add_prioridad('Alta')</tt> </tt>
+<a name="L70"></a><tt class="py-lineno"> 70</tt>  <tt class="py-line"><tt class="py-string">    '''</tt> </tt>
+<a name="L71"></a><tt class="py-lineno"> 71</tt>  <tt class="py-line">         </tt>
+<a name="L72"></a><tt class="py-lineno"> 72</tt>  <tt class="py-line">    <tt class="py-keyword">for</tt> <tt class="py-name">i</tt> <tt class="py-keyword">in</tt> <tt class="py-name">range</tt><tt class="py-op">(</tt><tt class="py-number">1</tt><tt class="py-op">,</tt><tt class="py-number">10</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L73"></a><tt class="py-lineno"> 73</tt>  <tt class="py-line">        <tt id="link-49" class="py-name" targets="Function apps.management.commands.population.add_prioridad()=apps.management.commands.population-module.html#add_prioridad,Function apps.population.add_prioridad()=apps.population-module.html#add_prioridad"><a title="apps.management.commands.population.add_prioridad
+apps.population.add_prioridad" class="py-name" href="#" onclick="return doclink('link-49', 'add_prioridad', 'link-49');">add_prioridad</a></tt><tt class="py-op">(</tt><tt class="py-name">i</tt><tt class="py-op">)</tt> </tt>
+<a name="L74"></a><tt class="py-lineno"> 74</tt>  <tt class="py-line">     </tt>
+<a name="L75"></a><tt class="py-lineno"> 75</tt>  <tt class="py-line">    <tt id="link-50" class="py-name" targets="Function apps.management.commands.population.add_estado()=apps.management.commands.population-module.html#add_estado,Function apps.population.add_estado()=apps.population-module.html#add_estado"><a title="apps.management.commands.population.add_estado
+apps.population.add_estado" class="py-name" href="#" onclick="return doclink('link-50', 'add_estado', 'link-50');">add_estado</a></tt><tt class="py-op">(</tt><tt class="py-string">'To Do'</tt><tt class="py-op">)</tt> </tt>
+<a name="L76"></a><tt class="py-lineno"> 76</tt>  <tt class="py-line">    <tt id="link-51" class="py-name"><a title="apps.management.commands.population.add_estado
+apps.population.add_estado" class="py-name" href="#" onclick="return doclink('link-51', 'add_estado', 'link-50');">add_estado</a></tt><tt class="py-op">(</tt><tt class="py-string">'Doing'</tt><tt class="py-op">)</tt> </tt>
+<a name="L77"></a><tt class="py-lineno"> 77</tt>  <tt class="py-line">    <tt id="link-52" class="py-name"><a title="apps.management.commands.population.add_estado
+apps.population.add_estado" class="py-name" href="#" onclick="return doclink('link-52', 'add_estado', 'link-50');">add_estado</a></tt><tt class="py-op">(</tt><tt class="py-string">'Done'</tt><tt class="py-op">)</tt> </tt>
+<a name="L78"></a><tt class="py-lineno"> 78</tt>  <tt class="py-line">     </tt>
+<a name="L79"></a><tt class="py-lineno"> 79</tt>  <tt class="py-line">    <tt id="link-53" class="py-name" targets="Function apps.management.commands.population.add_estado_scrum()=apps.management.commands.population-module.html#add_estado_scrum,Function apps.population.add_estado_scrum()=apps.population-module.html#add_estado_scrum"><a title="apps.management.commands.population.add_estado_scrum
+apps.population.add_estado_scrum" class="py-name" href="#" onclick="return doclink('link-53', 'add_estado_scrum', 'link-53');">add_estado_scrum</a></tt><tt class="py-op">(</tt><tt class="py-string">"Iniciado"</tt><tt class="py-op">)</tt> </tt>
+<a name="L80"></a><tt class="py-lineno"> 80</tt>  <tt class="py-line">    <tt id="link-54" class="py-name"><a title="apps.management.commands.population.add_estado_scrum
+apps.population.add_estado_scrum" class="py-name" href="#" onclick="return doclink('link-54', 'add_estado_scrum', 'link-53');">add_estado_scrum</a></tt><tt class="py-op">(</tt><tt class="py-string">"Asignado"</tt><tt class="py-op">)</tt> </tt>
+<a name="L81"></a><tt class="py-lineno"> 81</tt>  <tt class="py-line">    <tt id="link-55" class="py-name"><a title="apps.management.commands.population.add_estado_scrum
+apps.population.add_estado_scrum" class="py-name" href="#" onclick="return doclink('link-55', 'add_estado_scrum', 'link-53');">add_estado_scrum</a></tt><tt class="py-op">(</tt><tt class="py-string">"No Asignado"</tt><tt class="py-op">)</tt> </tt>
+<a name="L82"></a><tt class="py-lineno"> 82</tt>  <tt class="py-line">    <tt id="link-56" class="py-name"><a title="apps.management.commands.population.add_estado_scrum
+apps.population.add_estado_scrum" class="py-name" href="#" onclick="return doclink('link-56', 'add_estado_scrum', 'link-53');">add_estado_scrum</a></tt><tt class="py-op">(</tt><tt class="py-string">"Pendiente"</tt><tt class="py-op">)</tt> </tt>
+<a name="L83"></a><tt class="py-lineno"> 83</tt>  <tt class="py-line">    <tt id="link-57" class="py-name"><a title="apps.management.commands.population.add_estado_scrum
+apps.population.add_estado_scrum" class="py-name" href="#" onclick="return doclink('link-57', 'add_estado_scrum', 'link-53');">add_estado_scrum</a></tt><tt class="py-op">(</tt><tt class="py-string">"Finalizado"</tt><tt class="py-op">)</tt> </tt>
+<a name="L84"></a><tt class="py-lineno"> 84</tt>  <tt class="py-line">    <tt id="link-58" class="py-name"><a title="apps.management.commands.population.add_estado_scrum
+apps.population.add_estado_scrum" class="py-name" href="#" onclick="return doclink('link-58', 'add_estado_scrum', 'link-53');">add_estado_scrum</a></tt><tt class="py-op">(</tt><tt class="py-string">"Cancelado"</tt><tt class="py-op">)</tt> </tt>
+<a name="L85"></a><tt class="py-lineno"> 85</tt>  <tt class="py-line">     </tt>
+<a name="L86"></a><tt class="py-lineno"> 86</tt>  <tt class="py-line">    <tt id="link-59" class="py-name" targets="Function apps.management.commands.population.add_proyecto()=apps.management.commands.population-module.html#add_proyecto,Function apps.population.add_proyecto()=apps.population-module.html#add_proyecto"><a title="apps.management.commands.population.add_proyecto
+apps.population.add_proyecto" class="py-name" href="#" onclick="return doclink('link-59', 'add_proyecto', 'link-59');">add_proyecto</a></tt><tt class="py-op">(</tt><tt class="py-string">"Proyecto 1"</tt><tt class="py-op">)</tt> </tt>
+<a name="L87"></a><tt class="py-lineno"> 87</tt>  <tt class="py-line">    <tt id="link-60" class="py-name"><a title="apps.management.commands.population.add_proyecto
+apps.population.add_proyecto" class="py-name" href="#" onclick="return doclink('link-60', 'add_proyecto', 'link-59');">add_proyecto</a></tt><tt class="py-op">(</tt><tt class="py-string">"Proyecto 2"</tt><tt class="py-op">)</tt> </tt>
+<a name="L88"></a><tt class="py-lineno"> 88</tt>  <tt class="py-line">    <tt id="link-61" class="py-name"><a title="apps.management.commands.population.add_proyecto
+apps.population.add_proyecto" class="py-name" href="#" onclick="return doclink('link-61', 'add_proyecto', 'link-59');">add_proyecto</a></tt><tt class="py-op">(</tt><tt class="py-string">"Proyecto 3"</tt><tt class="py-op">)</tt> </tt>
+<a name="L89"></a><tt class="py-lineno"> 89</tt>  <tt class="py-line">     </tt>
+<a name="L90"></a><tt class="py-lineno"> 90</tt>  <tt class="py-line">    <tt id="link-62" class="py-name" targets="Function apps.management.commands.population.add_equipo()=apps.management.commands.population-module.html#add_equipo,Function apps.population.add_equipo()=apps.population-module.html#add_equipo"><a title="apps.management.commands.population.add_equipo
+apps.population.add_equipo" class="py-name" href="#" onclick="return doclink('link-62', 'add_equipo', 'link-62');">add_equipo</a></tt><tt class="py-op">(</tt><tt class="py-number">1</tt><tt class="py-op">,</tt> <tt class="py-number">3</tt><tt class="py-op">,</tt> <tt class="py-number">1</tt><tt class="py-op">)</tt> </tt>
+<a name="L91"></a><tt class="py-lineno"> 91</tt>  <tt class="py-line">    <tt id="link-63" class="py-name"><a title="apps.management.commands.population.add_equipo
+apps.population.add_equipo" class="py-name" href="#" onclick="return doclink('link-63', 'add_equipo', 'link-62');">add_equipo</a></tt><tt class="py-op">(</tt><tt class="py-number">1</tt><tt class="py-op">,</tt> <tt class="py-number">4</tt><tt class="py-op">,</tt> <tt class="py-number">2</tt><tt class="py-op">)</tt> </tt>
+<a name="L92"></a><tt class="py-lineno"> 92</tt>  <tt class="py-line">    <tt id="link-64" class="py-name"><a title="apps.management.commands.population.add_equipo
+apps.population.add_equipo" class="py-name" href="#" onclick="return doclink('link-64', 'add_equipo', 'link-62');">add_equipo</a></tt><tt class="py-op">(</tt><tt class="py-number">1</tt><tt class="py-op">,</tt> <tt class="py-number">5</tt><tt class="py-op">,</tt> <tt class="py-number">3</tt><tt class="py-op">)</tt> </tt>
+<a name="L93"></a><tt class="py-lineno"> 93</tt>  <tt class="py-line">    <tt id="link-65" class="py-name"><a title="apps.management.commands.population.add_equipo
+apps.population.add_equipo" class="py-name" href="#" onclick="return doclink('link-65', 'add_equipo', 'link-62');">add_equipo</a></tt><tt class="py-op">(</tt><tt class="py-number">1</tt><tt class="py-op">,</tt> <tt class="py-number">6</tt><tt class="py-op">,</tt> <tt class="py-number">4</tt><tt class="py-op">)</tt> </tt>
+<a name="L94"></a><tt class="py-lineno"> 94</tt>  <tt class="py-line">    <tt id="link-66" class="py-name"><a title="apps.management.commands.population.add_equipo
+apps.population.add_equipo" class="py-name" href="#" onclick="return doclink('link-66', 'add_equipo', 'link-62');">add_equipo</a></tt><tt class="py-op">(</tt><tt class="py-number">1</tt><tt class="py-op">,</tt> <tt class="py-number">5</tt><tt class="py-op">,</tt> <tt class="py-number">5</tt><tt class="py-op">)</tt> </tt>
+<a name="L95"></a><tt class="py-lineno"> 95</tt>  <tt class="py-line">    <tt id="link-67" class="py-name"><a title="apps.management.commands.population.add_equipo
+apps.population.add_equipo" class="py-name" href="#" onclick="return doclink('link-67', 'add_equipo', 'link-62');">add_equipo</a></tt><tt class="py-op">(</tt><tt class="py-number">1</tt><tt class="py-op">,</tt> <tt class="py-number">5</tt><tt class="py-op">,</tt> <tt class="py-number">6</tt><tt class="py-op">)</tt> </tt>
+<a name="L96"></a><tt class="py-lineno"> 96</tt>  <tt class="py-line">    <tt id="link-68" class="py-name"><a title="apps.management.commands.population.add_equipo
+apps.population.add_equipo" class="py-name" href="#" onclick="return doclink('link-68', 'add_equipo', 'link-62');">add_equipo</a></tt><tt class="py-op">(</tt><tt class="py-number">1</tt><tt class="py-op">,</tt> <tt class="py-number">5</tt><tt class="py-op">,</tt> <tt class="py-number">7</tt><tt class="py-op">)</tt> </tt>
+<a name="L97"></a><tt class="py-lineno"> 97</tt>  <tt class="py-line">    <tt id="link-69" class="py-name"><a title="apps.management.commands.population.add_equipo
+apps.population.add_equipo" class="py-name" href="#" onclick="return doclink('link-69', 'add_equipo', 'link-62');">add_equipo</a></tt><tt class="py-op">(</tt><tt class="py-number">1</tt><tt class="py-op">,</tt> <tt class="py-number">5</tt><tt class="py-op">,</tt> <tt class="py-number">8</tt><tt class="py-op">)</tt> </tt>
+<a name="L98"></a><tt class="py-lineno"> 98</tt>  <tt class="py-line">     </tt>
+<a name="L99"></a><tt class="py-lineno"> 99</tt>  <tt class="py-line">    <tt id="link-70" class="py-name"><a title="apps.management.commands.population.add_equipo
+apps.population.add_equipo" class="py-name" href="#" onclick="return doclink('link-70', 'add_equipo', 'link-62');">add_equipo</a></tt><tt class="py-op">(</tt><tt class="py-number">2</tt><tt class="py-op">,</tt> <tt class="py-number">3</tt><tt class="py-op">,</tt> <tt class="py-number">2</tt><tt class="py-op">)</tt> </tt>
+<a name="L100"></a><tt class="py-lineno">100</tt>  <tt class="py-line">    <tt id="link-71" class="py-name"><a title="apps.management.commands.population.add_equipo
+apps.population.add_equipo" class="py-name" href="#" onclick="return doclink('link-71', 'add_equipo', 'link-62');">add_equipo</a></tt><tt class="py-op">(</tt><tt class="py-number">2</tt><tt class="py-op">,</tt> <tt class="py-number">4</tt><tt class="py-op">,</tt> <tt class="py-number">3</tt><tt class="py-op">)</tt> </tt>
+<a name="L101"></a><tt class="py-lineno">101</tt>  <tt class="py-line">    <tt id="link-72" class="py-name"><a title="apps.management.commands.population.add_equipo
+apps.population.add_equipo" class="py-name" href="#" onclick="return doclink('link-72', 'add_equipo', 'link-62');">add_equipo</a></tt><tt class="py-op">(</tt><tt class="py-number">2</tt><tt class="py-op">,</tt> <tt class="py-number">5</tt><tt class="py-op">,</tt> <tt class="py-number">3</tt><tt class="py-op">)</tt> </tt>
+<a name="L102"></a><tt class="py-lineno">102</tt>  <tt class="py-line">    <tt id="link-73" class="py-name"><a title="apps.management.commands.population.add_equipo
+apps.population.add_equipo" class="py-name" href="#" onclick="return doclink('link-73', 'add_equipo', 'link-62');">add_equipo</a></tt><tt class="py-op">(</tt><tt class="py-number">2</tt><tt class="py-op">,</tt> <tt class="py-number">5</tt><tt class="py-op">,</tt> <tt class="py-number">9</tt><tt class="py-op">)</tt> </tt>
+<a name="L103"></a><tt class="py-lineno">103</tt>  <tt class="py-line">    <tt id="link-74" class="py-name"><a title="apps.management.commands.population.add_equipo
+apps.population.add_equipo" class="py-name" href="#" onclick="return doclink('link-74', 'add_equipo', 'link-62');">add_equipo</a></tt><tt class="py-op">(</tt><tt class="py-number">2</tt><tt class="py-op">,</tt> <tt class="py-number">5</tt><tt class="py-op">,</tt> <tt class="py-number">10</tt><tt class="py-op">)</tt> </tt>
+<a name="L104"></a><tt class="py-lineno">104</tt>  <tt class="py-line">     </tt>
+<a name="L105"></a><tt class="py-lineno">105</tt>  <tt class="py-line">    <tt id="link-75" class="py-name"><a title="apps.management.commands.population.add_equipo
+apps.population.add_equipo" class="py-name" href="#" onclick="return doclink('link-75', 'add_equipo', 'link-62');">add_equipo</a></tt><tt class="py-op">(</tt><tt class="py-number">3</tt><tt class="py-op">,</tt> <tt class="py-number">3</tt><tt class="py-op">,</tt> <tt class="py-number">2</tt><tt class="py-op">)</tt> </tt>
+<a name="L106"></a><tt class="py-lineno">106</tt>  <tt class="py-line">    <tt id="link-76" class="py-name"><a title="apps.management.commands.population.add_equipo
+apps.population.add_equipo" class="py-name" href="#" onclick="return doclink('link-76', 'add_equipo', 'link-62');">add_equipo</a></tt><tt class="py-op">(</tt><tt class="py-number">3</tt><tt class="py-op">,</tt> <tt class="py-number">4</tt><tt class="py-op">,</tt> <tt class="py-number">3</tt><tt class="py-op">)</tt> </tt>
+<a name="L107"></a><tt class="py-lineno">107</tt>  <tt class="py-line">    <tt id="link-77" class="py-name"><a title="apps.management.commands.population.add_equipo
+apps.population.add_equipo" class="py-name" href="#" onclick="return doclink('link-77', 'add_equipo', 'link-62');">add_equipo</a></tt><tt class="py-op">(</tt><tt class="py-number">3</tt><tt class="py-op">,</tt> <tt class="py-number">5</tt><tt class="py-op">,</tt> <tt class="py-number">3</tt><tt class="py-op">)</tt> </tt>
+<a name="L108"></a><tt class="py-lineno">108</tt>  <tt class="py-line">    <tt id="link-78" class="py-name"><a title="apps.management.commands.population.add_equipo
+apps.population.add_equipo" class="py-name" href="#" onclick="return doclink('link-78', 'add_equipo', 'link-62');">add_equipo</a></tt><tt class="py-op">(</tt><tt class="py-number">3</tt><tt class="py-op">,</tt> <tt class="py-number">5</tt><tt class="py-op">,</tt> <tt class="py-number">8</tt><tt class="py-op">)</tt> </tt>
+<a name="L109"></a><tt class="py-lineno">109</tt>  <tt class="py-line">    <tt id="link-79" class="py-name"><a title="apps.management.commands.population.add_equipo
+apps.population.add_equipo" class="py-name" href="#" onclick="return doclink('link-79', 'add_equipo', 'link-62');">add_equipo</a></tt><tt class="py-op">(</tt><tt class="py-number">3</tt><tt class="py-op">,</tt> <tt class="py-number">5</tt><tt class="py-op">,</tt> <tt class="py-number">10</tt><tt class="py-op">)</tt> </tt>
+<a name="L110"></a><tt class="py-lineno">110</tt>  <tt class="py-line">    <tt id="link-80" class="py-name"><a title="apps.management.commands.population.add_equipo
+apps.population.add_equipo" class="py-name" href="#" onclick="return doclink('link-80', 'add_equipo', 'link-62');">add_equipo</a></tt><tt class="py-op">(</tt><tt class="py-number">3</tt><tt class="py-op">,</tt> <tt class="py-number">5</tt><tt class="py-op">,</tt> <tt class="py-number">11</tt><tt class="py-op">)</tt> </tt>
+<a name="L111"></a><tt class="py-lineno">111</tt>  <tt class="py-line">    <tt id="link-81" class="py-name"><a title="apps.management.commands.population.add_equipo
+apps.population.add_equipo" class="py-name" href="#" onclick="return doclink('link-81', 'add_equipo', 'link-62');">add_equipo</a></tt><tt class="py-op">(</tt><tt class="py-number">3</tt><tt class="py-op">,</tt> <tt class="py-number">5</tt><tt class="py-op">,</tt> <tt class="py-number">12</tt><tt class="py-op">)</tt> </tt>
+<a name="L112"></a><tt class="py-lineno">112</tt>  <tt class="py-line">     </tt>
+<a name="L113"></a><tt class="py-lineno">113</tt>  <tt class="py-line">    <tt class="py-keyword">for</tt> <tt class="py-name">h</tt> <tt class="py-keyword">in</tt> <tt class="py-name">range</tt><tt class="py-op">(</tt><tt class="py-number">1</tt><tt class="py-op">,</tt><tt class="py-number">10</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L114"></a><tt class="py-lineno">114</tt>  <tt class="py-line">        <tt id="link-82" class="py-name" targets="Function apps.management.commands.population.add_hu()=apps.management.commands.population-module.html#add_hu,Function apps.population.add_hu()=apps.population-module.html#add_hu"><a title="apps.management.commands.population.add_hu
+apps.population.add_hu" class="py-name" href="#" onclick="return doclink('link-82', 'add_hu', 'link-82');">add_hu</a></tt><tt class="py-op">(</tt><tt class="py-number">1</tt><tt class="py-op">,</tt> <tt class="py-string">"hu"</tt> <tt class="py-op">+</tt><tt class="py-name">str</tt><tt class="py-op">(</tt><tt class="py-name">h</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> <tt class="py-string">"User Story "</tt><tt class="py-op">+</tt><tt class="py-name">str</tt><tt class="py-op">(</tt><tt class="py-name">h</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> <tt class="py-string">"Como usuario debo poder realizar esta funcion "</tt><tt class="py-op">+</tt><tt class="py-name">str</tt><tt class="py-op">(</tt><tt class="py-name">h</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L115"></a><tt class="py-lineno">115</tt>  <tt class="py-line">        <tt id="link-83" class="py-name"><a title="apps.management.commands.population.add_hu
+apps.population.add_hu" class="py-name" href="#" onclick="return doclink('link-83', 'add_hu', 'link-82');">add_hu</a></tt><tt class="py-op">(</tt><tt class="py-number">2</tt><tt class="py-op">,</tt> <tt class="py-string">"hu"</tt> <tt class="py-op">+</tt><tt class="py-name">str</tt><tt class="py-op">(</tt><tt class="py-name">h</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> <tt class="py-string">"User Story "</tt><tt class="py-op">+</tt><tt class="py-name">str</tt><tt class="py-op">(</tt><tt class="py-name">h</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> <tt class="py-string">"Como usuario debo poder realizar esta funcion "</tt><tt class="py-op">+</tt><tt class="py-name">str</tt><tt class="py-op">(</tt><tt class="py-name">h</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L116"></a><tt class="py-lineno">116</tt>  <tt class="py-line">        <tt id="link-84" class="py-name"><a title="apps.management.commands.population.add_hu
+apps.population.add_hu" class="py-name" href="#" onclick="return doclink('link-84', 'add_hu', 'link-82');">add_hu</a></tt><tt class="py-op">(</tt><tt class="py-number">3</tt><tt class="py-op">,</tt> <tt class="py-string">"hu"</tt> <tt class="py-op">+</tt><tt class="py-name">str</tt><tt class="py-op">(</tt><tt class="py-name">h</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> <tt class="py-string">"User Story "</tt><tt class="py-op">+</tt><tt class="py-name">str</tt><tt class="py-op">(</tt><tt class="py-name">h</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> <tt class="py-string">"Como usuario debo poder realizar esta funcion "</tt><tt class="py-op">+</tt><tt class="py-name">str</tt><tt class="py-op">(</tt><tt class="py-name">h</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L117"></a><tt class="py-lineno">117</tt>  <tt class="py-line">         </tt>
+<a name="add_estado_scrum"></a><div id="add_estado_scrum-def"><a name="L118"></a><tt class="py-lineno">118</tt> <a class="py-toggle" href="#" id="add_estado_scrum-toggle" onclick="return toggle('add_estado_scrum');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="apps.population-module.html#add_estado_scrum">add_estado_scrum</a><tt class="py-op">(</tt><tt class="py-param">descripcion</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="add_estado_scrum-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="add_estado_scrum-expanded"><a name="L119"></a><tt class="py-lineno">119</tt>  <tt class="py-line">    <tt id="link-85" class="py-name" targets="Variable apps.models.Actividades.estado=apps.models.Actividades-class.html#estado,Variable apps.models.Flujos.estado=apps.models.Flujos-class.html#estado,Variable apps.models.Permisos.estado=apps.models.Permisos-class.html#estado,Variable apps.models.Proyectos.estado=apps.models.Proyectos-class.html#estado,Variable apps.models.Roles.estado=apps.models.Roles-class.html#estado,Variable apps.models.Sprint.estado=apps.models.Sprint-class.html#estado,Variable apps.models.UserStory.estado=apps.models.UserStory-class.html#estado,Variable apps.models.UserStoryRegistro.estado=apps.models.UserStoryRegistro-class.html#estado,Variable apps.models.UserStoryVersiones.estado=apps.models.UserStoryVersiones-class.html#estado"><a title="apps.models.Actividades.estado
 apps.models.Flujos.estado
 apps.models.Permisos.estado
+apps.models.Proyectos.estado
 apps.models.Roles.estado
 apps.models.Sprint.estado
 apps.models.UserStory.estado
 apps.models.UserStoryRegistro.estado
-apps.models.UserStoryVersiones.estado" class="py-name" href="#" onclick="return doclink('link-41', 'estado', 'link-41');">estado</a></tt> <tt class="py-op">=</tt> <tt class="py-name">True</tt> </tt>
-<a name="L58"></a><tt class="py-lineno"> 58</tt>  <tt class="py-line">    <tt id="link-42" class="py-name"><a title="apps.models.Equipo.rol" class="py-name" href="#" onclick="return doclink('link-42', 'rol', 'link-35');">rol</a></tt><tt class="py-op">.</tt><tt id="link-43" class="py-name"><a title="apps.models.Permisos.sistema
-apps.models.Roles.sistema" class="py-name" href="#" onclick="return doclink('link-43', 'sistema', 'link-21');">sistema</a></tt> <tt class="py-op">=</tt> <tt id="link-44" class="py-name"><a title="apps.models.Permisos.sistema
-apps.models.Roles.sistema" class="py-name" href="#" onclick="return doclink('link-44', 'sistema', 'link-21');">sistema</a></tt> </tt>
-<a name="L59"></a><tt class="py-lineno"> 59</tt>  <tt class="py-line">    <tt id="link-45" class="py-name"><a title="apps.models.Equipo.rol" class="py-name" href="#" onclick="return doclink('link-45', 'rol', 'link-35');">rol</a></tt><tt class="py-op">.</tt><tt id="link-46" class="py-name" targets="Method apps.views.UserCreateForm.save()=apps.views.UserCreateForm-class.html#save,Method apps.views.UserModifyForm.save()=apps.views.UserModifyForm-class.html#save"><a title="apps.views.UserCreateForm.save
-apps.views.UserModifyForm.save" class="py-name" href="#" onclick="return doclink('link-46', 'save', 'link-46');">save</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
-<a name="L60"></a><tt class="py-lineno"> 60</tt>  <tt class="py-line">    <tt class="py-keyword">return</tt> <tt id="link-47" class="py-name"><a title="apps.models.Equipo.rol" class="py-name" href="#" onclick="return doclink('link-47', 'rol', 'link-35');">rol</a></tt> </tt>
-</div><a name="L61"></a><tt class="py-lineno"> 61</tt>  <tt class="py-line"> </tt>
-<a name="add_user"></a><div id="add_user-def"><a name="L62"></a><tt class="py-lineno"> 62</tt> <a class="py-toggle" href="#" id="add_user-toggle" onclick="return toggle('add_user');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="apps.population-module.html#add_user">add_user</a><tt class="py-op">(</tt><tt class="py-param">username</tt><tt class="py-op">,</tt> <tt class="py-param">password</tt><tt class="py-op">,</tt> <tt class="py-param">email</tt><tt class="py-op">,</tt> <tt class="py-param">role</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
-</div><div id="add_user-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="add_user-expanded"><a name="L63"></a><tt class="py-lineno"> 63</tt>  <tt class="py-line">    <tt id="link-48" class="py-name" targets="Variable apps.models.Users_Roles.user=apps.models.Users_Roles-class.html#user"><a title="apps.models.Users_Roles.user" class="py-name" href="#" onclick="return doclink('link-48', 'user', 'link-48');">user</a></tt> <tt class="py-op">=</tt> <tt class="py-name">User</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
-<a name="L64"></a><tt class="py-lineno"> 64</tt>  <tt class="py-line">    <tt id="link-49" class="py-name"><a title="apps.models.Users_Roles.user" class="py-name" href="#" onclick="return doclink('link-49', 'user', 'link-48');">user</a></tt><tt class="py-op">.</tt><tt class="py-name">username</tt> <tt class="py-op">=</tt> <tt class="py-name">username</tt> </tt>
-<a name="L65"></a><tt class="py-lineno"> 65</tt>  <tt class="py-line">    <tt id="link-50" class="py-name"><a title="apps.models.Users_Roles.user" class="py-name" href="#" onclick="return doclink('link-50', 'user', 'link-48');">user</a></tt><tt class="py-op">.</tt><tt class="py-name">set_password</tt><tt class="py-op">(</tt><tt class="py-name">password</tt><tt class="py-op">)</tt> </tt>
-<a name="L66"></a><tt class="py-lineno"> 66</tt>  <tt class="py-line">    <tt id="link-51" class="py-name"><a title="apps.models.Users_Roles.user" class="py-name" href="#" onclick="return doclink('link-51', 'user', 'link-48');">user</a></tt><tt class="py-op">.</tt><tt id="link-52" class="py-name" targets="Variable apps.views.UserCreateForm.email=apps.views.UserCreateForm-class.html#email,Variable apps.views.UserModifyForm.email=apps.views.UserModifyForm-class.html#email"><a title="apps.views.UserCreateForm.email
-apps.views.UserModifyForm.email" class="py-name" href="#" onclick="return doclink('link-52', 'email', 'link-52');">email</a></tt> <tt class="py-op">=</tt> <tt id="link-53" class="py-name"><a title="apps.views.UserCreateForm.email
-apps.views.UserModifyForm.email" class="py-name" href="#" onclick="return doclink('link-53', 'email', 'link-52');">email</a></tt> </tt>
-<a name="L67"></a><tt class="py-lineno"> 67</tt>  <tt class="py-line">    <tt id="link-54" class="py-name"><a title="apps.models.Users_Roles.user" class="py-name" href="#" onclick="return doclink('link-54', 'user', 'link-48');">user</a></tt><tt class="py-op">.</tt><tt id="link-55" class="py-name"><a title="apps.views.UserCreateForm.save
-apps.views.UserModifyForm.save" class="py-name" href="#" onclick="return doclink('link-55', 'save', 'link-46');">save</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
-<a name="L68"></a><tt class="py-lineno"> 68</tt>  <tt class="py-line">    <tt id="link-56" class="py-name" targets="Function apps.management.commands.population.add_users_roles()=apps.management.commands.population-module.html#add_users_roles,Function apps.population.add_users_roles()=apps.population-module.html#add_users_roles"><a title="apps.management.commands.population.add_users_roles
-apps.population.add_users_roles" class="py-name" href="#" onclick="return doclink('link-56', 'add_users_roles', 'link-56');">add_users_roles</a></tt><tt class="py-op">(</tt><tt id="link-57" class="py-name"><a title="apps.models.Users_Roles.user" class="py-name" href="#" onclick="return doclink('link-57', 'user', 'link-48');">user</a></tt><tt class="py-op">.</tt><tt class="py-name">id</tt><tt class="py-op">,</tt> <tt id="link-58" class="py-name" targets="Variable apps.models.Users_Roles.role=apps.models.Users_Roles-class.html#role"><a title="apps.models.Users_Roles.role" class="py-name" href="#" onclick="return doclink('link-58', 'role', 'link-58');">role</a></tt><tt class="py-op">)</tt> </tt>
-<a name="L69"></a><tt class="py-lineno"> 69</tt>  <tt class="py-line">    <tt class="py-keyword">return</tt> <tt id="link-59" class="py-name"><a title="apps.models.Users_Roles.user" class="py-name" href="#" onclick="return doclink('link-59', 'user', 'link-48');">user</a></tt> </tt>
-</div><a name="L70"></a><tt class="py-lineno"> 70</tt>  <tt class="py-line"> </tt>
-<a name="add_users_roles"></a><div id="add_users_roles-def"><a name="L71"></a><tt class="py-lineno"> 71</tt> <a class="py-toggle" href="#" id="add_users_roles-toggle" onclick="return toggle('add_users_roles');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="apps.population-module.html#add_users_roles">add_users_roles</a><tt class="py-op">(</tt><tt class="py-param">user_id</tt><tt class="py-op">,</tt> <tt class="py-param">role_id</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
-</div><div id="add_users_roles-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="add_users_roles-expanded"><a name="L72"></a><tt class="py-lineno"> 72</tt>  <tt class="py-line">    <tt class="py-name">ur</tt> <tt class="py-op">=</tt> <tt id="link-60" class="py-name"><a title="apps.models.Users_Roles" class="py-name" href="#" onclick="return doclink('link-60', 'Users_Roles', 'link-3');">Users_Roles</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
-<a name="L73"></a><tt class="py-lineno"> 73</tt>  <tt class="py-line">    <tt class="py-name">ur</tt><tt class="py-op">.</tt><tt class="py-name">role_id</tt> <tt class="py-op">=</tt> <tt class="py-name">role_id</tt> </tt>
-<a name="L74"></a><tt class="py-lineno"> 74</tt>  <tt class="py-line">    <tt class="py-name">ur</tt><tt class="py-op">.</tt><tt class="py-name">user_id</tt> <tt class="py-op">=</tt> <tt class="py-name">user_id</tt> </tt>
-<a name="L75"></a><tt class="py-lineno"> 75</tt>  <tt class="py-line">    <tt class="py-name">ur</tt><tt class="py-op">.</tt><tt id="link-61" class="py-name"><a title="apps.views.UserCreateForm.save
-apps.views.UserModifyForm.save" class="py-name" href="#" onclick="return doclink('link-61', 'save', 'link-46');">save</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
-<a name="L76"></a><tt class="py-lineno"> 76</tt>  <tt class="py-line">    <tt class="py-keyword">return</tt> <tt class="py-name">ur</tt> </tt>
-</div><a name="L77"></a><tt class="py-lineno"> 77</tt>  <tt class="py-line"> </tt>
-<a name="add_flujo"></a><div id="add_flujo-def"><a name="L78"></a><tt class="py-lineno"> 78</tt> <a class="py-toggle" href="#" id="add_flujo-toggle" onclick="return toggle('add_flujo');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="apps.population-module.html#add_flujo">add_flujo</a><tt class="py-op">(</tt><tt class="py-param">descripcion</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
-</div><div id="add_flujo-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="add_flujo-expanded"><a name="L79"></a><tt class="py-lineno"> 79</tt>  <tt class="py-line">    <tt id="link-62" class="py-name" targets="Variable apps.models.Actividades.flujo=apps.models.Actividades-class.html#flujo,Variable apps.models.UserStory.flujo=apps.models.UserStory-class.html#flujo,Variable apps.models.UserStoryRegistro.flujo=apps.models.UserStoryRegistro-class.html#flujo,Variable apps.models.UserStoryVersiones.flujo=apps.models.UserStoryVersiones-class.html#flujo"><a title="apps.models.Actividades.flujo
-apps.models.UserStory.flujo
-apps.models.UserStoryRegistro.flujo
-apps.models.UserStoryVersiones.flujo" class="py-name" href="#" onclick="return doclink('link-62', 'flujo', 'link-62');">flujo</a></tt> <tt class="py-op">=</tt> <tt id="link-63" class="py-name"><a title="apps.models.Flujos" class="py-name" href="#" onclick="return doclink('link-63', 'Flujos', 'link-4');">Flujos</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
-<a name="L80"></a><tt class="py-lineno"> 80</tt>  <tt class="py-line">    <tt id="link-64" class="py-name"><a title="apps.models.Actividades.flujo
-apps.models.UserStory.flujo
-apps.models.UserStoryRegistro.flujo
-apps.models.UserStoryVersiones.flujo" class="py-name" href="#" onclick="return doclink('link-64', 'flujo', 'link-62');">flujo</a></tt><tt class="py-op">.</tt><tt id="link-65" class="py-name"><a title="apps.models.Actividades.descripcion
-apps.models.Estados.descripcion
-apps.models.Flujos.descripcion
-apps.models.Permisos.descripcion
-apps.models.Prioridad.descripcion
-apps.models.Proyectos.descripcion
-apps.models.Roles.descripcion
-apps.models.UserStory.descripcion
-apps.models.UserStoryRegistro.descripcion
-apps.models.UserStoryVersiones.descripcion" class="py-name" href="#" onclick="return doclink('link-65', 'descripcion', 'link-38');">descripcion</a></tt> <tt class="py-op">=</tt> <tt id="link-66" class="py-name"><a title="apps.models.Actividades.descripcion
-apps.models.Estados.descripcion
-apps.models.Flujos.descripcion
-apps.models.Permisos.descripcion
-apps.models.Prioridad.descripcion
-apps.models.Proyectos.descripcion
-apps.models.Roles.descripcion
-apps.models.UserStory.descripcion
-apps.models.UserStoryRegistro.descripcion
-apps.models.UserStoryVersiones.descripcion" class="py-name" href="#" onclick="return doclink('link-66', 'descripcion', 'link-38');">descripcion</a></tt> </tt>
-<a name="L81"></a><tt class="py-lineno"> 81</tt>  <tt class="py-line">    <tt id="link-67" class="py-name"><a title="apps.models.Actividades.flujo
-apps.models.UserStory.flujo
-apps.models.UserStoryRegistro.flujo
-apps.models.UserStoryVersiones.flujo" class="py-name" href="#" onclick="return doclink('link-67', 'flujo', 'link-62');">flujo</a></tt><tt class="py-op">.</tt><tt id="link-68" class="py-name" targets="Variable apps.models.Actividades.plantilla=apps.models.Actividades-class.html#plantilla,Variable apps.models.Flujos.plantilla=apps.models.Flujos-class.html#plantilla"><a title="apps.models.Actividades.plantilla
-apps.models.Flujos.plantilla" class="py-name" href="#" onclick="return doclink('link-68', 'plantilla', 'link-68');">plantilla</a></tt> <tt class="py-op">=</tt> <tt class="py-name">True</tt> </tt>
-<a name="L82"></a><tt class="py-lineno"> 82</tt>  <tt class="py-line">    <tt id="link-69" class="py-name"><a title="apps.models.Actividades.flujo
-apps.models.UserStory.flujo
-apps.models.UserStoryRegistro.flujo
-apps.models.UserStoryVersiones.flujo" class="py-name" href="#" onclick="return doclink('link-69', 'flujo', 'link-62');">flujo</a></tt><tt class="py-op">.</tt><tt id="link-70" class="py-name"><a title="apps.models.Actividades.estado
+apps.models.UserStoryVersiones.estado" class="py-name" href="#" onclick="return doclink('link-85', 'estado', 'link-85');">estado</a></tt> <tt class="py-op">=</tt> <tt id="link-86" class="py-name"><a title="apps.models.Estados_Scrum" class="py-name" href="#" onclick="return doclink('link-86', 'Estados_Scrum', 'link-13');">Estados_Scrum</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L120"></a><tt class="py-lineno">120</tt>  <tt class="py-line">    <tt id="link-87" class="py-name"><a title="apps.models.Actividades.estado
 apps.models.Flujos.estado
 apps.models.Permisos.estado
+apps.models.Proyectos.estado
 apps.models.Roles.estado
 apps.models.Sprint.estado
 apps.models.UserStory.estado
 apps.models.UserStoryRegistro.estado
-apps.models.UserStoryVersiones.estado" class="py-name" href="#" onclick="return doclink('link-70', 'estado', 'link-41');">estado</a></tt> <tt class="py-op">=</tt> <tt class="py-name">True</tt> </tt>
-<a name="L83"></a><tt class="py-lineno"> 83</tt>  <tt class="py-line">    <tt id="link-71" class="py-name"><a title="apps.models.Actividades.flujo
-apps.models.UserStory.flujo
-apps.models.UserStoryRegistro.flujo
-apps.models.UserStoryVersiones.flujo" class="py-name" href="#" onclick="return doclink('link-71', 'flujo', 'link-62');">flujo</a></tt><tt class="py-op">.</tt><tt id="link-72" class="py-name" targets="Variable apps.models.Flujos.tamano=apps.models.Flujos-class.html#tamano"><a title="apps.models.Flujos.tamano" class="py-name" href="#" onclick="return doclink('link-72', 'tamano', 'link-72');">tamano</a></tt> <tt class="py-op">=</tt> <tt class="py-number">15</tt> </tt>
-<a name="L84"></a><tt class="py-lineno"> 84</tt>  <tt class="py-line">    <tt id="link-73" class="py-name"><a title="apps.models.Actividades.flujo
-apps.models.UserStory.flujo
-apps.models.UserStoryRegistro.flujo
-apps.models.UserStoryVersiones.flujo" class="py-name" href="#" onclick="return doclink('link-73', 'flujo', 'link-62');">flujo</a></tt><tt class="py-op">.</tt><tt id="link-74" class="py-name"><a title="apps.views.UserCreateForm.save
-apps.views.UserModifyForm.save" class="py-name" href="#" onclick="return doclink('link-74', 'save', 'link-46');">save</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
-<a name="L85"></a><tt class="py-lineno"> 85</tt>  <tt class="py-line">    <tt class="py-name">actividades</tt> <tt class="py-op">=</tt> <tt class="py-op">[</tt><tt class="py-string">'Analisis'</tt><tt class="py-op">,</tt> <tt class="py-string">'Diseno'</tt><tt class="py-op">,</tt> <tt class="py-string">'Programacion'</tt><tt class="py-op">,</tt> <tt class="py-string">'Testing'</tt><tt class="py-op">,</tt> <tt class="py-string">'Despliegue'</tt><tt class="py-op">]</tt> </tt>
-<a name="L86"></a><tt class="py-lineno"> 86</tt>  <tt class="py-line">    <tt class="py-keyword">for</tt> <tt class="py-name">act</tt> <tt class="py-keyword">in</tt> <tt class="py-name">actividades</tt><tt class="py-op">:</tt> </tt>
-<a name="L87"></a><tt class="py-lineno"> 87</tt>  <tt class="py-line">        <tt id="link-75" class="py-name" targets="Function apps.management.commands.population.add_actividades()=apps.management.commands.population-module.html#add_actividades,Function apps.population.add_actividades()=apps.population-module.html#add_actividades"><a title="apps.management.commands.population.add_actividades
-apps.population.add_actividades" class="py-name" href="#" onclick="return doclink('link-75', 'add_actividades', 'link-75');">add_actividades</a></tt><tt class="py-op">(</tt><tt class="py-name">act</tt><tt class="py-op">,</tt> <tt id="link-76" class="py-name"><a title="apps.models.Actividades.flujo
-apps.models.UserStory.flujo
-apps.models.UserStoryRegistro.flujo
-apps.models.UserStoryVersiones.flujo" class="py-name" href="#" onclick="return doclink('link-76', 'flujo', 'link-62');">flujo</a></tt><tt class="py-op">.</tt><tt class="py-name">id</tt><tt class="py-op">)</tt> </tt>
-<a name="L88"></a><tt class="py-lineno"> 88</tt>  <tt class="py-line">    <tt class="py-keyword">return</tt> <tt id="link-77" class="py-name"><a title="apps.models.Actividades.flujo
-apps.models.UserStory.flujo
-apps.models.UserStoryRegistro.flujo
-apps.models.UserStoryVersiones.flujo" class="py-name" href="#" onclick="return doclink('link-77', 'flujo', 'link-62');">flujo</a></tt> </tt>
-</div><a name="L89"></a><tt class="py-lineno"> 89</tt>  <tt class="py-line"> </tt>
-<a name="add_actividades"></a><div id="add_actividades-def"><a name="L90"></a><tt class="py-lineno"> 90</tt> <a class="py-toggle" href="#" id="add_actividades-toggle" onclick="return toggle('add_actividades');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="apps.population-module.html#add_actividades">add_actividades</a><tt class="py-op">(</tt><tt class="py-param">descripcion</tt><tt class="py-op">,</tt> <tt class="py-param">flujo_id</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
-</div><div id="add_actividades-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="add_actividades-expanded"><a name="L91"></a><tt class="py-lineno"> 91</tt>  <tt class="py-line">    <tt class="py-name">actividades</tt> <tt class="py-op">=</tt> <tt id="link-78" class="py-name"><a title="apps.models.Actividades" class="py-name" href="#" onclick="return doclink('link-78', 'Actividades', 'link-6');">Actividades</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
-<a name="L92"></a><tt class="py-lineno"> 92</tt>  <tt class="py-line">    <tt class="py-name">actividades</tt><tt class="py-op">.</tt><tt id="link-79" class="py-name"><a title="apps.models.Actividades.descripcion
+apps.models.UserStoryVersiones.estado" class="py-name" href="#" onclick="return doclink('link-87', 'estado', 'link-85');">estado</a></tt><tt class="py-op">.</tt><tt id="link-88" class="py-name" targets="Variable apps.models.Actividades.descripcion=apps.models.Actividades-class.html#descripcion,Variable apps.models.Estados.descripcion=apps.models.Estados-class.html#descripcion,Variable apps.models.Estados_Scrum.descripcion=apps.models.Estados_Scrum-class.html#descripcion,Variable apps.models.Flujos.descripcion=apps.models.Flujos-class.html#descripcion,Variable apps.models.Notas.descripcion=apps.models.Notas-class.html#descripcion,Variable apps.models.Permisos.descripcion=apps.models.Permisos-class.html#descripcion,Variable apps.models.Prioridad.descripcion=apps.models.Prioridad-class.html#descripcion,Variable apps.models.Proyectos.descripcion=apps.models.Proyectos-class.html#descripcion,Variable apps.models.Roles.descripcion=apps.models.Roles-class.html#descripcion,Variable apps.models.UserStory.descripcion=apps.models.UserStory-class.html#descripcion,Variable apps.models.UserStoryLog.descripcion=apps.models.UserStoryLog-class.html#descripcion,Variable apps.models.UserStoryRegistro.descripcion=apps.models.UserStoryRegistro-class.html#descripcion,Variable apps.models.UserStoryVersiones.descripcion=apps.models.UserStoryVersiones-class.html#descripcion"><a title="apps.models.Actividades.descripcion
 apps.models.Estados.descripcion
+apps.models.Estados_Scrum.descripcion
 apps.models.Flujos.descripcion
+apps.models.Notas.descripcion
 apps.models.Permisos.descripcion
 apps.models.Prioridad.descripcion
 apps.models.Proyectos.descripcion
 apps.models.Roles.descripcion
 apps.models.UserStory.descripcion
+apps.models.UserStoryLog.descripcion
 apps.models.UserStoryRegistro.descripcion
-apps.models.UserStoryVersiones.descripcion" class="py-name" href="#" onclick="return doclink('link-79', 'descripcion', 'link-38');">descripcion</a></tt> <tt class="py-op">=</tt> <tt id="link-80" class="py-name"><a title="apps.models.Actividades.descripcion
+apps.models.UserStoryVersiones.descripcion" class="py-name" href="#" onclick="return doclink('link-88', 'descripcion', 'link-88');">descripcion</a></tt> <tt class="py-op">=</tt> <tt id="link-89" class="py-name"><a title="apps.models.Actividades.descripcion
 apps.models.Estados.descripcion
+apps.models.Estados_Scrum.descripcion
 apps.models.Flujos.descripcion
+apps.models.Notas.descripcion
 apps.models.Permisos.descripcion
 apps.models.Prioridad.descripcion
 apps.models.Proyectos.descripcion
 apps.models.Roles.descripcion
 apps.models.UserStory.descripcion
+apps.models.UserStoryLog.descripcion
 apps.models.UserStoryRegistro.descripcion
-apps.models.UserStoryVersiones.descripcion" class="py-name" href="#" onclick="return doclink('link-80', 'descripcion', 'link-38');">descripcion</a></tt> </tt>
-<a name="L93"></a><tt class="py-lineno"> 93</tt>  <tt class="py-line">    <tt class="py-name">actividades</tt><tt class="py-op">.</tt><tt id="link-81" class="py-name"><a title="apps.models.Actividades.estado
+apps.models.UserStoryVersiones.descripcion" class="py-name" href="#" onclick="return doclink('link-89', 'descripcion', 'link-88');">descripcion</a></tt> </tt>
+<a name="L121"></a><tt class="py-lineno">121</tt>  <tt class="py-line">    <tt id="link-90" class="py-name"><a title="apps.models.Actividades.estado
 apps.models.Flujos.estado
 apps.models.Permisos.estado
+apps.models.Proyectos.estado
 apps.models.Roles.estado
 apps.models.Sprint.estado
 apps.models.UserStory.estado
 apps.models.UserStoryRegistro.estado
-apps.models.UserStoryVersiones.estado" class="py-name" href="#" onclick="return doclink('link-81', 'estado', 'link-41');">estado</a></tt> <tt class="py-op">=</tt> <tt class="py-name">True</tt> </tt>
-<a name="L94"></a><tt class="py-lineno"> 94</tt>  <tt class="py-line">    <tt class="py-name">actividades</tt><tt class="py-op">.</tt><tt id="link-82" class="py-name"><a title="apps.models.Actividades.plantilla
-apps.models.Flujos.plantilla" class="py-name" href="#" onclick="return doclink('link-82', 'plantilla', 'link-68');">plantilla</a></tt> <tt class="py-op">=</tt> <tt class="py-name">True</tt> </tt>
-<a name="L95"></a><tt class="py-lineno"> 95</tt>  <tt class="py-line">    <tt class="py-name">actividades</tt><tt class="py-op">.</tt><tt class="py-name">flujo_id</tt> <tt class="py-op">=</tt> <tt class="py-name">flujo_id</tt> </tt>
-<a name="L96"></a><tt class="py-lineno"> 96</tt>  <tt class="py-line">    <tt class="py-name">actividades</tt><tt class="py-op">.</tt><tt id="link-83" class="py-name"><a title="apps.views.UserCreateForm.save
-apps.views.UserModifyForm.save" class="py-name" href="#" onclick="return doclink('link-83', 'save', 'link-46');">save</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
-<a name="L97"></a><tt class="py-lineno"> 97</tt>  <tt class="py-line">    <tt class="py-keyword">return</tt> <tt class="py-name">actividades</tt> </tt>
-</div><a name="L98"></a><tt class="py-lineno"> 98</tt>  <tt class="py-line"> </tt>
-<a name="add_permisos"></a><div id="add_permisos-def"><a name="L99"></a><tt class="py-lineno"> 99</tt> <a class="py-toggle" href="#" id="add_permisos-toggle" onclick="return toggle('add_permisos');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="apps.population-module.html#add_permisos">add_permisos</a><tt class="py-op">(</tt><tt class="py-param">descripcion</tt><tt class="py-op">,</tt> <tt class="py-param">tag</tt><tt class="py-op">,</tt> <tt class="py-param">sistema</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
-</div><div id="add_permisos-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="add_permisos-expanded"><a name="L100"></a><tt class="py-lineno">100</tt>  <tt class="py-line">    <tt id="link-84" class="py-name"><a title="apps.models.Permisos_Roles.permisos" class="py-name" href="#" onclick="return doclink('link-84', 'permisos', 'link-20');">permisos</a></tt> <tt class="py-op">=</tt> <tt id="link-85" class="py-name"><a title="apps.models.Permisos" class="py-name" href="#" onclick="return doclink('link-85', 'Permisos', 'link-7');">Permisos</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
-<a name="L101"></a><tt class="py-lineno">101</tt>  <tt class="py-line">    <tt id="link-86" class="py-name"><a title="apps.models.Permisos_Roles.permisos" class="py-name" href="#" onclick="return doclink('link-86', 'permisos', 'link-20');">permisos</a></tt><tt class="py-op">.</tt><tt id="link-87" class="py-name"><a title="apps.models.Actividades.descripcion
+apps.models.UserStoryVersiones.estado" class="py-name" href="#" onclick="return doclink('link-90', 'estado', 'link-85');">estado</a></tt><tt class="py-op">.</tt><tt id="link-91" class="py-name" targets="Method apps.views.UserCreateForm.save()=apps.views.UserCreateForm-class.html#save,Method apps.views.UserModifyForm.save()=apps.views.UserModifyForm-class.html#save"><a title="apps.views.UserCreateForm.save
+apps.views.UserModifyForm.save" class="py-name" href="#" onclick="return doclink('link-91', 'save', 'link-91');">save</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L122"></a><tt class="py-lineno">122</tt>  <tt class="py-line"> </tt>
+<a name="add_roles"></a><div id="add_roles-def"><a name="L123"></a><tt class="py-lineno">123</tt> <a class="py-toggle" href="#" id="add_roles-toggle" onclick="return toggle('add_roles');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="apps.population-module.html#add_roles">add_roles</a><tt class="py-op">(</tt><tt class="py-param">descripcion</tt><tt class="py-op">,</tt> <tt class="py-param">sistema</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="add_roles-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="add_roles-expanded"><a name="L124"></a><tt class="py-lineno">124</tt>  <tt class="py-line">    <tt id="link-92" class="py-name" targets="Variable apps.models.Equipo.rol=apps.models.Equipo-class.html#rol"><a title="apps.models.Equipo.rol" class="py-name" href="#" onclick="return doclink('link-92', 'rol', 'link-92');">rol</a></tt> <tt class="py-op">=</tt> <tt id="link-93" class="py-name"><a title="apps.models.Roles" class="py-name" href="#" onclick="return doclink('link-93', 'Roles', 'link-5');">Roles</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L125"></a><tt class="py-lineno">125</tt>  <tt class="py-line">    <tt id="link-94" class="py-name"><a title="apps.models.Equipo.rol" class="py-name" href="#" onclick="return doclink('link-94', 'rol', 'link-92');">rol</a></tt><tt class="py-op">.</tt><tt id="link-95" class="py-name"><a title="apps.models.Actividades.descripcion
 apps.models.Estados.descripcion
+apps.models.Estados_Scrum.descripcion
 apps.models.Flujos.descripcion
+apps.models.Notas.descripcion
 apps.models.Permisos.descripcion
 apps.models.Prioridad.descripcion
 apps.models.Proyectos.descripcion
 apps.models.Roles.descripcion
 apps.models.UserStory.descripcion
+apps.models.UserStoryLog.descripcion
 apps.models.UserStoryRegistro.descripcion
-apps.models.UserStoryVersiones.descripcion" class="py-name" href="#" onclick="return doclink('link-87', 'descripcion', 'link-38');">descripcion</a></tt> <tt class="py-op">=</tt> <tt id="link-88" class="py-name"><a title="apps.models.Actividades.descripcion
+apps.models.UserStoryVersiones.descripcion" class="py-name" href="#" onclick="return doclink('link-95', 'descripcion', 'link-88');">descripcion</a></tt> <tt class="py-op">=</tt> <tt id="link-96" class="py-name"><a title="apps.models.Actividades.descripcion
 apps.models.Estados.descripcion
+apps.models.Estados_Scrum.descripcion
 apps.models.Flujos.descripcion
+apps.models.Notas.descripcion
 apps.models.Permisos.descripcion
 apps.models.Prioridad.descripcion
 apps.models.Proyectos.descripcion
 apps.models.Roles.descripcion
 apps.models.UserStory.descripcion
+apps.models.UserStoryLog.descripcion
 apps.models.UserStoryRegistro.descripcion
-apps.models.UserStoryVersiones.descripcion" class="py-name" href="#" onclick="return doclink('link-88', 'descripcion', 'link-38');">descripcion</a></tt> </tt>
-<a name="L102"></a><tt class="py-lineno">102</tt>  <tt class="py-line">    <tt id="link-89" class="py-name"><a title="apps.models.Permisos_Roles.permisos" class="py-name" href="#" onclick="return doclink('link-89', 'permisos', 'link-20');">permisos</a></tt><tt class="py-op">.</tt><tt id="link-90" class="py-name" targets="Variable apps.models.Permisos.tag=apps.models.Permisos-class.html#tag"><a title="apps.models.Permisos.tag" class="py-name" href="#" onclick="return doclink('link-90', 'tag', 'link-90');">tag</a></tt> <tt class="py-op">=</tt> <tt id="link-91" class="py-name"><a title="apps.models.Permisos.tag" class="py-name" href="#" onclick="return doclink('link-91', 'tag', 'link-90');">tag</a></tt> </tt>
-<a name="L103"></a><tt class="py-lineno">103</tt>  <tt class="py-line">    <tt id="link-92" class="py-name"><a title="apps.models.Permisos_Roles.permisos" class="py-name" href="#" onclick="return doclink('link-92', 'permisos', 'link-20');">permisos</a></tt><tt class="py-op">.</tt><tt id="link-93" class="py-name"><a title="apps.models.Actividades.estado
+apps.models.UserStoryVersiones.descripcion" class="py-name" href="#" onclick="return doclink('link-96', 'descripcion', 'link-88');">descripcion</a></tt> </tt>
+<a name="L126"></a><tt class="py-lineno">126</tt>  <tt class="py-line">    <tt id="link-97" class="py-name"><a title="apps.models.Equipo.rol" class="py-name" href="#" onclick="return doclink('link-97', 'rol', 'link-92');">rol</a></tt><tt class="py-op">.</tt><tt id="link-98" class="py-name"><a title="apps.models.Actividades.estado
 apps.models.Flujos.estado
 apps.models.Permisos.estado
+apps.models.Proyectos.estado
 apps.models.Roles.estado
 apps.models.Sprint.estado
 apps.models.UserStory.estado
 apps.models.UserStoryRegistro.estado
-apps.models.UserStoryVersiones.estado" class="py-name" href="#" onclick="return doclink('link-93', 'estado', 'link-41');">estado</a></tt> <tt class="py-op">=</tt> <tt class="py-name">True</tt> </tt>
-<a name="L104"></a><tt class="py-lineno">104</tt>  <tt class="py-line">    <tt id="link-94" class="py-name"><a title="apps.models.Permisos_Roles.permisos" class="py-name" href="#" onclick="return doclink('link-94', 'permisos', 'link-20');">permisos</a></tt><tt class="py-op">.</tt><tt id="link-95" class="py-name"><a title="apps.models.Permisos.sistema
-apps.models.Roles.sistema" class="py-name" href="#" onclick="return doclink('link-95', 'sistema', 'link-21');">sistema</a></tt> <tt class="py-op">=</tt> <tt id="link-96" class="py-name"><a title="apps.models.Permisos.sistema
-apps.models.Roles.sistema" class="py-name" href="#" onclick="return doclink('link-96', 'sistema', 'link-21');">sistema</a></tt> </tt>
-<a name="L105"></a><tt class="py-lineno">105</tt>  <tt class="py-line">    <tt id="link-97" class="py-name"><a title="apps.models.Permisos_Roles.permisos" class="py-name" href="#" onclick="return doclink('link-97', 'permisos', 'link-20');">permisos</a></tt><tt class="py-op">.</tt><tt id="link-98" class="py-name"><a title="apps.views.UserCreateForm.save
-apps.views.UserModifyForm.save" class="py-name" href="#" onclick="return doclink('link-98', 'save', 'link-46');">save</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
-<a name="L106"></a><tt class="py-lineno">106</tt>  <tt class="py-line">    <tt class="py-keyword">return</tt> <tt id="link-99" class="py-name"><a title="apps.models.Permisos_Roles.permisos" class="py-name" href="#" onclick="return doclink('link-99', 'permisos', 'link-20');">permisos</a></tt> </tt>
-</div><a name="L107"></a><tt class="py-lineno">107</tt>  <tt class="py-line"> </tt>
-<a name="add_permisos_roles"></a><div id="add_permisos_roles-def"><a name="L108"></a><tt class="py-lineno">108</tt> <a class="py-toggle" href="#" id="add_permisos_roles-toggle" onclick="return toggle('add_permisos_roles');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="apps.population-module.html#add_permisos_roles">add_permisos_roles</a><tt class="py-op">(</tt><tt class="py-param">permiso_id</tt><tt class="py-op">,</tt> <tt class="py-param">rol_id</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
-</div><div id="add_permisos_roles-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="add_permisos_roles-expanded"><a name="L109"></a><tt class="py-lineno">109</tt>  <tt class="py-line">    <tt class="py-name">permiso_rol</tt> <tt class="py-op">=</tt> <tt id="link-100" class="py-name"><a title="apps.models.Permisos_Roles" class="py-name" href="#" onclick="return doclink('link-100', 'Permisos_Roles', 'link-8');">Permisos_Roles</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
-<a name="L110"></a><tt class="py-lineno">110</tt>  <tt class="py-line">    <tt class="py-name">permiso_rol</tt><tt class="py-op">.</tt><tt class="py-name">roles_id</tt> <tt class="py-op">=</tt> <tt class="py-name">rol_id</tt> </tt>
-<a name="L111"></a><tt class="py-lineno">111</tt>  <tt class="py-line">    <tt class="py-name">permiso_rol</tt><tt class="py-op">.</tt><tt class="py-name">permisos_id</tt> <tt class="py-op">=</tt> <tt class="py-name">permiso_id</tt> </tt>
-<a name="L112"></a><tt class="py-lineno">112</tt>  <tt class="py-line">    <tt class="py-name">permiso_rol</tt><tt class="py-op">.</tt><tt id="link-101" class="py-name"><a title="apps.views.UserCreateForm.save
-apps.views.UserModifyForm.save" class="py-name" href="#" onclick="return doclink('link-101', 'save', 'link-46');">save</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
-<a name="L113"></a><tt class="py-lineno">113</tt>  <tt class="py-line">    <tt class="py-keyword">return</tt> <tt class="py-name">permiso_rol</tt> </tt>
-</div><a name="L114"></a><tt class="py-lineno">114</tt>  <tt class="py-line"> </tt>
-<a name="add_prioridad"></a><div id="add_prioridad-def"><a name="L115"></a><tt class="py-lineno">115</tt> <a class="py-toggle" href="#" id="add_prioridad-toggle" onclick="return toggle('add_prioridad');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="apps.population-module.html#add_prioridad">add_prioridad</a><tt class="py-op">(</tt><tt class="py-param">descripcion</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
-</div><div id="add_prioridad-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="add_prioridad-expanded"><a name="L116"></a><tt class="py-lineno">116</tt>  <tt class="py-line">    <tt id="link-102" class="py-name" targets="Variable apps.models.UserStory.prioridad=apps.models.UserStory-class.html#prioridad,Variable apps.models.UserStoryRegistro.prioridad=apps.models.UserStoryRegistro-class.html#prioridad,Variable apps.models.UserStoryVersiones.prioridad=apps.models.UserStoryVersiones-class.html#prioridad"><a title="apps.models.UserStory.prioridad
+apps.models.UserStoryVersiones.estado" class="py-name" href="#" onclick="return doclink('link-98', 'estado', 'link-85');">estado</a></tt> <tt class="py-op">=</tt> <tt class="py-name">True</tt> </tt>
+<a name="L127"></a><tt class="py-lineno">127</tt>  <tt class="py-line">    <tt id="link-99" class="py-name"><a title="apps.models.Equipo.rol" class="py-name" href="#" onclick="return doclink('link-99', 'rol', 'link-92');">rol</a></tt><tt class="py-op">.</tt><tt id="link-100" class="py-name"><a title="apps.models.Permisos.sistema
+apps.models.Roles.sistema" class="py-name" href="#" onclick="return doclink('link-100', 'sistema', 'link-39');">sistema</a></tt> <tt class="py-op">=</tt> <tt id="link-101" class="py-name"><a title="apps.models.Permisos.sistema
+apps.models.Roles.sistema" class="py-name" href="#" onclick="return doclink('link-101', 'sistema', 'link-39');">sistema</a></tt> </tt>
+<a name="L128"></a><tt class="py-lineno">128</tt>  <tt class="py-line">    <tt id="link-102" class="py-name"><a title="apps.models.Equipo.rol" class="py-name" href="#" onclick="return doclink('link-102', 'rol', 'link-92');">rol</a></tt><tt class="py-op">.</tt><tt id="link-103" class="py-name"><a title="apps.views.UserCreateForm.save
+apps.views.UserModifyForm.save" class="py-name" href="#" onclick="return doclink('link-103', 'save', 'link-91');">save</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L129"></a><tt class="py-lineno">129</tt>  <tt class="py-line">    <tt class="py-keyword">return</tt> <tt id="link-104" class="py-name"><a title="apps.models.Equipo.rol" class="py-name" href="#" onclick="return doclink('link-104', 'rol', 'link-92');">rol</a></tt> </tt>
+</div><a name="L130"></a><tt class="py-lineno">130</tt>  <tt class="py-line"> </tt>
+<a name="add_user"></a><div id="add_user-def"><a name="L131"></a><tt class="py-lineno">131</tt> <a class="py-toggle" href="#" id="add_user-toggle" onclick="return toggle('add_user');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="apps.population-module.html#add_user">add_user</a><tt class="py-op">(</tt><tt class="py-param">fname</tt><tt class="py-op">,</tt> <tt class="py-param">lname</tt><tt class="py-op">,</tt> <tt class="py-param">username</tt><tt class="py-op">,</tt> <tt class="py-param">password</tt><tt class="py-op">,</tt> <tt class="py-param">email</tt><tt class="py-op">,</tt> <tt class="py-param">role</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="add_user-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="add_user-expanded"><a name="L132"></a><tt class="py-lineno">132</tt>  <tt class="py-line">    <tt id="link-105" class="py-name" targets="Variable apps.models.Notas.user=apps.models.Notas-class.html#user,Variable apps.models.Users_Roles.user=apps.models.Users_Roles-class.html#user"><a title="apps.models.Notas.user
+apps.models.Users_Roles.user" class="py-name" href="#" onclick="return doclink('link-105', 'user', 'link-105');">user</a></tt> <tt class="py-op">=</tt> <tt class="py-name">User</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L133"></a><tt class="py-lineno">133</tt>  <tt class="py-line">    <tt id="link-106" class="py-name"><a title="apps.models.Notas.user
+apps.models.Users_Roles.user" class="py-name" href="#" onclick="return doclink('link-106', 'user', 'link-105');">user</a></tt><tt class="py-op">.</tt><tt id="link-107" class="py-name" targets="Variable apps.views.UserCreateForm.first_name=apps.views.UserCreateForm-class.html#first_name,Variable apps.views.UserModifyForm.first_name=apps.views.UserModifyForm-class.html#first_name"><a title="apps.views.UserCreateForm.first_name
+apps.views.UserModifyForm.first_name" class="py-name" href="#" onclick="return doclink('link-107', 'first_name', 'link-107');">first_name</a></tt> <tt class="py-op">=</tt> <tt class="py-name">fname</tt> </tt>
+<a name="L134"></a><tt class="py-lineno">134</tt>  <tt class="py-line">    <tt id="link-108" class="py-name"><a title="apps.models.Notas.user
+apps.models.Users_Roles.user" class="py-name" href="#" onclick="return doclink('link-108', 'user', 'link-105');">user</a></tt><tt class="py-op">.</tt><tt id="link-109" class="py-name" targets="Variable apps.views.UserCreateForm.last_name=apps.views.UserCreateForm-class.html#last_name,Variable apps.views.UserModifyForm.last_name=apps.views.UserModifyForm-class.html#last_name"><a title="apps.views.UserCreateForm.last_name
+apps.views.UserModifyForm.last_name" class="py-name" href="#" onclick="return doclink('link-109', 'last_name', 'link-109');">last_name</a></tt> <tt class="py-op">=</tt> <tt class="py-name">lname</tt> </tt>
+<a name="L135"></a><tt class="py-lineno">135</tt>  <tt class="py-line">    <tt id="link-110" class="py-name"><a title="apps.models.Notas.user
+apps.models.Users_Roles.user" class="py-name" href="#" onclick="return doclink('link-110', 'user', 'link-105');">user</a></tt><tt class="py-op">.</tt><tt class="py-name">username</tt> <tt class="py-op">=</tt> <tt class="py-name">username</tt> </tt>
+<a name="L136"></a><tt class="py-lineno">136</tt>  <tt class="py-line">    <tt id="link-111" class="py-name"><a title="apps.models.Notas.user
+apps.models.Users_Roles.user" class="py-name" href="#" onclick="return doclink('link-111', 'user', 'link-105');">user</a></tt><tt class="py-op">.</tt><tt class="py-name">set_password</tt><tt class="py-op">(</tt><tt class="py-name">password</tt><tt class="py-op">)</tt> </tt>
+<a name="L137"></a><tt class="py-lineno">137</tt>  <tt class="py-line">    <tt id="link-112" class="py-name"><a title="apps.models.Notas.user
+apps.models.Users_Roles.user" class="py-name" href="#" onclick="return doclink('link-112', 'user', 'link-105');">user</a></tt><tt class="py-op">.</tt><tt id="link-113" class="py-name" targets="Variable apps.views.UserCreateForm.email=apps.views.UserCreateForm-class.html#email,Variable apps.views.UserModifyForm.email=apps.views.UserModifyForm-class.html#email"><a title="apps.views.UserCreateForm.email
+apps.views.UserModifyForm.email" class="py-name" href="#" onclick="return doclink('link-113', 'email', 'link-113');">email</a></tt> <tt class="py-op">=</tt> <tt id="link-114" class="py-name"><a title="apps.views.UserCreateForm.email
+apps.views.UserModifyForm.email" class="py-name" href="#" onclick="return doclink('link-114', 'email', 'link-113');">email</a></tt> </tt>
+<a name="L138"></a><tt class="py-lineno">138</tt>  <tt class="py-line">    <tt id="link-115" class="py-name"><a title="apps.models.Notas.user
+apps.models.Users_Roles.user" class="py-name" href="#" onclick="return doclink('link-115', 'user', 'link-105');">user</a></tt><tt class="py-op">.</tt><tt id="link-116" class="py-name"><a title="apps.views.UserCreateForm.save
+apps.views.UserModifyForm.save" class="py-name" href="#" onclick="return doclink('link-116', 'save', 'link-91');">save</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L139"></a><tt class="py-lineno">139</tt>  <tt class="py-line">    <tt id="link-117" class="py-name" targets="Function apps.management.commands.population.add_users_roles()=apps.management.commands.population-module.html#add_users_roles,Function apps.population.add_users_roles()=apps.population-module.html#add_users_roles"><a title="apps.management.commands.population.add_users_roles
+apps.population.add_users_roles" class="py-name" href="#" onclick="return doclink('link-117', 'add_users_roles', 'link-117');">add_users_roles</a></tt><tt class="py-op">(</tt><tt id="link-118" class="py-name"><a title="apps.models.Notas.user
+apps.models.Users_Roles.user" class="py-name" href="#" onclick="return doclink('link-118', 'user', 'link-105');">user</a></tt><tt class="py-op">.</tt><tt class="py-name">id</tt><tt class="py-op">,</tt> <tt id="link-119" class="py-name" targets="Variable apps.models.Users_Roles.role=apps.models.Users_Roles-class.html#role"><a title="apps.models.Users_Roles.role" class="py-name" href="#" onclick="return doclink('link-119', 'role', 'link-119');">role</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L140"></a><tt class="py-lineno">140</tt>  <tt class="py-line">    <tt class="py-keyword">return</tt> <tt id="link-120" class="py-name"><a title="apps.models.Notas.user
+apps.models.Users_Roles.user" class="py-name" href="#" onclick="return doclink('link-120', 'user', 'link-105');">user</a></tt> </tt>
+</div><a name="L141"></a><tt class="py-lineno">141</tt>  <tt class="py-line"> </tt>
+<a name="add_users_roles"></a><div id="add_users_roles-def"><a name="L142"></a><tt class="py-lineno">142</tt> <a class="py-toggle" href="#" id="add_users_roles-toggle" onclick="return toggle('add_users_roles');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="apps.population-module.html#add_users_roles">add_users_roles</a><tt class="py-op">(</tt><tt class="py-param">user_id</tt><tt class="py-op">,</tt> <tt class="py-param">role_id</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="add_users_roles-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="add_users_roles-expanded"><a name="L143"></a><tt class="py-lineno">143</tt>  <tt class="py-line">    <tt class="py-name">ur</tt> <tt class="py-op">=</tt> <tt id="link-121" class="py-name"><a title="apps.models.Users_Roles" class="py-name" href="#" onclick="return doclink('link-121', 'Users_Roles', 'link-3');">Users_Roles</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L144"></a><tt class="py-lineno">144</tt>  <tt class="py-line">    <tt class="py-name">ur</tt><tt class="py-op">.</tt><tt class="py-name">role_id</tt> <tt class="py-op">=</tt> <tt class="py-name">role_id</tt> </tt>
+<a name="L145"></a><tt class="py-lineno">145</tt>  <tt class="py-line">    <tt class="py-name">ur</tt><tt class="py-op">.</tt><tt class="py-name">user_id</tt> <tt class="py-op">=</tt> <tt class="py-name">user_id</tt> </tt>
+<a name="L146"></a><tt class="py-lineno">146</tt>  <tt class="py-line">    <tt class="py-name">ur</tt><tt class="py-op">.</tt><tt id="link-122" class="py-name"><a title="apps.views.UserCreateForm.save
+apps.views.UserModifyForm.save" class="py-name" href="#" onclick="return doclink('link-122', 'save', 'link-91');">save</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L147"></a><tt class="py-lineno">147</tt>  <tt class="py-line">    <tt class="py-keyword">return</tt> <tt class="py-name">ur</tt> </tt>
+</div><a name="L148"></a><tt class="py-lineno">148</tt>  <tt class="py-line"> </tt>
+<a name="add_flujo"></a><div id="add_flujo-def"><a name="L149"></a><tt class="py-lineno">149</tt> <a class="py-toggle" href="#" id="add_flujo-toggle" onclick="return toggle('add_flujo');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="apps.population-module.html#add_flujo">add_flujo</a><tt class="py-op">(</tt><tt class="py-param">descripcion</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="add_flujo-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="add_flujo-expanded"><a name="L150"></a><tt class="py-lineno">150</tt>  <tt class="py-line">    <tt id="link-123" class="py-name" targets="Variable apps.models.Actividades.flujo=apps.models.Actividades-class.html#flujo,Variable apps.models.UserStory.flujo=apps.models.UserStory-class.html#flujo,Variable apps.models.UserStoryLog.flujo=apps.models.UserStoryLog-class.html#flujo,Variable apps.models.UserStoryRegistro.flujo=apps.models.UserStoryRegistro-class.html#flujo,Variable apps.models.UserStoryVersiones.flujo=apps.models.UserStoryVersiones-class.html#flujo"><a title="apps.models.Actividades.flujo
+apps.models.UserStory.flujo
+apps.models.UserStoryLog.flujo
+apps.models.UserStoryRegistro.flujo
+apps.models.UserStoryVersiones.flujo" class="py-name" href="#" onclick="return doclink('link-123', 'flujo', 'link-123');">flujo</a></tt> <tt class="py-op">=</tt> <tt id="link-124" class="py-name"><a title="apps.models.Flujos" class="py-name" href="#" onclick="return doclink('link-124', 'Flujos', 'link-4');">Flujos</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L151"></a><tt class="py-lineno">151</tt>  <tt class="py-line">    <tt id="link-125" class="py-name"><a title="apps.models.Actividades.flujo
+apps.models.UserStory.flujo
+apps.models.UserStoryLog.flujo
+apps.models.UserStoryRegistro.flujo
+apps.models.UserStoryVersiones.flujo" class="py-name" href="#" onclick="return doclink('link-125', 'flujo', 'link-123');">flujo</a></tt><tt class="py-op">.</tt><tt id="link-126" class="py-name"><a title="apps.models.Actividades.descripcion
+apps.models.Estados.descripcion
+apps.models.Estados_Scrum.descripcion
+apps.models.Flujos.descripcion
+apps.models.Notas.descripcion
+apps.models.Permisos.descripcion
+apps.models.Prioridad.descripcion
+apps.models.Proyectos.descripcion
+apps.models.Roles.descripcion
+apps.models.UserStory.descripcion
+apps.models.UserStoryLog.descripcion
+apps.models.UserStoryRegistro.descripcion
+apps.models.UserStoryVersiones.descripcion" class="py-name" href="#" onclick="return doclink('link-126', 'descripcion', 'link-88');">descripcion</a></tt> <tt class="py-op">=</tt> <tt id="link-127" class="py-name"><a title="apps.models.Actividades.descripcion
+apps.models.Estados.descripcion
+apps.models.Estados_Scrum.descripcion
+apps.models.Flujos.descripcion
+apps.models.Notas.descripcion
+apps.models.Permisos.descripcion
+apps.models.Prioridad.descripcion
+apps.models.Proyectos.descripcion
+apps.models.Roles.descripcion
+apps.models.UserStory.descripcion
+apps.models.UserStoryLog.descripcion
+apps.models.UserStoryRegistro.descripcion
+apps.models.UserStoryVersiones.descripcion" class="py-name" href="#" onclick="return doclink('link-127', 'descripcion', 'link-88');">descripcion</a></tt> </tt>
+<a name="L152"></a><tt class="py-lineno">152</tt>  <tt class="py-line">    <tt id="link-128" class="py-name"><a title="apps.models.Actividades.flujo
+apps.models.UserStory.flujo
+apps.models.UserStoryLog.flujo
+apps.models.UserStoryRegistro.flujo
+apps.models.UserStoryVersiones.flujo" class="py-name" href="#" onclick="return doclink('link-128', 'flujo', 'link-123');">flujo</a></tt><tt class="py-op">.</tt><tt id="link-129" class="py-name" targets="Variable apps.models.Actividades.plantilla=apps.models.Actividades-class.html#plantilla,Variable apps.models.Flujos.plantilla=apps.models.Flujos-class.html#plantilla"><a title="apps.models.Actividades.plantilla
+apps.models.Flujos.plantilla" class="py-name" href="#" onclick="return doclink('link-129', 'plantilla', 'link-129');">plantilla</a></tt> <tt class="py-op">=</tt> <tt class="py-name">True</tt> </tt>
+<a name="L153"></a><tt class="py-lineno">153</tt>  <tt class="py-line">    <tt id="link-130" class="py-name"><a title="apps.models.Actividades.flujo
+apps.models.UserStory.flujo
+apps.models.UserStoryLog.flujo
+apps.models.UserStoryRegistro.flujo
+apps.models.UserStoryVersiones.flujo" class="py-name" href="#" onclick="return doclink('link-130', 'flujo', 'link-123');">flujo</a></tt><tt class="py-op">.</tt><tt id="link-131" class="py-name"><a title="apps.models.Actividades.estado
+apps.models.Flujos.estado
+apps.models.Permisos.estado
+apps.models.Proyectos.estado
+apps.models.Roles.estado
+apps.models.Sprint.estado
+apps.models.UserStory.estado
+apps.models.UserStoryRegistro.estado
+apps.models.UserStoryVersiones.estado" class="py-name" href="#" onclick="return doclink('link-131', 'estado', 'link-85');">estado</a></tt> <tt class="py-op">=</tt> <tt class="py-name">True</tt> </tt>
+<a name="L154"></a><tt class="py-lineno">154</tt>  <tt class="py-line">    <tt id="link-132" class="py-name"><a title="apps.models.Actividades.flujo
+apps.models.UserStory.flujo
+apps.models.UserStoryLog.flujo
+apps.models.UserStoryRegistro.flujo
+apps.models.UserStoryVersiones.flujo" class="py-name" href="#" onclick="return doclink('link-132', 'flujo', 'link-123');">flujo</a></tt><tt class="py-op">.</tt><tt id="link-133" class="py-name" targets="Variable apps.models.Flujos.tamano=apps.models.Flujos-class.html#tamano"><a title="apps.models.Flujos.tamano" class="py-name" href="#" onclick="return doclink('link-133', 'tamano', 'link-133');">tamano</a></tt> <tt class="py-op">=</tt> <tt class="py-number">15</tt> </tt>
+<a name="L155"></a><tt class="py-lineno">155</tt>  <tt class="py-line">    <tt id="link-134" class="py-name"><a title="apps.models.Actividades.flujo
+apps.models.UserStory.flujo
+apps.models.UserStoryLog.flujo
+apps.models.UserStoryRegistro.flujo
+apps.models.UserStoryVersiones.flujo" class="py-name" href="#" onclick="return doclink('link-134', 'flujo', 'link-123');">flujo</a></tt><tt class="py-op">.</tt><tt id="link-135" class="py-name"><a title="apps.views.UserCreateForm.save
+apps.views.UserModifyForm.save" class="py-name" href="#" onclick="return doclink('link-135', 'save', 'link-91');">save</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L156"></a><tt class="py-lineno">156</tt>  <tt class="py-line">    <tt class="py-name">actividades</tt> <tt class="py-op">=</tt> <tt class="py-op">[</tt><tt class="py-string">'Analisis'</tt><tt class="py-op">,</tt> <tt class="py-string">'Diseno'</tt><tt class="py-op">,</tt> <tt class="py-string">'Programacion'</tt><tt class="py-op">,</tt> <tt class="py-string">'Testing'</tt><tt class="py-op">,</tt> <tt class="py-string">'Despliegue'</tt><tt class="py-op">]</tt> </tt>
+<a name="L157"></a><tt class="py-lineno">157</tt>  <tt class="py-line">    <tt class="py-keyword">for</tt> <tt class="py-name">act</tt> <tt class="py-keyword">in</tt> <tt class="py-name">actividades</tt><tt class="py-op">:</tt> </tt>
+<a name="L158"></a><tt class="py-lineno">158</tt>  <tt class="py-line">        <tt id="link-136" class="py-name" targets="Function apps.management.commands.population.add_actividades()=apps.management.commands.population-module.html#add_actividades,Function apps.population.add_actividades()=apps.population-module.html#add_actividades"><a title="apps.management.commands.population.add_actividades
+apps.population.add_actividades" class="py-name" href="#" onclick="return doclink('link-136', 'add_actividades', 'link-136');">add_actividades</a></tt><tt class="py-op">(</tt><tt class="py-name">act</tt><tt class="py-op">,</tt> <tt id="link-137" class="py-name"><a title="apps.models.Actividades.flujo
+apps.models.UserStory.flujo
+apps.models.UserStoryLog.flujo
+apps.models.UserStoryRegistro.flujo
+apps.models.UserStoryVersiones.flujo" class="py-name" href="#" onclick="return doclink('link-137', 'flujo', 'link-123');">flujo</a></tt><tt class="py-op">.</tt><tt class="py-name">id</tt><tt class="py-op">)</tt> </tt>
+<a name="L159"></a><tt class="py-lineno">159</tt>  <tt class="py-line">    <tt class="py-keyword">return</tt> <tt id="link-138" class="py-name"><a title="apps.models.Actividades.flujo
+apps.models.UserStory.flujo
+apps.models.UserStoryLog.flujo
+apps.models.UserStoryRegistro.flujo
+apps.models.UserStoryVersiones.flujo" class="py-name" href="#" onclick="return doclink('link-138', 'flujo', 'link-123');">flujo</a></tt> </tt>
+</div><a name="L160"></a><tt class="py-lineno">160</tt>  <tt class="py-line"> </tt>
+<a name="add_actividades"></a><div id="add_actividades-def"><a name="L161"></a><tt class="py-lineno">161</tt> <a class="py-toggle" href="#" id="add_actividades-toggle" onclick="return toggle('add_actividades');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="apps.population-module.html#add_actividades">add_actividades</a><tt class="py-op">(</tt><tt class="py-param">descripcion</tt><tt class="py-op">,</tt> <tt class="py-param">flujo_id</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="add_actividades-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="add_actividades-expanded"><a name="L162"></a><tt class="py-lineno">162</tt>  <tt class="py-line">    <tt class="py-name">actividades</tt> <tt class="py-op">=</tt> <tt id="link-139" class="py-name"><a title="apps.models.Actividades" class="py-name" href="#" onclick="return doclink('link-139', 'Actividades', 'link-6');">Actividades</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L163"></a><tt class="py-lineno">163</tt>  <tt class="py-line">    <tt class="py-name">actividades</tt><tt class="py-op">.</tt><tt id="link-140" class="py-name"><a title="apps.models.Actividades.descripcion
+apps.models.Estados.descripcion
+apps.models.Estados_Scrum.descripcion
+apps.models.Flujos.descripcion
+apps.models.Notas.descripcion
+apps.models.Permisos.descripcion
+apps.models.Prioridad.descripcion
+apps.models.Proyectos.descripcion
+apps.models.Roles.descripcion
+apps.models.UserStory.descripcion
+apps.models.UserStoryLog.descripcion
+apps.models.UserStoryRegistro.descripcion
+apps.models.UserStoryVersiones.descripcion" class="py-name" href="#" onclick="return doclink('link-140', 'descripcion', 'link-88');">descripcion</a></tt> <tt class="py-op">=</tt> <tt id="link-141" class="py-name"><a title="apps.models.Actividades.descripcion
+apps.models.Estados.descripcion
+apps.models.Estados_Scrum.descripcion
+apps.models.Flujos.descripcion
+apps.models.Notas.descripcion
+apps.models.Permisos.descripcion
+apps.models.Prioridad.descripcion
+apps.models.Proyectos.descripcion
+apps.models.Roles.descripcion
+apps.models.UserStory.descripcion
+apps.models.UserStoryLog.descripcion
+apps.models.UserStoryRegistro.descripcion
+apps.models.UserStoryVersiones.descripcion" class="py-name" href="#" onclick="return doclink('link-141', 'descripcion', 'link-88');">descripcion</a></tt> </tt>
+<a name="L164"></a><tt class="py-lineno">164</tt>  <tt class="py-line">    <tt class="py-name">actividades</tt><tt class="py-op">.</tt><tt id="link-142" class="py-name"><a title="apps.models.Actividades.estado
+apps.models.Flujos.estado
+apps.models.Permisos.estado
+apps.models.Proyectos.estado
+apps.models.Roles.estado
+apps.models.Sprint.estado
+apps.models.UserStory.estado
+apps.models.UserStoryRegistro.estado
+apps.models.UserStoryVersiones.estado" class="py-name" href="#" onclick="return doclink('link-142', 'estado', 'link-85');">estado</a></tt> <tt class="py-op">=</tt> <tt class="py-name">True</tt> </tt>
+<a name="L165"></a><tt class="py-lineno">165</tt>  <tt class="py-line">    <tt class="py-name">actividades</tt><tt class="py-op">.</tt><tt id="link-143" class="py-name"><a title="apps.models.Actividades.plantilla
+apps.models.Flujos.plantilla" class="py-name" href="#" onclick="return doclink('link-143', 'plantilla', 'link-129');">plantilla</a></tt> <tt class="py-op">=</tt> <tt class="py-name">True</tt> </tt>
+<a name="L166"></a><tt class="py-lineno">166</tt>  <tt class="py-line">    <tt class="py-name">actividades</tt><tt class="py-op">.</tt><tt class="py-name">flujo_id</tt> <tt class="py-op">=</tt> <tt class="py-name">flujo_id</tt> </tt>
+<a name="L167"></a><tt class="py-lineno">167</tt>  <tt class="py-line">    <tt class="py-name">actividades</tt><tt class="py-op">.</tt><tt id="link-144" class="py-name"><a title="apps.views.UserCreateForm.save
+apps.views.UserModifyForm.save" class="py-name" href="#" onclick="return doclink('link-144', 'save', 'link-91');">save</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L168"></a><tt class="py-lineno">168</tt>  <tt class="py-line">    <tt class="py-keyword">return</tt> <tt class="py-name">actividades</tt> </tt>
+</div><a name="L169"></a><tt class="py-lineno">169</tt>  <tt class="py-line"> </tt>
+<a name="add_permisos"></a><div id="add_permisos-def"><a name="L170"></a><tt class="py-lineno">170</tt> <a class="py-toggle" href="#" id="add_permisos-toggle" onclick="return toggle('add_permisos');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="apps.population-module.html#add_permisos">add_permisos</a><tt class="py-op">(</tt><tt class="py-param">descripcion</tt><tt class="py-op">,</tt> <tt class="py-param">tag</tt><tt class="py-op">,</tt> <tt class="py-param">sistema</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="add_permisos-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="add_permisos-expanded"><a name="L171"></a><tt class="py-lineno">171</tt>  <tt class="py-line">    <tt id="link-145" class="py-name"><a title="apps.models.Permisos_Roles.permisos" class="py-name" href="#" onclick="return doclink('link-145', 'permisos', 'link-38');">permisos</a></tt> <tt class="py-op">=</tt> <tt id="link-146" class="py-name"><a title="apps.models.Permisos" class="py-name" href="#" onclick="return doclink('link-146', 'Permisos', 'link-7');">Permisos</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L172"></a><tt class="py-lineno">172</tt>  <tt class="py-line">    <tt id="link-147" class="py-name"><a title="apps.models.Permisos_Roles.permisos" class="py-name" href="#" onclick="return doclink('link-147', 'permisos', 'link-38');">permisos</a></tt><tt class="py-op">.</tt><tt id="link-148" class="py-name"><a title="apps.models.Actividades.descripcion
+apps.models.Estados.descripcion
+apps.models.Estados_Scrum.descripcion
+apps.models.Flujos.descripcion
+apps.models.Notas.descripcion
+apps.models.Permisos.descripcion
+apps.models.Prioridad.descripcion
+apps.models.Proyectos.descripcion
+apps.models.Roles.descripcion
+apps.models.UserStory.descripcion
+apps.models.UserStoryLog.descripcion
+apps.models.UserStoryRegistro.descripcion
+apps.models.UserStoryVersiones.descripcion" class="py-name" href="#" onclick="return doclink('link-148', 'descripcion', 'link-88');">descripcion</a></tt> <tt class="py-op">=</tt> <tt id="link-149" class="py-name"><a title="apps.models.Actividades.descripcion
+apps.models.Estados.descripcion
+apps.models.Estados_Scrum.descripcion
+apps.models.Flujos.descripcion
+apps.models.Notas.descripcion
+apps.models.Permisos.descripcion
+apps.models.Prioridad.descripcion
+apps.models.Proyectos.descripcion
+apps.models.Roles.descripcion
+apps.models.UserStory.descripcion
+apps.models.UserStoryLog.descripcion
+apps.models.UserStoryRegistro.descripcion
+apps.models.UserStoryVersiones.descripcion" class="py-name" href="#" onclick="return doclink('link-149', 'descripcion', 'link-88');">descripcion</a></tt> </tt>
+<a name="L173"></a><tt class="py-lineno">173</tt>  <tt class="py-line">    <tt id="link-150" class="py-name"><a title="apps.models.Permisos_Roles.permisos" class="py-name" href="#" onclick="return doclink('link-150', 'permisos', 'link-38');">permisos</a></tt><tt class="py-op">.</tt><tt id="link-151" class="py-name" targets="Variable apps.models.Permisos.tag=apps.models.Permisos-class.html#tag"><a title="apps.models.Permisos.tag" class="py-name" href="#" onclick="return doclink('link-151', 'tag', 'link-151');">tag</a></tt> <tt class="py-op">=</tt> <tt id="link-152" class="py-name"><a title="apps.models.Permisos.tag" class="py-name" href="#" onclick="return doclink('link-152', 'tag', 'link-151');">tag</a></tt> </tt>
+<a name="L174"></a><tt class="py-lineno">174</tt>  <tt class="py-line">    <tt id="link-153" class="py-name"><a title="apps.models.Permisos_Roles.permisos" class="py-name" href="#" onclick="return doclink('link-153', 'permisos', 'link-38');">permisos</a></tt><tt class="py-op">.</tt><tt id="link-154" class="py-name"><a title="apps.models.Actividades.estado
+apps.models.Flujos.estado
+apps.models.Permisos.estado
+apps.models.Proyectos.estado
+apps.models.Roles.estado
+apps.models.Sprint.estado
+apps.models.UserStory.estado
+apps.models.UserStoryRegistro.estado
+apps.models.UserStoryVersiones.estado" class="py-name" href="#" onclick="return doclink('link-154', 'estado', 'link-85');">estado</a></tt> <tt class="py-op">=</tt> <tt class="py-name">True</tt> </tt>
+<a name="L175"></a><tt class="py-lineno">175</tt>  <tt class="py-line">    <tt id="link-155" class="py-name"><a title="apps.models.Permisos_Roles.permisos" class="py-name" href="#" onclick="return doclink('link-155', 'permisos', 'link-38');">permisos</a></tt><tt class="py-op">.</tt><tt id="link-156" class="py-name"><a title="apps.models.Permisos.sistema
+apps.models.Roles.sistema" class="py-name" href="#" onclick="return doclink('link-156', 'sistema', 'link-39');">sistema</a></tt> <tt class="py-op">=</tt> <tt id="link-157" class="py-name"><a title="apps.models.Permisos.sistema
+apps.models.Roles.sistema" class="py-name" href="#" onclick="return doclink('link-157', 'sistema', 'link-39');">sistema</a></tt> </tt>
+<a name="L176"></a><tt class="py-lineno">176</tt>  <tt class="py-line">    <tt id="link-158" class="py-name"><a title="apps.models.Permisos_Roles.permisos" class="py-name" href="#" onclick="return doclink('link-158', 'permisos', 'link-38');">permisos</a></tt><tt class="py-op">.</tt><tt id="link-159" class="py-name"><a title="apps.views.UserCreateForm.save
+apps.views.UserModifyForm.save" class="py-name" href="#" onclick="return doclink('link-159', 'save', 'link-91');">save</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L177"></a><tt class="py-lineno">177</tt>  <tt class="py-line">    <tt class="py-keyword">return</tt> <tt id="link-160" class="py-name"><a title="apps.models.Permisos_Roles.permisos" class="py-name" href="#" onclick="return doclink('link-160', 'permisos', 'link-38');">permisos</a></tt> </tt>
+</div><a name="L178"></a><tt class="py-lineno">178</tt>  <tt class="py-line"> </tt>
+<a name="add_permisos_roles"></a><div id="add_permisos_roles-def"><a name="L179"></a><tt class="py-lineno">179</tt> <a class="py-toggle" href="#" id="add_permisos_roles-toggle" onclick="return toggle('add_permisos_roles');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="apps.population-module.html#add_permisos_roles">add_permisos_roles</a><tt class="py-op">(</tt><tt class="py-param">permiso_id</tt><tt class="py-op">,</tt> <tt class="py-param">rol_id</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="add_permisos_roles-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="add_permisos_roles-expanded"><a name="L180"></a><tt class="py-lineno">180</tt>  <tt class="py-line">    <tt class="py-name">permiso_rol</tt> <tt class="py-op">=</tt> <tt id="link-161" class="py-name"><a title="apps.models.Permisos_Roles" class="py-name" href="#" onclick="return doclink('link-161', 'Permisos_Roles', 'link-8');">Permisos_Roles</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L181"></a><tt class="py-lineno">181</tt>  <tt class="py-line">    <tt class="py-name">permiso_rol</tt><tt class="py-op">.</tt><tt class="py-name">roles_id</tt> <tt class="py-op">=</tt> <tt class="py-name">rol_id</tt> </tt>
+<a name="L182"></a><tt class="py-lineno">182</tt>  <tt class="py-line">    <tt class="py-name">permiso_rol</tt><tt class="py-op">.</tt><tt class="py-name">permisos_id</tt> <tt class="py-op">=</tt> <tt class="py-name">permiso_id</tt> </tt>
+<a name="L183"></a><tt class="py-lineno">183</tt>  <tt class="py-line">    <tt class="py-name">permiso_rol</tt><tt class="py-op">.</tt><tt id="link-162" class="py-name"><a title="apps.views.UserCreateForm.save
+apps.views.UserModifyForm.save" class="py-name" href="#" onclick="return doclink('link-162', 'save', 'link-91');">save</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L184"></a><tt class="py-lineno">184</tt>  <tt class="py-line">    <tt class="py-keyword">return</tt> <tt class="py-name">permiso_rol</tt> </tt>
+</div><a name="L185"></a><tt class="py-lineno">185</tt>  <tt class="py-line"> </tt>
+<a name="add_prioridad"></a><div id="add_prioridad-def"><a name="L186"></a><tt class="py-lineno">186</tt> <a class="py-toggle" href="#" id="add_prioridad-toggle" onclick="return toggle('add_prioridad');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="apps.population-module.html#add_prioridad">add_prioridad</a><tt class="py-op">(</tt><tt class="py-param">descripcion</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="add_prioridad-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="add_prioridad-expanded"><a name="L187"></a><tt class="py-lineno">187</tt>  <tt class="py-line">    <tt id="link-163" class="py-name" targets="Variable apps.models.UserStory.prioridad=apps.models.UserStory-class.html#prioridad,Variable apps.models.UserStoryRegistro.prioridad=apps.models.UserStoryRegistro-class.html#prioridad,Variable apps.models.UserStoryVersiones.prioridad=apps.models.UserStoryVersiones-class.html#prioridad"><a title="apps.models.UserStory.prioridad
 apps.models.UserStoryRegistro.prioridad
-apps.models.UserStoryVersiones.prioridad" class="py-name" href="#" onclick="return doclink('link-102', 'prioridad', 'link-102');">prioridad</a></tt> <tt class="py-op">=</tt> <tt id="link-103" class="py-name"><a title="apps.models.Prioridad" class="py-name" href="#" onclick="return doclink('link-103', 'Prioridad', 'link-9');">Prioridad</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
-<a name="L117"></a><tt class="py-lineno">117</tt>  <tt class="py-line">    <tt id="link-104" class="py-name"><a title="apps.models.UserStory.prioridad
+apps.models.UserStoryVersiones.prioridad" class="py-name" href="#" onclick="return doclink('link-163', 'prioridad', 'link-163');">prioridad</a></tt> <tt class="py-op">=</tt> <tt id="link-164" class="py-name"><a title="apps.models.Prioridad" class="py-name" href="#" onclick="return doclink('link-164', 'Prioridad', 'link-9');">Prioridad</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L188"></a><tt class="py-lineno">188</tt>  <tt class="py-line">    <tt id="link-165" class="py-name"><a title="apps.models.UserStory.prioridad
 apps.models.UserStoryRegistro.prioridad
-apps.models.UserStoryVersiones.prioridad" class="py-name" href="#" onclick="return doclink('link-104', 'prioridad', 'link-102');">prioridad</a></tt><tt class="py-op">.</tt><tt id="link-105" class="py-name"><a title="apps.models.Actividades.descripcion
+apps.models.UserStoryVersiones.prioridad" class="py-name" href="#" onclick="return doclink('link-165', 'prioridad', 'link-163');">prioridad</a></tt><tt class="py-op">.</tt><tt id="link-166" class="py-name"><a title="apps.models.Actividades.descripcion
 apps.models.Estados.descripcion
+apps.models.Estados_Scrum.descripcion
 apps.models.Flujos.descripcion
+apps.models.Notas.descripcion
 apps.models.Permisos.descripcion
 apps.models.Prioridad.descripcion
 apps.models.Proyectos.descripcion
 apps.models.Roles.descripcion
 apps.models.UserStory.descripcion
+apps.models.UserStoryLog.descripcion
 apps.models.UserStoryRegistro.descripcion
-apps.models.UserStoryVersiones.descripcion" class="py-name" href="#" onclick="return doclink('link-105', 'descripcion', 'link-38');">descripcion</a></tt> <tt class="py-op">=</tt> <tt id="link-106" class="py-name"><a title="apps.models.Actividades.descripcion
+apps.models.UserStoryVersiones.descripcion" class="py-name" href="#" onclick="return doclink('link-166', 'descripcion', 'link-88');">descripcion</a></tt> <tt class="py-op">=</tt> <tt id="link-167" class="py-name"><a title="apps.models.Actividades.descripcion
 apps.models.Estados.descripcion
+apps.models.Estados_Scrum.descripcion
 apps.models.Flujos.descripcion
+apps.models.Notas.descripcion
 apps.models.Permisos.descripcion
 apps.models.Prioridad.descripcion
 apps.models.Proyectos.descripcion
 apps.models.Roles.descripcion
 apps.models.UserStory.descripcion
+apps.models.UserStoryLog.descripcion
 apps.models.UserStoryRegistro.descripcion
-apps.models.UserStoryVersiones.descripcion" class="py-name" href="#" onclick="return doclink('link-106', 'descripcion', 'link-38');">descripcion</a></tt> </tt>
-<a name="L118"></a><tt class="py-lineno">118</tt>  <tt class="py-line">    <tt id="link-107" class="py-name"><a title="apps.models.UserStory.prioridad
+apps.models.UserStoryVersiones.descripcion" class="py-name" href="#" onclick="return doclink('link-167', 'descripcion', 'link-88');">descripcion</a></tt> </tt>
+<a name="L189"></a><tt class="py-lineno">189</tt>  <tt class="py-line">    <tt id="link-168" class="py-name"><a title="apps.models.UserStory.prioridad
 apps.models.UserStoryRegistro.prioridad
-apps.models.UserStoryVersiones.prioridad" class="py-name" href="#" onclick="return doclink('link-107', 'prioridad', 'link-102');">prioridad</a></tt><tt class="py-op">.</tt><tt id="link-108" class="py-name"><a title="apps.views.UserCreateForm.save
-apps.views.UserModifyForm.save" class="py-name" href="#" onclick="return doclink('link-108', 'save', 'link-46');">save</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
-</div><a name="L119"></a><tt class="py-lineno">119</tt>  <tt class="py-line">     </tt>
-<a name="add_estado"></a><div id="add_estado-def"><a name="L120"></a><tt class="py-lineno">120</tt> <a class="py-toggle" href="#" id="add_estado-toggle" onclick="return toggle('add_estado');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="apps.population-module.html#add_estado">add_estado</a><tt class="py-op">(</tt><tt class="py-param">descripcion</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
-</div><div id="add_estado-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="add_estado-expanded"><a name="L121"></a><tt class="py-lineno">121</tt>  <tt class="py-line">    <tt id="link-109" class="py-name"><a title="apps.models.Actividades.estado
+apps.models.UserStoryVersiones.prioridad" class="py-name" href="#" onclick="return doclink('link-168', 'prioridad', 'link-163');">prioridad</a></tt><tt class="py-op">.</tt><tt id="link-169" class="py-name"><a title="apps.views.UserCreateForm.save
+apps.views.UserModifyForm.save" class="py-name" href="#" onclick="return doclink('link-169', 'save', 'link-91');">save</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L190"></a><tt class="py-lineno">190</tt>  <tt class="py-line">     </tt>
+<a name="add_estado"></a><div id="add_estado-def"><a name="L191"></a><tt class="py-lineno">191</tt> <a class="py-toggle" href="#" id="add_estado-toggle" onclick="return toggle('add_estado');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="apps.population-module.html#add_estado">add_estado</a><tt class="py-op">(</tt><tt class="py-param">descripcion</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="add_estado-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="add_estado-expanded"><a name="L192"></a><tt class="py-lineno">192</tt>  <tt class="py-line">    <tt id="link-170" class="py-name"><a title="apps.models.Actividades.estado
 apps.models.Flujos.estado
 apps.models.Permisos.estado
+apps.models.Proyectos.estado
 apps.models.Roles.estado
 apps.models.Sprint.estado
 apps.models.UserStory.estado
 apps.models.UserStoryRegistro.estado
-apps.models.UserStoryVersiones.estado" class="py-name" href="#" onclick="return doclink('link-109', 'estado', 'link-41');">estado</a></tt> <tt class="py-op">=</tt> <tt id="link-110" class="py-name"><a title="apps.models.Estados" class="py-name" href="#" onclick="return doclink('link-110', 'Estados', 'link-10');">Estados</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
-<a name="L122"></a><tt class="py-lineno">122</tt>  <tt class="py-line">    <tt id="link-111" class="py-name"><a title="apps.models.Actividades.estado
+apps.models.UserStoryVersiones.estado" class="py-name" href="#" onclick="return doclink('link-170', 'estado', 'link-85');">estado</a></tt> <tt class="py-op">=</tt> <tt id="link-171" class="py-name"><a title="apps.models.Estados" class="py-name" href="#" onclick="return doclink('link-171', 'Estados', 'link-10');">Estados</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L193"></a><tt class="py-lineno">193</tt>  <tt class="py-line">    <tt id="link-172" class="py-name"><a title="apps.models.Actividades.estado
 apps.models.Flujos.estado
 apps.models.Permisos.estado
+apps.models.Proyectos.estado
 apps.models.Roles.estado
 apps.models.Sprint.estado
 apps.models.UserStory.estado
 apps.models.UserStoryRegistro.estado
-apps.models.UserStoryVersiones.estado" class="py-name" href="#" onclick="return doclink('link-111', 'estado', 'link-41');">estado</a></tt><tt class="py-op">.</tt><tt id="link-112" class="py-name"><a title="apps.models.Actividades.descripcion
+apps.models.UserStoryVersiones.estado" class="py-name" href="#" onclick="return doclink('link-172', 'estado', 'link-85');">estado</a></tt><tt class="py-op">.</tt><tt id="link-173" class="py-name"><a title="apps.models.Actividades.descripcion
 apps.models.Estados.descripcion
+apps.models.Estados_Scrum.descripcion
 apps.models.Flujos.descripcion
+apps.models.Notas.descripcion
 apps.models.Permisos.descripcion
 apps.models.Prioridad.descripcion
 apps.models.Proyectos.descripcion
 apps.models.Roles.descripcion
 apps.models.UserStory.descripcion
+apps.models.UserStoryLog.descripcion
 apps.models.UserStoryRegistro.descripcion
-apps.models.UserStoryVersiones.descripcion" class="py-name" href="#" onclick="return doclink('link-112', 'descripcion', 'link-38');">descripcion</a></tt> <tt class="py-op">=</tt> <tt id="link-113" class="py-name"><a title="apps.models.Actividades.descripcion
+apps.models.UserStoryVersiones.descripcion" class="py-name" href="#" onclick="return doclink('link-173', 'descripcion', 'link-88');">descripcion</a></tt> <tt class="py-op">=</tt> <tt id="link-174" class="py-name"><a title="apps.models.Actividades.descripcion
 apps.models.Estados.descripcion
+apps.models.Estados_Scrum.descripcion
 apps.models.Flujos.descripcion
+apps.models.Notas.descripcion
 apps.models.Permisos.descripcion
 apps.models.Prioridad.descripcion
 apps.models.Proyectos.descripcion
 apps.models.Roles.descripcion
 apps.models.UserStory.descripcion
+apps.models.UserStoryLog.descripcion
 apps.models.UserStoryRegistro.descripcion
-apps.models.UserStoryVersiones.descripcion" class="py-name" href="#" onclick="return doclink('link-113', 'descripcion', 'link-38');">descripcion</a></tt> </tt>
-<a name="L123"></a><tt class="py-lineno">123</tt>  <tt class="py-line">    <tt id="link-114" class="py-name"><a title="apps.models.Actividades.estado
+apps.models.UserStoryVersiones.descripcion" class="py-name" href="#" onclick="return doclink('link-174', 'descripcion', 'link-88');">descripcion</a></tt> </tt>
+<a name="L194"></a><tt class="py-lineno">194</tt>  <tt class="py-line">    <tt id="link-175" class="py-name"><a title="apps.models.Actividades.estado
 apps.models.Flujos.estado
 apps.models.Permisos.estado
+apps.models.Proyectos.estado
 apps.models.Roles.estado
 apps.models.Sprint.estado
 apps.models.UserStory.estado
 apps.models.UserStoryRegistro.estado
-apps.models.UserStoryVersiones.estado" class="py-name" href="#" onclick="return doclink('link-114', 'estado', 'link-41');">estado</a></tt><tt class="py-op">.</tt><tt id="link-115" class="py-name"><a title="apps.views.UserCreateForm.save
-apps.views.UserModifyForm.save" class="py-name" href="#" onclick="return doclink('link-115', 'save', 'link-46');">save</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
-</div><a name="L124"></a><tt class="py-lineno">124</tt>  <tt class="py-line"> </tt>
-<a name="L125"></a><tt class="py-lineno">125</tt>  <tt class="py-line"><tt class="py-keyword">if</tt> <tt class="py-name">__name__</tt> <tt class="py-op">==</tt> <tt class="py-string">'__main__'</tt><tt class="py-op">:</tt> </tt>
-<a name="L126"></a><tt class="py-lineno">126</tt>  <tt class="py-line">    <tt class="py-keyword">print</tt> <tt class="py-string">"Starting population script..."</tt> </tt>
-<a name="L127"></a><tt class="py-lineno">127</tt>  <tt class="py-line">    <tt id="link-116" class="py-name" targets="Function apps.population.populate()=apps.population-module.html#populate"><a title="apps.population.populate" class="py-name" href="#" onclick="return doclink('link-116', 'populate', 'link-116');">populate</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
-<a name="L128"></a><tt class="py-lineno">128</tt>  <tt class="py-line">    <tt class="py-keyword">print</tt> <tt class="py-string">"Done."</tt> </tt>
-<a name="L129"></a><tt class="py-lineno">129</tt>  <tt class="py-line"> </tt><script type="text/javascript">
+apps.models.UserStoryVersiones.estado" class="py-name" href="#" onclick="return doclink('link-175', 'estado', 'link-85');">estado</a></tt><tt class="py-op">.</tt><tt id="link-176" class="py-name"><a title="apps.views.UserCreateForm.save
+apps.views.UserModifyForm.save" class="py-name" href="#" onclick="return doclink('link-176', 'save', 'link-91');">save</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L195"></a><tt class="py-lineno">195</tt>  <tt class="py-line"> </tt>
+<a name="add_proyecto"></a><div id="add_proyecto-def"><a name="L196"></a><tt class="py-lineno">196</tt> <a class="py-toggle" href="#" id="add_proyecto-toggle" onclick="return toggle('add_proyecto');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="apps.population-module.html#add_proyecto">add_proyecto</a><tt class="py-op">(</tt><tt class="py-param">descripcion</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="add_proyecto-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="add_proyecto-expanded"><a name="L197"></a><tt class="py-lineno">197</tt>  <tt class="py-line">    <tt id="link-177" class="py-name" targets="Variable apps.models.Equipo.proyecto=apps.models.Equipo-class.html#proyecto,Variable apps.models.Flujos.proyecto=apps.models.Flujos-class.html#proyecto,Variable apps.models.Sprint.proyecto=apps.models.Sprint-class.html#proyecto,Variable apps.models.UserStory.proyecto=apps.models.UserStory-class.html#proyecto,Variable apps.models.UserStoryRegistro.proyecto=apps.models.UserStoryRegistro-class.html#proyecto,Variable apps.models.UserStoryVersiones.proyecto=apps.models.UserStoryVersiones-class.html#proyecto"><a title="apps.models.Equipo.proyecto
+apps.models.Flujos.proyecto
+apps.models.Sprint.proyecto
+apps.models.UserStory.proyecto
+apps.models.UserStoryRegistro.proyecto
+apps.models.UserStoryVersiones.proyecto" class="py-name" href="#" onclick="return doclink('link-177', 'proyecto', 'link-177');">proyecto</a></tt> <tt class="py-op">=</tt> <tt id="link-178" class="py-name"><a title="apps.models.Proyectos" class="py-name" href="#" onclick="return doclink('link-178', 'Proyectos', 'link-11');">Proyectos</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L198"></a><tt class="py-lineno">198</tt>  <tt class="py-line">    <tt id="link-179" class="py-name"><a title="apps.models.Equipo.proyecto
+apps.models.Flujos.proyecto
+apps.models.Sprint.proyecto
+apps.models.UserStory.proyecto
+apps.models.UserStoryRegistro.proyecto
+apps.models.UserStoryVersiones.proyecto" class="py-name" href="#" onclick="return doclink('link-179', 'proyecto', 'link-177');">proyecto</a></tt><tt class="py-op">.</tt><tt id="link-180" class="py-name" targets="Variable apps.models.Proyectos.nombre=apps.models.Proyectos-class.html#nombre,Variable apps.models.UserStory.nombre=apps.models.UserStory-class.html#nombre,Variable apps.models.UserStoryLog.nombre=apps.models.UserStoryLog-class.html#nombre,Variable apps.models.UserStoryRegistro.nombre=apps.models.UserStoryRegistro-class.html#nombre,Variable apps.models.UserStoryVersiones.nombre=apps.models.UserStoryVersiones-class.html#nombre"><a title="apps.models.Proyectos.nombre
+apps.models.UserStory.nombre
+apps.models.UserStoryLog.nombre
+apps.models.UserStoryRegistro.nombre
+apps.models.UserStoryVersiones.nombre" class="py-name" href="#" onclick="return doclink('link-180', 'nombre', 'link-180');">nombre</a></tt> <tt class="py-op">=</tt> <tt id="link-181" class="py-name"><a title="apps.models.Actividades.descripcion
+apps.models.Estados.descripcion
+apps.models.Estados_Scrum.descripcion
+apps.models.Flujos.descripcion
+apps.models.Notas.descripcion
+apps.models.Permisos.descripcion
+apps.models.Prioridad.descripcion
+apps.models.Proyectos.descripcion
+apps.models.Roles.descripcion
+apps.models.UserStory.descripcion
+apps.models.UserStoryLog.descripcion
+apps.models.UserStoryRegistro.descripcion
+apps.models.UserStoryVersiones.descripcion" class="py-name" href="#" onclick="return doclink('link-181', 'descripcion', 'link-88');">descripcion</a></tt> </tt>
+<a name="L199"></a><tt class="py-lineno">199</tt>  <tt class="py-line">    <tt id="link-182" class="py-name"><a title="apps.models.Equipo.proyecto
+apps.models.Flujos.proyecto
+apps.models.Sprint.proyecto
+apps.models.UserStory.proyecto
+apps.models.UserStoryRegistro.proyecto
+apps.models.UserStoryVersiones.proyecto" class="py-name" href="#" onclick="return doclink('link-182', 'proyecto', 'link-177');">proyecto</a></tt><tt class="py-op">.</tt><tt id="link-183" class="py-name" targets="Variable apps.models.Proyectos.fecha_ini=apps.models.Proyectos-class.html#fecha_ini,Variable apps.models.Sprint.fecha_ini=apps.models.Sprint-class.html#fecha_ini"><a title="apps.models.Proyectos.fecha_ini
+apps.models.Sprint.fecha_ini" class="py-name" href="#" onclick="return doclink('link-183', 'fecha_ini', 'link-183');">fecha_ini</a></tt><tt class="py-op">=</tt> <tt class="py-string">'2015-05-01'</tt> </tt>
+<a name="L200"></a><tt class="py-lineno">200</tt>  <tt class="py-line">    <tt id="link-184" class="py-name"><a title="apps.models.Equipo.proyecto
+apps.models.Flujos.proyecto
+apps.models.Sprint.proyecto
+apps.models.UserStory.proyecto
+apps.models.UserStoryRegistro.proyecto
+apps.models.UserStoryVersiones.proyecto" class="py-name" href="#" onclick="return doclink('link-184', 'proyecto', 'link-177');">proyecto</a></tt><tt class="py-op">.</tt><tt id="link-185" class="py-name" targets="Variable apps.models.Proyectos.fecha_est_fin=apps.models.Proyectos-class.html#fecha_est_fin,Variable apps.models.Sprint.fecha_est_fin=apps.models.Sprint-class.html#fecha_est_fin"><a title="apps.models.Proyectos.fecha_est_fin
+apps.models.Sprint.fecha_est_fin" class="py-name" href="#" onclick="return doclink('link-185', 'fecha_est_fin', 'link-185');">fecha_est_fin</a></tt> <tt class="py-op">=</tt> <tt class="py-string">'2015-06-02'</tt> </tt>
+<a name="L201"></a><tt class="py-lineno">201</tt>  <tt class="py-line">    <tt id="link-186" class="py-name"><a title="apps.models.Equipo.proyecto
+apps.models.Flujos.proyecto
+apps.models.Sprint.proyecto
+apps.models.UserStory.proyecto
+apps.models.UserStoryRegistro.proyecto
+apps.models.UserStoryVersiones.proyecto" class="py-name" href="#" onclick="return doclink('link-186', 'proyecto', 'link-177');">proyecto</a></tt><tt class="py-op">.</tt><tt id="link-187" class="py-name"><a title="apps.models.Actividades.descripcion
+apps.models.Estados.descripcion
+apps.models.Estados_Scrum.descripcion
+apps.models.Flujos.descripcion
+apps.models.Notas.descripcion
+apps.models.Permisos.descripcion
+apps.models.Prioridad.descripcion
+apps.models.Proyectos.descripcion
+apps.models.Roles.descripcion
+apps.models.UserStory.descripcion
+apps.models.UserStoryLog.descripcion
+apps.models.UserStoryRegistro.descripcion
+apps.models.UserStoryVersiones.descripcion" class="py-name" href="#" onclick="return doclink('link-187', 'descripcion', 'link-88');">descripcion</a></tt> <tt class="py-op">=</tt> <tt class="py-string">'una prueba de proyecto'</tt> </tt>
+<a name="L202"></a><tt class="py-lineno">202</tt>  <tt class="py-line">    <tt id="link-188" class="py-name"><a title="apps.models.Equipo.proyecto
+apps.models.Flujos.proyecto
+apps.models.Sprint.proyecto
+apps.models.UserStory.proyecto
+apps.models.UserStoryRegistro.proyecto
+apps.models.UserStoryVersiones.proyecto" class="py-name" href="#" onclick="return doclink('link-188', 'proyecto', 'link-177');">proyecto</a></tt><tt class="py-op">.</tt><tt id="link-189" class="py-name" targets="Variable apps.models.Proyectos.observaciones=apps.models.Proyectos-class.html#observaciones"><a title="apps.models.Proyectos.observaciones" class="py-name" href="#" onclick="return doclink('link-189', 'observaciones', 'link-189');">observaciones</a></tt> <tt class="py-op">=</tt> <tt class="py-string">'ninguna'</tt> </tt>
+<a name="L203"></a><tt class="py-lineno">203</tt>  <tt class="py-line">    <tt id="link-190" class="py-name"><a title="apps.models.Equipo.proyecto
+apps.models.Flujos.proyecto
+apps.models.Sprint.proyecto
+apps.models.UserStory.proyecto
+apps.models.UserStoryRegistro.proyecto
+apps.models.UserStoryVersiones.proyecto" class="py-name" href="#" onclick="return doclink('link-190', 'proyecto', 'link-177');">proyecto</a></tt><tt class="py-op">.</tt><tt id="link-191" class="py-name" targets="Variable apps.models.Proyectos.nro_sprint=apps.models.Proyectos-class.html#nro_sprint,Variable apps.models.Sprint.nro_sprint=apps.models.Sprint-class.html#nro_sprint"><a title="apps.models.Proyectos.nro_sprint
+apps.models.Sprint.nro_sprint" class="py-name" href="#" onclick="return doclink('link-191', 'nro_sprint', 'link-191');">nro_sprint</a></tt> <tt class="py-op">=</tt> <tt class="py-number">0</tt> </tt>
+<a name="L204"></a><tt class="py-lineno">204</tt>  <tt class="py-line">    <tt id="link-192" class="py-name"><a title="apps.models.Equipo.proyecto
+apps.models.Flujos.proyecto
+apps.models.Sprint.proyecto
+apps.models.UserStory.proyecto
+apps.models.UserStoryRegistro.proyecto
+apps.models.UserStoryVersiones.proyecto" class="py-name" href="#" onclick="return doclink('link-192', 'proyecto', 'link-177');">proyecto</a></tt><tt class="py-op">.</tt><tt id="link-193" class="py-name"><a title="apps.views.UserCreateForm.save
+apps.views.UserModifyForm.save" class="py-name" href="#" onclick="return doclink('link-193', 'save', 'link-91');">save</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L205"></a><tt class="py-lineno">205</tt>  <tt class="py-line">    <tt id="link-194" class="py-name" targets="Function apps.management.commands.population.add_flujo_proyecto()=apps.management.commands.population-module.html#add_flujo_proyecto,Function apps.population.add_flujo_proyecto()=apps.population-module.html#add_flujo_proyecto"><a title="apps.management.commands.population.add_flujo_proyecto
+apps.population.add_flujo_proyecto" class="py-name" href="#" onclick="return doclink('link-194', 'add_flujo_proyecto', 'link-194');">add_flujo_proyecto</a></tt><tt class="py-op">(</tt><tt id="link-195" class="py-name"><a title="apps.models.Equipo.proyecto
+apps.models.Flujos.proyecto
+apps.models.Sprint.proyecto
+apps.models.UserStory.proyecto
+apps.models.UserStoryRegistro.proyecto
+apps.models.UserStoryVersiones.proyecto" class="py-name" href="#" onclick="return doclink('link-195', 'proyecto', 'link-177');">proyecto</a></tt><tt class="py-op">.</tt><tt class="py-name">id</tt><tt class="py-op">,</tt> <tt class="py-number">1</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L206"></a><tt class="py-lineno">206</tt>  <tt class="py-line">     </tt>
+<a name="add_equipo"></a><div id="add_equipo-def"><a name="L207"></a><tt class="py-lineno">207</tt> <a class="py-toggle" href="#" id="add_equipo-toggle" onclick="return toggle('add_equipo');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="apps.population-module.html#add_equipo">add_equipo</a><tt class="py-op">(</tt><tt class="py-param">p_id</tt><tt class="py-op">,</tt> <tt class="py-param">r_id</tt><tt class="py-op">,</tt> <tt class="py-param">u_id</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="add_equipo-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="add_equipo-expanded"><a name="L208"></a><tt class="py-lineno">208</tt>  <tt class="py-line">    <tt class="py-name">equipo</tt> <tt class="py-op">=</tt> <tt id="link-196" class="py-name"><a title="apps.models.Equipo" class="py-name" href="#" onclick="return doclink('link-196', 'Equipo', 'link-12');">Equipo</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L209"></a><tt class="py-lineno">209</tt>  <tt class="py-line">    <tt class="py-name">equipo</tt><tt class="py-op">.</tt><tt class="py-name">proyecto_id</tt> <tt class="py-op">=</tt> <tt class="py-name">p_id</tt> </tt>
+<a name="L210"></a><tt class="py-lineno">210</tt>  <tt class="py-line">    <tt class="py-name">equipo</tt><tt class="py-op">.</tt><tt class="py-name">rol_id</tt> <tt class="py-op">=</tt> <tt class="py-name">r_id</tt> </tt>
+<a name="L211"></a><tt class="py-lineno">211</tt>  <tt class="py-line">    <tt class="py-name">equipo</tt><tt class="py-op">.</tt><tt class="py-name">usuario_id</tt> <tt class="py-op">=</tt> <tt class="py-name">u_id</tt> </tt>
+<a name="L212"></a><tt class="py-lineno">212</tt>  <tt class="py-line">    <tt class="py-name">equipo</tt><tt class="py-op">.</tt><tt id="link-197" class="py-name"><a title="apps.views.UserCreateForm.save
+apps.views.UserModifyForm.save" class="py-name" href="#" onclick="return doclink('link-197', 'save', 'link-91');">save</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L213"></a><tt class="py-lineno">213</tt>  <tt class="py-line">     </tt>
+<a name="add_flujo_proyecto"></a><div id="add_flujo_proyecto-def"><a name="L214"></a><tt class="py-lineno">214</tt> <a class="py-toggle" href="#" id="add_flujo_proyecto-toggle" onclick="return toggle('add_flujo_proyecto');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="apps.population-module.html#add_flujo_proyecto">add_flujo_proyecto</a><tt class="py-op">(</tt><tt class="py-param">proyecto_id</tt><tt class="py-op">,</tt> <tt class="py-param">flujo_id</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="add_flujo_proyecto-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="add_flujo_proyecto-expanded"><a name="L215"></a><tt class="py-lineno">215</tt>  <tt class="py-line">    <tt id="link-198" class="py-name"><a title="apps.models.Equipo.proyecto
+apps.models.Flujos.proyecto
+apps.models.Sprint.proyecto
+apps.models.UserStory.proyecto
+apps.models.UserStoryRegistro.proyecto
+apps.models.UserStoryVersiones.proyecto" class="py-name" href="#" onclick="return doclink('link-198', 'proyecto', 'link-177');">proyecto</a></tt> <tt class="py-op">=</tt> <tt id="link-199" class="py-name"><a title="apps.models.Proyectos" class="py-name" href="#" onclick="return doclink('link-199', 'Proyectos', 'link-11');">Proyectos</a></tt><tt class="py-op">.</tt><tt class="py-name">objects</tt><tt class="py-op">.</tt><tt id="link-200" class="py-name" targets="Method apps.views.IndexView.get()=apps.views.IndexView-class.html#get,Method apps.views.adminflow.get()=apps.views.adminflow-class.html#get,Method apps.views.adminrole.get()=apps.views.adminrole-class.html#get,Method apps.views.modadmin.get()=apps.views.modadmin-class.html#get,Method apps.views.modproyecto.get()=apps.views.modproyecto-class.html#get,Method apps.views.newProject.get()=apps.views.newProject-class.html#get"><a title="apps.views.IndexView.get
+apps.views.adminflow.get
+apps.views.adminrole.get
+apps.views.modadmin.get
+apps.views.modproyecto.get
+apps.views.newProject.get" class="py-name" href="#" onclick="return doclink('link-200', 'get', 'link-200');">get</a></tt><tt class="py-op">(</tt><tt class="py-name">pk</tt><tt class="py-op">=</tt><tt class="py-name">proyecto_id</tt><tt class="py-op">)</tt> </tt>
+<a name="L216"></a><tt class="py-lineno">216</tt>  <tt class="py-line">    <tt id="link-201" class="py-name"><a title="apps.models.Actividades.flujo
+apps.models.UserStory.flujo
+apps.models.UserStoryLog.flujo
+apps.models.UserStoryRegistro.flujo
+apps.models.UserStoryVersiones.flujo" class="py-name" href="#" onclick="return doclink('link-201', 'flujo', 'link-123');">flujo</a></tt> <tt class="py-op">=</tt> <tt id="link-202" class="py-name"><a title="apps.models.Flujos" class="py-name" href="#" onclick="return doclink('link-202', 'Flujos', 'link-4');">Flujos</a></tt><tt class="py-op">.</tt><tt class="py-name">objects</tt><tt class="py-op">.</tt><tt id="link-203" class="py-name"><a title="apps.views.IndexView.get
+apps.views.adminflow.get
+apps.views.adminrole.get
+apps.views.modadmin.get
+apps.views.modproyecto.get
+apps.views.newProject.get" class="py-name" href="#" onclick="return doclink('link-203', 'get', 'link-200');">get</a></tt><tt class="py-op">(</tt><tt class="py-name">pk</tt><tt class="py-op">=</tt><tt class="py-name">flujo_id</tt><tt class="py-op">)</tt> </tt>
+<a name="L217"></a><tt class="py-lineno">217</tt>  <tt class="py-line">    <tt class="py-name">flujo_nuevo</tt> <tt class="py-op">=</tt> <tt id="link-204" class="py-name"><a title="apps.models.Flujos" class="py-name" href="#" onclick="return doclink('link-204', 'Flujos', 'link-4');">Flujos</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L218"></a><tt class="py-lineno">218</tt>  <tt class="py-line">    <tt class="py-name">flujo_nuevo</tt><tt class="py-op">.</tt><tt id="link-205" class="py-name"><a title="apps.models.Actividades.descripcion
+apps.models.Estados.descripcion
+apps.models.Estados_Scrum.descripcion
+apps.models.Flujos.descripcion
+apps.models.Notas.descripcion
+apps.models.Permisos.descripcion
+apps.models.Prioridad.descripcion
+apps.models.Proyectos.descripcion
+apps.models.Roles.descripcion
+apps.models.UserStory.descripcion
+apps.models.UserStoryLog.descripcion
+apps.models.UserStoryRegistro.descripcion
+apps.models.UserStoryVersiones.descripcion" class="py-name" href="#" onclick="return doclink('link-205', 'descripcion', 'link-88');">descripcion</a></tt> <tt class="py-op">=</tt> <tt id="link-206" class="py-name"><a title="apps.models.Actividades.flujo
+apps.models.UserStory.flujo
+apps.models.UserStoryLog.flujo
+apps.models.UserStoryRegistro.flujo
+apps.models.UserStoryVersiones.flujo" class="py-name" href="#" onclick="return doclink('link-206', 'flujo', 'link-123');">flujo</a></tt><tt class="py-op">.</tt><tt id="link-207" class="py-name"><a title="apps.models.Actividades.descripcion
+apps.models.Estados.descripcion
+apps.models.Estados_Scrum.descripcion
+apps.models.Flujos.descripcion
+apps.models.Notas.descripcion
+apps.models.Permisos.descripcion
+apps.models.Prioridad.descripcion
+apps.models.Proyectos.descripcion
+apps.models.Roles.descripcion
+apps.models.UserStory.descripcion
+apps.models.UserStoryLog.descripcion
+apps.models.UserStoryRegistro.descripcion
+apps.models.UserStoryVersiones.descripcion" class="py-name" href="#" onclick="return doclink('link-207', 'descripcion', 'link-88');">descripcion</a></tt> </tt>
+<a name="L219"></a><tt class="py-lineno">219</tt>  <tt class="py-line">    <tt class="py-name">flujo_nuevo</tt><tt class="py-op">.</tt><tt id="link-208" class="py-name"><a title="apps.models.Actividades.estado
+apps.models.Flujos.estado
+apps.models.Permisos.estado
+apps.models.Proyectos.estado
+apps.models.Roles.estado
+apps.models.Sprint.estado
+apps.models.UserStory.estado
+apps.models.UserStoryRegistro.estado
+apps.models.UserStoryVersiones.estado" class="py-name" href="#" onclick="return doclink('link-208', 'estado', 'link-85');">estado</a></tt> <tt class="py-op">=</tt> <tt id="link-209" class="py-name"><a title="apps.models.Actividades.flujo
+apps.models.UserStory.flujo
+apps.models.UserStoryLog.flujo
+apps.models.UserStoryRegistro.flujo
+apps.models.UserStoryVersiones.flujo" class="py-name" href="#" onclick="return doclink('link-209', 'flujo', 'link-123');">flujo</a></tt><tt class="py-op">.</tt><tt id="link-210" class="py-name"><a title="apps.models.Actividades.estado
+apps.models.Flujos.estado
+apps.models.Permisos.estado
+apps.models.Proyectos.estado
+apps.models.Roles.estado
+apps.models.Sprint.estado
+apps.models.UserStory.estado
+apps.models.UserStoryRegistro.estado
+apps.models.UserStoryVersiones.estado" class="py-name" href="#" onclick="return doclink('link-210', 'estado', 'link-85');">estado</a></tt> </tt>
+<a name="L220"></a><tt class="py-lineno">220</tt>  <tt class="py-line">    <tt class="py-name">flujo_nuevo</tt><tt class="py-op">.</tt><tt id="link-211" class="py-name"><a title="apps.models.Actividades.plantilla
+apps.models.Flujos.plantilla" class="py-name" href="#" onclick="return doclink('link-211', 'plantilla', 'link-129');">plantilla</a></tt> <tt class="py-op">=</tt> <tt class="py-name">False</tt> </tt>
+<a name="L221"></a><tt class="py-lineno">221</tt>  <tt class="py-line">    <tt class="py-name">flujo_nuevo</tt><tt class="py-op">.</tt><tt id="link-212" class="py-name"><a title="apps.models.Flujos.tamano" class="py-name" href="#" onclick="return doclink('link-212', 'tamano', 'link-133');">tamano</a></tt> <tt class="py-op">=</tt> <tt id="link-213" class="py-name"><a title="apps.models.Actividades.flujo
+apps.models.UserStory.flujo
+apps.models.UserStoryLog.flujo
+apps.models.UserStoryRegistro.flujo
+apps.models.UserStoryVersiones.flujo" class="py-name" href="#" onclick="return doclink('link-213', 'flujo', 'link-123');">flujo</a></tt><tt class="py-op">.</tt><tt id="link-214" class="py-name"><a title="apps.models.Flujos.tamano" class="py-name" href="#" onclick="return doclink('link-214', 'tamano', 'link-133');">tamano</a></tt> </tt>
+<a name="L222"></a><tt class="py-lineno">222</tt>  <tt class="py-line">    <tt class="py-name">flujo_nuevo</tt><tt class="py-op">.</tt><tt id="link-215" class="py-name"><a title="apps.models.Equipo.proyecto
+apps.models.Flujos.proyecto
+apps.models.Sprint.proyecto
+apps.models.UserStory.proyecto
+apps.models.UserStoryRegistro.proyecto
+apps.models.UserStoryVersiones.proyecto" class="py-name" href="#" onclick="return doclink('link-215', 'proyecto', 'link-177');">proyecto</a></tt> <tt class="py-op">=</tt> <tt id="link-216" class="py-name"><a title="apps.models.Equipo.proyecto
+apps.models.Flujos.proyecto
+apps.models.Sprint.proyecto
+apps.models.UserStory.proyecto
+apps.models.UserStoryRegistro.proyecto
+apps.models.UserStoryVersiones.proyecto" class="py-name" href="#" onclick="return doclink('link-216', 'proyecto', 'link-177');">proyecto</a></tt> </tt>
+<a name="L223"></a><tt class="py-lineno">223</tt>  <tt class="py-line">    <tt class="py-name">flujo_nuevo</tt><tt class="py-op">.</tt><tt id="link-217" class="py-name"><a title="apps.views.UserCreateForm.save
+apps.views.UserModifyForm.save" class="py-name" href="#" onclick="return doclink('link-217', 'save', 'link-91');">save</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L224"></a><tt class="py-lineno">224</tt>  <tt class="py-line">    <tt class="py-name">actividades</tt> <tt class="py-op">=</tt> <tt class="py-op">[</tt><tt class="py-string">'Analisis'</tt><tt class="py-op">,</tt> <tt class="py-string">'Diseno'</tt><tt class="py-op">,</tt> <tt class="py-string">'Programacion'</tt><tt class="py-op">,</tt> <tt class="py-string">'Testing'</tt><tt class="py-op">,</tt> <tt class="py-string">'Despliegue'</tt><tt class="py-op">]</tt> </tt>
+<a name="L225"></a><tt class="py-lineno">225</tt>  <tt class="py-line">    <tt class="py-keyword">for</tt> <tt class="py-name">act</tt> <tt class="py-keyword">in</tt> <tt class="py-name">actividades</tt><tt class="py-op">:</tt> </tt>
+<a name="L226"></a><tt class="py-lineno">226</tt>  <tt class="py-line">        <tt id="link-218" class="py-name"><a title="apps.management.commands.population.add_actividades
+apps.population.add_actividades" class="py-name" href="#" onclick="return doclink('link-218', 'add_actividades', 'link-136');">add_actividades</a></tt><tt class="py-op">(</tt><tt class="py-name">act</tt><tt class="py-op">,</tt> <tt class="py-name">flujo_nuevo</tt><tt class="py-op">.</tt><tt class="py-name">id</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L227"></a><tt class="py-lineno">227</tt>  <tt class="py-line">     </tt>
+<a name="add_hu"></a><div id="add_hu-def"><a name="L228"></a><tt class="py-lineno">228</tt> <a class="py-toggle" href="#" id="add_hu-toggle" onclick="return toggle('add_hu');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="apps.population-module.html#add_hu">add_hu</a><tt class="py-op">(</tt><tt class="py-param">proyecto_id</tt><tt class="py-op">,</tt> <tt class="py-param">codigo</tt><tt class="py-op">,</tt> <tt class="py-param">nombre</tt><tt class="py-op">,</tt> <tt class="py-param">descripcion</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="add_hu-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="add_hu-expanded"><a name="L229"></a><tt class="py-lineno">229</tt>  <tt class="py-line">    <tt class="py-name">us</tt> <tt class="py-op">=</tt> <tt id="link-219" class="py-name"><a title="apps.models.UserStory" class="py-name" href="#" onclick="return doclink('link-219', 'UserStory', 'link-14');">UserStory</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L230"></a><tt class="py-lineno">230</tt>  <tt class="py-line">    <tt class="py-name">us</tt><tt class="py-op">.</tt><tt id="link-220" class="py-name"><a title="apps.models.Proyectos.nombre
+apps.models.UserStory.nombre
+apps.models.UserStoryLog.nombre
+apps.models.UserStoryRegistro.nombre
+apps.models.UserStoryVersiones.nombre" class="py-name" href="#" onclick="return doclink('link-220', 'nombre', 'link-180');">nombre</a></tt> <tt class="py-op">=</tt> <tt id="link-221" class="py-name"><a title="apps.models.Proyectos.nombre
+apps.models.UserStory.nombre
+apps.models.UserStoryLog.nombre
+apps.models.UserStoryRegistro.nombre
+apps.models.UserStoryVersiones.nombre" class="py-name" href="#" onclick="return doclink('link-221', 'nombre', 'link-180');">nombre</a></tt> </tt>
+<a name="L231"></a><tt class="py-lineno">231</tt>  <tt class="py-line">    <tt class="py-name">us</tt><tt class="py-op">.</tt><tt id="link-222" class="py-name"><a title="apps.models.Actividades.descripcion
+apps.models.Estados.descripcion
+apps.models.Estados_Scrum.descripcion
+apps.models.Flujos.descripcion
+apps.models.Notas.descripcion
+apps.models.Permisos.descripcion
+apps.models.Prioridad.descripcion
+apps.models.Proyectos.descripcion
+apps.models.Roles.descripcion
+apps.models.UserStory.descripcion
+apps.models.UserStoryLog.descripcion
+apps.models.UserStoryRegistro.descripcion
+apps.models.UserStoryVersiones.descripcion" class="py-name" href="#" onclick="return doclink('link-222', 'descripcion', 'link-88');">descripcion</a></tt> <tt class="py-op">=</tt> <tt id="link-223" class="py-name"><a title="apps.models.Actividades.descripcion
+apps.models.Estados.descripcion
+apps.models.Estados_Scrum.descripcion
+apps.models.Flujos.descripcion
+apps.models.Notas.descripcion
+apps.models.Permisos.descripcion
+apps.models.Prioridad.descripcion
+apps.models.Proyectos.descripcion
+apps.models.Roles.descripcion
+apps.models.UserStory.descripcion
+apps.models.UserStoryLog.descripcion
+apps.models.UserStoryRegistro.descripcion
+apps.models.UserStoryVersiones.descripcion" class="py-name" href="#" onclick="return doclink('link-223', 'descripcion', 'link-88');">descripcion</a></tt> </tt>
+<a name="L232"></a><tt class="py-lineno">232</tt>  <tt class="py-line">    <tt class="py-name">us</tt><tt class="py-op">.</tt><tt id="link-224" class="py-name" targets="Variable apps.models.UserStory.codigo=apps.models.UserStory-class.html#codigo,Variable apps.models.UserStoryLog.codigo=apps.models.UserStoryLog-class.html#codigo,Variable apps.models.UserStoryRegistro.codigo=apps.models.UserStoryRegistro-class.html#codigo,Variable apps.models.UserStoryVersiones.codigo=apps.models.UserStoryVersiones-class.html#codigo"><a title="apps.models.UserStory.codigo
+apps.models.UserStoryLog.codigo
+apps.models.UserStoryRegistro.codigo
+apps.models.UserStoryVersiones.codigo" class="py-name" href="#" onclick="return doclink('link-224', 'codigo', 'link-224');">codigo</a></tt> <tt class="py-op">=</tt> <tt id="link-225" class="py-name"><a title="apps.models.UserStory.codigo
+apps.models.UserStoryLog.codigo
+apps.models.UserStoryRegistro.codigo
+apps.models.UserStoryVersiones.codigo" class="py-name" href="#" onclick="return doclink('link-225', 'codigo', 'link-224');">codigo</a></tt> </tt>
+<a name="L233"></a><tt class="py-lineno">233</tt>  <tt class="py-line">    <tt class="py-name">us</tt><tt class="py-op">.</tt><tt id="link-226" class="py-name" targets="Variable apps.models.UserStory.tiempo_Estimado=apps.models.UserStory-class.html#tiempo_Estimado,Variable apps.models.UserStoryRegistro.tiempo_Estimado=apps.models.UserStoryRegistro-class.html#tiempo_Estimado,Variable apps.models.UserStoryVersiones.tiempo_Estimado=apps.models.UserStoryVersiones-class.html#tiempo_Estimado"><a title="apps.models.UserStory.tiempo_Estimado
+apps.models.UserStoryRegistro.tiempo_Estimado
+apps.models.UserStoryVersiones.tiempo_Estimado" class="py-name" href="#" onclick="return doclink('link-226', 'tiempo_Estimado', 'link-226');">tiempo_Estimado</a></tt> <tt class="py-op">=</tt> <tt class="py-number">50</tt> </tt>
+<a name="L234"></a><tt class="py-lineno">234</tt>  <tt class="py-line">    <tt class="py-name">us</tt><tt class="py-op">.</tt><tt id="link-227" class="py-name" targets="Variable apps.models.UserStory.valor_Negocio=apps.models.UserStory-class.html#valor_Negocio,Variable apps.models.UserStoryRegistro.valor_Negocio=apps.models.UserStoryRegistro-class.html#valor_Negocio,Variable apps.models.UserStoryVersiones.valor_Negocio=apps.models.UserStoryVersiones-class.html#valor_Negocio"><a title="apps.models.UserStory.valor_Negocio
+apps.models.UserStoryRegistro.valor_Negocio
+apps.models.UserStoryVersiones.valor_Negocio" class="py-name" href="#" onclick="return doclink('link-227', 'valor_Negocio', 'link-227');">valor_Negocio</a></tt> <tt class="py-op">=</tt> <tt class="py-number">5</tt> </tt>
+<a name="L235"></a><tt class="py-lineno">235</tt>  <tt class="py-line">    <tt class="py-name">us</tt><tt class="py-op">.</tt><tt id="link-228" class="py-name" targets="Variable apps.models.UserStory.valor_Tecnico=apps.models.UserStory-class.html#valor_Tecnico,Variable apps.models.UserStoryRegistro.valor_Tecnico=apps.models.UserStoryRegistro-class.html#valor_Tecnico,Variable apps.models.UserStoryVersiones.valor_Tecnico=apps.models.UserStoryVersiones-class.html#valor_Tecnico"><a title="apps.models.UserStory.valor_Tecnico
+apps.models.UserStoryRegistro.valor_Tecnico
+apps.models.UserStoryVersiones.valor_Tecnico" class="py-name" href="#" onclick="return doclink('link-228', 'valor_Tecnico', 'link-228');">valor_Tecnico</a></tt> <tt class="py-op">=</tt> <tt class="py-number">5</tt> </tt>
+<a name="L236"></a><tt class="py-lineno">236</tt>  <tt class="py-line">    <tt class="py-name">us</tt><tt class="py-op">.</tt><tt id="link-229" class="py-name"><a title="apps.models.UserStory.prioridad
+apps.models.UserStoryRegistro.prioridad
+apps.models.UserStoryVersiones.prioridad" class="py-name" href="#" onclick="return doclink('link-229', 'prioridad', 'link-163');">prioridad</a></tt> <tt class="py-op">=</tt> <tt id="link-230" class="py-name"><a title="apps.models.Prioridad" class="py-name" href="#" onclick="return doclink('link-230', 'Prioridad', 'link-9');">Prioridad</a></tt><tt class="py-op">.</tt><tt class="py-name">objects</tt><tt class="py-op">.</tt><tt id="link-231" class="py-name"><a title="apps.views.IndexView.get
+apps.views.adminflow.get
+apps.views.adminrole.get
+apps.views.modadmin.get
+apps.views.modproyecto.get
+apps.views.newProject.get" class="py-name" href="#" onclick="return doclink('link-231', 'get', 'link-200');">get</a></tt><tt class="py-op">(</tt><tt class="py-name">pk</tt><tt class="py-op">=</tt><tt class="py-number">3</tt><tt class="py-op">)</tt> </tt>
+<a name="L237"></a><tt class="py-lineno">237</tt>  <tt class="py-line">    <tt class="py-name">us</tt><tt class="py-op">.</tt><tt class="py-name">proyecto_id</tt> <tt class="py-op">=</tt> <tt class="py-name">proyecto_id</tt> </tt>
+<a name="L238"></a><tt class="py-lineno">238</tt>  <tt class="py-line">    <tt class="py-name">us</tt><tt class="py-op">.</tt><tt id="link-232" class="py-name" targets="Variable apps.models.UserStory.estado_scrum=apps.models.UserStory-class.html#estado_scrum,Variable apps.models.UserStoryRegistro.estado_scrum=apps.models.UserStoryRegistro-class.html#estado_scrum,Variable apps.models.UserStoryVersiones.estado_scrum=apps.models.UserStoryVersiones-class.html#estado_scrum"><a title="apps.models.UserStory.estado_scrum
+apps.models.UserStoryRegistro.estado_scrum
+apps.models.UserStoryVersiones.estado_scrum" class="py-name" href="#" onclick="return doclink('link-232', 'estado_scrum', 'link-232');">estado_scrum</a></tt> <tt class="py-op">=</tt> <tt id="link-233" class="py-name"><a title="apps.models.Estados_Scrum" class="py-name" href="#" onclick="return doclink('link-233', 'Estados_Scrum', 'link-13');">Estados_Scrum</a></tt><tt class="py-op">.</tt><tt class="py-name">objects</tt><tt class="py-op">.</tt><tt id="link-234" class="py-name"><a title="apps.views.IndexView.get
+apps.views.adminflow.get
+apps.views.adminrole.get
+apps.views.modadmin.get
+apps.views.modproyecto.get
+apps.views.newProject.get" class="py-name" href="#" onclick="return doclink('link-234', 'get', 'link-200');">get</a></tt><tt class="py-op">(</tt><tt class="py-name">pk</tt><tt class="py-op">=</tt><tt class="py-number">3</tt><tt class="py-op">)</tt> </tt>
+<a name="L239"></a><tt class="py-lineno">239</tt>  <tt class="py-line">    <tt class="py-name">us</tt><tt class="py-op">.</tt><tt id="link-235" class="py-name"><a title="apps.views.UserCreateForm.save
+apps.views.UserModifyForm.save" class="py-name" href="#" onclick="return doclink('link-235', 'save', 'link-91');">save</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L240"></a><tt class="py-lineno">240</tt>  <tt class="py-line"> </tt>
+<a name="L241"></a><tt class="py-lineno">241</tt>  <tt class="py-line"><tt class="py-keyword">if</tt> <tt class="py-name">__name__</tt> <tt class="py-op">==</tt> <tt class="py-string">'__main__'</tt><tt class="py-op">:</tt> </tt>
+<a name="L242"></a><tt class="py-lineno">242</tt>  <tt class="py-line">    <tt class="py-keyword">print</tt> <tt class="py-string">"Starting population script..."</tt> </tt>
+<a name="L243"></a><tt class="py-lineno">243</tt>  <tt class="py-line">    <tt id="link-236" class="py-name" targets="Function apps.population.populate()=apps.population-module.html#populate"><a title="apps.population.populate" class="py-name" href="#" onclick="return doclink('link-236', 'populate', 'link-236');">populate</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L244"></a><tt class="py-lineno">244</tt>  <tt class="py-line">    <tt class="py-keyword">print</tt> <tt class="py-string">"Done."</tt> </tt>
+<a name="L245"></a><tt class="py-lineno">245</tt>  <tt class="py-line"> </tt><script type="text/javascript">
 <!--
 expandto(location.href);
 // -->
@@ -445,7 +940,7 @@ expandto(location.href);
 <table border="0" cellpadding="0" cellspacing="0" width="100%%">
   <tr>
     <td align="left" class="footer">
-    Generated by Epydoc 3.0.1 on Sat May  2 00:06:31 2015
+    Generated by Epydoc 3.0.1 on Fri May 29 22:57:14 2015
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"

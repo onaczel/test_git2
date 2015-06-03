@@ -2083,9 +2083,8 @@ def editarHu(request, proyecto_id, hu_id):
         hu.valor_Tecnico = request.POST['valortecnico']
         hu.proyecto_id = proyecto_id
         
-        #llamada a funcion que notifica a los responsables, la modificacion del hu
-        notificarModificacionHU(hu_id,proyecto_id)
-        print  request.POST['username']
+        
+        
         
         try:
             user = User.objects.get(username = request.POST['username'])
@@ -2118,6 +2117,11 @@ def editarHu(request, proyecto_id, hu_id):
         hu.fecha_modificacion = time.strftime("%Y-%m-%d")
         #hu.notas = request.POST.get('notas', False)
         hu.save()
+        #llamada a funcion que notifica a los responsables, la modificacion del hu
+        try:
+            notificarModificacionHU(hu.id,proyecto_id)
+        except :
+            pass  
         '''
         #se envian notificaciones si se ha cambiado de responsable del user story
         if oldUser != hu.usuario_Asignado:
@@ -2208,7 +2212,10 @@ def crearregistroHu(request, proyecto_id, hu_id):
             hu_reg.delete()
             guardado = False
         #aca le tengo que llamar a la notificacion <selm>
-        notificarRegistroTrabajo(hu_id, proyecto_id,hu_reg.descripcion_tarea, hu_reg.tiempo_Real)
+        try:
+            notificarRegistroTrabajo(hu_id, proyecto_id,hu_reg.descripcion_tarea, hu_reg.tiempo_Real)
+        except :
+            pass  
         #"respuesta" se puede manejar como sea necesario
         #termina asignacion de horas a los dias del sprint
         hu_reg = UserStoryRegistro.objects.filter(idr = hu.id)
@@ -2865,8 +2872,14 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
                     if cambio:
                         huv = UserStoryVersiones()
                         copiarHU(huCopia, huv, User.objects.get(username = request.user))
-                        notificarModificacionHU(hu_id, proyecto_id)
+                        
+                        
                         hu.save()
+                        
+                        try:
+                            notificarModificacionHU(hu_id, proyecto_id)
+                        except :
+                            pass  
                 if sprint.estado == 2:
                     userStory = UserStoryVersiones.objects.get(id = hu_id)
                 else:
@@ -2937,7 +2950,7 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
             print sprint_id
             planeado = []
             no_planeado = []
-            
+            h_planeadas = 0
             if Dia_Sprint.objects.filter(sprint_id = sprint_id).exists():
                 mylista = Dia_Sprint.objects.filter(sprint_id = sprint_id)
                 h_planeadas = 0
@@ -3069,10 +3082,13 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
                 if cambio:
                     huv = UserStoryVersiones()
                     copiarHU(huCopia, huv, User.objects.get(username = request.user))
-                    notificarModificacionHU(request.POST['hu_id'], proyecto_id)
+                    
                        
                 hu.save()
-
+                try:
+                    notificarModificacionHU(hu.id, proyecto_id)
+                except :
+                    pass  
             #if request.POST['cambio'] == "x":
                 #hu = UserStory.objects.get(id = hu_id)
                 #huv = UserStoryVersiones()
@@ -3395,11 +3411,50 @@ def sprintsMas(request, proyecto_id, sprint_id, hu_id):
     
     #El Scrum Master del proyecto "rol_id = 3"
     scrum = []
+    
+    ##seccion de codigo que prepara datos para el chart##
+    print "id sprint ="
+    print sprint_id
+    planeado = []
+    no_planeado = []
+    h_planeadas = 0
+    if Dia_Sprint.objects.filter(sprint_id = sprint_id).exists():
+        mylista = Dia_Sprint.objects.filter(sprint_id = sprint_id)
+        h_planeadas = 0
+        # se obtiene el total de las horas planeadas
+        for l in mylista:
+            h_planeadas = h_planeadas + l.tiempo_estimado
+
+            aux = h_planeadas
+
+        planeado.append(h_planeadas)
+        for l in mylista:
+            if l.tiempo_estimado != 0:
+                planeado.append(aux-l.tiempo_estimado)    
+                aux = aux - l.tiempo_estimado
+
+        aux = h_planeadas
+        no_planeado.append(h_planeadas)
+        
+        for l in mylista:
+            print l.fecha
+            print  l.tiempo_real
+            if l.tiempo_real > 0 :
+                no_planeado.append(aux-l.tiempo_real)    
+                aux = aux - l.tiempo_real
+            
+            elif  l.tiempo_estimado != 0 and l.fecha.strftime("%y/%m/%d") < time.strftime("%y/%m/%d"): 
+                no_planeado.append(aux-l.tiempo_real)    
+                aux = aux - l.tiempo_real
+            
+        ###fin de la seccion##
+    
+    
     try:
         scrum = Equipo.objects.get(proyecto_id = proyecto_id, usuario_id = request.user.id, rol_id = 3)
     except:
         scrum = Equipo()
-    return render_to_response('apps/project_sprint_planificar.html', {"proyecto":proyecto, "sprint":sprint, "hus":hus, "userStory":userStory, "usuario":usuario, "flujo":flujo, "prioridad":prioridad, "f_actividad":f_actividad, "f_a_estado":f_a_estado, "users":users, "flujos":flujos, "prioridades":prioridades, "scrum":scrum, "horas_sprint_usuario":horas_sprint_usuario, "cant_hus":cant_hus}, context_instance = RequestContext(request))
+    return render_to_response('apps/project_sprint_planificar.html', {"planeado":planeado,"nplaneado":no_planeado,"horasp":h_planeadas,"proyecto":proyecto, "sprint":sprint, "hus":hus, "userStory":userStory, "usuario":usuario, "flujo":flujo, "prioridad":prioridad, "f_actividad":f_actividad, "f_a_estado":f_a_estado, "users":users, "flujos":flujos, "prioridades":prioridades, "scrum":scrum, "horas_sprint_usuario":horas_sprint_usuario, "cant_hus":cant_hus}, context_instance = RequestContext(request))
 
 
 def crearSprint(proyecto_id):
@@ -3492,13 +3547,19 @@ def iniciarSprint(proyecto_id, nro_sprint):
         mensaje = "Establezca la duracion del Sprint " + str(nro_sprint) + " antes de iniciarlo"
         iniciar = False
     hora_usuario_sprint = horas_usuario_sprint.objects.filter(Sprint_id = sprint.id)
+    for hos in hora_usuario_sprint:
+        if int(hos.horas) == 0:
+            mensaje = "Establezca horas de trabajo para los usuarios en el sprint " + str(nro_sprint)
+            iniciar = False
+            break
+    """
     horas = 0
     for hos in hora_usuario_sprint: 
         horas = horas + int(hos.horas)
     if horas == 0:
         mensaje = "Establezca horas de trabajo para los usuarios en el sprint " + str(nro_sprint)
         iniciar = False 
-        
+    """ 
     if(iniciar):
         sprint.fecha_ini = datetime.today().strftime("%Y-%m-%d")
         sprint.save()

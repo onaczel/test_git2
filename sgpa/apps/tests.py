@@ -215,6 +215,51 @@ def test_ver_adminArchivoAdjunto(self):
     
         self.assertTemplateUsed(resp, 'hu_fileManager.html')
     
+def test_ver_templateChart(self):
+        """
+        Prueba de visualizacion del template donde esta el burndown chart
+        """
+        self.factory = RequestFactory()
+        resp= self.factory.get('/apps/project_sprint_planificar')
+    
+        self.assertTemplateUsed(resp, 'project_sprint_planificar.html')
+
+def test_ver_templateSprints(self):
+        """
+        Prueba de visualizacion del template de sprints
+        """
+        self.factory = RequestFactory()
+        resp= self.factory.get('/apps/project_sprints')
+    
+        self.assertTemplateUsed(resp, 'project_sprints.html')
+
+def test_ver_templateListaVersionesHU(self):
+        """
+        Prueba de visualizacion del template donde estan las versiondes de los hu
+        """
+        self.factory = RequestFactory()
+        resp= self.factory.get('/apps/hu_list_versiones')
+    
+        self.assertTemplateUsed(resp, 'hu_list_versiones')
+
+def test_ver_templateNotasHU(self):
+        """
+        Prueba de visualizacion del template donde estan las notas de los hu
+        """
+        self.factory = RequestFactory()
+        resp= self.factory.get('/apps/hu_notas')
+    
+        self.assertTemplateUsed(resp, 'hu_notas.html')
+
+def test_ver_templateRegistroHU(self):
+        """
+        Prueba de visualizacion del template donde estan los registros de los hu
+        """
+        self.factory = RequestFactory()
+        resp= self.factory.get('/apps/hu_registro')
+    
+        self.assertTemplateUsed(resp, 'hu_registro.html')         
+        
   
 
 class test_login(TestCase):
