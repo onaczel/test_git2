@@ -748,7 +748,7 @@ def rolemodifypermisos(request, user_logged, role_id, proyecto_id):
     else:
         permisos = Permisos.objects.filter(sistema=False)
     print user_logged
-    
+    permisos = sorted(permisos, key=gethuidsort, reverse=False)
     if int(user_logged) == 0: 
         proyecto = Proyectos.objects.get(pk=proyecto_id)
         return render_to_response("apps/role_set_permisos_mod_proj.html", {"permisos":permisos, 'rol':rol, 'user_logged':user_logged, 'proyecto':proyecto, 'role_id':role_id}, context_instance=RequestContext(request))

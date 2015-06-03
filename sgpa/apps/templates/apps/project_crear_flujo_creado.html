@@ -1,10 +1,14 @@
 {% extends 'base.html' %}
+{% block uptitulo %}
+<h1>{{proyecto.nombre}}</h1>
+{% endblock %}
 {% block titulo %}
-<h1>Modulo Proyecto</h1>
+<h1>Flujos</h1>
 {% endblock %}
 {% block contenido %}
-<h1>Flujos asignados con exito</h1>
+<h3>Flujos asignados con exito</h3>
 {% endblock %}
 {% block atras %}
-<a href="{% url 'apps:accionesproyecto' proyecto.id %}" >Volver</a>
+<a href="{% url 'apps:listflujosproyectosMod' proyecto.id %}">Volver</a>
+
 {% endblock %}

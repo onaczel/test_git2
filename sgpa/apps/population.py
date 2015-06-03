@@ -155,14 +155,14 @@ def add_flujo(descripcion):
     flujo.save()
     actividades = ['Analisis', 'Diseno', 'Programacion', 'Testing', 'Despliegue']
     for act in actividades:
-        add_actividades(act, flujo.id)
+        add_actividades(act, flujo.id, True)
     return flujo
 
-def add_actividades(descripcion, flujo_id):
+def add_actividades(descripcion, flujo_id, plantilla):
     actividades = Actividades()
     actividades.descripcion = descripcion
     actividades.estado = True
-    actividades.plantilla = True
+    actividades.plantilla = plantilla
     actividades.flujo_id = flujo_id
     actividades.save()
     return actividades
@@ -223,7 +223,7 @@ def add_flujo_proyecto(proyecto_id, flujo_id):
     flujo_nuevo.save()
     actividades = ['Analisis', 'Diseno', 'Programacion', 'Testing', 'Despliegue']
     for act in actividades:
-        add_actividades(act, flujo_nuevo.id)
+        add_actividades(act, flujo_nuevo.id, False)
     
 def add_hu(proyecto_id, codigo, nombre, descripcion):
     us = UserStory()
