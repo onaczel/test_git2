@@ -2177,13 +2177,7 @@ def registroHu(request, proyecto_id, hu_id):
     
     return render_to_response('apps/hu_registro.html', {'hu_reg':hu_reg, 'hu':hu, 'proyecto':proyecto, 'misPermisos':mispermisos}, context_instance=RequestContext(request))
 
-def gethudate(hu):
-    """
-    Funcion utilizada para ordenar una lista de User Stories en base a la fecha de modificacion
-    @param hu: objeto User Story
-    @return: la fecha de modificacion del User Story
-    """
-    return hu.fechahora
+
 
 def crearregistroHu(request, proyecto_id, hu_id):
     """
@@ -2199,6 +2193,7 @@ def crearregistroHu(request, proyecto_id, hu_id):
     user = request.user
     proyecto = Proyectos.objects.get(pk=proyecto_id)
     guardado = False
+
     if request.method == 'POST':
         hu_reg = UserStoryRegistro()
         hu_reg.idr = hu.id
@@ -2217,9 +2212,19 @@ def crearregistroHu(request, proyecto_id, hu_id):
         #"respuesta" se puede manejar como sea necesario
         #termina asignacion de horas a los dias del sprint
         hu_reg = UserStoryRegistro.objects.filter(idr = hu.id)
+        
+        hu_reg = sorted(hu_reg, key=gethudate, reverse=True)
         return render_to_response('apps/hu_registro.html', {'hu':hu, 'proyecto':proyecto, 'guardado':guardado, 'hu_reg':hu_reg, "respuesta":respuesta}, context_instance=RequestContext(request))
     
     return render_to_response('apps/hu_registro_nuevo.html', {'hu':hu, 'proyecto':proyecto, 'guardado':guardado}, context_instance=RequestContext(request))
+
+def gethudate(hu):
+    """
+    Funcion utilizada para ordenar una lista de User Stories en base a la fecha de modificacion
+    @param hu: objeto User Story
+    @return: la fecha de modificacion del User Story
+    """
+    return hu.fechahora
 
 def verregistroHu(request, proyecto_id, hu_id):
     """
