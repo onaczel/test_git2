@@ -3716,4 +3716,3 @@ def horasUsuarioSprint(request, proyecto_id, sprint_id, usu_id):
         cant_hus = cant_hus + 1
     
     return render_to_response('apps/project_sprint_planificar.html', {"proyecto":proyecto, "sprint":sprint, "hus":hus, "users":users, "scrum":scrum, "horas_sprint_usuario":horas_sprint_usuario, "cant_hus":cant_hus}, context_instance = RequestContext(request))
-
