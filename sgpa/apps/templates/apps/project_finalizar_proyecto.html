@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% block titulo %}
+	<h1><b>{{proyecto.nombre}}</b></h1>
+{% endblock %}
+
+{% block index %}
+	<li>
+		<a href="{% url 'apps:accionesproyecto' proyecto.id %}"><i class="fa fa-fw fa-edit"></i>{{proyecto.nombre}}</a>
+	</li>
+{% endblock %}
+
+{% block contenido %}
+	<center>
+		<h3>Analisis de User Stories del proyecto</h3>
+		<h4>Seleccione un User Story para mas detalles (+)</h4>
+	</center>
+	{% if mensaje %}
+		<table border=1 bordercolor="green" width=100%>
+			<tr><td align="center"><font color="green"><p>{{mensaje}}</p></font></td></tr>
+		</table>
+	{% endif %}
+	<div style="clear: left;">
+		<h3>User Stories del proyecto</h3>
+		{% if hus %}
+			<table width=100%>
+				<tr>
+					<td><b>Codigo</b></td><td><b>Nombre</b></td><td><b>Fecha Creacion</b></td><td><b>Valor de Negocio</b></td><td><b>Valor Tecnico</b></td><td><b>Prioridad</b></td><td><b>Tiempo Consumido</b></td><td><b>ESTADO</b></td><td><b>SPRINT</b></td>
+				</tr>
+				{% for hu in hus %}
+					
+						{% if userStory.id == hu.id %}
+							<tr style="border-bottom: dotted; border-bottom-color: green;"><td><br /></td></tr>
+						{% endif %}
+						<tr>
+							<form action="{% url 'apps:finalizarProyecto' proyecto.id hu.id %}" method="post">{% csrf_token %}
+								<td>
+									{{hu.codigo}}<font size="1"><input title="Mas Detalles" color="#0000", type="submit", name="cambio", value="+"><input type="submit", name="cambio", value="-"></font>
+								</td>
+							</form>
+							<td>{{hu.nombre}}</td><td>&emsp;{{hu.fecha_creacion}}</td><td>&emsp;{{hu.valor_Negocio}}</td><td>&emsp;{{hu.valor_Tecnico}}</td><td>&emsp;{{hu.prioridad}}</td>
+							<td>
+								&emsp;{{hu.tiempo_Real}} Horas
+							</td>
+							<td>
+								<b>
+									{% if hu.estado_scrum_id == 2 %}
+										Asignado
+									{% elif hu.estado_scrum_id == 3 %}
+										No Asignado
+									{% elif hu.estado_scrum_id == 4 %}
+										Pendiente
+									{% endif %}
+								</b>
+							</td>
+							<td>
+								<b>
+									{% if hu.sprint %}
+										&emsp;{{hu.sprint}}
+									{% endif %}
+								</b>
+							</td>
+						</tr>
+						{% if userStory.id == hu.id %}
+							<tr><td><br /></td></tr>
+							<tr><td><b>Tiempo Estimado</b></td><td><b>Usuario Asignado</b></td><td><b>Fecha de inicio</b></td><td><b>Ult. fecha Mod.</b></td><td><b>Flujo</b></td><td><b>Actividad</b></td><td><b>Estado Act.</b></td></tr>
+							<tr style="border-bottom: dotted; border-bottom-color: green;"><td>{{hu.tiempo_Estimado}} Horas</td><td>{{usuario.username}}</td><td>{{hu.fecha_inicio}}<td>{{hu.fecha_modificacion}}</td><td>{{flujo.descripcion}}</td><td>&emsp;&emsp;{{f_actividad}}</td><td>&emsp;&emsp;{{f_a_estado.descripcion}}</td>
+								<td style="border: dotted; border-color: red;" >
+									<form action="{% url 'apps:finalizarProyecto' proyecto.id hu.id %}" method="post">{% csrf_token %}
+										<input type="submit", name="cambio", value="Cancelar User Story", style="width: 135px">
+									</form>
+								</td>
+							</tr>
+							<tr><td><br /></td></tr>
+							{% if forloop.counter < cant_hus %}
+								<tr>
+									<td><b>Codigo</b></td><td><b>Nombre</b></td><td><b>Fecha Creacion</b></td><td><b>Valor de Negocio</b></td><td><b>Valor Tecnico</b></td><td><b>Prioridad</b></td><td><b>Tiempo Consumido</b></td><td><b>ESTADO</b></td><td><b>SPRINT</b></td>
+								</tr>
+							{% endif %}
+						{% endif %}
+
+				{% endfor %}
+			</table>
+			</div>
+			<div style="clear: both; float: right;">
+				<form action="{% url 'apps:finalizarProyecto' proyecto.id 0 %}" method="post">{% csrf_token %}
+					<br /><br />
+					<input title="Al cancelar todos los User Stories se finalizara automaticamente el proyecto" color="#0000", type="submit", name="cambio", value="Cancelar todos los User Stories del Proyecto">
+				</form>
+			</div>
+		{% else %}
+			<table border=1 bordercolor="green" width=100%>
+				<tr><td align="center"><font color="green"><p><h4>No hay User Stories para analizar</h4></p></font></td></tr>
+			</table>
+		{% endif%}
+{% endblock %}
+
+{% block atras %}
+	<a href="{% url 'apps:accionesproyecto' proyecto.id %}">Volver</a>
+{% endblock %}

@@ -3716,3 +3716,167 @@ def horasUsuarioSprint(request, proyecto_id, sprint_id, usu_id):
         cant_hus = cant_hus + 1
     
     return render_to_response('apps/project_sprint_planificar.html', {"proyecto":proyecto, "sprint":sprint, "hus":hus, "users":users, "scrum":scrum, "horas_sprint_usuario":horas_sprint_usuario, "cant_hus":cant_hus}, context_instance = RequestContext(request))
+
+def finalizarProyecto(request, proyecto_id, hu_id):
+    """
+    Permite finalizar el proyecto si los cumple con las siguientes condiciones, todos los Sprints iniciados deben estar finalizados y los User Stories deben tener un estado de finalizado o Cancelado
+    @param request: Http
+    @param projecto_id: id de un proyecto
+    @return: render a project_finalizar proyecto.html con el objeto proyecto a finalizar y sus User Stories no finalizados
+    """
+    proyecto = []
+    hus = []
+    
+    proyecto = Proyectos.objects.get(id = proyecto_id)
+    try:
+        userStory = UserStory.objects.get(id = hu_id)
+    except:
+        userStory = UserStory()
+    usuario = []
+    flujo = []
+    prioridad = []
+    f_actividad = []
+    f_a_estado = []
+    tiempo_hu_registrado = 0
+    cancelar_hu = False
+    cancelar_todos_los_hus = False
+    mensaje = []
+    mensaje_error = []
+    finalizar_proyecto = False
+    
+    hus2 = UserStory.objects.filter(proyecto_id = proyecto_id, estado_scrum_id = 2)
+    hus3 = UserStory.objects.filter(proyecto_id = proyecto_id, estado_scrum_id = 3)
+    hus4 = UserStory.objects.filter(proyecto_id = proyecto_id, estado_scrum_id = 4)
+    listHus = []
+    listHus.append(hus2)
+    listHus.append(hus3)
+    listHus.append(hus4)
+    for huN in listHus:
+        for hu in huN:
+            try:
+                sp = Sprint.objects.get(proyecto_id = proyecto_id, nro_sprint = hu.sprint)
+            except:
+                sp = None
+            if sp:
+                if sp.estado != 1:
+                    hus.append(hu)
+            else:
+                hus.append(hu)
+    hus = sorted(hus, key=gethuidsort, reverse=False)
+    
+    sprint = Sprint.objects.get(proyecto_id = proyecto_id, nro_sprint = proyecto.nro_sprint)
+    if int(sprint.estado) < 2:
+        mensaje_error = "Finalice el Sprint actual (Sprint numero " + str(sprint.nro_sprint) + ") antes de finalizar el proyecto"
+        hus = []
+    
+    if request.method == "POST":
+        if request.POST['cambio'] == "-":
+            userStory = UserStory()
+        if request.POST['cambio'] == "+":
+            userStory = UserStory.objects.get(id = hu_id)
+            try:
+                usuario = User.objects.get(id = userStory.usuario_Asignado)
+            except:
+                usuario = ""
+            try:
+                flujo = Flujos.objects.get(id = userStory.flujo)
+            except:
+                flujo = ""
+            prioridad = Prioridad.objects.get(id = userStory.prioridad_id)
+            f_actividad = userStory.f_actividad
+            try:
+                f_a_estado = Estados.objects.get(id = userStory.f_a_estado)
+            except:
+                f_a_estado = ""
+            hus_registros = UserStoryRegistro.objects.filter(idr = userStory.id)
+            for hu_registro in hus_registros:
+                tiempo_hu_registrado = tiempo_hu_registrado + hu_registro.tiempo_Real
+        elif request.POST['cambio'] == "Cancelar User Story":
+            cancelar_hu = True
+            userStory = UserStory.objects.get(id = hu_id)
+        elif request.POST['cambio'] == "Cancelar este user story":
+            if request.POST['motivo_cancelacion'] != "":
+                hu = UserStory.objects.get(id = hu_id)
+                huv = UserStoryVersiones()
+                copiarHU(hu, huv, User.objects.get(username = request.user))
+                hu.estado_scrum_id = 6
+                hu.motivo_cancelacion = request.POST['motivo_cancelacion']
+                hu.save()
+                mensaje = "User Story \"" + str(hu.nombre) + "\" Cancelado, Motivo: \"" + str(hu.motivo_cancelacion) + "\""
+            else:
+                cancelar_hu = True
+                userStory = UserStory.objects.get(id = hu_id)
+                mensaje = "Debe especificar un motivo de cancelacion del User Story"
+        elif request.POST['cambio'] == "Cancelar todos los User Stories del Proyecto":
+            cancelar_hu = True
+            cancelar_todos_los_hus = True
+        elif request.POST['cambio'] == "Cancelar todos los user stories":
+            if request.POST['motivo_cancelacion'] != "":
+                for hu in hus:
+                    huv = UserStoryVersiones()
+                    copiarHU(hu, huv, User.objects.get(username = request.user))
+                    hu.estado_scrum_id = 6
+                    hu.motivo_cancelacion = request.POST['motivo_cancelacion']
+                    hu.save()
+                hus = []
+            else:
+                cancelar_hu = True
+                cancelar_todos_los_hus = True
+                mensaje = "Debe especificar un motivo de cancelacion de los User Stories"
+    
+    if hus == []:
+        finalizar_proyecto = True
+        if mensaje_error == []:
+            proyecto.estado_id = 5
+            proyecto.fecha_fin_real = datetime.today().strftime("%Y-%m-%d")
+            proyecto.save()
+            
+            mensaje = "Proyecto \"" + str(proyecto.nombre) + "\" Finalizado con exito"
+        
+        mispermisos = misPermisos(request.user.id, proyecto_id)
+
+        uroles = Equipo.objects.filter(proyecto_id = proyecto_id)
+        users = []
+        roles = []    
+        
+        for ur in uroles:
+            if not is_in_list(users, ur.usuario_id):
+                users.append(User.objects.get(pk = ur.usuario_id))
+
+        for ur in uroles:
+            if not is_in_list(roles, ur.rol_id):
+                roles.append(Roles.objects.get(pk = ur.rol_id))
+
+        flujo = Flujos.objects.filter(proyecto_id = proyecto_id, estado=True)
+        
+        actividades = Actividades.objects.all()
+        hus = UserStory.objects.filter(proyecto_id = proyecto_id, estado=True, sprint=proyecto.nro_sprint)
+        hu = sorted(hus, key=gethuidsort, reverse=False)
+        for hu in hus:
+            if hu.f_a_estado != 0 and hu.f_actividad != 0:
+                hu.flujo_posicion = ((hu.f_actividad - 1)*3) + hu.f_a_estado
+                hu.save()
+                
+        hus = sorted(hus, key=gethuidsort, reverse=False)
+        
+        tamanolista = []
+        for act in actividades:
+            tamanolista.append(act)
+            tamanolista.append(act)
+            tamanolista.append(act)
+            
+        user_logged = request.user
+
+        scrum = False
+        usereq = Equipo.objects.filter(proyecto_id = proyecto_id, usuario_id=user_logged.id, rol_id = 3)
+        if len(usereq):
+            scrum = True
+    
+        
+    if finalizar_proyecto:
+        return render_to_response("apps/project_acciones.html", {"proyecto":proyecto, 'scrum':scrum, 'user_logged':user_logged, "usuario":request.user, "misPermisos":mispermisos, 'equipo':uroles,'users':users, 'roles':roles, 'flujo':flujo, 'actividades':actividades, 'hus':hus, 'tamanolista':tamanolista, "mensaje":mensaje, "mensaje_error":mensaje_error}, context_instance=RequestContext(request))
+    elif cancelar_hu:
+        return render_to_response('apps/project_finalizar_proyecto_cancelar_hu.html', {"proyecto":proyecto, "userStory":userStory, "cancelar_todos_los_hus":cancelar_todos_los_hus, "mensaje":mensaje}, context_instance = RequestContext(request))
+    else:
+        return render_to_response('apps/project_finalizar_proyecto.html', {"proyecto":proyecto, "hus":hus, "userStory":userStory, "usuario":usuario, "flujo":flujo, "prioridad":prioridad, "f_actividad":f_actividad, "f_a_estado":f_a_estado, "tiempo_hu_registrado":tiempo_hu_registrado, "mensaje":mensaje}, context_instance = RequestContext(request))
+

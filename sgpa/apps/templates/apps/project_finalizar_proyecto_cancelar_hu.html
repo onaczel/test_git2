@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block encabezado %}
+	<h1>{{proyecto.nombre}}</h1>
+	{% if cancelar_todos_los_hus == False %}
+		<h2>Registro de cancelacion del User Story {{userStory.codigo}}</h2>
+	{% else %}
+		<h2>Registro de cancelacion de los User Stories del proyecto {{proyecto.nombre}}</h2>
+	{% endif %}
+{% endblock %}
+<br />
+{% block contenido %}
+	{% if mensaje %}
+		<table border=1 bordercolor="red" width=100%>
+			<tr><td align="center"><font color="red"><p>{{mensaje}}</p></font></td></tr>
+		</table>
+	{% endif %}
+	{% if cancelar_todos_los_hus == False %}
+		<form action="{% url 'apps:finalizarProyecto' proyecto.id userStory.id %}" method="post">{% csrf_token %}
+			<textarea name="motivo_cancelacion" rows="10" cols="100"></textarea><br />
+			<input type="submit", name="cambio", value="Cancelar este user story">&emsp;<input type="submit", name="cambio", value="Cancelar esta accion">
+		</form>
+	{% else %}
+		<form action="{% url 'apps:finalizarProyecto' proyecto.id 0 %}" method="post">{% csrf_token %}
+			<textarea name="motivo_cancelacion" rows="10" cols="100"></textarea><br />
+			<input type="submit", name="cambio", value="Cancelar todos los user stories">&emsp;<input type="submit", name="cambio", value="Cancelar esta accion">
+		</form>	
+	{% endif %}
+{% endblock %}
+
+{% block atras %}
+	{% if cancelar_todos_los_hus == False %}
+		<a href="{% url 'apps:finalizarProyecto' proyecto.id userStory.id %}">Volver</a>
+	{% else %}
+		<a href="{% url 'apps:finalizarProyecto' proyecto.id 0 %}">Volver</a>	
+	{% endif %}
+{% endblock %}

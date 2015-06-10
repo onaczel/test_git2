@@ -67,6 +67,16 @@
 
 
 {% block contenido %}
+	{% if mensaje %}
+		<table border=1 bordercolor="green" width=100%>
+			<tr><td align="center"><font color="green"><p>{{mensaje}}</p></font></td></tr>
+		</table>
+	{% endif %}
+	{% if mensaje_error %}
+		<table border=1 bordercolor="red" width=100%>
+			<tr><td align="center"><font color="red"><p>{{mensaje_error}}</p></font></td></tr>
+		</table>
+	{% endif %}
 {% if proyecto.nro_sprint != 0 %}
 	<h1>Sprint {{proyecto.nro_sprint}}</h1>
 {% endif %}
@@ -155,6 +165,12 @@
 	{% endfor %} 
 	
 </table>
+
+	{% if proyecto.estado_id == 1 and scrum%}
+		<form action="{% url 'apps:finalizarProyecto' proyecto.id 0 %}" method="post">{% csrf_token %}
+			<br /><input type="submit", name="cambio", value="Finalizar Proyecto"><br />
+		</form>
+	{% endif %}
 
 {% endblock %}
 
