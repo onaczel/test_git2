@@ -119,6 +119,9 @@ urlpatterns = patterns('',
     url(r'^(?P<proyecto_id>\d+)/modproyecto/Roles/(?P<role_id>\d+)/eliminar/$', views.roledeleteproj, name="roledeleteproj"),
     #url(r'^asigpermisos/$', views.listpermisos, name="listpermisos"),
     
+    url(r'^(?P<proyecto_id>\d+)/modproyecto/Reportes/$', views.reportes, name="reportes"),
+    url(r'^(?P<proyecto_id>\d+)/modproyecto/(?P<nro_sprint>\d+)/Reportes/ReporteporEquipo$', views.reporte_por_equipo, name="reporte_por_equipo"),
+    
     
     
     

@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block uptitulo %}
+<h1>{{proyecto.nombre}}</h1>
+{% endblock %}
+{% block encabezado %}
+<h1>Reportes</h1>
+{% endblock %}
+{% block index %}
+	<li>
+		<a href="{% url 'apps:accionesproyecto' proyecto.id %}"><i class="fa fa-fw fa-edit"></i>{{proyecto.nombre}}</a>
+	</li>
+{% endblock %}
+{% block contenido %}
+	
+	<table>
+	<tr><td><a href="{% url 'apps:reporte_por_equipo' proyecto.id proyecto.nro_sprint %}">Cantidad de trabajos en curso por equipo</a></td></tr>
+	<tr><td>Cantidad de trabajos por usuario pendiente, en curso, finalizados</td></tr>
+	<tr><td>Lista clasificada por orden de prioridad de todas las actividades  para completar un proyecto.</td></tr>
+	<tr><td>Lista de Tiempo estimado por  proyecto y la ejecución del mismo (graficado, sprint por proyecto)</td></tr>
+	<tr><td>El Backlog del Producto, lista ordenada de HU, en el orden que esperamos deban terminarse</td></tr>
+	<tr><td>El Backlog del Sprin, lista de los elementos del Backlog del Producto, elegidos para ser desarrollador en el Sprint actual</td></tr>
+	</table>
+
+{% endblock %}
+{% block atras %}
+
+{% endblock %}

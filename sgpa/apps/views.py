@@ -8,6 +8,8 @@ from django.utils import timezone
 from django.template import RequestContext, loader
 import time
 import os
+from reportlab.pdfgen import canvas
+from django.http import HttpResponse
 from django.views.static import serve
 from django.core.servers.basehttp import FileWrapper
 
@@ -3880,3 +3882,114 @@ def finalizarProyecto(request, proyecto_id, hu_id):
     else:
         return render_to_response('apps/project_finalizar_proyecto.html', {"proyecto":proyecto, "hus":hus, "userStory":userStory, "usuario":usuario, "flujo":flujo, "prioridad":prioridad, "f_actividad":f_actividad, "f_a_estado":f_a_estado, "tiempo_hu_registrado":tiempo_hu_registrado, "mensaje":mensaje}, context_instance = RequestContext(request))
 
+def reportes(request, proyecto_id):
+    proyecto = Proyectos.objects.get(pk = proyecto_id)
+    
+    return render_to_response('apps/project_reportes.html', {'proyecto':proyecto})
+
+def reporte_por_equipo(request, proyecto_id, nro_sprint):
+    # Create the HttpResponse object with the appropriate PDF headers.
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'filename="Reporte_Trabajos_por_Equipo.pdf"'
+
+    # Create the PDF object, using the response object as its "file."
+    p = canvas.Canvas(response)
+    
+    now = datetime.now()
+    ftime = str(now.day)+"/"+str(now.month)+"/"+str(now.year)+"  "+str(now.hour)+":"+str(now.minute)
+    print ftime
+    p.setLineWidth(.3)
+    
+    p.setFont('Helvetica', 9)
+    p.drawString(480, 805, ftime)
+    p.setFont('Helvetica', 18)
+    
+    p.drawString(230, 760, "REPORTE")
+    #p.line(10, 750, 590, 750)
+
+    proyecto = Proyectos.objects.get(pk=proyecto_id)
+    p.setFont('Helvetica', 10)
+    p.drawString(50, 720, "REPORTE DE TRABAJOS EN CURSO")
+    p.drawString(50, 700, "PROYECTO: "+ proyecto.nombre)
+    p.drawString(50, 680, "SPRINT: "+ str(proyecto.nro_sprint))
+    
+    
+    p.setFont('Helvetica', 9)
+    p.drawString(50, 640,  "Equipo")
+    p.line(10, 635, 590, 635)
+    
+    sprint = Sprint.objects.filter(proyecto_id = proyecto_id, nro_sprint=nro_sprint)
+    sprint_object = sprint.first()
+    list_horas_sprint = horas_usuario_sprint.objects.filter(Sprint_id = sprint_object.id)
+    list_usuarios = User.objects.all()
+    
+    y_inicial = 620
+    for hs in list_horas_sprint:
+        if horas!=0:
+            for user in list_usuarios:
+                if user.id == hs.usuario_id:
+                    nombre_apellido = user.first_name + " " + user.last_name + " ("+ user.username +")"
+                    p.drawString(50, y_inicial, "- "+ nombre_apellido)                    
+                    y_inicial = y_inicial - 12
+                    
+    y_final = y_inicial - 20
+
+    p.drawString(50, y_final,  "User Stories en Curso")
+    y_final = y_final - 5
+    p.line(10, y_final, 590, y_final)   
+    
+    y_final = y_final - 15
+    list_hu = UserStory.objects.filter(proyecto_id = proyecto_id, sprint = nro_sprint)
+    list_hu = sorted(list_hu, key=gethuidsort)
+    for hu in list_hu:
+        p.drawString(50, y_final, hu.nombre)
+        p.setFontSize(8)
+        y_final = y_final - 10
+        
+        p.drawString(60, y_final,"GENERAL")
+        y_final = y_final - 10
+        p.drawString(70, y_final,"Codigo: "+hu.codigo)
+        y_final = y_final - 10
+        p.drawString(70, y_final,"Descripcion: "+hu.descripcion)
+        y_final = y_final - 10
+        user_asig = User.objects.get(pk=hu.usuario_Asignado).username
+        p.drawString(70, y_final,"Usuario Asignado: "+user_asig)
+        y_final = y_final - 10
+        
+        p.drawString(60, y_final,"VALORES")
+        y_final = y_final - 10
+        p.drawString(70, y_final,"Valor de Negocio: "+str(hu.valor_Negocio))
+        p.drawString(160, y_final,"Valor Tecnico: "+str(hu.valor_Tecnico))
+        p.drawString(250, y_final,"Prioridad: "+str(hu.prioridad))
+        y_final = y_final - 10
+        
+        p.drawString(60, y_final,"REGISTROS")
+        y_final = y_final - 10
+        flujo = Flujos.objects.get(pk=hu.flujo)
+        flujod = flujo.descripcion
+        p.drawString(70, y_final,"Flujo: "+flujod)
+        y_final = y_final - 10
+        list_act = Actividades.objects.filter(flujo_id = flujo.id)
+        #list_act = list_act.first()
+        
+        list_act = sorted(list_act, key=gethuidsort)
+        c = 0
+        for act in list_act:
+            c = c+1
+            if c == hu.f_actividad:
+                actividad_actual = act
+        p.drawString(70, y_final,"Actividad Actual: "+actividad_actual.descripcion)
+        
+        estado = Estados.objects.get(pk=hu.f_a_estado).descripcion
+        p.drawString(200, y_final,"Estado Actual: "+estado)
+        y_final = y_final - 10
+        p.drawString(70, y_final,"Tiempo Estimado: "+str(hu.tiempo_Estimado))
+        p.drawString(200, y_final,"Tiempo Registrado: "+str(hu.tiempo_Real))
+        y_final = y_final - 10
+        
+        
+        y_final = y_final - 12
+    # Close the PDF object cleanly, and we're done.
+    p.showPage()
+    p.save()
+    return response
