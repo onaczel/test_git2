@@ -3897,7 +3897,7 @@ def reporte_por_equipo(request, proyecto_id, nro_sprint):
     
     now = datetime.now()
     ftime = str(now.day)+"/"+str(now.month)+"/"+str(now.year)+"  "+str(now.hour)+":"+str(now.minute)
-    print ftime
+    
     p.setLineWidth(.3)
     
     p.setFont('Helvetica', 9)
@@ -3989,6 +3989,396 @@ def reporte_por_equipo(request, proyecto_id, nro_sprint):
         
         
         y_final = y_final - 12
+    # Close the PDF object cleanly, and we're done.
+    p.showPage()
+    p.save()
+    return response
+def reporte_select_user(request, proyecto_id):
+    proyecto = Proyectos.objects.get(pk=proyecto_id)
+    list_user_equipo = Equipo.objects.filter(proyecto_id = proyecto_id, rol_id = 5)
+    
+    list_users = User.objects.all()
+    users_asig = []
+    
+    for us_e in list_user_equipo:
+        for us_u in list_users:
+            if us_e.usuario_id == us_u.id:
+                users_asig.append(us_u)
+    return render_to_response('apps/project_report_select_user.html', {'proyecto':proyecto, 'users_asig':users_asig})
+
+def reporte_por_usuario(request, proyecto_id, user_id):
+    # Create the HttpResponse object with the appropriate PDF headers.
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'filename="Reporte_Trabajos_por_Usuario.pdf"'
+
+    # Create the PDF object, using the response object as its "file."
+    p = canvas.Canvas(response)
+    
+    now = datetime.now()
+    ftime = str(now.day)+"/"+str(now.month)+"/"+str(now.year)+"  "+str(now.hour)+":"+str(now.minute)
+    
+    p.setLineWidth(.3)
+    
+    y_final = 805
+    p.setFont('Helvetica', 9)
+    p.drawString(480, y_final, ftime)
+    p.setFont('Helvetica', 18)
+    
+    y_final = y_final - 45
+    p.drawString(230, y_final, "REPORTE")
+    #p.line(10, 750, 590, 750)
+
+    proyecto = Proyectos.objects.get(pk=proyecto_id)
+    p.setFont('Helvetica', 10)
+    y_final = y_final - 40
+    p.drawString(50, y_final, "REPORTE DE TRABAJOS POR USUARIO")
+    y_final = y_final - 20
+    p.drawString(50, y_final, "PROYECTO: "+ proyecto.nombre)
+    y_final = y_final - 20
+    p.drawString(50, y_final, "SPRINT: "+ str(proyecto.nro_sprint))
+    y_final = y_final - 20
+    user = User.objects.get(pk=user_id)
+    nombre_apellido = user.first_name + " " + user.last_name + " ("+ user.username +")"
+    p.drawString(50, y_final, "USUARIO: "+nombre_apellido)  
+    
+    y_final = y_final - 20 
+
+    
+    
+    list_usuarios = User.objects.all()
+    
+    list_hu = UserStory.objects.filter(usuario_Asignado = user_id)
+    
+    y_inicial = y_final - 15
+    
+    y_final = y_final -20
+                
+    
+    
+    list_hu = UserStory.objects.filter(usuario_Asignado = user_id)
+    list_hu = sorted(list_hu, key=gethuidsort)
+    
+    p.drawString(50, y_final,  "User Stories en Curso")
+    y_final = y_final - 5
+    p.line(10, y_final, 590, y_final)   
+    
+    y_final = y_final - 15
+    
+    
+    if UserStory.objects.filter(usuario_Asignado = user_id, estado_scrum =1):
+        for hu in UserStory.objects.filter(usuario_Asignado = user_id, estado_scrum =1):
+            print hu.estado_scrum
+            #if str(hu.estado_scrum) == 'Iniciado':
+            p.drawString(50, y_final, hu.nombre)
+            p.setFontSize(8)
+            y_final = y_final - 10
+            
+            p.drawString(60, y_final,"GENERAL")
+            y_final = y_final - 10
+            p.drawString(70, y_final,"Codigo: "+hu.codigo)
+            y_final = y_final - 10
+            p.drawString(70, y_final,"Descripcion: "+hu.descripcion)
+            y_final = y_final - 10
+            user_asig = User.objects.get(pk=hu.usuario_Asignado).username
+            p.drawString(70, y_final,"Usuario Asignado: "+user_asig)
+            y_final = y_final - 10
+            p.drawString(70, y_final,"Sprint: "+str(hu.sprint))
+            y_final = y_final - 10
+            
+            p.drawString(60, y_final,"VALORES")
+            y_final = y_final - 10
+            p.drawString(70, y_final,"Valor de Negocio: "+str(hu.valor_Negocio))
+            p.drawString(160, y_final,"Valor Tecnico: "+str(hu.valor_Tecnico))
+            p.drawString(250, y_final,"Prioridad: "+str(hu.prioridad))
+            y_final = y_final - 10
+            
+            p.drawString(60, y_final,"REGISTROS")
+            y_final = y_final - 10
+            flujo = Flujos.objects.get(pk=hu.flujo)
+            flujod = flujo.descripcion
+            p.drawString(70, y_final,"Flujo: "+flujod)
+            y_final = y_final - 10
+            list_act = Actividades.objects.filter(flujo_id = flujo.id)
+            #list_act = list_act.first()
+            
+            list_act = sorted(list_act, key=gethuidsort)
+            c = 0
+            for act in list_act:
+                c = c+1
+                if c == hu.f_actividad:
+                    actividad_actual = act
+            p.drawString(70, y_final,"Actividad Actual: "+actividad_actual.descripcion)
+            
+            estado = Estados.objects.get(pk=hu.f_a_estado).descripcion
+            p.drawString(200, y_final,"Estado Actual: "+estado)
+            y_final = y_final - 10
+            p.drawString(70, y_final,"Tiempo Estimado: "+str(hu.tiempo_Estimado))
+            p.drawString(200, y_final,"Tiempo Registrado: "+str(hu.tiempo_Real))
+            y_final = y_final - 10
+            
+            y_final = y_final - 12
+    else:
+        p.setFontSize(8)
+        p.drawString(60, y_final,  "No existen Registros")
+        y_final = y_final - 20
+    
+            
+    p.setFontSize(10)
+    p.drawString(50, y_final,  "User Stories Planificados")
+    y_final = y_final - 5
+    p.line(10, y_final, 590, y_final)   
+    
+    y_final = y_final - 15
+    
+    if UserStory.objects.filter(usuario_Asignado = user_id, estado_scrum =2):
+        for hu in UserStory.objects.filter(usuario_Asignado = user_id, estado_scrum =2):
+            print hu.estado_scrum
+            #if str(hu.estado_scrum) == 'Asignado':
+            p.drawString(50, y_final, hu.nombre)
+            p.setFontSize(8)
+            y_final = y_final - 10
+            
+            p.drawString(60, y_final,"GENERAL")
+            y_final = y_final - 10
+            p.drawString(70, y_final,"Codigo: "+hu.codigo)
+            y_final = y_final - 10
+            p.drawString(70, y_final,"Descripcion: "+hu.descripcion)
+            y_final = y_final - 10
+            user_asig = User.objects.get(pk=hu.usuario_Asignado).username
+            p.drawString(70, y_final,"Usuario Asignado: "+user_asig)
+            y_final = y_final - 10
+            p.drawString(70, y_final,"Sprint: "+str(hu.sprint))
+            y_final = y_final - 10
+            
+            p.drawString(60, y_final,"VALORES")
+            y_final = y_final - 10
+            p.drawString(70, y_final,"Valor de Negocio: "+str(hu.valor_Negocio))
+            p.drawString(160, y_final,"Valor Tecnico: "+str(hu.valor_Tecnico))
+            p.drawString(250, y_final,"Prioridad: "+str(hu.prioridad))
+            y_final = y_final - 10
+            
+            p.drawString(60, y_final,"REGISTROS")
+            y_final = y_final - 10
+            flujo = Flujos.objects.get(pk=hu.flujo)
+            flujod = flujo.descripcion
+            p.drawString(70, y_final,"Flujo: "+flujod)
+            y_final = y_final - 10
+            list_act = Actividades.objects.filter(flujo_id = flujo.id)
+            #list_act = list_act.first()
+            
+            list_act = sorted(list_act, key=gethuidsort)
+            c = 0
+            for act in list_act:
+                c = c+1
+                if c == hu.f_actividad:
+                    actividad_actual = act
+            p.drawString(70, y_final,"Actividad Actual: "+actividad_actual.descripcion)
+            
+            estado = Estados.objects.get(pk=hu.f_a_estado).descripcion
+            p.drawString(200, y_final,"Estado Actual: "+estado)
+            y_final = y_final - 10
+            p.drawString(70, y_final,"Tiempo Estimado: "+str(hu.tiempo_Estimado))
+            p.drawString(200, y_final,"Tiempo Registrado: "+str(hu.tiempo_Real))
+            y_final = y_final - 10
+            
+            y_final = y_final - 12
+    else:
+        p.setFontSize(8)
+        p.drawString(60, y_final,  "No existen Registros")
+        y_final = y_final - 20
+            
+    p.drawString(50, y_final,  "User Stories Pendientes")
+    y_final = y_final - 5
+    p.line(10, y_final, 590, y_final)   
+    
+    y_final = y_final - 15
+    
+    if UserStory.objects.filter(usuario_Asignado = user_id, estado_scrum =4):
+        for hu in UserStory.objects.filter(usuario_Asignado = user_id, estado_scrum =4):
+            print hu.estado_scrum
+            #if str(hu.estado_scrum) == 'Pendiente':
+            p.drawString(50, y_final, hu.nombre)
+            p.setFontSize(8)
+            y_final = y_final - 10
+            
+            p.drawString(60, y_final,"GENERAL")
+            y_final = y_final - 10
+            p.drawString(70, y_final,"Codigo: "+hu.codigo)
+            y_final = y_final - 10
+            p.drawString(70, y_final,"Descripcion: "+hu.descripcion)
+            y_final = y_final - 10
+            user_asig = User.objects.get(pk=hu.usuario_Asignado).username
+            p.drawString(70, y_final,"Usuario Asignado: "+user_asig)
+            y_final = y_final - 10
+            p.drawString(70, y_final,"Sprint: "+str(hu.sprint))
+            y_final = y_final - 10
+            
+            p.drawString(60, y_final,"VALORES")
+            y_final = y_final - 10
+            p.drawString(70, y_final,"Valor de Negocio: "+str(hu.valor_Negocio))
+            p.drawString(160, y_final,"Valor Tecnico: "+str(hu.valor_Tecnico))
+            p.drawString(250, y_final,"Prioridad: "+str(hu.prioridad))
+            y_final = y_final - 10
+            
+            p.drawString(60, y_final,"REGISTROS")
+            y_final = y_final - 10
+            flujo = Flujos.objects.get(pk=hu.flujo)
+            flujod = flujo.descripcion
+            p.drawString(70, y_final,"Flujo: "+flujod)
+            y_final = y_final - 10
+            list_act = Actividades.objects.filter(flujo_id = flujo.id)
+            #list_act = list_act.first()
+            
+            list_act = sorted(list_act, key=gethuidsort)
+            c = 0
+            for act in list_act:
+                c = c+1
+                if c == hu.f_actividad:
+                    actividad_actual = act
+            p.drawString(70, y_final,"Actividad Actual: "+actividad_actual.descripcion)
+            
+            estado = Estados.objects.get(pk=hu.f_a_estado).descripcion
+            p.drawString(200, y_final,"Estado Actual: "+estado)
+            y_final = y_final - 10
+            p.drawString(70, y_final,"Tiempo Estimado: "+str(hu.tiempo_Estimado))
+            p.drawString(200, y_final,"Tiempo Registrado: "+str(hu.tiempo_Real))
+            y_final = y_final - 10
+            
+            y_final = y_final - 12
+    else:
+        p.setFontSize(8)
+        p.drawString(60, y_final,  "No existen Registros")
+        y_final = y_final - 20
+        
+    p.drawString(50, y_final,  "User Stories Finalizados")
+    y_final = y_final - 5
+    p.line(10, y_final, 590, y_final)   
+    
+    y_final = y_final - 15
+    
+    if UserStory.objects.filter(usuario_Asignado = user_id, estado_scrum =5):
+        for hu in UserStory.objects.filter(usuario_Asignado = user_id, estado_scrum =5):
+            print hu.estado_scrum
+            #if str(hu.estado_scrum) == 'Finalizado':
+            p.drawString(50, y_final, hu.nombre)
+            p.setFontSize(8)
+            y_final = y_final - 10
+            
+            p.drawString(60, y_final,"GENERAL")
+            y_final = y_final - 10
+            p.drawString(70, y_final,"Codigo: "+hu.codigo)
+            y_final = y_final - 10
+            p.drawString(70, y_final,"Descripcion: "+hu.descripcion)
+            y_final = y_final - 10
+            user_asig = User.objects.get(pk=hu.usuario_Asignado).username
+            p.drawString(70, y_final,"Usuario Asignado: "+user_asig)
+            y_final = y_final - 10
+            p.drawString(70, y_final,"Sprint: "+str(hu.sprint))
+            y_final = y_final - 10
+            
+            p.drawString(60, y_final,"VALORES")
+            y_final = y_final - 10
+            p.drawString(70, y_final,"Valor de Negocio: "+str(hu.valor_Negocio))
+            p.drawString(160, y_final,"Valor Tecnico: "+str(hu.valor_Tecnico))
+            p.drawString(250, y_final,"Prioridad: "+str(hu.prioridad))
+            y_final = y_final - 10
+            
+            p.drawString(60, y_final,"REGISTROS")
+            y_final = y_final - 10
+            flujo = Flujos.objects.get(pk=hu.flujo)
+            flujod = flujo.descripcion
+            p.drawString(70, y_final,"Flujo: "+flujod)
+            y_final = y_final - 10
+            list_act = Actividades.objects.filter(flujo_id = flujo.id)
+            #list_act = list_act.first()
+            
+            list_act = sorted(list_act, key=gethuidsort)
+            c = 0
+            for act in list_act:
+                c = c+1
+                if c == hu.f_actividad:
+                    actividad_actual = act
+            p.drawString(70, y_final,"Actividad Actual: "+actividad_actual.descripcion)
+            
+            estado = Estados.objects.get(pk=hu.f_a_estado).descripcion
+            p.drawString(200, y_final,"Estado Actual: "+estado)
+            y_final = y_final - 10
+            p.drawString(70, y_final,"Tiempo Estimado: "+str(hu.tiempo_Estimado))
+            p.drawString(200, y_final,"Tiempo Registrado: "+str(hu.tiempo_Real))
+            y_final = y_final - 10
+            
+            y_final = y_final - 12
+    else:
+        p.setFontSize(8)
+        p.drawString(60, y_final,  "No existen Registros")
+        y_final = y_final - 20
+
+    p.drawString(50, y_final,  "User Stories Cancelados")
+    y_final = y_final - 5
+    p.line(10, y_final, 590, y_final)   
+    
+    y_final = y_final - 15
+    
+    if UserStory.objects.filter(usuario_Asignado = user_id, estado_scrum =6):
+        for hu in UserStory.objects.filter(usuario_Asignado = user_id, estado_scrum =6):
+            print hu.estado_scrum
+            #if str(hu.estado_scrum) == 'Cancelado':
+            p.drawString(50, y_final, hu.nombre)
+            p.setFontSize(8)
+            y_final = y_final - 10
+            
+            p.drawString(60, y_final,"GENERAL")
+            y_final = y_final - 10
+            p.drawString(70, y_final,"Codigo: "+hu.codigo)
+            y_final = y_final - 10
+            p.drawString(70, y_final,"Descripcion: "+hu.descripcion)
+            y_final = y_final - 10
+            user_asig = User.objects.get(pk=hu.usuario_Asignado).username
+            p.drawString(70, y_final,"Usuario Asignado: "+user_asig)
+            y_final = y_final - 10
+            p.drawString(70, y_final,"Sprint: "+str(hu.sprint))
+            y_final = y_final - 10
+            
+            p.drawString(60, y_final,"VALORES")
+            y_final = y_final - 10
+            p.drawString(70, y_final,"Valor de Negocio: "+str(hu.valor_Negocio))
+            p.drawString(160, y_final,"Valor Tecnico: "+str(hu.valor_Tecnico))
+            p.drawString(250, y_final,"Prioridad: "+str(hu.prioridad))
+            y_final = y_final - 10
+            
+            p.drawString(60, y_final,"REGISTROS")
+            y_final = y_final - 10
+            flujo = Flujos.objects.get(pk=hu.flujo)
+            flujod = flujo.descripcion
+            p.drawString(70, y_final,"Flujo: "+flujod)
+            y_final = y_final - 10
+            list_act = Actividades.objects.filter(flujo_id = flujo.id)
+            #list_act = list_act.first()
+            
+            list_act = sorted(list_act, key=gethuidsort)
+            c = 0
+            for act in list_act:
+                c = c+1
+                if c == hu.f_actividad:
+                    actividad_actual = act
+            p.drawString(70, y_final,"Actividad Actual: "+actividad_actual.descripcion)
+            
+            estado = Estados.objects.get(pk=hu.f_a_estado).descripcion
+            p.drawString(200, y_final,"Estado Actual: "+estado)
+            y_final = y_final - 10
+            p.drawString(70, y_final,"Tiempo Estimado: "+str(hu.tiempo_Estimado))
+            p.drawString(200, y_final,"Tiempo Registrado: "+str(hu.tiempo_Real))
+            y_final = y_final - 10
+            
+            y_final = y_final - 12
+            p.drawString(60, y_final,"Motivo de Cancelacion: "+hu.motivo_cancelacion)
+    else:
+        p.setFontSize(8)
+        p.drawString(60, y_final,  "No existen Registros")
+        y_final = y_final - 20
+
+
+
     # Close the PDF object cleanly, and we're done.
     p.showPage()
     p.save()

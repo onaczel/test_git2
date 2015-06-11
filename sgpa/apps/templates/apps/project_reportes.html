@@ -14,7 +14,7 @@
 	
 	<table>
 	<tr><td><a href="{% url 'apps:reporte_por_equipo' proyecto.id proyecto.nro_sprint %}">Cantidad de trabajos en curso por equipo</a></td></tr>
-	<tr><td>Cantidad de trabajos por usuario pendiente, en curso, finalizados</td></tr>
+	<tr><td><a href="{% url 'apps:reporte_select_user' proyecto.id %}">Cantidad de trabajos por usuario pendiente, en curso, finalizados</a></td></tr>
 	<tr><td>Lista clasificada por orden de prioridad de todas las actividades  para completar un proyecto.</td></tr>
 	<tr><td>Lista de Tiempo estimado por  proyecto y la ejecución del mismo (graficado, sprint por proyecto)</td></tr>
 	<tr><td>El Backlog del Producto, lista ordenada de HU, en el orden que esperamos deban terminarse</td></tr>
