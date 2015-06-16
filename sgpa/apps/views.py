@@ -59,6 +59,15 @@ import StringIO
 from bsddb.dbtables import _data
 from apps.commands import enviarMail, notificarNota, notificarModificacionHU,\
     notificarRegistroTrabajo, notificarCambioResponsableHU
+from reportlab.platypus.paragraph import Paragraph
+from reportlab.platypus.doctemplate import SimpleDocTemplate
+from reportlab.lib.enums import TA_CENTER, TA_JUSTIFY
+from reportlab.lib.units import inch, cm
+from reportlab.lib.pagesizes import A4
+from reportlab.lib.styles import getSampleStyleSheet
+import copy
+
+
 
 
 ######################################################################################################################################################
@@ -276,7 +285,6 @@ def recuperarContrasena(request):
                     return render_to_response('apps/user_new_pwd_ok.html', {'username':usuario},context_instance=RequestContext(request))
                 
                 else:               
-                
                     return render_to_response('apps/user_pwd_user_not_valid.html', context_instance=RequestContext(request))
         
  
@@ -4379,6 +4387,281 @@ def reporte_por_usuario(request, proyecto_id, user_id):
 
 
 
+    # Close the PDF object cleanly, and we're done.
+    p.showPage()
+    p.save()
+    return response
+
+ 
+
+        
+def reporte_HU_SprintEnCurso(request,proyecto_id,nro_sprint):
+    # Create the HttpResponse object with the appropriate PDF headers.
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'filename="Reporte_Trabajos_por_Equipo.pdf"'
+
+    # Create the PDF object, using the response object as its "file."
+    p = canvas.Canvas(response)
+    p.setPageSize(A4)
+    p.setTitle('reporte_HU_SprintEnCurso')
+    now = datetime.now()
+    ftime = str(now.day)+"/"+str(now.month)+"/"+str(now.year)+"  "+str(now.hour)+":"+str(now.minute)
+    
+    p.setLineWidth(.3)
+    
+    p.setFont('Helvetica', 9)
+    p.drawString(50, 805, 'SGPA')
+    p.drawString(480, 805, ftime)
+    p.setFont('Helvetica-Bold', 18)
+    
+    p.drawString(230, 760, "REPORTE")
+    #p.line(10, 750, 590, 750)
+
+    proyecto = Proyectos.objects.get(pk=proyecto_id)
+    p.setFont('Helvetica', 10)
+    p.drawString(50, 720, "TIPO: Reporte de user stories a ser desarrollados en el sprint actual")
+    p.drawString(50, 700, "PROYECTO: "+ proyecto.nombre)
+    p.drawString(50, 680, "SPRINT Nro.: "+ str(proyecto.nro_sprint))
+    usuario = User.objects.get(username = request.user)
+    p.drawString(50, 660, "GENERADO POR: "+ usuario.first_name+ ' '+ usuario.last_name+' ('+usuario.username+')')
+    
+    p.setFont('Helvetica-Bold', 10)
+    p.drawString(50, 620,  "Equipo")
+    p.line(10, 615, 590, 615)
+    
+ 
+   
+    
+    
+   
+    y_inicial = 600
+    p.setFont('Helvetica-Bold', 9)
+    p.drawString(70, y_inicial, "Usuario(nick)") 
+    p.drawString(220, y_inicial, "Rol")
+    p.drawString(320, y_inicial, "Email")
+    y_inicial = y_inicial - 15
+    equipo = Equipo.objects.filter(proyecto_id = proyecto_id)
+    
+    p.setFont('Helvetica', 9)
+    for e in equipo:
+        if y_inicial <= 150:
+            y_inicial = 800
+            p.showPage()
+        user = User.objects.get(id = e.usuario_id)
+        nombre_apellido = user.first_name + " " + user.last_name + " ("+ user.username +")"
+        p.drawString(50, y_inicial, "- "+ nombre_apellido) 
+             
+       
+        rolEquipo = Equipo.objects.get(usuario_id = user.id,proyecto_id = proyecto_id)
+                
+        rol = Roles.objects.get(id = rolEquipo.rol_id)
+                    
+        p.drawString(200, y_inicial, "- "+ rol.descripcion) 
+        
+        p.drawString(300, y_inicial, user.email)                    
+        y_inicial = y_inicial - 12
+                    
+    y_final = y_inicial - 20
+    p.setFont('Helvetica-Bold', 10)
+    p.drawString(50, y_final,  "Listado de User Stories")
+    y_final = y_final - 5
+    p.line(10, y_final, 590, y_final)   
+    
+    p.setFont('Helvetica', 9)
+    
+    y_final = y_final - 15
+    list_hu = UserStory.objects.filter(proyecto_id = proyecto_id, sprint = nro_sprint)
+    list_hu = sorted(list_hu, key=gethuidsort)
+    
+  
+    
+    for hu in list_hu:
+        
+        if y_final <= 150:
+            y_final = 800
+            p.showPage()
+        p.setFont('Helvetica-Bold', 9)
+        p.drawString(50, y_final, hu.nombre)
+        
+        p.setFontSize(8)
+        y_final = y_final - 10
+        p.setFont('Helvetica', 9)
+        
+        p.setFont('Helvetica-Bold', 9)
+        p.drawString(60, y_final,"GENERAL")
+        p.setFont('Helvetica', 9)
+        
+        y_final = y_final - 10
+        p.drawString(70, y_final,"Codigo: "+hu.codigo)
+        y_final = y_final - 10
+        p.drawString(70, y_final,"Descripcion: "+hu.descripcion)
+        y_final = y_final - 10
+        user_asig = User.objects.get(pk=hu.usuario_Asignado).username
+        p.drawString(70, y_final,"Usuario Asignado: "+user_asig)
+        y_final = y_final - 10
+        
+        p.setFont('Helvetica-Bold', 9)
+        p.drawString(60, y_final,"VALORES")
+        y_final = y_final - 10
+        p.setFont('Helvetica', 9)
+        
+        p.drawString(70, y_final,"Valor de Negocio: "+str(hu.valor_Negocio))
+        p.drawString(160, y_final,"Valor Tecnico: "+str(hu.valor_Tecnico))
+        p.drawString(250, y_final,"Prioridad: "+str(hu.prioridad))
+        y_final = y_final - 10
+        
+        p.setFont('Helvetica-Bold', 9)
+        p.drawString(60, y_final,"REGISTROS")
+        y_final = y_final - 10
+        p.setFont('Helvetica', 9)
+        
+        flujo = Flujos.objects.get(pk=hu.flujo)
+        flujod = flujo.descripcion
+        p.drawString(70, y_final,"Flujo: "+flujod)
+        y_final = y_final - 10
+        list_act = Actividades.objects.filter(flujo_id = flujo.id)
+        #list_act = list_act.first()
+        
+        list_act = sorted(list_act, key=gethuidsort)
+        c = 0
+        for act in list_act:
+            c = c+1
+            if c == hu.f_actividad:
+                actividad_actual = act
+        p.drawString(70, y_final,"Actividad Actual: "+actividad_actual.descripcion)
+        
+        estado = Estados.objects.get(pk=hu.f_a_estado).descripcion
+        p.drawString(200, y_final,"Estado Actual: "+estado)
+        y_final = y_final - 10
+        p.drawString(70, y_final,"Tiempo Estimado: "+str(hu.tiempo_Estimado))
+        p.drawString(200, y_final,"Tiempo Registrado: "+str(hu.tiempo_Real))
+        y_final = y_final - 10
+        
+        
+        print 'y final = '+ str(y_final)
+    # Close the PDF object cleanly, and we're done.
+    p.showPage()
+    p.save()
+    return response
+
+def reporte_HU_porPrioridad(request,proyecto_id,nro_sprint):
+    # Create the HttpResponse object with the appropriate PDF headers.
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'filename="Reporte_Trabajos_por_Equipo.pdf"'
+
+    # Create the PDF object, using the response object as its "file."
+    p = canvas.Canvas(response)
+    p.setPageSize(A4)
+    p.setTitle('reporte_HU_SprintEnCurso')
+    now = datetime.now()
+    ftime = str(now.day)+"/"+str(now.month)+"/"+str(now.year)+"  "+str(now.hour)+":"+str(now.minute)
+    
+    p.setLineWidth(.3)
+    
+    p.setFont('Helvetica', 9)
+    p.drawString(50, 805, 'SGPA')
+    p.drawString(480, 805, ftime)
+    p.setFont('Helvetica-Bold', 18)
+    
+    p.drawString(230, 760, "REPORTE")
+    #p.line(10, 750, 590, 750)
+
+    proyecto = Proyectos.objects.get(pk=proyecto_id)
+    p.setFont('Helvetica', 10)
+    p.drawString(50, 720, "TIPO: Reporte de user stories ordenados segun prioridad de terminacion")
+    p.drawString(50, 700, "PROYECTO: "+ proyecto.nombre)
+    p.drawString(50, 680, "SPRINT Nro.: "+ str(proyecto.nro_sprint))
+    usuario = User.objects.get(username = request.user)
+    p.drawString(50, 660, "GENERADO POR: "+ usuario.first_name+ ' '+ usuario.last_name+' ('+usuario.username+')')
+    
+    p.setFont('Helvetica-Bold', 10)
+    p.drawString(50, 620,  "Equipo")
+    p.line(10, 615, 590, 615)
+    
+ 
+   
+    
+    
+   
+    y_inicial = 600
+    p.setFont('Helvetica-Bold', 9)
+    p.drawString(70, y_inicial, "Usuario(nick)") 
+    p.drawString(220, y_inicial, "Rol")
+    p.drawString(320, y_inicial, "Email")
+    y_inicial = y_inicial - 15
+    equipo = Equipo.objects.filter(proyecto_id = proyecto_id)
+    
+    p.setFont('Helvetica', 9)
+    for e in equipo:
+        if y_inicial <= 150:
+            y_inicial = 800
+            p.showPage()
+        user = User.objects.get(id = e.usuario_id)
+        nombre_apellido = user.first_name + " " + user.last_name + " ("+ user.username +")"
+        p.drawString(50, y_inicial, "- "+ nombre_apellido) 
+             
+       
+        rolEquipo = Equipo.objects.get(usuario_id = user.id,proyecto_id = proyecto_id)
+                
+        rol = Roles.objects.get(id = rolEquipo.rol_id)
+                    
+        p.drawString(200, y_inicial, "- "+ rol.descripcion) 
+        
+        p.drawString(300, y_inicial, user.email)                    
+        y_inicial = y_inicial - 12
+                    
+    y_final = y_inicial - 20
+    p.setFont('Helvetica-Bold', 10)
+    p.drawString(50, y_final,  "Listado de User Stories")
+    y_final = y_final - 5
+    p.line(10, y_final, 590, y_final)   
+    
+    p.setFont('Helvetica', 9)
+    
+    y_final = y_final - 15
+    list_hu = UserStory.objects.filter(proyecto_id = proyecto_id).order_by('prioridad_id')
+    
+    
+  
+    c = 0
+    for hu in list_hu:
+        c = c+1
+        if y_final <= 150:
+            y_final = 800
+            p.showPage()
+        p.setFont('Helvetica-Bold', 9)
+        p.drawString(50, y_final, '  ')
+        y_final = y_final - 10
+        p.drawString(50, y_final, str(c)+'  '+hu.nombre)
+        
+        p.setFontSize(8)
+        y_final = y_final - 10
+        
+        y_final = y_final - 10
+        p.setFont('Helvetica', 9)
+        
+        p.setFont('Helvetica-Bold', 9)
+        p.drawString(60, y_final,"GENERAL")
+        p.setFont('Helvetica', 9)
+        
+        y_final = y_final - 10
+        p.drawString(70, y_final,"Codigo: "+hu.codigo)
+        y_final = y_final - 10
+        p.drawString(70, y_final,"Descripcion: "+hu.descripcion)
+        y_final = y_final - 10
+
+        
+        p.setFont('Helvetica-Bold', 9)
+        p.drawString(60, y_final,"VALORES")
+        y_final = y_final - 10
+        p.setFont('Helvetica', 9)
+        
+        p.drawString(70, y_final,"Valor de Negocio: "+str(hu.valor_Negocio))
+        p.drawString(160, y_final,"Valor Tecnico: "+str(hu.valor_Tecnico))
+        p.drawString(250, y_final,"Prioridad: "+str(hu.prioridad))
+        y_final = y_final - 10
+        
+       
     # Close the PDF object cleanly, and we're done.
     p.showPage()
     p.save()
