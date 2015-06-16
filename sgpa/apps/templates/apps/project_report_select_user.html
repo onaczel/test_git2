@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block uptitulo %}
+<h1>{{proyecto.nombre}}</h1>
+{% endblock %}
+{% block encabezado %}
+<h1>Reportes</h1>
+{% endblock %}
+{% block index %}
+	<li>
+		<a href="{% url 'apps:accionesproyecto' proyecto.id %}"><i class="fa fa-fw fa-edit"></i>{{proyecto.nombre}}</a>
+	</li>
+{% endblock %}
+{% block contenido %}
+	
+	{% if users_asig %}
+		{% for user in users_asig %}
+			<table>
+				<tr>
+					<td><a href="{% url 'apps:reporte_por_usuario' proyecto.id user.id %}">{{user.first_name}} {{user.last_name}} ({{user.username}})</a></td>
+				<tr>
+			</table>
+		{% endfor %}
+	{% else %}
+		<p>No existen usuarios</p>
+	{% endif %}
+	
+
+{% endblock %}
+{% block atras %}
+
+{% endblock %}
