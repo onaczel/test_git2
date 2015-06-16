@@ -123,8 +123,8 @@ urlpatterns = patterns('',
     url(r'^(?P<proyecto_id>\d+)/modproyecto/(?P<nro_sprint>\d+)/Reportes/ReporteporEquipo$', views.reporte_por_equipo, name="reporte_por_equipo"),
     url(r'^(?P<proyecto_id>\d+)/modproyecto/Reportes/ReporteporEquipo$', views.reporte_select_user, name="reporte_select_user"),
     url(r'^(?P<proyecto_id>\d+)/modproyecto/(?P<user_id>\d+)/Reportes/ReporteporUsuario', views.reporte_por_usuario, name="reporte_por_usuario"),
-    
-    
+    url(r'^(?P<proyecto_id>\d+)/modproyecto/(?P<nro_sprint>\d+)/Reportes/Reporte_HU_Sprint_en_Curso$', views.reporte_HU_SprintEnCurso, name="reporte_HU_SprintEnCurso"),
+    url(r'^(?P<proyecto_id>\d+)/modproyecto/(?P<nro_sprint>\d+)/Reportes/Reporte_HU_por_Prioridad$', views.reporte_HU_porPrioridad, name="reporte_HU_porPrioridad"),
     
     
     
