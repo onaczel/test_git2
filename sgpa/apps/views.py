@@ -3915,7 +3915,10 @@ def reporte_por_equipo(request, proyecto_id, nro_sprint):
     p = canvas.Canvas(response)
     
     now = datetime.now()
-    ftime = str(now.day)+"/"+str(now.month)+"/"+str(now.year)+"  "+str(now.hour)+":"+str(now.minute)
+    minute = str(now.minute)
+    if int(now.minute)<10:
+        minute = "0"+str(now.minute)
+    ftime = str(now.day)+"/"+str(now.month)+"/"+str(now.year)+"  "+str(now.hour)+":"+minute
     
     p.setLineWidth(.3)
     
@@ -4096,7 +4099,10 @@ def reporte_por_usuario(request, proyecto_id, user_id):
     p = canvas.Canvas(response)
     
     now = datetime.now()
-    ftime = str(now.day)+"/"+str(now.month)+"/"+str(now.year)+"  "+str(now.hour)+":"+str(now.minute)
+    minute = str(now.minute)
+    if int(now.minute)<10:
+        minute = "0"+str(now.minute)
+    ftime = str(now.day)+"/"+str(now.month)+"/"+str(now.year)+"  "+str(now.hour)+":"+minute
     
     p.setLineWidth(.3)
     
@@ -4547,7 +4553,10 @@ def reporte_HU_SprintEnCurso(request,proyecto_id,nro_sprint):
     p.setPageSize(A4)
     p.setTitle('reporte_HU_SprintEnCurso')
     now = datetime.now()
-    ftime = str(now.day)+"/"+str(now.month)+"/"+str(now.year)+"  "+str(now.hour)+":"+str(now.minute)
+    minute = str(now.minute)
+    if int(now.minute)<10:
+        minute = "0"+str(now.minute)
+    ftime = str(now.day)+"/"+str(now.month)+"/"+str(now.year)+"  "+str(now.hour)+":"+minute
     
     p.setLineWidth(.3)
     
@@ -4696,7 +4705,10 @@ def reporte_HU_porPrioridad(request,proyecto_id,nro_sprint):
     p.setPageSize(A4)
     p.setTitle('reporte_HU_SprintEnCurso')
     now = datetime.now()
-    ftime = str(now.day)+"/"+str(now.month)+"/"+str(now.year)+"  "+str(now.hour)+":"+str(now.minute)
+    minute = str(now.minute)
+    if int(now.minute)<10:
+        minute = "0"+str(now.minute)
+    ftime = str(now.day)+"/"+str(now.month)+"/"+str(now.year)+"  "+str(now.hour)+":"+minute
     
     p.setLineWidth(.3)
     
