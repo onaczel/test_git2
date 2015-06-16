@@ -3921,18 +3921,67 @@ def reporte_por_equipo(request, proyecto_id, nro_sprint):
     
     p.setFont('Helvetica', 9)
     p.drawString(480, 805, ftime)
-    p.setFont('Helvetica', 18)
-    
+    p.setFont('Helvetica-Bold', 18)    
     p.drawString(230, 760, "REPORTE")
     #p.line(10, 750, 590, 750)
 
+    '''
     proyecto = Proyectos.objects.get(pk=proyecto_id)
     p.setFont('Helvetica', 10)
     p.drawString(50, 720, "REPORTE DE TRABAJOS EN CURSO")
     p.drawString(50, 700, "PROYECTO: "+ proyecto.nombre)
     p.drawString(50, 680, "SPRINT: "+ str(proyecto.nro_sprint))
+    '''
     
+    proyecto = Proyectos.objects.get(pk=proyecto_id)
+    p.setFont('Helvetica', 10)
+    p.drawString(50, 720, "TIPO: Reporte de trabajos por Equipo")
+    p.drawString(50, 700, "PROYECTO: "+ proyecto.nombre)
+    p.drawString(50, 680, "SPRINT Nro.: "+ str(proyecto.nro_sprint))
+    usuario = User.objects.get(username = request.user)
+    p.drawString(50, 660, "GENERADO POR: "+ usuario.first_name+ ' '+ usuario.last_name+' ('+usuario.username+')')
     
+    y_final = 640
+    
+    p.setFont('Helvetica-Bold', 10)
+    p.drawString(50, 620,  "Equipo")
+    p.line(10, 615, 590, 615)
+    
+    y_inicial = 600
+    p.setFont('Helvetica-Bold', 9)
+    p.drawString(70, y_inicial, "Usuario(nick)") 
+    p.drawString(220, y_inicial, "Rol")
+    p.drawString(320, y_inicial, "Email")
+    y_inicial = y_inicial - 15
+    equipo = Equipo.objects.filter(proyecto_id = proyecto_id)
+    
+    p.setFont('Helvetica', 9)
+    for e in equipo:
+        if y_inicial <= 150:
+            y_inicial = 800
+            p.showPage()
+        user = User.objects.get(id = e.usuario_id)
+        nombre_apellido = user.first_name + " " + user.last_name + " ("+ user.username +")"
+        p.drawString(50, y_inicial, "- "+ nombre_apellido) 
+             
+       
+        rolEquipo = Equipo.objects.get(usuario_id = user.id,proyecto_id = proyecto_id)
+                
+        rol = Roles.objects.get(id = rolEquipo.rol_id)
+                    
+        p.drawString(200, y_inicial, "- "+ rol.descripcion) 
+        
+        p.drawString(300, y_inicial, user.email)                    
+        y_inicial = y_inicial - 12
+                    
+    y_final = y_inicial - 20
+    p.setFont('Helvetica-Bold', 10)
+    p.drawString(50, y_final,  "User Stories en Curso")
+    y_final = y_final - 5
+    p.line(10, y_final, 590, y_final)   
+    y_final = y_final -20
+    
+    '''
     p.setFont('Helvetica', 9)
     p.drawString(50, 640,  "Equipo")
     p.line(10, 635, 590, 635)
@@ -3952,20 +4001,28 @@ def reporte_por_equipo(request, proyecto_id, nro_sprint):
                     y_inicial = y_inicial - 12
                     
     y_final = y_inicial - 20
-
-    p.drawString(50, y_final,  "User Stories en Curso")
-    y_final = y_final - 5
-    p.line(10, y_final, 590, y_final)   
+    '''
+    p.setFont('Helvetica', 9)
+    #p.drawString(50, y_final,  "User Stories en Curso")
+    #y_final = y_final - 5
+    #p.line(10, y_final, 590, y_final)   
     
-    y_final = y_final - 15
+    #y_final = y_final - 15
     list_hu = UserStory.objects.filter(proyecto_id = proyecto_id, sprint = nro_sprint)
     list_hu = sorted(list_hu, key=gethuidsort)
     for hu in list_hu:
+        if y_final <= 150:
+            y_final = 800
+            p.showPage()
+        
+        p.setFont('Helvetica-Bold', 10)
         p.drawString(50, y_final, hu.nombre)
         p.setFontSize(8)
-        y_final = y_final - 10
+        y_final = y_final - 20
         
+        p.setFont('Helvetica-Bold', 9)
         p.drawString(60, y_final,"GENERAL")
+        p.setFont('Helvetica', 9)
         y_final = y_final - 10
         p.drawString(70, y_final,"Codigo: "+hu.codigo)
         y_final = y_final - 10
@@ -3974,15 +4031,21 @@ def reporte_por_equipo(request, proyecto_id, nro_sprint):
         user_asig = User.objects.get(pk=hu.usuario_Asignado).username
         p.drawString(70, y_final,"Usuario Asignado: "+user_asig)
         y_final = y_final - 10
+        p.drawString(70, y_final,"Sprint: "+str(hu.sprint))
+        y_final = y_final - 10
         
+        p.setFont('Helvetica-Bold', 9)
         p.drawString(60, y_final,"VALORES")
+        p.setFont('Helvetica', 9)
         y_final = y_final - 10
         p.drawString(70, y_final,"Valor de Negocio: "+str(hu.valor_Negocio))
         p.drawString(160, y_final,"Valor Tecnico: "+str(hu.valor_Tecnico))
         p.drawString(250, y_final,"Prioridad: "+str(hu.prioridad))
         y_final = y_final - 10
         
+        p.setFont('Helvetica-Bold', 9)
         p.drawString(60, y_final,"REGISTROS")
+        p.setFont('Helvetica', 9)
         y_final = y_final - 10
         flujo = Flujos.objects.get(pk=hu.flujo)
         flujod = flujo.descripcion
@@ -4005,7 +4068,6 @@ def reporte_por_equipo(request, proyecto_id, nro_sprint):
         p.drawString(70, y_final,"Tiempo Estimado: "+str(hu.tiempo_Estimado))
         p.drawString(200, y_final,"Tiempo Registrado: "+str(hu.tiempo_Real))
         y_final = y_final - 10
-        
         
         y_final = y_final - 12
     # Close the PDF object cleanly, and we're done.
@@ -4041,12 +4103,24 @@ def reporte_por_usuario(request, proyecto_id, user_id):
     y_final = 805
     p.setFont('Helvetica', 9)
     p.drawString(480, y_final, ftime)
-    p.setFont('Helvetica', 18)
+    p.setFont('Helvetica-Bold', 18)
     
     y_final = y_final - 45
     p.drawString(230, y_final, "REPORTE")
     #p.line(10, 750, 590, 750)
 
+    proyecto = Proyectos.objects.get(pk=proyecto_id)
+    p.setFont('Helvetica', 10)
+    p.drawString(50, 720, "TIPO: Reporte de trabajos por usuario")
+    p.drawString(50, 700, "PROYECTO: "+ proyecto.nombre)
+    p.drawString(50, 680, "SPRINT Nro.: "+ str(proyecto.nro_sprint))
+    user = User.objects.get(pk=user_id)
+    nombre_apellido = user.first_name + " " + user.last_name + " ("+ user.username +")"
+    p.drawString(50, 660, "USUARIO: "+nombre_apellido)  
+    usuario = User.objects.get(username = request.user)
+    p.drawString(50, 640, "GENERADO POR: "+ usuario.first_name+ ' '+ usuario.last_name+' ('+usuario.username+')')
+    
+    '''
     proyecto = Proyectos.objects.get(pk=proyecto_id)
     p.setFont('Helvetica', 10)
     y_final = y_final - 40
@@ -4059,8 +4133,11 @@ def reporte_por_usuario(request, proyecto_id, user_id):
     user = User.objects.get(pk=user_id)
     nombre_apellido = user.first_name + " " + user.last_name + " ("+ user.username +")"
     p.drawString(50, y_final, "USUARIO: "+nombre_apellido)  
-    
+    '''
     y_final = y_final - 20 
+    y_final = 620
+    
+    
 
     
     
@@ -4076,23 +4153,29 @@ def reporte_por_usuario(request, proyecto_id, user_id):
     
     list_hu = UserStory.objects.filter(usuario_Asignado = user_id)
     list_hu = sorted(list_hu, key=gethuidsort)
-    
+    p.setFont('Helvetica-Bold', 10)
     p.drawString(50, y_final,  "User Stories en Curso")
     y_final = y_final - 5
     p.line(10, y_final, 590, y_final)   
     
     y_final = y_final - 15
     
-    
+    p.setFont('Helvetica', 9)
     if UserStory.objects.filter(usuario_Asignado = user_id, estado_scrum =1):
         for hu in UserStory.objects.filter(usuario_Asignado = user_id, estado_scrum =1):
+            if y_final <= 150:
+                y_final = 800
+                p.showPage()    
             print hu.estado_scrum
             #if str(hu.estado_scrum) == 'Iniciado':
+            p.setFont('Helvetica-Bold', 10)
             p.drawString(50, y_final, hu.nombre)
             p.setFontSize(8)
-            y_final = y_final - 10
+            y_final = y_final - 20
             
+            p.setFont('Helvetica-Bold', 9)
             p.drawString(60, y_final,"GENERAL")
+            p.setFont('Helvetica', 9)
             y_final = y_final - 10
             p.drawString(70, y_final,"Codigo: "+hu.codigo)
             y_final = y_final - 10
@@ -4104,14 +4187,18 @@ def reporte_por_usuario(request, proyecto_id, user_id):
             p.drawString(70, y_final,"Sprint: "+str(hu.sprint))
             y_final = y_final - 10
             
+            p.setFont('Helvetica-Bold', 9)
             p.drawString(60, y_final,"VALORES")
+            p.setFont('Helvetica', 9)
             y_final = y_final - 10
             p.drawString(70, y_final,"Valor de Negocio: "+str(hu.valor_Negocio))
             p.drawString(160, y_final,"Valor Tecnico: "+str(hu.valor_Tecnico))
             p.drawString(250, y_final,"Prioridad: "+str(hu.prioridad))
             y_final = y_final - 10
             
+            p.setFont('Helvetica-Bold', 9)
             p.drawString(60, y_final,"REGISTROS")
+            p.setFont('Helvetica', 9)
             y_final = y_final - 10
             flujo = Flujos.objects.get(pk=hu.flujo)
             flujod = flujo.descripcion
@@ -4141,23 +4228,28 @@ def reporte_por_usuario(request, proyecto_id, user_id):
         p.drawString(60, y_final,  "No existen Registros")
         y_final = y_final - 20
     
-            
-    p.setFontSize(10)
+    p.setFont('Helvetica-Bold', 10)
     p.drawString(50, y_final,  "User Stories Planificados")
     y_final = y_final - 5
     p.line(10, y_final, 590, y_final)   
     
     y_final = y_final - 15
-    
+    p.setFont('Helvetica', 9)
     if UserStory.objects.filter(usuario_Asignado = user_id, estado_scrum =2):
         for hu in UserStory.objects.filter(usuario_Asignado = user_id, estado_scrum =2):
+            if y_final <= 150:
+                y_final = 800
+                p.showPage()
             print hu.estado_scrum
             #if str(hu.estado_scrum) == 'Asignado':
+            p.setFont('Helvetica-Bold', 10)
             p.drawString(50, y_final, hu.nombre)
             p.setFontSize(8)
-            y_final = y_final - 10
+            y_final = y_final - 20
             
+            p.setFont('Helvetica-Bold', 10)
             p.drawString(60, y_final,"GENERAL")
+            p.setFont('Helvetica', 9)
             y_final = y_final - 10
             p.drawString(70, y_final,"Codigo: "+hu.codigo)
             y_final = y_final - 10
@@ -4169,14 +4261,18 @@ def reporte_por_usuario(request, proyecto_id, user_id):
             p.drawString(70, y_final,"Sprint: "+str(hu.sprint))
             y_final = y_final - 10
             
+            p.setFont('Helvetica-Bold', 9)
             p.drawString(60, y_final,"VALORES")
+            p.setFont('Helvetica', 9)
             y_final = y_final - 10
             p.drawString(70, y_final,"Valor de Negocio: "+str(hu.valor_Negocio))
             p.drawString(160, y_final,"Valor Tecnico: "+str(hu.valor_Tecnico))
             p.drawString(250, y_final,"Prioridad: "+str(hu.prioridad))
             y_final = y_final - 10
             
+            p.setFont('Helvetica-Bold', 9)
             p.drawString(60, y_final,"REGISTROS")
+            p.setFont('Helvetica', 9)
             y_final = y_final - 10
             flujo = Flujos.objects.get(pk=hu.flujo)
             flujod = flujo.descripcion
@@ -4206,21 +4302,28 @@ def reporte_por_usuario(request, proyecto_id, user_id):
         p.drawString(60, y_final,  "No existen Registros")
         y_final = y_final - 20
             
+    p.setFont('Helvetica-Bold', 10)
     p.drawString(50, y_final,  "User Stories Pendientes")
     y_final = y_final - 5
     p.line(10, y_final, 590, y_final)   
     
     y_final = y_final - 15
-    
+    p.setFont('Helvetica', 9)
     if UserStory.objects.filter(usuario_Asignado = user_id, estado_scrum =4):
         for hu in UserStory.objects.filter(usuario_Asignado = user_id, estado_scrum =4):
+            if y_final <= 150:
+                y_final = 800
+                p.showPage()
             print hu.estado_scrum
             #if str(hu.estado_scrum) == 'Pendiente':
+            p.setFont('Helvetica-Bold', 10)
             p.drawString(50, y_final, hu.nombre)
             p.setFontSize(8)
-            y_final = y_final - 10
+            y_final = y_final - 20
             
+            p.setFont('Helvetica-Bold', 9)
             p.drawString(60, y_final,"GENERAL")
+            p.setFont('Helvetica', 9)
             y_final = y_final - 10
             p.drawString(70, y_final,"Codigo: "+hu.codigo)
             y_final = y_final - 10
@@ -4232,14 +4335,18 @@ def reporte_por_usuario(request, proyecto_id, user_id):
             p.drawString(70, y_final,"Sprint: "+str(hu.sprint))
             y_final = y_final - 10
             
+            p.setFont('Helvetica-Bold', 9)
             p.drawString(60, y_final,"VALORES")
+            p.setFont('Helvetica', 9)
             y_final = y_final - 10
             p.drawString(70, y_final,"Valor de Negocio: "+str(hu.valor_Negocio))
             p.drawString(160, y_final,"Valor Tecnico: "+str(hu.valor_Tecnico))
             p.drawString(250, y_final,"Prioridad: "+str(hu.prioridad))
             y_final = y_final - 10
             
+            p.setFont('Helvetica-Bold', 9)
             p.drawString(60, y_final,"REGISTROS")
+            p.setFont('Helvetica', 9)
             y_final = y_final - 10
             flujo = Flujos.objects.get(pk=hu.flujo)
             flujod = flujo.descripcion
@@ -4269,21 +4376,30 @@ def reporte_por_usuario(request, proyecto_id, user_id):
         p.drawString(60, y_final,  "No existen Registros")
         y_final = y_final - 20
         
+
+    
+    p.setFont('Helvetica-Bold', 10)    
     p.drawString(50, y_final,  "User Stories Finalizados")
     y_final = y_final - 5
     p.line(10, y_final, 590, y_final)   
     
     y_final = y_final - 15
-    
+    p.setFont('Helvetica', 9)
     if UserStory.objects.filter(usuario_Asignado = user_id, estado_scrum =5):
         for hu in UserStory.objects.filter(usuario_Asignado = user_id, estado_scrum =5):
+            if y_final <= 150:
+                y_final = 800
+                p.showPage()
             print hu.estado_scrum
             #if str(hu.estado_scrum) == 'Finalizado':
+            p.setFont('Helvetica-Bold', 10)
             p.drawString(50, y_final, hu.nombre)
             p.setFontSize(8)
-            y_final = y_final - 10
+            y_final = y_final - 20
             
+            p.setFont('Helvetica-Bold', 9)
             p.drawString(60, y_final,"GENERAL")
+            p.setFont('Helvetica', 9)
             y_final = y_final - 10
             p.drawString(70, y_final,"Codigo: "+hu.codigo)
             y_final = y_final - 10
@@ -4295,14 +4411,18 @@ def reporte_por_usuario(request, proyecto_id, user_id):
             p.drawString(70, y_final,"Sprint: "+str(hu.sprint))
             y_final = y_final - 10
             
+            p.setFont('Helvetica-Bold', 9)
             p.drawString(60, y_final,"VALORES")
+            p.setFont('Helvetica', 9)
             y_final = y_final - 10
             p.drawString(70, y_final,"Valor de Negocio: "+str(hu.valor_Negocio))
             p.drawString(160, y_final,"Valor Tecnico: "+str(hu.valor_Tecnico))
             p.drawString(250, y_final,"Prioridad: "+str(hu.prioridad))
             y_final = y_final - 10
             
+            p.setFont('Helvetica-Bold', 9)
             p.drawString(60, y_final,"REGISTROS")
+            p.setFont('Helvetica', 9)
             y_final = y_final - 10
             flujo = Flujos.objects.get(pk=hu.flujo)
             flujod = flujo.descripcion
@@ -4332,21 +4452,28 @@ def reporte_por_usuario(request, proyecto_id, user_id):
         p.drawString(60, y_final,  "No existen Registros")
         y_final = y_final - 20
 
+    p.setFont('Helvetica-Bold', 10)
     p.drawString(50, y_final,  "User Stories Cancelados")
     y_final = y_final - 5
     p.line(10, y_final, 590, y_final)   
     
     y_final = y_final - 15
-    
+    p.setFont('Helvetica', 9)
     if UserStory.objects.filter(usuario_Asignado = user_id, estado_scrum =6):
         for hu in UserStory.objects.filter(usuario_Asignado = user_id, estado_scrum =6):
+            if y_final <= 150:
+                y_final = 800
+                p.showPage()
             print hu.estado_scrum
             #if str(hu.estado_scrum) == 'Cancelado':
+            p.setFont('Helvetica-Bold', 10)
             p.drawString(50, y_final, hu.nombre)
             p.setFontSize(8)
-            y_final = y_final - 10
+            y_final = y_final - 20
             
+            p.setFont('Helvetica-Bold', 9)
             p.drawString(60, y_final,"GENERAL")
+            p.setFont('Helvetica', 9)
             y_final = y_final - 10
             p.drawString(70, y_final,"Codigo: "+hu.codigo)
             y_final = y_final - 10
@@ -4358,14 +4485,18 @@ def reporte_por_usuario(request, proyecto_id, user_id):
             p.drawString(70, y_final,"Sprint: "+str(hu.sprint))
             y_final = y_final - 10
             
+            p.setFont('Helvetica-Bold', 9)
             p.drawString(60, y_final,"VALORES")
+            p.setFont('Helvetica', 9)
             y_final = y_final - 10
             p.drawString(70, y_final,"Valor de Negocio: "+str(hu.valor_Negocio))
             p.drawString(160, y_final,"Valor Tecnico: "+str(hu.valor_Tecnico))
             p.drawString(250, y_final,"Prioridad: "+str(hu.prioridad))
             y_final = y_final - 10
             
+            p.setFont('Helvetica-Bold', 9)
             p.drawString(60, y_final,"REGISTROS")
+            p.setFont('Helvetica', 9)
             y_final = y_final - 10
             flujo = Flujos.objects.get(pk=hu.flujo)
             flujod = flujo.descripcion
