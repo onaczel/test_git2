@@ -2482,16 +2482,27 @@ def setEstadoHu(request, proyecto_id, hu_id):
             actividadeslist = Actividades.objects.filter(flujo_id = hu.flujo)
             count = 0
             ordenact = 0
+            cambio = False
+            act_original = hu.f_actividad
             for a in actividadeslist:
                 count = count + 1
                 if a.descripcion == request.POST['act']:
                     ordenact = count
                     break
                     
+            if act_original != ordenact:
+                cambio = True
+                
             hu.f_actividad = ordenact
             #hu.f_actividad = actlist.get(descripcion = request.POST['act']).id
             
             hu.f_a_estado = Estados.objects.get(descripcion = request.POST['est']).id
+            
+            if cambio:
+                if hu.f_a_estado != 1:
+                    #hu.f_a_estado = 1
+                    return render_to_response('apps/hu_set_estado.html', {'proyecto':proyecto, 'hu':hu, 'actividades':actividades, 'estados':estados, 'flujo_descripcion':flujo.descripcion, 'misPermisos':mispermisos, 'modificado':modificado, 'user_logged':user_logged, 'error':True}, context_instance = RequestContext(request))
+                
             hu.finalizado = False
             hu.save()
             setlog(hu.id)

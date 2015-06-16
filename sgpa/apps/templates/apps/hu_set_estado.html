@@ -67,6 +67,9 @@
 		<h4><font color="#50A850">El User Story ha Finalizado</font></h4>
 	{% endif %}
 	<br>
+	{% if error %}
+		<p>Solo puede avanzar un estado a la vez</p>
+	{% endif %}
 	{% if misPermisos.MUS %}
 		<form action="{% url 'apps:setEstadoHu' proyecto.id hu.id %}" method="post">
 			{% csrf_token %}
