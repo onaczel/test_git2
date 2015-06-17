@@ -3678,20 +3678,32 @@ def horasUsuarioSprint(request, proyecto_id, sprint_id, usu_id):
     proyecto = Proyectos.objects.get(id = proyecto_id)
     sprint = Sprint.objects.get(id = sprint_id)
     
+    equipos = Equipo.objects.filter(proyecto_id = proyecto_id, rol_id = 5)
+    for equipo in equipos:
+        user = User.objects.get(id = equipo.usuario_id)
+        se_encuentra = False
+        for u in users:
+            if u.id == user.id:
+                se_encuentra = True
+        if se_encuentra == False:
+            if user.is_active:
+                users.append(user)
+    
     if request.method == 'POST':
         if request.POST['cambio'] == "Establecer Horas":
-            try:
-                hora_usuario_sprint = horas_usuario_sprint.objects.get(usuario_id = usu_id, Sprint_id = sprint_id)
-            except:
-                hora_usuario_sprint = horas_usuario_sprint()
-            try:
-                horas = int(request.POST.get('horas', False))
-            except:
-                horas = 0
-            hora_usuario_sprint.horas = horas
-            hora_usuario_sprint.usuario_id = usu_id
-            hora_usuario_sprint.Sprint_id = sprint_id
-            hora_usuario_sprint.save()
+            for user in users:
+                try:
+                    hora_usuario_sprint = horas_usuario_sprint.objects.get(usuario_id = user.id, Sprint_id = sprint_id)
+                except:
+                    hora_usuario_sprint = horas_usuario_sprint()
+                try:
+                    horas = int(request.POST.get('horas'+str(user.id), False))
+                except:
+                    horas = 0
+                hora_usuario_sprint.horas = horas
+                hora_usuario_sprint.usuario_id = user.id
+                hora_usuario_sprint.Sprint_id = sprint_id
+                hora_usuario_sprint.save()
     
     hus2 = UserStory.objects.filter(proyecto_id = proyecto_id, estado_scrum_id = 2)
     hus3 = UserStory.objects.filter(proyecto_id = proyecto_id, estado_scrum_id = 3)
@@ -3712,16 +3724,6 @@ def horasUsuarioSprint(request, proyecto_id, sprint_id, usu_id):
             else:
                 hus.append(hu)
     hus = sorted(hus, key=gethuidsort, reverse=False)
-    equipos = Equipo.objects.filter(proyecto_id = proyecto_id, rol_id = 5)
-    for equipo in equipos:
-        user = User.objects.get(id = equipo.usuario_id)
-        se_encuentra = False
-        for u in users:
-            if u.id == user.id:
-                se_encuentra = True
-        if se_encuentra == False:
-            if user.is_active:
-                users.append(user)
     
     horas_sprint_usuario = horas_usuario_sprint.objects.filter(Sprint_id = sprint_id)
     

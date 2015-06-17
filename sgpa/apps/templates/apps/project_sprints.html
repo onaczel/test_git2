@@ -95,7 +95,7 @@
 			<div style="clear:both">
 				<form action="{% url 'apps:sprints' proyecto.id s.id 0 %}" method="post">{% csrf_token %}
 					<br><input type="submit", name="cambio", value="+">&emsp;<input type="submit", name="cambio", value="-">&emsp;<label>Sprint Numero {{s.nro_sprint}}</label>&emsp;
-					{% if s.estado == 0 and mispermisos.PS == True %}
+					{% if proyecto.estado_id != 5 and s.estado == 0 and mispermisos.PS == True %}
 						<input type="submit", name="cambio", value="Planificar">&emsp;
 					{% elif s.estado == 1 %}
 						{% if scrum.rol_id == 3 %}
@@ -105,9 +105,15 @@
 				</form>
 				{% if sprint.nro_sprint == s.nro_sprint %}
 					{% if s.estado == 0 %}
-						<table border=1 bordercolor="green" width=100%>
-							<tr><td align="center"><font color="green"><p>El Sprint aun no ha Iniciado</p></font></td></tr>
-						</table>
+						{% if proyecto.estado_id != 5 %}
+							<table border=1 bordercolor="green" width=100%>
+								<tr><td align="center"><font color="green"><p>El Sprint aun no ha Iniciado</p></font></td></tr>
+							</table>
+						{% else %}
+							<table border=1 bordercolor="green" width=100%>
+								<tr><td align="center"><font color="green"><p>Este Sprint no fue Iniciado</p></font></td></tr>
+							</table>
+						{% endif %}
 						<form action="{% url 'apps:sprints' proyecto.id s.id 0 %}" method="post">{% csrf_token %}
 							{% if scrum.rol_id == 3 and proyecto.estado_id == 1%}
 								<br /><input type="submit", name="cambio", value="Iniciar Sprint"><br />
@@ -199,23 +205,27 @@
 											</tr>
 											<tr style="border-bottom: dotted; border-bottom-color: green;"><td>{{hu.tiempo_Estimado}} Horas</td>
 												<form action="{% url 'apps:sprints' proyecto.id s.id hu.id %}" method="post">{% csrf_token %}
-													{% if sprint.estado != 2 and scrum.rol_id == 3 %}
-														<td>
-															<select name="us"  style="width:90px">
-																{% if usuario %}
-																	<option>{{usuario.username}}</option>
-																	{% for user in users %}
-																		{% if usuario.id != user.id %}
+													{% if hu.estado_scrum_id == 1 or hu.estado_scrum_id == 2 %}
+														{% if sprint.estado != 2 and scrum.rol_id == 3 %}
+															<td>
+																<select name="us"  style="width:90px">
+																	{% if usuario %}
+																		<option>{{usuario.username}}</option>
+																		{% for user in users %}
+																			{% if usuario.id != user.id %}
+																				<option >{{user.username}}</option>
+																			{% endif %}
+																		{% endfor %}
+																	{% else %}
+								 										{% for user in users %}
 																			<option >{{user.username}}</option>
-																		{% endif %}
-																	{% endfor %}
-																{% else %}
-							 										{% for user in users %}
-																		<option >{{user.username}}</option>
-																	{% endfor %} 
-																{% endif %}
-															</select>
-														</td>
+																		{% endfor %} 
+																	{% endif %}
+																</select>
+															</td>
+														{% else %}
+															<td>{{usuario.username}}</td>
+														{% endif %}
 													{% else %}
 														<td>{{usuario.username}}</td>
 													{% endif %}

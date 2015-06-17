@@ -219,48 +219,44 @@ function drawCurveTypes() {
 {% endblock %}
 {% block equipo %}
 	<center>
-		<table border=1px width=66%>
-			<tr>
-				<td><b>Usuario</b></td><td><b>Ult. conexion.</b></td><td><b>horas</b></b></td><td></td>
-			</tr>
-			{% if users %}
-				{% for us in users %}
-					{% if us.is_active == True %}
-						<tr>
-							<td><a href="{% url 'apps:verUser' proyecto.id us.id %}">{{us.username}}</a></td>
-							<td>
-								{% for u in users %}
-									{% if u.id == us.id %}
-										{% if us.is_active == True %}
-											{{us.last_login}}
+		<form action="{% url 'apps:horasUsuarioSprint' proyecto.id sprint.id 0 %}" method="post">{% csrf_token %}
+			<table border=1px width=66%>
+				<tr>
+					<td><b>Usuario</b></td><td><b>Ult. conexion.</b></td><td><b>horas</b></b></td><td></td>
+				</tr>
+				{% if users %}
+					{% for us in users %}
+						{% if us.is_active == True %}
+							<tr>
+								<td><a href="{% url 'apps:verUser' proyecto.id us.id %}">{{us.username}}</a></td>
+								<td>
+									{% for u in users %}
+										{% if u.id == us.id %}
+											{% if us.is_active == True %}
+												{{us.last_login}}
+											{% endif %}
 										{% endif %}
-									{% endif %}
-								{% endfor %}  
-							</td>
-							<td>
-	
-			
-					
-					
-					
-
-            </div>		<form action="{% url 'apps:horasUsuarioSprint' proyecto.id sprint.id us.id %}" method="post">{% csrf_token %}
+									{% endfor %}  
+								</td>
+								<td>
 									{% for hora_sprint_usuario in horas_sprint_usuario %}
 										{% if hora_sprint_usuario.usuario_id == us.id %}
 											{% if sprint.estado != 0%}
 												<h5><input type="text" id="horas1" value="{{hora_sprint_usuario.horas}}" name="horas" style="width:190px" disabled/></h5>
 											{% else %}
-												<h5><input type="text" id="horas1" value="{{hora_sprint_usuario.horas}}" name="horas" style="width:190px"/><input type="submit", name="cambio", value="Establecer Horas"></h5>
+												<h5><input type="text" id="horas1" value="{{hora_sprint_usuario.horas}}" name="horas{{us.id}}" style="width:190px"/></h5>
 											{% endif %}
 										{% endif %}
 									{% endfor %}
-								</form>
-							</td>
-						</tr>
-					{% endif %}
-				{% endfor %}
-			{% endif %}
-		</table>
+								</td>
+							</tr>
+						{% endif %}
+					{% endfor %}
+				{% endif %}
+			</table>
+			<br />
+			<input type="submit", name="cambio", value="Establecer Horas">
+		</form>
 	</center>
 {% endblock %}
 {% block chart %}
