@@ -2536,8 +2536,9 @@ def setEstadoHu(request, proyecto_id, hu_id):
             hu.save()
             return render_to_response('apps/hu_set_estado.html', {'proyecto':proyecto, 'hu':hu, 'actividades':actividades, 'estados':estados, 'flujo_descripcion':flujo.descripcion, 'misPermisos':mispermisos, 'user_logged':user_logged}, context_instance = RequestContext(request))
     
+    sprint = Sprint.objects.get(id = proyecto.nro_sprint, proyecto_id = proyecto.id)
     #return render_to_response('apps/hu_modify_fields.html', {"form":form, "proyecto_id":proyecto_id, "hu_id":hu_id, "hu_descripcion":hu.descripcion, 'misPermisos':mispermisos, 'users':users, 'flujos':flujos, 'proyecto_nombre':proyecto.nombre, 'prioridades':prioridades, 'hu':hu}, context_instance = RequestContext(request))
-    return render_to_response('apps/hu_set_estado.html', {'proyecto':proyecto, 'hu':hu, 'actividades':actividades, 'estados':estados, 'flujo_descripcion':flujo.descripcion, 'misPermisos':mispermisos, 'finalizar':finalizar, 'user_logged':user_logged}, context_instance = RequestContext(request))
+    return render_to_response('apps/hu_set_estado.html', {'proyecto':proyecto, 'hu':hu, 'actividades':actividades, 'estados':estados, 'flujo_descripcion':flujo.descripcion, 'misPermisos':mispermisos, 'finalizar':finalizar, 'user_logged':user_logged, "sprint":sprint}, context_instance = RequestContext(request))
 
 def userToHU(request, proyecto_id, hu_id):
     """
@@ -2955,15 +2956,17 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
                     us = True
                     flu = True
                     for hu_proyecto in hus_proyecto:
-                        setlog(hu_proyecto.id)
-                        if hu_proyecto.flujo < 0:
+                        print hu_proyecto.flujo
+                        if hu_proyecto.flujo <= 0:
                             mensaje = "No se olvide de asignarle un flujo al User Story: " + str(hu_proyecto.nombre)
                             flu = False
                             break
-                        if hu_proyecto.usuario_Asignado < 0:
+                        print hu_proyecto.usuario_Asignado
+                        if hu_proyecto.usuario_Asignado <= 0:
                             mensaje = "No se olvide de asignarle un usuario responsable al User Story: " + str(hu_proyecto.nombre)
                             us = False
                             break
+                        setlog(hu_proyecto.id)
                     if us and flu:
                         mensaje = iniciarSprint(proyecto_id, sprint.nro_sprint)
                         sprint = []

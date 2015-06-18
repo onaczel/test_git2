@@ -104,17 +104,31 @@
 						</td>
 					{% else %}
 						{% if hu.f_a_estado == 3 %}
-						<td width=100>
-							<select name="act"  style="width:190px" sort = true>
-									{% for actividad in actividades %}
-										{% if hu.f_actividad == forloop.counter %}
-											<option selected="selected">{{actividad.descripcion}}</option>
-										{% else %}
-											<option>{{actividad.descripcion}}</option>
-										{% endif %}
-									{% endfor %} 
-							</select>
-						</td>
+							{% if sprint.estado != 2 %}
+								<td width=100>
+									<select name="act"  style="width:190px" sort = true>
+											{% for actividad in actividades %}
+												{% if hu.f_actividad == forloop.counter %}
+													<option selected="selected">{{actividad.descripcion}}</option>
+												{% else %}
+													<option>{{actividad.descripcion}}</option>
+												{% endif %}
+											{% endfor %} 
+									</select>
+								</td>
+							{% else %}
+								<td width=100>
+									<select disabled name="act"  style="width:190px" sort = true>
+											{% for actividad in actividades %}
+												{% if hu.f_actividad == forloop.counter %}
+													<option selected="selected">{{actividad.descripcion}}</option>
+												{% else %}
+													<option>{{actividad.descripcion}}</option>
+												{% endif %}
+											{% endfor %} 
+									</select>
+								</td>
+							{% endif %}
 						{% else %}
 							{% for actividad in actividades %}
 								{% if hu.f_actividad == forloop.counter %}
@@ -162,15 +176,27 @@
 					{% else %}
 						{% if estados %}
 						<td>
-						<select name="est"  style="width:190px;" sort = true  >
-								{% for e in estados %}
-									{% if e.id == hu.f_a_estado %}
-										<option selected="selected">{{e.descripcion}}</option>
-									{% else %}
-										<option >{{e.descripcion}}</option>
-									{% endif %}
-								{% endfor %} 
-						</select>
+						{% if sprint.estado != 2 %}
+							<select name="est"  style="width:190px;" sort = true  >
+									{% for e in estados %}
+										{% if e.id == hu.f_a_estado %}
+											<option selected="selected">{{e.descripcion}}</option>
+										{% else %}
+											<option >{{e.descripcion}}</option>
+										{% endif %}
+									{% endfor %} 
+							</select>
+						{% else %}
+							<select disabled name="est"  style="width:190px;" sort = true  >
+									{% for e in estados %}
+										{% if e.id == hu.f_a_estado %}
+											<option selected="selected">{{e.descripcion}}</option>
+										{% else %}
+											<option >{{e.descripcion}}</option>
+										{% endif %}
+									{% endfor %} 
+							</select>
+						{% endif %}
 						</td>
 						{% else %}
 							<td>{{estados.descripcion}}</td>
@@ -180,7 +206,7 @@
 			</table>
 			{% if hu.finalizado == True and hu.usuario_Asignado == user_logged %}
 				<input disabled type='submit' value='Guardar' name='submit'/>
-			{% elif hu.estado_scrum.id == 5 %}
+			{% elif hu.estado_scrum.id == 5 or sprint.estado == 2 %}
 				<input disabled type='submit' value='Guardar' name='submit'/>
 			{% else %}
 				<input type='submit' value='Guardar' name='submit'/>
