@@ -66,6 +66,11 @@ from reportlab.lib.units import inch, cm
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import getSampleStyleSheet
 import copy
+from reportlab.graphics.shapes import Drawing
+from reportlab.lib import colors
+from reportlab.graphics import renderPDF
+
+from apps import mycharts
 
 
 
@@ -4668,7 +4673,7 @@ def reporte_HU_SprintEnCurso(request,proyecto_id,nro_sprint):
         p.drawString(70, y_final,"Descripcion: "+hu.descripcion)
         y_final = y_final - 10
         user_asig = User.objects.get(pk=hu.usuario_Asignado).username
-        p.drawString(70, y_final,"Usuario Asignado: "+user_asig)
+        p.drawString(70, y_final,"Usuario Asighoras reales0nado: "+user_asig)
         y_final = y_final - 10
         
         p.setFont('Helvetica-Bold', 9)
@@ -4840,3 +4845,283 @@ def reporte_HU_porPrioridad(request,proyecto_id,nro_sprint):
     p.showPage()
     p.save()
     return response
+
+from reportlab.graphics.charts.lineplots import  LinePlot
+from reportlab.graphics.widgets.markers import makeMarker
+
+def reporte_tiempo_estimadoPor_Proyecto(request,proyecto_id,nro_sprint):
+    
+    # Create the HttpResponse object with the appropriate PDF headers.
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'filename="Reporte_TiempoEjecucion_Proyecto.pdf"'
+
+    # Create the PDF object, using the response object as its "file."
+    p = canvas.Canvas(response)
+    p.setPageSize(A4)
+    p.setTitle('reporte_HU_SprintEnCurso')
+    now = datetime.now()
+    minute = str(now.minute)
+    if int(now.minute)<10:
+        minute = "0"+str(now.minute)
+    ftime = str(now.day)+"/"+str(now.month)+"/"+str(now.year)+"  "+str(now.hour)+":"+minute
+    
+    p.setLineWidth(.3)
+    
+    p.setFont('Helvetica', 9)
+    p.drawString(50, 805, 'SGPA')
+    p.drawString(480, 805, ftime)
+    p.setFont('Helvetica-Bold', 18)
+    
+    p.drawString(230, 760, "REPORTE")
+    #p.line(10, 750, 590, 750)
+
+    proyecto = Proyectos.objects.get(pk=proyecto_id)
+    p.setFont('Helvetica', 10)
+    p.drawString(50, 720, "TIPO: Reporte de tiempo estimado y ejecucion de proyecto")
+    p.drawString(50, 700, "PROYECTO: "+ proyecto.nombre)
+    
+    usuario = User.objects.get(username = request.user)
+    p.drawString(50, 680, "GENERADO POR: "+ usuario.first_name+ ' '+ usuario.last_name+' ('+usuario.username+')')
+    
+    p.setFont('Helvetica-Bold', 10)
+    p.drawString(50, 620,  "Equipo")
+    p.line(10, 615, 590, 615)
+    
+    y_inicial = 600
+    p.setFont('Helvetica-Bold', 9)
+    p.drawString(70, y_inicial, "Usuario(nick)") 
+    p.drawString(220, y_inicial, "Rol")
+    p.drawString(320, y_inicial, "Email")
+    y_inicial = y_inicial - 15
+    equipo = Equipo.objects.filter(proyecto_id = proyecto_id)
+    
+    
+    p.setFont('Helvetica', 9)
+    
+    aux_user = 0
+    for e in equipo:
+        if y_inicial <= 150:
+            y_inicial = 800
+            p.showPage()
+        if e.usuario_id != aux_user:
+            aux_user = e.usuario_id 
+            user = User.objects.get(id = e.usuario_id)
+            nombre_apellido = user.first_name + " " + user.last_name + " ("+ user.username +")"
+            p.drawString(50, y_inicial, "- "+ nombre_apellido) 
+                 
+           
+            rolEquipo = Equipo.objects.filter(usuario_id = user.id,proyecto_id = proyecto_id)
+            roles = ''
+            
+            p.drawString(300, y_inicial, user.email)                    
+                
+            for r in rolEquipo:        
+                rol = Roles.objects.get(id = r.rol_id)
+                
+                p.drawString(200, y_inicial, "- "+ rol.descripcion) 
+                y_inicial = y_inicial - 12
+            
+        y_inicial = y_inicial - 12
+        
+    y_inicial = y_inicial - 12    
+    p.setFont('Helvetica-Bold', 10)
+    p.drawString(50, y_inicial,  "Proyecto")
+    y_inicial = y_inicial - 5
+    p.line(10, y_inicial, 590, y_inicial)
+    
+    
+    p.setFont('Helvetica', 10)
+    y_inicial = y_inicial - 20
+    p.drawString(70, y_inicial,"Fecha de incio: "+ str(proyecto.fecha_ini_real))
+    y_inicial = y_inicial - 20
+    
+  
+    p.drawString(70, y_inicial,"Dias transcurridos: " + str(date.today() - proyecto.fecha_ini_real))
+    y_inicial = y_inicial - 20
+    
+    if proyecto.nro_sprint > 0:
+        p.drawString(70, y_inicial,"Sprint en curso: " + str(proyecto.nro_sprint))
+    else:
+        p.drawString(70, y_inicial,"Sprint en curso nro.: Ninguno") 
+    
+  
+    
+    sprints = Sprint.objects.filter(proyecto_id = proyecto_id)
+    
+    c = 0
+    for s in sprints:
+        c = c + 1
+        nro_sprint = s.id
+        p.showPage()
+        y_inicial = 770
+        p.setFont('Helvetica-Bold', 10)
+        p.drawString(50, y_inicial,  "Sprint Nro.: " + str(c))
+        y_inicial = y_inicial - 5
+        p.line(10, y_inicial, 590, y_inicial)
+        
+        
+        
+        if Dia_Sprint.objects.filter(sprint_id = nro_sprint).exists():
+            mylista = Dia_Sprint.objects.filter(sprint_id = nro_sprint)
+            h_planeadas = 0
+            h_real = 0
+            # se obtiene el total de las horas planeadas
+            for l in mylista:
+                h_planeadas = h_planeadas + l.tiempo_estimado
+                h_real = h_real + l.tiempo_real
+                aux = h_planeadas
+                
+        p.setFont('Helvetica', 10)
+        y_inicial = y_inicial - 20
+        
+        if  s.estado == 0 :
+            p.drawString(70, y_inicial,"Estado: No iniciado")
+            y_inicial = y_inicial - 20
+        
+        if  s.estado == 1 :
+            p.drawString(70, y_inicial,"Estado: En curso")
+            y_inicial = y_inicial - 20
+        
+        if  s.estado == 2 :
+            p.drawString(70, y_inicial,"Estado: Finalizado")
+            y_inicial = y_inicial - 20
+            
+        p.drawString(70, y_inicial,"Tiempo consumido: " + str(h_real) +' horas')
+        y_inicial = y_inicial - 20
+        
+        if  s.estado == 0 :
+            p.drawString(70, y_inicial,"Tiempo saldo: None")
+            y_inicial = y_inicial - 20
+        else:
+            p.drawString(70, y_inicial,"Tiempo saldo: " + str(aux - h_real) +' horas')
+            y_inicial = y_inicial - 20
+        
+        p.drawString(70, y_inicial,"Fecha de inicio: " + str(s.fecha_ini))
+        y_inicial = y_inicial - 20
+        
+        p.drawString(70, y_inicial,"Fecha estimada de fin: " + str(s.fecha_est_fin))
+        y_inicial = y_inicial - 40
+        
+        
+        p.setFont('Helvetica-Bold', 10)
+        p.drawString(50, y_inicial,  "Tiempo estimado(azul) vs. Tiempo real(rojo)")
+        y_inicial = y_inicial - 5
+        p.line(10, y_inicial, 590, y_inicial)
+        ####draw###
+        
+        d = mycharts.MyLineChartDrawing()
+    
+        #extract the request params of interest.
+        #I suggest having a default for everything.
+        
+        
+        d.height = 200
+        d.chart.height = 200
+        
+    
+        d.width = 300
+        d.chart.width = 300
+       
+        d.title._text = request.session.get('Some custom title')
+        
+    
+    
+        d.XLabel._text = 'Dias'
+        d.YLabel._text = 'Horas'
+    
+        #d.chart.data = [((1,1), (2,2), (2.5,1), (3,3), (4,5))]
+        if  s.estado == 0 :
+           
+            d.chart.data = [((0,0), (0,0), (0,0), (0,0), (0,0))]
+        else: 
+            d.chart.data = datos_SprintBurnDownChart(nro_sprint)
+           
+                
+        
+        labels =  ["Label One","Label Two"]
+        if labels:
+            # set colors in the legend
+            d.Legend.colorNamePairs = []
+            for cnt,label in enumerate(labels):
+                    d.Legend.colorNamePairs.append((d.chart.lines[cnt].strokeColor,label))
+    
+        
+        renderPDF.draw(d, p, 100, 380)
+        
+    p.save()
+        
+        # Close the PDF object cleanly, and we're done.
+    
+    return response
+        
+    
+def datos_SprintBurnDownChart(sprint_id):    
+    ##seccion de codigo que prepara datos para el chart##
+    
+    
+    planeado = []
+    no_planeado = []
+    h_planeadas = 0
+    if Dia_Sprint.objects.filter(sprint_id = sprint_id).exists():
+        mylista = Dia_Sprint.objects.filter(sprint_id = sprint_id)
+        h_planeadas = 0
+        # se obtiene el total de las horas planeadas
+        for l in mylista:
+            h_planeadas = h_planeadas + l.tiempo_estimado
+
+            aux = h_planeadas
+
+        planeado.append(h_planeadas)
+        for l in mylista:
+            if l.tiempo_estimado != 0:
+                planeado.append(aux-l.tiempo_estimado)    
+                aux = aux - l.tiempo_estimado
+
+        aux = h_planeadas
+        no_planeado.append(h_planeadas)
+        
+        for l in mylista:
+            print l.fecha
+            print  l.tiempo_real
+            if l.tiempo_real > 0 :
+                no_planeado.append(aux-l.tiempo_real)    
+                aux = aux - l.tiempo_real
+            
+            elif  l.tiempo_estimado != 0 and l.fecha.strftime("%y/%m/%d") < time.strftime("%y/%m/%d"): 
+                no_planeado.append(aux-l.tiempo_real)    
+                aux = aux - l.tiempo_real
+            
+        ###fin de la seccion##
+        c = 0
+        l= []
+        l1 = []
+        
+        #if (UserStory.objects.filter(sprint = sprint_id).exists()):
+        for p in planeado:
+            l.append(c)
+            c = c+1
+                
+        c = 0
+            
+        for n in no_planeado:
+            l1.append(c)
+            c = c+1
+        #else:
+        #    l.append(0)
+        #    l1.append(0) 
+            
+        zip1 = zip(l,planeado)
+        zip2 = zip(l1, no_planeado)
+        
+        l2 = []
+        l2.append(zip1)
+        l2.append(zip2)
+                       
+         
+        print 'esto es l2'
+        print l2
+        
+    return l2
+       
+    
+
