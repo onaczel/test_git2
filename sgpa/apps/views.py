@@ -1824,7 +1824,7 @@ def gethulog(hulog):
     """
     return hulog.id
 
-def setlog(hu_id):
+def setlog(request, hu_id):
     hu = UserStory.objects.get(pk=hu_id)
     hulog = UserStoryLog()
     hulog.idl = hu
@@ -1835,6 +1835,7 @@ def setlog(hu_id):
     hulog.f_a_estado = hu.f_a_estado
     hulog.f_actividad = hu.f_actividad
     hulog.flujo_posicion = hu.flujo_posicion
+    hulog.user_modificador = request.user
     try:
         hulog.fechahora =  datetime.now() - hulog.fechahora
     except:
@@ -2568,15 +2569,16 @@ def setEstadoHu(request, proyecto_id, hu_id):
                 
             hu.finalizado = False
             hu.save()
-            setlog(hu.id)
+            setlog(request, hu.id)
             modificado = True
             return render_to_response('apps/hu_set_estado.html', {'proyecto':proyecto, 'hu':hu, 'actividades':actividades, 'estados':estados, 'flujo_descripcion':flujo.descripcion, 'misPermisos':mispermisos, 'modificado':modificado, 'user_logged':user_logged}, context_instance = RequestContext(request))
         elif request.POST['submit'] == "Finalizar":
             hu.finalizado = True
             hu.save()
             return render_to_response('apps/hu_set_estado.html', {'proyecto':proyecto, 'hu':hu, 'actividades':actividades, 'estados':estados, 'flujo_descripcion':flujo.descripcion, 'misPermisos':mispermisos, 'user_logged':user_logged}, context_instance = RequestContext(request))
+
+    sprint = Sprint.objects.get(nro_sprint = proyecto.nro_sprint, proyecto_id = proyecto.id)
     
-    sprint = Sprint.objects.get(id = proyecto.nro_sprint, proyecto_id = proyecto.id)
     #return render_to_response('apps/hu_modify_fields.html', {"form":form, "proyecto_id":proyecto_id, "hu_id":hu_id, "hu_descripcion":hu.descripcion, 'misPermisos':mispermisos, 'users':users, 'flujos':flujos, 'proyecto_nombre':proyecto.nombre, 'prioridades':prioridades, 'hu':hu}, context_instance = RequestContext(request))
     return render_to_response('apps/hu_set_estado.html', {'proyecto':proyecto, 'hu':hu, 'actividades':actividades, 'estados':estados, 'flujo_descripcion':flujo.descripcion, 'misPermisos':mispermisos, 'finalizar':finalizar, 'user_logged':user_logged, "sprint":sprint}, context_instance = RequestContext(request))
 
@@ -3007,7 +3009,7 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
                             mensaje = "No se olvide de asignarle un usuario responsable al User Story: " + str(hu_proyecto.nombre)
                             us = False
                             break
-                        setlog(hu_proyecto.id)
+                        setlog(request, hu_proyecto.id)
                     if us and flu:
                         mensaje = iniciarSprint(proyecto_id, sprint.nro_sprint)
                         sprint = []

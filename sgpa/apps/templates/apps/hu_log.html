@@ -75,7 +75,7 @@
 	<table width=100%>
 		<tr>
 			<td><b>Codigo</b></td><td><b>Nombre</b></td><td><b>Sprint</b></td><td><b>Usuario Asignado</b></td><td><b>Flujo</b></td>
-			<td><b>Actividad</b></td><td><b>Estado</b></td>
+			<td><b>Actividad</b></td><td><b>Estado</b></td><td><b>Modificado por</b></td>
 			<td><b>Fecha</b></td>
 		</tr>
 		<tr height=10px ></tr>
@@ -100,6 +100,7 @@
 					<td>{{e.descripcion}}</td>
 				{% endif %}	
 			{% endfor %}
+			<td>{{hulog.user_modificador}}</td>
 			<td>{{hulog.fechahora}}</td>
 		</tr>
 		{% endfor %}

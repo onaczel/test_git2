@@ -246,6 +246,7 @@ class UserStoryLog(models.Model):
     tiempoEstado = models.DateTimeField(null = True)
     usuario_Asignado = models.IntegerField(default = 0, null = True)
     sprint = models.IntegerField(null = True)
+    user_modificador = models.CharField(max_length = 50, null = True)
 
 class Notas(models.Model):
     """
