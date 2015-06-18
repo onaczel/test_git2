@@ -4975,7 +4975,10 @@ def reporte_tiempo_estimadoPor_Proyecto(request,proyecto_id,nro_sprint):
         if  s.estado == 2 :
             p.drawString(70, y_inicial,"Estado: Finalizado")
             y_inicial = y_inicial - 20
-            
+        
+        p.drawString(70, y_inicial,"Tiempo estimado: " + str(aux) +' horas')
+        y_inicial = y_inicial - 20
+        
         p.drawString(70, y_inicial,"Tiempo consumido: " + str(h_real) +' horas')
         y_inicial = y_inicial - 20
         
