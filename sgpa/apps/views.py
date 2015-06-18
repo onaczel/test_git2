@@ -3062,9 +3062,13 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
                         hu = UserStory()
                     if hu.sprint != sprint.nro_sprint:
                         hu.sprint = sprint.nro_sprint
-                        hu.f_actividad = 1
-                        hu.f_a_estado = 1
-                        hu.flujo_posicion = 1
+                        if hu.f_actividad == 0:
+                            hu.f_actividad = 1
+                        if hu.f_a_estado == 0:
+                            hu.f_a_estado = 1
+                        if hu.flujo_posicion == None:
+                            hu.flujo_posicion = 1
+                        hu.usuario_Asignado = 0
                         hu.estado_scrum_id = 2
                         hu.save()
 
