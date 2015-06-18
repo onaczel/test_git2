@@ -126,6 +126,7 @@ urlpatterns = patterns('',
     url(r'^(?P<proyecto_id>\d+)/modproyecto/(?P<nro_sprint>\d+)/Reportes/Reporte_HU_Sprint_en_Curso$', views.reporte_HU_SprintEnCurso, name="reporte_HU_SprintEnCurso"),
     url(r'^(?P<proyecto_id>\d+)/modproyecto/(?P<nro_sprint>\d+)/Reportes/Reporte_HU_por_Prioridad$', views.reporte_HU_porPrioridad, name="reporte_HU_porPrioridad"),
     url(r'^(?P<proyecto_id>\d+)/modproyecto/(?P<nro_sprint>\d+)/Reportes/Reporte_TiempoEjecucion$', views.reporte_tiempo_estimadoPor_Proyecto, name="reporte_tiempo_estimadoPor_Proyecto"),
+    url(r'^(?P<proyecto_id>\d+)/modproyecto/Reportes/reporte_HU_porTiempoEstimado$', views.reporte_HU_porTiempoEstimado, name="reporte_HU_porTiempoEstimado"),
     
     
     #url(r'^modadmin/adminrole/selectrolmod/$', views.selectrolmod, name="selectrolmod"),
