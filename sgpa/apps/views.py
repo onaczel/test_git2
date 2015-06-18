@@ -1306,6 +1306,7 @@ def listelimparticipante(request, proyecto_id):
     @return: render a apps/project_eliminar_participante.html con la lista de usuarios asignados al proyecto y el proyecto en el cual se encuentra
     """
     usuarios = []
+    usuarios_con_hu = []
     proyecto = Proyectos.objects.get(id = proyecto_id)
     equipos = Equipo.objects.filter(proyecto_id = proyecto_id)
     for usuario in User.objects.all():
@@ -1315,9 +1316,13 @@ def listelimparticipante(request, proyecto_id):
                 seEncuentra = True
                 break
         if seEncuentra == True:
-            usuarios.append(usuario)
-
-    return render_to_response("apps/project_eliminar_participante.html", {"usuarios":usuarios, "proyecto":proyecto})
+            hus = UserStory.objects.filter(usuario_Asignado = usuario.id)
+            if not hus:
+                usuarios.append(usuario)
+            else:
+                usuarios_con_hu.append(usuario)
+    user_logged = User.objects.get(username = request.user)
+    return render_to_response("apps/project_eliminar_participante.html", {"usuarios":usuarios, "proyecto":proyecto, "usuarios_con_hu":usuarios_con_hu, "user_logged":user_logged})
 
 def listasigparticipanterol(request, proyecto_id, usuario_id):
     """
