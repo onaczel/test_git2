@@ -2819,6 +2819,7 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
     """
 
     proyecto = Proyectos.objects.get(id = proyecto_id)
+    mispermisos = misPermisos(request.user.id, proyecto_id)
     mensaje = ""
     sprint = []
     fmayor = []
@@ -3402,15 +3403,15 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
     mispermisos = misPermisos(request.user.id, proyecto_id)
     
     if cancelar_hu:
-        return render_to_response('apps/project_sprint_cancelar_hu.html', {"proyecto":proyecto, "userStory":userStory, "sprint":sprint, "mispermisos":mispermisos}, context_instance = RequestContext(request))
+        return render_to_response('apps/project_sprint_cancelar_hu.html', {"proyecto":proyecto, "userStory":userStory, "sprint":sprint, "misPermisos":mispermisos}, context_instance = RequestContext(request))
     elif finalizar_sprint:
-        return render_to_response('apps/project_sprints_analizarhu.html', {"proyecto":proyecto, "sprint":sprint,"hus":hus, "userStory":userStory, "detalles":detalles, "usuario":usuario, "flujo":flujo, "prioridad":prioridad, "f_actividad":f_actividad, "f_a_estado":f_a_estado, "tiempo_hu_registrado":tiempo_hu_registrado, "scrum":scrum, "cant_hus":cant_hus, "mispermisos":mispermisos}, context_instance = RequestContext(request))
+        return render_to_response('apps/project_sprints_analizarhu.html', {"proyecto":proyecto, "sprint":sprint,"hus":hus, "userStory":userStory, "detalles":detalles, "usuario":usuario, "flujo":flujo, "prioridad":prioridad, "f_actividad":f_actividad, "f_a_estado":f_a_estado, "tiempo_hu_registrado":tiempo_hu_registrado, "scrum":scrum, "cant_hus":cant_hus, "misPermisos":mispermisos}, context_instance = RequestContext(request))
     #elif cambiar_fecha:
         #return render_to_response('apps/project_sprint_fecha_fin.html', {"proyecto":proyecto, "sprint":sprint, "fecha_est_fin":fecha_est_fin}, context_instance = RequestContext(request))
     elif planificar:
-        return render_to_response('apps/project_sprint_planificar.html', {"planeado":planeado,"nplaneado":no_planeado,"horasp":h_planeadas,"proyecto":proyecto, "sprint":sprint, "hus":hus, "userStory":userStory, "usuario":usuario, "flujo":flujo, "prioridad":prioridad, "f_actividad":f_actividad, "f_a_estado":f_a_estado, "users":users, "flujos":flujos, "prioridades":prioridades, "scrum":scrum, "horas_sprint_usuario":horas_sprint_usuario, "cant_hus":cant_hus, "mispermisos":mispermisos}, context_instance = RequestContext(request))
+        return render_to_response('apps/project_sprint_planificar.html', {"planeado":planeado,"nplaneado":no_planeado,"horasp":h_planeadas,"proyecto":proyecto, "sprint":sprint, "hus":hus, "userStory":userStory, "usuario":usuario, "flujo":flujo, "prioridad":prioridad, "f_actividad":f_actividad, "f_a_estado":f_a_estado, "users":users, "flujos":flujos, "prioridades":prioridades, "scrum":scrum, "horas_sprint_usuario":horas_sprint_usuario, "cant_hus":cant_hus, "misPermisos":mispermisos}, context_instance = RequestContext(request))
     else:
-        return render_to_response('apps/project_sprints.html', {"proyecto":proyecto, "scrum":scrum, "mensaje":mensaje, "sprints":sprints, "sprint":sprint, "fmayor":fmayor, "fmenor":fmenor, "tiempo_sprint_horas":tiempo_sprint_horas, "hus":hus, "tiempo_hu_estimado":tiempo_hu_estimado, "tiempo_hu_registrado":tiempo_hu_registrado, "userStory":userStory, "usuario":usuario, "users":users, "flujo":flujo, "prioridad":prioridad, "f_actividad":f_actividad, "f_a_estado":f_a_estado, "users":users, "fecha_fin_sprint":fecha_fin_sprint, "cant_hus":cant_hus, "mispermisos":mispermisos, "horas_sprint_usuario":horas_sprint_usuario}, context_instance = RequestContext(request))
+        return render_to_response('apps/project_sprints.html', {"proyecto":proyecto, "scrum":scrum, "mensaje":mensaje, "sprints":sprints, "sprint":sprint, "fmayor":fmayor, "fmenor":fmenor, "tiempo_sprint_horas":tiempo_sprint_horas, "hus":hus, "tiempo_hu_estimado":tiempo_hu_estimado, "tiempo_hu_registrado":tiempo_hu_registrado, "userStory":userStory, "usuario":usuario, "users":users, "flujo":flujo, "prioridad":prioridad, "f_actividad":f_actividad, "f_a_estado":f_a_estado, "users":users, "fecha_fin_sprint":fecha_fin_sprint, "cant_hus":cant_hus, "mispermisos":mispermisos, "horas_sprint_usuario":horas_sprint_usuario, "misPermisos":mispermisos}, context_instance = RequestContext(request))
 
 def sprintsMas(request, proyecto_id, sprint_id, hu_id):
     """
@@ -3975,8 +3976,9 @@ def finalizarProyecto(request, proyecto_id, hu_id):
 
 def reportes(request, proyecto_id):
     proyecto = Proyectos.objects.get(pk = proyecto_id)
-    
-    return render_to_response('apps/project_reportes.html', {'proyecto':proyecto})
+    usuario = User.objects.get(username = request.user)
+    mispermisos = misPermisos(usuario.id, proyecto_id)
+    return render_to_response('apps/project_reportes.html', {'proyecto':proyecto, "misPermisos":mispermisos})
 
 def reporte_por_equipo(request, proyecto_id, nro_sprint):
     # Create the HttpResponse object with the appropriate PDF headers.

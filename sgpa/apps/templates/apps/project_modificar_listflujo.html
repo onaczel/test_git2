@@ -58,6 +58,12 @@
 	</li>
 	{% endif %}
 	
+	{% if misPermisos.VP %}
+	<li>
+		<a href="{% url 'apps:reportes' proyecto.id %}"><i class="fa fa-fw fa-edit"></i>Reportes</a>
+	</li>
+	{% endif %}
+	
 {% endblock %}
 {% block contenido %}
 
@@ -91,10 +97,10 @@
 				</table>
 			</td>
 			<td align="right" height=50px valign="bottom">
-				<br><h5><a href="{% url 'apps:flujosproyectosRequestMod' proyecto.id f.id 0 %}">Modificar</a></h5><br />
+				<br><a href="{% url 'apps:flujosproyectosRequestMod' proyecto.id f.id 0 %}">Modificar</a><br />
 			</td>
-			<td align="right" valign="top">
-				<br><h5><a href="{% url 'apps:flowdeleteproj' proyecto.id f.id %}">Eliminar</a></h5><br />
+			<td align="right" valign="bottom">
+				<br><a href="{% url 'apps:flowdeleteproj' proyecto.id f.id %}">Eliminar</a><br />
 			</td>
 		</tr>
 		<tr height=20px></tr>
