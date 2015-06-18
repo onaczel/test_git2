@@ -3934,7 +3934,7 @@ def reportes(request, proyecto_id):
 def reporte_por_equipo(request, proyecto_id, nro_sprint):
     # Create the HttpResponse object with the appropriate PDF headers.
     response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'filename="Reporte_Trabajos_por_Equipo.pdf"'
+    
 
     # Create the PDF object, using the response object as its "file."
     p = canvas.Canvas(response)
@@ -3944,6 +3944,7 @@ def reporte_por_equipo(request, proyecto_id, nro_sprint):
     if int(now.minute)<10:
         minute = "0"+str(now.minute)
     ftime = str(now.day)+"/"+str(now.month)+"/"+str(now.year)+"  "+str(now.hour)+":"+minute
+    response['Content-Disposition'] = 'filename="Reporte_TiempoEjecucion_Proyecto'+ftime+'.pdf'
     
     p.setLineWidth(.3)
     
@@ -4127,7 +4128,7 @@ def reporte_select_user(request, proyecto_id):
 def reporte_por_usuario(request, proyecto_id, user_id):
     # Create the HttpResponse object with the appropriate PDF headers.
     response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'filename="Reporte_Trabajos_por_Usuario.pdf"'
+    
 
     # Create the PDF object, using the response object as its "file."
     p = canvas.Canvas(response)
@@ -4137,6 +4138,7 @@ def reporte_por_usuario(request, proyecto_id, user_id):
     if int(now.minute)<10:
         minute = "0"+str(now.minute)
     ftime = str(now.day)+"/"+str(now.month)+"/"+str(now.year)+"  "+str(now.hour)+":"+minute
+    response['Content-Disposition'] = 'filename="Reporte_TiempoEjecucion_Proyecto'+ftime+'.pdf'
     
     p.setLineWidth(.3)
     
@@ -4580,7 +4582,7 @@ def reporte_por_usuario(request, proyecto_id, user_id):
 def reporte_HU_SprintEnCurso(request,proyecto_id,nro_sprint):
     # Create the HttpResponse object with the appropriate PDF headers.
     response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'filename="Reporte_Trabajos_por_Equipo.pdf"'
+    
 
     # Create the PDF object, using the response object as its "file."
     p = canvas.Canvas(response)
@@ -4591,6 +4593,8 @@ def reporte_HU_SprintEnCurso(request,proyecto_id,nro_sprint):
     if int(now.minute)<10:
         minute = "0"+str(now.minute)
     ftime = str(now.day)+"/"+str(now.month)+"/"+str(now.year)+"  "+str(now.hour)+":"+minute
+    
+    response['Content-Disposition'] = 'filename="Reporte_TiempoEjecucion_Proyecto'+ftime+'.pdf'
     
     p.setLineWidth(.3)
     
@@ -4741,7 +4745,7 @@ def reporte_HU_SprintEnCurso(request,proyecto_id,nro_sprint):
 def reporte_HU_porPrioridad(request,proyecto_id,nro_sprint):
     # Create the HttpResponse object with the appropriate PDF headers.
     response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'filename="Reporte_Trabajos_por_Equipo.pdf"'
+    
 
     # Create the PDF object, using the response object as its "file."
     p = canvas.Canvas(response)
@@ -4752,6 +4756,8 @@ def reporte_HU_porPrioridad(request,proyecto_id,nro_sprint):
     if int(now.minute)<10:
         minute = "0"+str(now.minute)
     ftime = str(now.day)+"/"+str(now.month)+"/"+str(now.year)+"  "+str(now.hour)+":"+minute
+    
+    response['Content-Disposition'] = 'filename="Reporte_TiempoEjecucion_Proyecto'+ftime+'.pdf'
     
     p.setLineWidth(.3)
     
@@ -4882,7 +4888,7 @@ def reporte_tiempo_estimadoPor_Proyecto(request,proyecto_id,nro_sprint):
     
     # Create the HttpResponse object with the appropriate PDF headers.
     response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'filename="Reporte_TiempoEjecucion_Proyecto.pdf"'
+    
 
     # Create the PDF object, using the response object as its "file."
     p = canvas.Canvas(response)
@@ -4893,6 +4899,8 @@ def reporte_tiempo_estimadoPor_Proyecto(request,proyecto_id,nro_sprint):
     if int(now.minute)<10:
         minute = "0"+str(now.minute)
     ftime = str(now.day)+"/"+str(now.month)+"/"+str(now.year)+"  "+str(now.hour)+":"+minute
+    
+    response['Content-Disposition'] = 'filename="Reporte_TiempoEjecucion_Proyecto'+ftime+'.pdf'
     
     p.setLineWidth(.3)
     
@@ -5078,7 +5086,7 @@ def reporte_tiempo_estimadoPor_Proyecto(request,proyecto_id,nro_sprint):
                     d.Legend.colorNamePairs.append((d.chart.lines[cnt].strokeColor,label))
     
         
-        renderPDF.draw(d, p, 100, 380)
+        renderPDF.draw(d, p, 100, 355)
         
     p.save()
         
