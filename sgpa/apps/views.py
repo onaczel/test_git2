@@ -3948,6 +3948,8 @@ def reporte_por_equipo(request, proyecto_id, nro_sprint):
     p.setLineWidth(.3)
     
     p.setFont('Helvetica', 9)
+    p.drawString(50, 805, 'SGPA')
+    p.setFont('Helvetica', 9)
     p.drawString(480, 805, ftime)
     p.setFont('Helvetica-Bold', 18)    
     p.drawString(230, 760, "REPORTE")
@@ -4142,6 +4144,8 @@ def reporte_por_usuario(request, proyecto_id, user_id):
     
     y_final = 805
     p.setFont('Helvetica', 9)
+    p.setFont('Helvetica', 9)
+    p.drawString(50, y_final, 'SGPA')
     p.drawString(480, y_final, ftime)
     p.setFont('Helvetica-Bold', 18)
     
