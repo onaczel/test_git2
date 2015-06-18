@@ -779,7 +779,11 @@ def asignarpermisosmod(request, user_logged, role_id, proyecto_id):
     @param role_id: Id de un rol registrado en el sistema
     @return: render a apps/role_modified.html 
     """
-    proyecto = Proyectos.objects.get(pk=proyecto_id)
+    
+    try:
+        proyecto = Proyectos.objects.get(pk=proyecto_id)
+    except:
+        proyecto = None
     r = get_object_or_404(Roles, pk=role_id)
     #CONTROLAR!
     lista = request.POST.getlist(u'permisos')
@@ -1073,7 +1077,7 @@ def verProyectos(request, user_logged):
         if not se_repite(eqlist, e.usuario_id, e.proyecto_id):
             equiposlist.append(e)
 
-    
+    proyectoslist = sorted(proyectoslist, key=gethuidsort)
     return render_to_response("apps/project_ver_proyectos.html", {'user_logged':user_logged, 'proyectoslist':proyectoslist, 'usuarioslist':usuarioslist, 'equiposlist':equiposlist})
 
 def se_repite(lista, u_id, p_id):
@@ -1097,6 +1101,8 @@ def verprojusuario(request, user_logged):
         eqlist.append(e)
         if not se_repite(eqlist, e.usuario_id, e.proyecto_id):
             equiposlist.append(e)
+    
+    
 
     return render_to_response('apps/project_ver_proyectos_users.html', {'user_logged':user_logged, 'equiposlist':equiposlist, 'proyectoslist':proyectoslist, 'usuarioslist':usuarioslist})
 
@@ -1160,7 +1166,7 @@ def crearProyecto(request, user_logged):
                 l2.append(user2)
                 enviarMail(asunto, msg, l2)
             
-            return render_to_response('apps/project_add_plantilla.html', {'flujo':flujo,'actividades':actividades, 'p_descripcion':proyecto.descripcion, 'idp':proyecto.id, 'user_logged':user_logged},context_instance=RequestContext(request))
+            return render_to_response('apps/project_add_plantilla.html', {'flujo':flujo,'actividades':actividades, 'p_descripcion':proyecto.nombre, 'idp':proyecto.id, 'user_logged':user_logged},context_instance=RequestContext(request))
             
             
         else:
@@ -1284,8 +1290,12 @@ def listasigparticipante(request, proyecto_id):
                         break
                 if yaListado == False:
                     usuarios.append(usuario)
+    usuarios = sorted(usuarios, key=getnameu)
                 
     return render_to_response("apps/project_asignar_participante.html", {"usuarios":usuarios, "proyecto":proyecto})
+
+def getnameu(user):
+    return user.last_name
 
 def listelimparticipante(request, proyecto_id):
     """
@@ -3982,9 +3992,9 @@ def reporte_por_equipo(request, proyecto_id, nro_sprint):
         nombre_apellido = user.first_name + " " + user.last_name + " ("+ user.username +")"
         p.drawString(50, y_inicial, "- "+ nombre_apellido) 
              
-       
+        
         rolEquipo = Equipo.objects.get(usuario_id = user.id,proyecto_id = proyecto_id)
-                
+
         rol = Roles.objects.get(id = rolEquipo.rol_id)
                     
         p.drawString(200, y_inicial, "- "+ rol.descripcion) 
