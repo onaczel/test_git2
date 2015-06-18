@@ -3983,23 +3983,32 @@ def reporte_por_equipo(request, proyecto_id, nro_sprint):
     y_inicial = y_inicial - 15
     equipo = Equipo.objects.filter(proyecto_id = proyecto_id)
     
+    
     p.setFont('Helvetica', 9)
+    
+    aux_user = 0
     for e in equipo:
         if y_inicial <= 150:
             y_inicial = 800
             p.showPage()
-        user = User.objects.get(id = e.usuario_id)
-        nombre_apellido = user.first_name + " " + user.last_name + " ("+ user.username +")"
-        p.drawString(50, y_inicial, "- "+ nombre_apellido) 
-             
-        
-        rolEquipo = Equipo.objects.get(usuario_id = user.id,proyecto_id = proyecto_id)
-
-        rol = Roles.objects.get(id = rolEquipo.rol_id)
-                    
-        p.drawString(200, y_inicial, "- "+ rol.descripcion) 
-        
-        p.drawString(300, y_inicial, user.email)                    
+        if e.usuario_id != aux_user:
+            aux_user = e.usuario_id 
+            user = User.objects.get(id = e.usuario_id)
+            nombre_apellido = user.first_name + " " + user.last_name + " ("+ user.username +")"
+            p.drawString(50, y_inicial, "- "+ nombre_apellido) 
+                 
+           
+            rolEquipo = Equipo.objects.filter(usuario_id = user.id,proyecto_id = proyecto_id)
+            roles = ''
+            
+            p.drawString(300, y_inicial, user.email)                    
+                
+            for r in rolEquipo:        
+                rol = Roles.objects.get(id = r.rol_id)
+                
+                p.drawString(200, y_inicial, "- "+ rol.descripcion) 
+                y_inicial = y_inicial - 12
+            
         y_inicial = y_inicial - 12
                     
     y_final = y_inicial - 20
@@ -4618,23 +4627,32 @@ def reporte_HU_SprintEnCurso(request,proyecto_id,nro_sprint):
     y_inicial = y_inicial - 15
     equipo = Equipo.objects.filter(proyecto_id = proyecto_id)
     
+    
     p.setFont('Helvetica', 9)
+    
+    aux_user = 0
     for e in equipo:
         if y_inicial <= 150:
             y_inicial = 800
             p.showPage()
-        user = User.objects.get(id = e.usuario_id)
-        nombre_apellido = user.first_name + " " + user.last_name + " ("+ user.username +")"
-        p.drawString(50, y_inicial, "- "+ nombre_apellido) 
-             
-       
-        rolEquipo = Equipo.objects.get(usuario_id = user.id,proyecto_id = proyecto_id)
+        if e.usuario_id != aux_user:
+            aux_user = e.usuario_id 
+            user = User.objects.get(id = e.usuario_id)
+            nombre_apellido = user.first_name + " " + user.last_name + " ("+ user.username +")"
+            p.drawString(50, y_inicial, "- "+ nombre_apellido) 
+                 
+           
+            rolEquipo = Equipo.objects.filter(usuario_id = user.id,proyecto_id = proyecto_id)
+            roles = ''
+            
+            p.drawString(300, y_inicial, user.email)                    
                 
-        rol = Roles.objects.get(id = rolEquipo.rol_id)
-                    
-        p.drawString(200, y_inicial, "- "+ rol.descripcion) 
-        
-        p.drawString(300, y_inicial, user.email)                    
+            for r in rolEquipo:        
+                rol = Roles.objects.get(id = r.rol_id)
+                
+                p.drawString(200, y_inicial, "- "+ rol.descripcion) 
+                y_inicial = y_inicial - 12
+            
         y_inicial = y_inicial - 12
                     
     y_final = y_inicial - 20
@@ -4757,6 +4775,8 @@ def reporte_HU_porPrioridad(request,proyecto_id,nro_sprint):
     p.drawString(50, 620,  "Equipo")
     p.line(10, 615, 590, 615)
     
+    
+    
  
    
     
@@ -4770,23 +4790,32 @@ def reporte_HU_porPrioridad(request,proyecto_id,nro_sprint):
     y_inicial = y_inicial - 15
     equipo = Equipo.objects.filter(proyecto_id = proyecto_id)
     
+    
     p.setFont('Helvetica', 9)
+    
+    aux_user = 0
     for e in equipo:
         if y_inicial <= 150:
             y_inicial = 800
             p.showPage()
-        user = User.objects.get(id = e.usuario_id)
-        nombre_apellido = user.first_name + " " + user.last_name + " ("+ user.username +")"
-        p.drawString(50, y_inicial, "- "+ nombre_apellido) 
-             
-       
-        rolEquipo = Equipo.objects.get(usuario_id = user.id,proyecto_id = proyecto_id)
+        if e.usuario_id != aux_user:
+            aux_user = e.usuario_id 
+            user = User.objects.get(id = e.usuario_id)
+            nombre_apellido = user.first_name + " " + user.last_name + " ("+ user.username +")"
+            p.drawString(50, y_inicial, "- "+ nombre_apellido) 
+                 
+           
+            rolEquipo = Equipo.objects.filter(usuario_id = user.id,proyecto_id = proyecto_id)
+            roles = ''
+            
+            p.drawString(300, y_inicial, user.email)                    
                 
-        rol = Roles.objects.get(id = rolEquipo.rol_id)
-                    
-        p.drawString(200, y_inicial, "- "+ rol.descripcion) 
-        
-        p.drawString(300, y_inicial, user.email)                    
+            for r in rolEquipo:        
+                rol = Roles.objects.get(id = r.rol_id)
+                
+                p.drawString(200, y_inicial, "- "+ rol.descripcion) 
+                y_inicial = y_inicial - 12
+            
         y_inicial = y_inicial - 12
                     
     y_final = y_inicial - 20
