@@ -66,7 +66,9 @@
 		{% csrf_token %}
 		
 			<legend><font color="#888888">Adjuntar archivo</font></legend>
-			
+			<a href="{% url 'apps:versionesAdjunto' proyecto_id hu_id %}"><i class="fa fa-fw fa-edit"></i>Versiones de Archivos</a>
+			</br>
+			</br>
 				<table>
 					<tr>
 						
