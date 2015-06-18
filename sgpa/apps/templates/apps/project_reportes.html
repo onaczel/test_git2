@@ -21,7 +21,7 @@
 	
 	<tr><td><a href="{% url 'apps:reporte_tiempo_estimadoPor_Proyecto' proyecto.id proyecto.nro_sprint %}"><i class="fa fa-fw fa-edit"></i> Lista de tiempo estimado por  proyecto y la ejecución del mismo (graficado, sprint por proyecto)</a></br></br></td></tr>
 	
-	<tr><td><a href="{% url 'apps:reporte_HU_porPrioridad' proyecto.id proyecto.nro_sprint %}"><i class="fa fa-fw fa-edit"></i> El Backlog del Producto, lista ordenada de User Stories, en el orden que esperamos deban terminarse</a></br></br></td></tr>
+	<tr><td><a href="{% url 'apps:reporte_HU_porTiempoEstimado' proyecto.id  %}"><i class="fa fa-fw fa-edit"></i> El Backlog del Producto, lista ordenada de User Stories, en el orden que esperamos deban terminarse</a></br></br></td></tr>
 	
 	<tr><td><a href="{% url 'apps:reporte_HU_SprintEnCurso' proyecto.id proyecto.nro_sprint %}"><i class="fa fa-fw fa-edit"></i> El Backlog del Sprint, lista de los elementos del Backlog del Producto, elegidos para ser desarrollados en el Sprint actual</a></br></br></td></tr>
 	</table>
