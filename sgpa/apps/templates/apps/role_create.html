@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block titulo %}
-<h1>Administrar Roles</p>
+<h1>Administrar Roles</h1>
 {% endblock %}
 {% block encabezado %}
 <h1>Registrar un nuevo Rol</h1>
@@ -15,6 +15,6 @@
 	{% if proyecto %}
 		<a href="{% url 'apps:listrolesproj' proyecto_id %}">Atras</a>
 	{% else %}
-		<a href="{% url 'apps:listrolesmod' user_logged %}">Atras</a><br />
+		<a href="{% url 'apps:listrolesmod' user_logged %}">Atras</a>
 	{% endif %}
 {% endblock %}

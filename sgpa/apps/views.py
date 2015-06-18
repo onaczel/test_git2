@@ -724,6 +724,12 @@ def rolemodify(request, user_logged, role_id):
     @return: render a apps/role_set_permisos_mod.html con una lista de permisos, el id y la descripcion del rol
     """
     rol = get_object_or_404(Roles, pk=role_id)
+    rol_en_uso = False
+    usuarios_roles = []
+    equipos = []
+    roles = []
+    permisos = []
+    mensaje = ""
     if request.method == 'POST':
         form = RoleModifyForm(request.POST)
         if form.is_valid():
@@ -733,9 +739,20 @@ def rolemodify(request, user_logged, role_id):
 
         return rolemodifypermisos(request, user_logged, rol.id, 0)
     else:
-        form = RoleModifyForm(initial={'descripcion':rol.descripcion})
-    
-    return render_to_response('apps/role_modify_form.html' ,{'form':form, "rol":rol , 'user_logged':user_logged, 'proyecto_id':0}, context_instance=RequestContext(request))
+        usuarios_roles = Users_Roles.objects.filter(role_id = role_id)
+        equipos = Equipo.objects.filter(rol_id = role_id)
+        if not usuarios_roles and not equipos:
+            form = RoleModifyForm(initial={'descripcion':rol.descripcion})
+        else:
+            rol_en_uso = True
+            roles = Roles.objects.all()
+            permisos = misPermisos(user_logged, 0)
+            mensaje = "El Rol \"" + str(rol.descripcion) + "\" esta siendo usado por algun usuario"
+        
+    if rol_en_uso:
+        return render_to_response("apps/role_admin.html", {"roles":roles, 'user_logged':user_logged, 'misPermisos':permisos, "mensaje":mensaje})
+    else:
+        return render_to_response('apps/role_modify_form.html' ,{'form':form, "rol":rol , 'user_logged':user_logged, 'proyecto_id':0}, context_instance=RequestContext(request))
     
 def rolemodifypermisos(request, user_logged, role_id, proyecto_id):
     """
@@ -825,12 +842,30 @@ def roledelete(request, user_logged, role_id):
     @param role_id: Id de un rol registrado en el sistema
     @return: render a apps/role_deleted.html
     """
-    r = get_object_or_404(Roles, pk=role_id)
-    
-    r.estado = False
-    r.save()
-    
-    return render_to_response("apps/role_deleted.html",{'user_logged':user_logged}, RequestContext(request))
+    rol_en_uso = False
+    usuarios_roles = []
+    equipos = []
+    roles = []
+    permisos = []
+    mensaje = ""
+    rol = Roles.objects.get(id = role_id)
+    usuarios_roles = Users_Roles.objects.filter(role_id = role_id)
+    equipos = Equipo.objects.filter(rol_id = role_id)
+    if not usuarios_roles and not equipos:
+        r = get_object_or_404(Roles, pk=role_id)
+
+        r.estado = False
+        r.save()
+    else:
+        rol_en_uso = True
+        roles = Roles.objects.all()
+        permisos = misPermisos(user_logged, 0)
+        mensaje = "El Rol \"" + str(rol.descripcion) + "\" esta siendo usado por algun usuario"
+        
+    if rol_en_uso:
+        return render_to_response("apps/role_admin.html", {"roles":roles, 'user_logged':user_logged, 'misPermisos':permisos, "mensaje":mensaje})
+    else:
+        return render_to_response("apps/role_deleted.html",{'user_logged':user_logged}, RequestContext(request))
 
 ###################################################################################################################################################
 
