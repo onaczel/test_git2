@@ -10,14 +10,25 @@
 	{% if users %}
 		{% for user in users %}
 			{% if user.is_active == True and user.id != user_logged.id %}
-				<label><b>{{user.username}}</b></label>
-				{% if misPermisos.MU %}
-					<a href="{% url 'apps:muser' user_logged.id user.id %}">Modificar</a>
-				{% endif %}
-				{% if misPermisos.EU %}
-					<a href="{% url 'apps:deluser' user_logged.id user.id %}">Eliminar</a>
-				{% endif %}
-				<br>
+				<table>
+					<tr>
+						<td width="70px"><label><b>{{user.username}}</b></label></td>
+					
+					
+						<td width="70px">
+							{% if misPermisos.MU %}
+								<a href="{% url 'apps:muser' user_logged.id user.id %}">Modificar</a>
+							{% endif %}
+						</td>
+					
+					
+						<td width="90px">
+							{% if misPermisos.EU %}
+								<a href="{% url 'apps:deluser' user_logged.id user.id %}">Eliminar</a>
+							{% endif %}
+						</td>
+					</tr>
+				</table>
 			{% endif %}
 		{% endfor %}
 	{% else %}

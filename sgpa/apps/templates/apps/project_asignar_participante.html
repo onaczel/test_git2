@@ -6,14 +6,18 @@
 	<h1>{{proyecto.nombre}}</h1>
 {% endblock %}
 {% block contenido %}
-<h2>Asignar Participantes</h2>
+<legend>Asignar Participantes</legend>
 
 {% if usuarios %}
 	<h4>Usuarios disponibles</h4>
 	{% for u in usuarios %}
 		{% if u.id != 1 %}
-			<label> {{u.first_name}} {{u.last_name}} ({{u.username}})</label>
-			<a href="{% url 'apps:listasigparticipanterol' proyecto.id u.id %}">Asignar</a><br /><br />
+			<table>
+				<tr>
+					<td width="180px" height="25px">{{u.first_name}} {{u.last_name}} ({{u.username}})</td>
+					<td><a href="{% url 'apps:listasigparticipanterol' proyecto.id u.id %}">Asignar</a></td>
+				</tr>
+			</table>
 		{% endif %}
 	{% endfor %}
 {% else %}

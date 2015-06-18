@@ -1,16 +1,22 @@
 {% extends 'base.html' %}
 {% block titulo %}
-	<h1>Modulo Proyecto</h1>
+<h1>Modulo Proyecto</h1>
+{% endblock %}
+{% block encabezado %}
+	<h1>{{proyecto.nombre}}</h1>
 {% endblock %}
 {% block contenido %}
-<h4>{{proyecto.nombre}}</h4>
-
+<legend>Eliminar Participantes</legend>
 
 {% if usuarios %}
-	<h3>Usuarios del proyecto</h3>
+	<h4>Usuarios del proyecto</h4>
 	{% for u in usuarios %}
-		<label>{{u.first_name}} {{u.last_name}} ({{u.username}})</label>
-		<a href="{% url 'apps:elimparticipante' proyecto.id u.id %}">Eliminar</a><br /><br />
+		<table>
+			<tr>
+				<td width="150px">{{u.first_name}} {{u.last_name}} ({{u.username}})</td>
+				<td width="70px"><a href="{% url 'apps:elimparticipante' proyecto.id u.id %}">Eliminar</a></td>
+			</tr>
+		</table>
 	{% endfor %}
 {% else %}
 	<p>No se encontro ningun usuario</p>

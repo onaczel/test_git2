@@ -11,14 +11,21 @@
 	<br>
 	{% if flujos %}
 		{% for f in flujos %}
-			<label><b>{{f.descripcion}}</b></label>
-			{% if misPermisos.MPF %}
-				<a href="{% url 'apps:editarflujos' user_logged f.id %}">Modificar</a>
-			{% endif %}
-			{% if misPermisos.EPF %}
-				<a href="{% url 'apps:flowdelete' user_logged f.id %}">Eliminar</a>
-			{% endif %}
-			<br>
+			<table >
+				<tr>
+					<td width="150px"><b>{{f.descripcion}}</b></td>
+					<td width="70px">
+						{% if misPermisos.MPF %}
+							<a href="{% url 'apps:editarflujos' user_logged f.id %}">Modificar</a>
+						{% endif %}
+					</td>
+					<td width="70px">
+						{% if misPermisos.EPF %}
+							<a href="{% url 'apps:flowdelete' user_logged f.id %}">Eliminar</a>
+						{% endif %}
+					</td>
+				</tr>
+			</table>
 		{% endfor %}
 	{% else %}
 		<p>There are no flows in db</p>

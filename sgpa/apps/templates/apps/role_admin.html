@@ -11,14 +11,21 @@
 	{% if roles %}
 	{% for r in roles %}
 		{% if r.estado == True %}
-			<label><b>{{r.descripcion}}</label></b>
-			{% if misPermisos.MR %}
-				<a href="{% url  'apps:rolemodify' user_logged r.id %}">Modificar</a>
-			{% endif %}
-			{% if misPermisos.ER %}
-				<a href="{% url 'apps:roledelete'  user_logged r.id %}">Eliminar</a>
-			{% endif %}
-			<br>
+			<table>
+				<tr>
+					<td width="110px"><b>{{r.descripcion}}</b></td>
+					<td width="70px">
+						{% if misPermisos.MR %}
+							<a href="{% url  'apps:rolemodify' user_logged r.id %}">Modificar</a>
+						{% endif %}
+					</td>
+					<td width="70px">
+						{% if misPermisos.ER %}
+							<a href="{% url 'apps:roledelete'  user_logged r.id %}">Eliminar</a>
+						{% endif %}
+					</td>
+				</tr>
+			</table>
 		{% endif %}
 	{% endfor %}
 {% else %}
