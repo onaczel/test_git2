@@ -724,6 +724,12 @@ def rolemodify(request, user_logged, role_id):
     @return: render a apps/role_set_permisos_mod.html con una lista de permisos, el id y la descripcion del rol
     """
     rol = get_object_or_404(Roles, pk=role_id)
+    rol_en_uso = False
+    usuarios_roles = []
+    equipos = []
+    roles = []
+    permisos = []
+    mensaje = ""
     if request.method == 'POST':
         form = RoleModifyForm(request.POST)
         if form.is_valid():
@@ -733,9 +739,20 @@ def rolemodify(request, user_logged, role_id):
 
         return rolemodifypermisos(request, user_logged, rol.id, 0)
     else:
-        form = RoleModifyForm(initial={'descripcion':rol.descripcion})
-    
-    return render_to_response('apps/role_modify_form.html' ,{'form':form, "rol":rol , 'user_logged':user_logged, 'proyecto_id':0}, context_instance=RequestContext(request))
+        usuarios_roles = Users_Roles.objects.filter(role_id = role_id)
+        equipos = Equipo.objects.filter(rol_id = role_id)
+        if not usuarios_roles and not equipos:
+            form = RoleModifyForm(initial={'descripcion':rol.descripcion})
+        else:
+            rol_en_uso = True
+            roles = Roles.objects.all()
+            permisos = misPermisos(user_logged, 0)
+            mensaje = "El Rol \"" + str(rol.descripcion) + "\" esta siendo usado por algun usuario"
+        
+    if rol_en_uso:
+        return render_to_response("apps/role_admin.html", {"roles":roles, 'user_logged':user_logged, 'misPermisos':permisos, "mensaje":mensaje})
+    else:
+        return render_to_response('apps/role_modify_form.html' ,{'form':form, "rol":rol , 'user_logged':user_logged, 'proyecto_id':0}, context_instance=RequestContext(request))
     
 def rolemodifypermisos(request, user_logged, role_id, proyecto_id):
     """
@@ -825,12 +842,30 @@ def roledelete(request, user_logged, role_id):
     @param role_id: Id de un rol registrado en el sistema
     @return: render a apps/role_deleted.html
     """
-    r = get_object_or_404(Roles, pk=role_id)
-    
-    r.estado = False
-    r.save()
-    
-    return render_to_response("apps/role_deleted.html",{'user_logged':user_logged}, RequestContext(request))
+    rol_en_uso = False
+    usuarios_roles = []
+    equipos = []
+    roles = []
+    permisos = []
+    mensaje = ""
+    rol = Roles.objects.get(id = role_id)
+    usuarios_roles = Users_Roles.objects.filter(role_id = role_id)
+    equipos = Equipo.objects.filter(rol_id = role_id)
+    if not usuarios_roles and not equipos:
+        r = get_object_or_404(Roles, pk=role_id)
+
+        r.estado = False
+        r.save()
+    else:
+        rol_en_uso = True
+        roles = Roles.objects.all()
+        permisos = misPermisos(user_logged, 0)
+        mensaje = "El Rol \"" + str(rol.descripcion) + "\" esta siendo usado por algun usuario"
+        
+    if rol_en_uso:
+        return render_to_response("apps/role_admin.html", {"roles":roles, 'user_logged':user_logged, 'misPermisos':permisos, "mensaje":mensaje})
+    else:
+        return render_to_response("apps/role_deleted.html",{'user_logged':user_logged}, RequestContext(request))
 
 ###################################################################################################################################################
 
@@ -1306,6 +1341,7 @@ def listelimparticipante(request, proyecto_id):
     @return: render a apps/project_eliminar_participante.html con la lista de usuarios asignados al proyecto y el proyecto en el cual se encuentra
     """
     usuarios = []
+    usuarios_con_hu = []
     proyecto = Proyectos.objects.get(id = proyecto_id)
     equipos = Equipo.objects.filter(proyecto_id = proyecto_id)
     for usuario in User.objects.all():
@@ -1315,9 +1351,13 @@ def listelimparticipante(request, proyecto_id):
                 seEncuentra = True
                 break
         if seEncuentra == True:
-            usuarios.append(usuario)
-
-    return render_to_response("apps/project_eliminar_participante.html", {"usuarios":usuarios, "proyecto":proyecto})
+            hus = UserStory.objects.filter(usuario_Asignado = usuario.id)
+            if not hus:
+                usuarios.append(usuario)
+            else:
+                usuarios_con_hu.append(usuario)
+    user_logged = User.objects.get(username = request.user)
+    return render_to_response("apps/project_eliminar_participante.html", {"usuarios":usuarios, "proyecto":proyecto, "usuarios_con_hu":usuarios_con_hu, "user_logged":user_logged})
 
 def listasigparticipanterol(request, proyecto_id, usuario_id):
     """
@@ -2536,8 +2576,9 @@ def setEstadoHu(request, proyecto_id, hu_id):
             hu.save()
             return render_to_response('apps/hu_set_estado.html', {'proyecto':proyecto, 'hu':hu, 'actividades':actividades, 'estados':estados, 'flujo_descripcion':flujo.descripcion, 'misPermisos':mispermisos, 'user_logged':user_logged}, context_instance = RequestContext(request))
     
+    sprint = Sprint.objects.get(id = proyecto.nro_sprint, proyecto_id = proyecto.id)
     #return render_to_response('apps/hu_modify_fields.html', {"form":form, "proyecto_id":proyecto_id, "hu_id":hu_id, "hu_descripcion":hu.descripcion, 'misPermisos':mispermisos, 'users':users, 'flujos':flujos, 'proyecto_nombre':proyecto.nombre, 'prioridades':prioridades, 'hu':hu}, context_instance = RequestContext(request))
-    return render_to_response('apps/hu_set_estado.html', {'proyecto':proyecto, 'hu':hu, 'actividades':actividades, 'estados':estados, 'flujo_descripcion':flujo.descripcion, 'misPermisos':mispermisos, 'finalizar':finalizar, 'user_logged':user_logged}, context_instance = RequestContext(request))
+    return render_to_response('apps/hu_set_estado.html', {'proyecto':proyecto, 'hu':hu, 'actividades':actividades, 'estados':estados, 'flujo_descripcion':flujo.descripcion, 'misPermisos':mispermisos, 'finalizar':finalizar, 'user_logged':user_logged, "sprint":sprint}, context_instance = RequestContext(request))
 
 def userToHU(request, proyecto_id, hu_id):
     """
@@ -2955,15 +2996,17 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
                     us = True
                     flu = True
                     for hu_proyecto in hus_proyecto:
-                        setlog(hu_proyecto.id)
-                        if hu_proyecto.flujo < 0:
+                        print hu_proyecto.flujo
+                        if hu_proyecto.flujo <= 0:
                             mensaje = "No se olvide de asignarle un flujo al User Story: " + str(hu_proyecto.nombre)
                             flu = False
                             break
-                        if hu_proyecto.usuario_Asignado < 0:
+                        print hu_proyecto.usuario_Asignado
+                        if hu_proyecto.usuario_Asignado <= 0:
                             mensaje = "No se olvide de asignarle un usuario responsable al User Story: " + str(hu_proyecto.nombre)
                             us = False
                             break
+                        setlog(hu_proyecto.id)
                     if us and flu:
                         mensaje = iniciarSprint(proyecto_id, sprint.nro_sprint)
                         sprint = []
@@ -3059,9 +3102,13 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
                         hu = UserStory()
                     if hu.sprint != sprint.nro_sprint:
                         hu.sprint = sprint.nro_sprint
-                        hu.f_actividad = 1
-                        hu.f_a_estado = 1
-                        hu.flujo_posicion = 1
+                        if hu.f_actividad == 0:
+                            hu.f_actividad = 1
+                        if hu.f_a_estado == 0:
+                            hu.f_a_estado = 1
+                        if hu.flujo_posicion == None:
+                            hu.flujo_posicion = 1
+                        hu.usuario_Asignado = 0
                         hu.estado_scrum_id = 2
                         hu.save()
 

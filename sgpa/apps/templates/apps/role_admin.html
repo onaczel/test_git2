@@ -3,6 +3,11 @@
 	<h1>Administrar Roles</h1>
 {% endblock %}
 {% block contenido %}
+	{% if mensaje %}
+		<table border=1 bordercolor="red" width=100%>
+			<tr><td align="center"><font color="red"><p>{{mensaje}}</p></font></td></tr>
+		</table>
+	{% endif %}
 	{% if misPermisos.CR %}
 		<a href="{% url  'apps:listpermisos' user_logged %}">Nuevo Rol</a><br />
 	{% endif %}
