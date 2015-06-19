@@ -2593,7 +2593,7 @@ def setEstadoHu(request, proyecto_id, hu_id):
             if cambio:
                 if hu.f_a_estado != 1:
                     #hu.f_a_estado = 1
-                    return render_to_response('apps/hu_set_estado.html', {'proyecto':proyecto, 'hu':hu, 'actividades':actividades, 'estados':estados, 'flujo_descripcion':flujo.descripcion, 'misPermisos':mispermisos, 'modificado':modificado, 'user_logged':user_logged, 'error':True}, context_instance = RequestContext(request))
+                    return render_to_response('apps/hu_set_estado.html', {'proyecto':proyecto, 'hu':hu, 'actividades':actividades, 'estados':estados, 'flujo_descripcion':flujo.descripcion, 'misPermisos':mispermisos, 'modificado':modificado, 'user_logged':user_logged, 'error':True, 'scrum':scrum}, context_instance = RequestContext(request))
                 
             hu.finalizado = False
             try:
