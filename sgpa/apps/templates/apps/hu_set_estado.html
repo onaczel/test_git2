@@ -62,13 +62,20 @@
 {% block contenido %}
 	<legend><font color="#888888">Cambiar Estado</font></legend>
 	{% if hu.finalizado and hu.estado_scrum.id != 5 %}
-		<h4><font color="#FF0000">El User Story esta actualmente en revision</font></h4>
+		<h4><font color="#E18700"><i class="fa fa-fw fa-exclamation"></i>El User Story esta actualmente en revision</font></h4>
+		<br>
 	{% elif hu.estado_scrum.id == 5 %}
-		<h4><font color="#50A850">El User Story ha Finalizado</font></h4>
+		<h4><font color="#0000F0"><i class="fa fa-fw fa-check"></i>El User Story ha Finalizado</font></h4>
+		<br>
 	{% endif %}
 	<br>
 	{% if error %}
-		<p>Solo puede avanzar un estado a la vez</p>
+		<h4><font color="#FF0000"><i class="fa fa-fw fa-close"></i>Solo puede avanzar un estado a la vez</font></h4>
+		<br>
+	{% endif %}
+	{% if modificado %}
+		<h4><font color="#50A850"><i class="fa fa-fw fa-check-square"></i>Los cambios se han guardado correctamente</font></h4>
+		<br>
 	{% endif %}
 	{% if misPermisos.MUS %}
 		<form action="{% url 'apps:setEstadoHu' proyecto.id hu.id %}" method="post">
@@ -240,9 +247,7 @@
 		
 		
 		</form>
-		{% if modificado %}
-			<p>Los cambios se han guardado correctamente</p>
-		{% endif %}
+
 	{% endif %}
 {% endblock %}
 {% block atras %}
