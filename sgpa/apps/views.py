@@ -58,8 +58,7 @@ from django.db import connection
 import StringIO
 from bsddb.dbtables import _data
 from apps.commands import enviarMail, notificarNota, notificarModificacionHU,\
-    notificarRegistroTrabajo, notificarCambioResponsableHU,\
-    notificar_pedido_finalizacion, notificar_finalizacion_HU, es_ScrumMaster
+    notificarRegistroTrabajo, notificarCambioResponsableHU
 from reportlab.platypus.paragraph import Paragraph
 from reportlab.platypus.doctemplate import SimpleDocTemplate
 from reportlab.lib.enums import TA_CENTER, TA_JUSTIFY
@@ -2229,8 +2228,6 @@ def finalizarHu(request, proyecto_id, hu_id):
     hu = UserStory.objects.get(pk=hu_id)
     hu.estado_scrum = Estados_Scrum.objects.get(pk=5)
     hu.save()
-    #notificacion
-    notificar_finalizacion_HU(proyecto_id, hu_id)
     return render_to_response('apps/hu_finalizado.html', {'hu':hu, 'hu_id':hu.id, 'proyecto':proyecto})
  
 def registroHu(request, proyecto_id, hu_id):
@@ -2521,9 +2518,6 @@ def setEstadoHu(request, proyecto_id, hu_id):
     actividades = []
     user_logged = request.user.id
     count = 0
-    
-    es_ScrumMaster(request.user.id,proyecto_id,hu_id)
-    
     for act in actividadeslist:
         if count<=hu.f_actividad:
             actividades.append(act)
@@ -2599,14 +2593,9 @@ def setEstadoHu(request, proyecto_id, hu_id):
         elif request.POST['submit'] == "Finalizar":
             hu.finalizado = True
             hu.save()
-            #notificacion
-            notificar_pedido_finalizacion(request.user.id, proyecto_id, hu_id)
-            
             return render_to_response('apps/hu_set_estado.html', {'proyecto':proyecto, 'hu':hu, 'actividades':actividades, 'estados':estados, 'flujo_descripcion':flujo.descripcion, 'misPermisos':mispermisos, 'user_logged':user_logged}, context_instance = RequestContext(request))
 
     sprint = Sprint.objects.get(nro_sprint = proyecto.nro_sprint, proyecto_id = proyecto.id)
-    #notificacion
-    es_ScrumMaster(request.user.id,proyecto_id,hu_id)
     
     #return render_to_response('apps/hu_modify_fields.html', {"form":form, "proyecto_id":proyecto_id, "hu_id":hu_id, "hu_descripcion":hu.descripcion, 'misPermisos':mispermisos, 'users':users, 'flujos':flujos, 'proyecto_nombre':proyecto.nombre, 'prioridades':prioridades, 'hu':hu}, context_instance = RequestContext(request))
     
