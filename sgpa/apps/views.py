@@ -2537,7 +2537,7 @@ def setEstadoHu(request, proyecto_id, hu_id):
     user_logged = request.user.id
     count = 0
     
-        es_ScrumMaster(request.user.id,proyecto_id,hu_id)
+    es_ScrumMaster(request.user,proyecto_id,hu_id)
     
     for act in actividadeslist:
         if count<=hu.f_actividad:
@@ -2622,7 +2622,7 @@ def setEstadoHu(request, proyecto_id, hu_id):
 
     sprint = Sprint.objects.get(nro_sprint = proyecto.nro_sprint, proyecto_id = proyecto.id)
     #notificacion
-    es_ScrumMaster(request.user.id,proyecto_id,hu_id)
+    es_ScrumMaster(request.user,proyecto_id,hu_id)
     
     #return render_to_response('apps/hu_modify_fields.html', {"form":form, "proyecto_id":proyecto_id, "hu_id":hu_id, "hu_descripcion":hu.descripcion, 'misPermisos':mispermisos, 'users':users, 'flujos':flujos, 'proyecto_nombre':proyecto.nombre, 'prioridades':prioridades, 'hu':hu}, context_instance = RequestContext(request))
     
