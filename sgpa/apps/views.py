@@ -2537,7 +2537,7 @@ def setEstadoHu(request, proyecto_id, hu_id):
     user_logged = request.user.id
     count = 0
     
-    es_ScrumMaster(request.user.id,proyecto_id,hu_id)
+    
     
     for act in actividadeslist:
         if count<=hu.f_actividad:
@@ -2609,13 +2609,14 @@ def setEstadoHu(request, proyecto_id, hu_id):
             hu.save()
             setlog(request, hu.id)
             modificado = True
-
+            #notificacion
+            es_ScrumMaster(request.user.id,proyecto_id,hu_id)
             return render_to_response('apps/hu_set_estado.html', {'proyecto':proyecto, 'hu':hu, 'actividades':actividades, 'estados':estados, 'flujo_descripcion':flujo.descripcion, 'misPermisos':mispermisos, 'modificado':modificado, 'user_logged':user_logged}, context_instance = RequestContext(request))
         elif request.POST['submit'] == "Finalizar":
             hu.finalizado = True
             hu.save()
             #notificacion
-            notificar_pedido_finalizacion(request.user.id, proyecto_id, hu_id)
+            notificar_pedido_finalizacion(proyecto_id, hu_id)
             
             return render_to_response('apps/hu_set_estado.html', {'proyecto':proyecto, 'hu':hu, 'actividades':actividades, 'estados':estados, 'flujo_descripcion':flujo.descripcion, 'misPermisos':mispermisos, 'user_logged':user_logged}, context_instance = RequestContext(request))
 
