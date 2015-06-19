@@ -1,5 +1,6 @@
 import os
 from __builtin__ import True
+import random
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'apps.settings')
 
 import django
@@ -230,7 +231,7 @@ def add_hu(proyecto_id, codigo, nombre, descripcion):
     us.nombre = nombre
     us.descripcion = descripcion
     us.codigo = codigo
-    us.tiempo_Estimado = 50
+    us.tiempo_Estimado = random.randint(20, 70)
     us.valor_Negocio = 5
     us.valor_Tecnico = 5
     us.prioridad = Prioridad.objects.get(pk=3)

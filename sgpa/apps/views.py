@@ -58,7 +58,8 @@ from django.db import connection
 import StringIO
 from bsddb.dbtables import _data
 from apps.commands import enviarMail, notificarNota, notificarModificacionHU,\
-    notificarRegistroTrabajo, notificarCambioResponsableHU
+    notificarRegistroTrabajo, notificarCambioResponsableHU,\
+    notificar_pedido_finalizacion, notificar_finalizacion_HU, es_ScrumMaster
 from reportlab.platypus.paragraph import Paragraph
 from reportlab.platypus.doctemplate import SimpleDocTemplate
 from reportlab.lib.enums import TA_CENTER, TA_JUSTIFY
@@ -2243,6 +2244,8 @@ def finalizarHu(request, proyecto_id, hu_id):
     hu = UserStory.objects.get(pk=hu_id)
     hu.estado_scrum = Estados_Scrum.objects.get(pk=5)
     hu.save()
+    #notificacion
+    notificar_finalizacion_HU(proyecto_id, hu_id)
     return render_to_response('apps/hu_finalizado.html', {'hu':hu, 'hu_id':hu.id, 'proyecto':proyecto})
  
 def registroHu(request, proyecto_id, hu_id):
@@ -2533,6 +2536,9 @@ def setEstadoHu(request, proyecto_id, hu_id):
     actividades = []
     user_logged = request.user.id
     count = 0
+    
+        es_ScrumMaster(request.user.id,proyecto_id,hu_id)
+    
     for act in actividadeslist:
         if count<=hu.f_actividad:
             actividades.append(act)
@@ -2603,14 +2609,20 @@ def setEstadoHu(request, proyecto_id, hu_id):
             hu.save()
             setlog(request, hu.id)
             modificado = True
-
+            
             return render_to_response('apps/hu_set_estado.html', {'proyecto':proyecto, 'hu':hu, 'actividades':actividades, 'estados':estados, 'flujo_descripcion':flujo.descripcion, 'misPermisos':mispermisos, 'modificado':modificado, 'user_logged':user_logged}, context_instance = RequestContext(request))
         elif request.POST['submit'] == "Finalizar":
             hu.finalizado = True
             hu.save()
+            #notificacion
+            notificar_pedido_finalizacion(request.user.id, proyecto_id, hu_id)
+            
+
             return render_to_response('apps/hu_set_estado.html', {'proyecto':proyecto, 'hu':hu, 'actividades':actividades, 'estados':estados, 'flujo_descripcion':flujo.descripcion, 'misPermisos':mispermisos, 'user_logged':user_logged}, context_instance = RequestContext(request))
 
     sprint = Sprint.objects.get(nro_sprint = proyecto.nro_sprint, proyecto_id = proyecto.id)
+    #notificacion
+    es_ScrumMaster(request.user.id,proyecto_id,hu_id)
     
     #return render_to_response('apps/hu_modify_fields.html', {"form":form, "proyecto_id":proyecto_id, "hu_id":hu_id, "hu_descripcion":hu.descripcion, 'misPermisos':mispermisos, 'users':users, 'flujos':flujos, 'proyecto_nombre':proyecto.nombre, 'prioridades':prioridades, 'hu':hu}, context_instance = RequestContext(request))
     
@@ -4073,6 +4085,11 @@ def reporte_por_equipo(request, proyecto_id, nro_sprint):
     p.setFont('Helvetica', 10)
     p.drawString(50, 720, "TIPO: Reporte de trabajos por Equipo")
     p.drawString(50, 700, "PROYECTO: "+ proyecto.nombre)
+    try:
+        estado = Estados_Scrum.objects.get(id = proyecto.estado_id) 
+        p.drawString(300, 700, "ESTADO: "+ estado.descripcion)
+    except:
+        pass
     p.drawString(50, 680, "SPRINT Nro.: "+ str(proyecto.nro_sprint))
     usuario = User.objects.get(username = request.user)
     p.drawString(50, 660, "GENERADO POR: "+ usuario.first_name+ ' '+ usuario.last_name+' ('+usuario.username+')')
@@ -4267,6 +4284,11 @@ def reporte_por_usuario(request, proyecto_id, user_id):
     p.setFont('Helvetica', 10)
     p.drawString(50, 720, "TIPO: Reporte de trabajos por usuario")
     p.drawString(50, 700, "PROYECTO: "+ proyecto.nombre)
+    try:
+        estado = Estados_Scrum.objects.get(id = proyecto.estado_id) 
+        p.drawString(300, 700, "ESTADO: "+ estado.descripcion)
+    except:
+        pass
     p.drawString(50, 680, "SPRINT Nro.: "+ str(proyecto.nro_sprint))
     user = User.objects.get(pk=user_id)
     nombre_apellido = user.first_name + " " + user.last_name + " ("+ user.username +")"
@@ -4733,6 +4755,11 @@ def reporte_HU_SprintEnCurso(request,proyecto_id,nro_sprint):
     p.setFont('Helvetica', 10)
     p.drawString(50, 720, "TIPO: Reporte de user stories a ser desarrollados en el sprint actual")
     p.drawString(50, 700, "PROYECTO: "+ proyecto.nombre)
+    try:
+        estado = Estados_Scrum.objects.get(id = proyecto.estado_id) 
+        p.drawString(300, 700, "ESTADO: "+ estado.descripcion)
+    except:
+        pass
     p.drawString(50, 680, "SPRINT Nro.: "+ str(proyecto.nro_sprint))
     usuario = User.objects.get(username = request.user)
     p.drawString(50, 660, "GENERADO POR: "+ usuario.first_name+ ' '+ usuario.last_name+' ('+usuario.username+')')
@@ -4898,6 +4925,11 @@ def reporte_HU_porPrioridad(request,proyecto_id,nro_sprint):
     p.setFont('Helvetica', 10)
     p.drawString(50, 720, "TIPO: Reporte de user stories ordenados segun prioridad de terminacion")
     p.drawString(50, 700, "PROYECTO: "+ proyecto.nombre)
+    try:
+        estado = Estados_Scrum.objects.get(id = proyecto.estado_id) 
+        p.drawString(300, 700, "ESTADO: "+ estado.descripcion)
+    except:
+        pass
     p.drawString(50, 680, "SPRINT Nro.: "+ str(proyecto.nro_sprint))
     usuario = User.objects.get(username = request.user)
     p.drawString(50, 660, "GENERADO POR: "+ usuario.first_name+ ' '+ usuario.last_name+' ('+usuario.username+')')
@@ -5079,6 +5111,11 @@ def reporte_tiempo_estimadoPor_Proyecto(request,proyecto_id,nro_sprint):
     p.setFont('Helvetica', 10)
     p.drawString(50, 720, "TIPO: Reporte de tiempo estimado y ejecucion de proyecto")
     p.drawString(50, 700, "PROYECTO: "+ proyecto.nombre)
+    try:
+        estado = Estados_Scrum.objects.get(id = proyecto.estado_id) 
+        p.drawString(300, 700, "ESTADO: "+ estado.descripcion)
+    except:
+        pass
     
     usuario = User.objects.get(username = request.user)
     p.drawString(50, 680, "GENERADO POR: "+ usuario.first_name+ ' '+ usuario.last_name+' ('+usuario.username+')')
@@ -5358,6 +5395,11 @@ def reporte_HU_porTiempoEstimado(request,proyecto_id):
     p.setFont('Helvetica', 10)
     p.drawString(50, 720, "TIPO: Resporte de user stories ordenados segun tiempo estimado de finalizacion")
     p.drawString(50, 700, "PROYECTO: "+ proyecto.nombre)
+    try:
+        estado = Estados_Scrum.objects.get(id = proyecto.estado_id) 
+        p.drawString(300, 700, "ESTADO: "+ estado.descripcion)
+    except:
+        pass
     p.drawString(50, 680, "SPRINT Nro.: "+ str(proyecto.nro_sprint))
     usuario = User.objects.get(username = request.user)
     p.drawString(50, 660, "GENERADO POR: "+ usuario.first_name+ ' '+ usuario.last_name+' ('+usuario.username+')')
