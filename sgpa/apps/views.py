@@ -1450,7 +1450,7 @@ def accionesproyecto(request, proyecto_id):
         scrum = True
     
         
-    return render_to_response("apps/project_acciones.html", {"proyecto":proyecto, 'scrum':scrum, 'user_logged':user_logged, "usuario":request.user, "misPermisos":mispermisos, 'equipo':uroles,'users':users, 'roles':roles, 'flujo':flujo, 'actividades':actividades, 'hus':hus, 'tamanolista':tamanolista})
+    return render_to_response("apps/project_acciones.html", {"proyecto":proyecto, 'scrum':scrum, 'user_logged':user_logged, "usuario":request.user, "misPermisos":mispermisos, 'equipo':uroles,'users':users, 'roles':roles, 'flujo':flujo, 'actividades':actividades, 'hus':hus, 'tamanolista':tamanolista}, context_instance=RequestContext(request))
 
 def is_in_list(list, o_id):
     """
