@@ -4041,12 +4041,25 @@ def projectDetalles(request, proyecto_id):
     return render_to_response('apps/project_detalles.html',{'flujos':flujos,'proyecto':proyecto, 'misPermisos':mispermisos, 'scrum':scrumMaster,'clientes':clientes, "estado":estado},context_instance=RequestContext(request))
 
 def reportes(request, proyecto_id):
+    """
+    Genera una pagina con las opciones de reporte
+    @param request: http request
+    @param proyecto_id: Id del proyecto
+    @return: render a apps/project_reportes.html
+    """
     proyecto = Proyectos.objects.get(pk = proyecto_id)
     usuario = User.objects.get(username = request.user)
     mispermisos = misPermisos(usuario.id, proyecto_id)
     return render_to_response('apps/project_reportes.html', {'proyecto':proyecto, "misPermisos":mispermisos})
 
 def reporte_por_equipo(request, proyecto_id, nro_sprint):
+    """
+    Genera un reporte de user stories desarrollados por un equipo 
+    @param request: http request
+    @param proyecto_id: Id del proyecto
+    @param nro_sprint: Id del sprint 
+    @return: response, con el reporte en formato pdf  
+    """
     # Create the HttpResponse object with the appropriate PDF headers.
     response = HttpResponse(content_type='application/pdf')
     
@@ -4251,6 +4264,13 @@ def reporte_select_user(request, proyecto_id):
     return render_to_response('apps/project_report_select_user.html', {'proyecto':proyecto, 'users_asig':users_asig})
 
 def reporte_por_usuario(request, proyecto_id, user_id):
+    """
+    Genera un reporte de trabajos realizados por un usuario
+    @param request: http request
+    @param proyecto_id: Id del proyecto
+    @param user_id: Id del usuario 
+    @return: response, con el reporte en formato pdf  
+    """
     # Create the HttpResponse object with the appropriate PDF headers.
     response = HttpResponse(content_type='application/pdf')
     
@@ -4724,6 +4744,14 @@ def reporte_por_usuario(request, proyecto_id, user_id):
 
         
 def reporte_HU_SprintEnCurso(request,proyecto_id,nro_sprint):
+    """
+    Genera un reporte de user stories a ser desarrollados en el sprint actual
+    @param request: http request
+    @param proyecto_id: Id del proyecto
+    @param nro_sprint: Id del sprint 
+    @return: response, con el reporte en formato pdf  
+    """
+    
     # Create the HttpResponse object with the appropriate PDF headers.
     response = HttpResponse(content_type='application/pdf')
     
@@ -4894,6 +4922,14 @@ def reporte_HU_SprintEnCurso(request,proyecto_id,nro_sprint):
     return response
 
 def reporte_HU_porPrioridad(request,proyecto_id,nro_sprint):
+    """
+    Genera un reporte de que contiene una lista de user stories ordenadas segun prioridad
+    @param request: http request
+    @param proyecto_id: Id del proyecto
+    @param nro_sprint: Id del sprint 
+    @return: response, con el reporte en formato pdf  
+    """
+    
     # Create the HttpResponse object with the appropriate PDF headers.
     response = HttpResponse(content_type='application/pdf')
     
@@ -5079,6 +5115,13 @@ from reportlab.graphics.charts.lineplots import  LinePlot
 from reportlab.graphics.widgets.markers import makeMarker
 
 def reporte_tiempo_estimadoPor_Proyecto(request,proyecto_id,nro_sprint):
+    """
+    Genera un reporte de que contiene informacion acerca del estado y ejecucion de un proyecto
+    @param request: http request
+    @param proyecto_id: Id del proyecto
+    @param nro_sprint: Id del sprint 
+    @return: response, con el reporte en formato pdf  
+    """
     
     # Create the HttpResponse object with the appropriate PDF headers.
     response = HttpResponse(content_type='application/pdf')
@@ -5295,7 +5338,11 @@ def reporte_tiempo_estimadoPor_Proyecto(request,proyecto_id,nro_sprint):
         
     
 def datos_SprintBurnDownChart(sprint_id):    
-    ##seccion de codigo que prepara datos para el chart##
+    """
+    Prepara una lista con los datos para generar un sprint burndown chart
+    @param sprint_id: Id del sprint
+    @return: lista con los datos necesarios para crear un sprint burndownchart  
+    """
     
     
     planeado = []
@@ -5364,6 +5411,12 @@ def datos_SprintBurnDownChart(sprint_id):
        
     
 def reporte_HU_porTiempoEstimado(request,proyecto_id):
+    """
+    Genera un reporte de que contiene los user stories ordenados por tiempo estimado de desarrollo
+    @param request: http request
+    @param proyecto_id: Id del proyecto
+    @return: response, con el reporte en formato pdf  
+    """
     # Create the HttpResponse object with the appropriate PDF headers.
     response = HttpResponse(content_type='application/pdf')
     
