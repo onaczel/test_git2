@@ -90,7 +90,7 @@
 								{% endfor %} 
 						</select>
 						</td>
-					{% elif hu.estado_scrum.id == 5 %}
+					{% elif hu.estado_scrum.id > 5 %}
 						<td width=100>
 						<select disabled name="act"  style="width:190px;" sort = true>
 								{% for actividad in actividades %}
@@ -161,7 +161,7 @@
 								{% endfor %} 
 						</select>
 						</td>
-					{% elif hu.estado_scrum.id == 5 %}
+					{% elif hu.estado_scrum.id > 5 %}
 						<td>
 						<select disabled name="est"  style="width:190px;" sort = true  >
 								{% for e in estados %}
@@ -173,6 +173,20 @@
 								{% endfor %} 
 						</select>
 						</td>
+					{% elif modificado and user_logged != hu.usuario_Asignado %}
+						<td>
+						<select disabled name="est"  style="width:190px;" sort = true  >
+								{% for e in estados %}
+									{% if e.id == hu.f_a_estado %}
+										<option selected="selected">{{e.descripcion}}</option>
+									{% else %}
+										<option >{{e.descripcion}}</option>
+									{% endif %}
+								{% endfor %} 
+						</select>
+						</td>
+					
+
 					{% else %}
 						{% if estados %}
 						<td>
@@ -206,8 +220,17 @@
 			</table>
 			{% if hu.finalizado == True and hu.usuario_Asignado == user_logged %}
 				<input disabled type='submit' value='Guardar' name='submit'/>
-			{% elif hu.estado_scrum.id == 5 or sprint.estado == 2 %}
+			{% elif hu.estado_scrum.id > 5 or sprint.estado == 2  %}
 				<input disabled type='submit' value='Guardar' name='submit'/>
+			{% elif modificado and user_logged != hu.usuario_Asignado %}
+				<input disabled type='submit' value='Guardar' name='submit'/>
+			{% elif scrum %}
+				
+				<br>
+				<legend><font color="#888888">Motivo de Cambio de Estado</font></legend>
+				<textarea rows="4" cols="50" name="motivo"></textarea>
+				<br><br>
+				<input type='submit' value='Guardar' name='submit'/>
 			{% else %}
 				<input type='submit' value='Guardar' name='submit'/>
 			{% endif %}	

@@ -167,6 +167,7 @@ class UserStory(models.Model):
     #notas = models.CharField(max_length = 512, null = True)
     estado_scrum = models.ForeignKey(Estados_Scrum, null = True)
     motivo_cancelacion = models.CharField(max_length = 512, null = True)
+    motivo_cambio_estado = models.CharField(max_length = 120, null = True)
 
 class UserStoryVersiones(models.Model):
     """
@@ -247,6 +248,7 @@ class UserStoryLog(models.Model):
     usuario_Asignado = models.IntegerField(default = 0, null = True)
     sprint = models.IntegerField(null = True)
     user_modificador = models.CharField(max_length = 50, null = True)
+    motivo_cambio_estado = models.CharField(max_length = 120, null = True)
 
 class Notas(models.Model):
     """

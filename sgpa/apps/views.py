@@ -1836,6 +1836,7 @@ def setlog(request, hu_id):
     hulog.f_actividad = hu.f_actividad
     hulog.flujo_posicion = hu.flujo_posicion
     hulog.user_modificador = request.user
+    hulog.motivo_cambio_estado = hu.motivo_cambio_estado
     try:
         hulog.fechahora =  datetime.now() - hulog.fechahora
     except:
@@ -2537,6 +2538,10 @@ def setEstadoHu(request, proyecto_id, hu_id):
     if hu.f_actividad == len(Actividades.objects.filter(flujo_id = hu.flujo)) and hu.f_a_estado == 3:
         finalizar = True
     
+    scrum = False
+    if len(Equipo.objects.filter(proyecto_id = proyecto_id, rol_id = 3, usuario_id = user_logged))>0:
+        scrum = True
+        
     ordenact = 0
     
     if request.method == 'POST':
@@ -2562,15 +2567,28 @@ def setEstadoHu(request, proyecto_id, hu_id):
             
             hu.f_a_estado = Estados.objects.get(descripcion = request.POST['est']).id
             
+            estadoslist = Estados.objects.all()
+            estados = []
+            count = 0
+            for est in estadoslist:
+                if count<=hu.f_a_estado:
+                    estados.append(est)
+                count = count + 1
+                
             if cambio:
                 if hu.f_a_estado != 1:
                     #hu.f_a_estado = 1
                     return render_to_response('apps/hu_set_estado.html', {'proyecto':proyecto, 'hu':hu, 'actividades':actividades, 'estados':estados, 'flujo_descripcion':flujo.descripcion, 'misPermisos':mispermisos, 'modificado':modificado, 'user_logged':user_logged, 'error':True}, context_instance = RequestContext(request))
                 
             hu.finalizado = False
+            try:
+                hu.motivo_cambio_estado = request.POST['motivo']
+            except:
+                hu.motio_cambio_estado = None
             hu.save()
             setlog(request, hu.id)
             modificado = True
+
             return render_to_response('apps/hu_set_estado.html', {'proyecto':proyecto, 'hu':hu, 'actividades':actividades, 'estados':estados, 'flujo_descripcion':flujo.descripcion, 'misPermisos':mispermisos, 'modificado':modificado, 'user_logged':user_logged}, context_instance = RequestContext(request))
         elif request.POST['submit'] == "Finalizar":
             hu.finalizado = True
@@ -2580,7 +2598,8 @@ def setEstadoHu(request, proyecto_id, hu_id):
     sprint = Sprint.objects.get(nro_sprint = proyecto.nro_sprint, proyecto_id = proyecto.id)
     
     #return render_to_response('apps/hu_modify_fields.html', {"form":form, "proyecto_id":proyecto_id, "hu_id":hu_id, "hu_descripcion":hu.descripcion, 'misPermisos':mispermisos, 'users':users, 'flujos':flujos, 'proyecto_nombre':proyecto.nombre, 'prioridades':prioridades, 'hu':hu}, context_instance = RequestContext(request))
-    return render_to_response('apps/hu_set_estado.html', {'proyecto':proyecto, 'hu':hu, 'actividades':actividades, 'estados':estados, 'flujo_descripcion':flujo.descripcion, 'misPermisos':mispermisos, 'finalizar':finalizar, 'user_logged':user_logged, "sprint":sprint}, context_instance = RequestContext(request))
+    
+    return render_to_response('apps/hu_set_estado.html', {'proyecto':proyecto, 'hu':hu, 'actividades':actividades, 'estados':estados, 'flujo_descripcion':flujo.descripcion, 'misPermisos':mispermisos, 'finalizar':finalizar, 'user_logged':user_logged, "sprint":sprint, 'scrum':scrum}, context_instance = RequestContext(request))
 
 def userToHU(request, proyecto_id, hu_id):
     """
