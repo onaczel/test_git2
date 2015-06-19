@@ -260,7 +260,50 @@ class test_templates(TestCase):
         
             self.assertTemplateUsed(resp, 'hu_registro.html')         
             
-  
+    def test_ver_templateReportes(self):
+            """
+            Prueba de visualizacion del template donde esta la lista de reportes
+            """
+            self.factory = RequestFactory()
+            resp= self.factory.get('/apps/project_reportes')
+        
+            self.assertTemplateUsed(resp, 'project_reportes.html')
+    
+    def test_ver_templateNotas(self):
+            """
+            Prueba de visualizacion del template donde se asignan notas
+            """
+            self.factory = RequestFactory()
+            resp= self.factory.get('/apps/hu_asignar_notas')
+        
+            self.assertTemplateUsed(resp, 'hu_asignar_notas.html')
+    
+    def test_ver_templateProyecto(self):
+            """
+            Prueba de visualizacion del template de la pagina principal de proyecto
+            """
+            self.factory = RequestFactory()
+            resp= self.factory.get('/apps/project_index')
+        
+            self.assertTemplateUsed(resp, 'project_index.html')
+            
+    def test_ver_templateSprintBacklog(self):
+            """
+            Prueba de visualizacion del template de la pagina de sprint backlog
+            """
+            self.factory = RequestFactory()
+            resp= self.factory.get('/apps/project_sprint_backlog_list')
+        
+            self.assertTemplateUsed(resp, 'project_sprint_backlog_list.html')
+            
+    def test_ver_templateHUNotas(self):
+            """
+            Prueba de visualizacion del template de la pagina donde se asignan notas al hu
+            """
+            self.factory = RequestFactory()
+            resp= self.factory.get('/apps/hu_asignar_notas')
+        
+            self.assertTemplateUsed(resp, 'hu_asignar_notas.html')
 
 class test_login(TestCase):
     
