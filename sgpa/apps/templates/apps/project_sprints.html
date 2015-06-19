@@ -267,9 +267,12 @@
 														{% endif %}
 													{% elif hu.estado_scrum_id == 6 %}
 														<td>
-															<select name="flujo"  style="width:90px">
+															<textarea disabled rows="4" cols="20">
+																{{hu.motivo_cancelacion}}
+															</textarea>
+															<!-- <select name="flujo"  style="width:90px">
 																<option>{{hu.motivo_cancelacion}}</option>
-															</select>
+															</select> -->
 														</td>
 													{% endif %}
 												</form>
