@@ -163,10 +163,7 @@ def notificar_pedido_finalizacion(proyecto_id, hu_id):
     list = []
     list.append(scrumMaster)
     asunto = 'SGPA - Revision de finalizacion de User Story'
-    msg = 'Scrum Master :'+scrumMaster.username+', el usuario: '+usuario.username+ 'ha solicitado la revision del user story: '+hu.nombre\
-    +' para su posterior finalizacion \n'\
-    +' Proyecto: '+proyecto.nombre \
-    +'\n Sprint nro.:' + proyecto.nro_sprint
+    msg = 'Scrum Master: '+scrumMaster.username+', el usuario: '+usuario.username+ ' ha solicitado la revision del user story: '+hu.nombre+' para su posterior finalizacion \n'+'\n    Proyecto: '+proyecto.nombre+'\n    Sprint nro.: ' + str(proyecto.nro_sprint)
     enviarMail(asunto, msg, list)
     
 
@@ -186,9 +183,7 @@ def notificar_finalizacion_HU(proyecto_id, hu_id):
     list = []
     list.append(usuario)
     asunto = 'SGPA - Finalizacion de User Story'
-    msg = 'Usuario :'+usuario.username+', el scrum master: '+scrumMaster.username+ 'ha dado por finalizado el user story: '+hu.nombre\
-    +' Proyecto: '+proyecto.nombre \
-    +'\n Sprint nro.:' + proyecto.nro_sprint
+    msg = 'Usuario: '+usuario.username+', el scrum master: '+scrumMaster.username+ ' ha dado por finalizado el user story: '+hu.nombre+'\n    Proyecto: '+proyecto.nombre+'\n    Sprint nro.: ' + str(proyecto.nro_sprint)
     enviarMail(asunto, msg, list)
     
 def es_ScrumMaster(user_id, proyecto_id, hu_id):
@@ -213,11 +208,5 @@ def es_ScrumMaster(user_id, proyecto_id, hu_id):
         list = []
         list.append(usuario_asignado)
         asunto = 'SGPA - Finalizacion rechazada de User Story'
-        msg = 'Usuario :'+usuario_asignado.username+', el scrum master: '+scrumMaster.username+ 'no ha dado por finalizado el user story: '+hu.nombre\
-        
-        +'\nDetalles de la reprogramacion:'
-        +'\n    Proyecto: '+proyecto.nombre \
-        +'\n    Sprint nro.:' + proyecto.nro_sprint
-        +'\n    Actividad: '+actividad.descripcion \
-        +'\n    Estado:' + estado.descripcion
+        msg = 'Usuario: '+usuario_asignado.username+', el scrum master: '+scrumMaster.username+ ' no ha dado por finalizado el user story: '+hu.nombre+'\n\nDetalles de la reprogramacion:'+'\n    Proyecto: '+proyecto.nombre+'\n    Sprint nro.: ' + str(proyecto.nro_sprint)+'\n    Actividad: '+actividad.descripcion+'\n    Estado: ' + estado.descripcion
         enviarMail(asunto, msg, list)
