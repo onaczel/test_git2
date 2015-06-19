@@ -6,7 +6,7 @@ from django.core.mail import send_mail
 from djutils.decorators import async
 
 from apps.models import UserStory, Proyectos, historialResponsableHU, Equipo,\
-    UserStoryVersiones
+    UserStoryVersiones, Actividades, Estados
 from django.contrib.auth.models import User
 from django.db.models.aggregates import Max
 
@@ -146,7 +146,78 @@ def notificarRegistroTrabajo(hu_id, proyecto_id, detalle,tiempo):
     asunto = 'SGPA - Registro de trabajo'
     msg = 'Scrum Master :'+scrumMaster.username+', se ha registrado trabajo en el user story: '+hu.nombre+' del proyecto: '+proyecto.nombre +'\n\nDescripcion del trabajo: \n' + detalle +'\n\nHoras registradas: '+ tiempo
     enviarMail(asunto, msg, list)    
-          
+
+def notificar_pedido_finalizacion(proyecto_id, hu_id):
+    """
+    Prepara un email de notificacion cuando se solicita revision para finalizacion de un user story
+    @param proyecto_id: id de un proyecto
+    @param hu_id: id de un user story
+    """
+    proyecto = Proyectos.objects.get(id = proyecto_id)
+    equipo = Equipo.objects.get(proyecto_id = proyecto_id, rol_id = 3)
+    hu = UserStory.objects.get(id = hu_id)
+    usuario = User.objects.get(id = hu.usuario_Asignado)
+    scrumMaster = User.objects.get(id = equipo.usuario_id)
             
             
+    list = []
+    list.append(scrumMaster)
+    asunto = 'SGPA - Revision de finalizacion de User Story'
+    msg = 'Scrum Master :'+scrumMaster.username+', el usuario: '+usuario.username+ 'ha solicitado la revision del user story: '+hu.nombre\
+    +' para su posterior finalizacion \n'\
+    +' Proyecto: '+proyecto.nombre \
+    +'\n Sprint nro.:' + proyecto.nro_sprint
+    enviarMail(asunto, msg, list)
     
+
+def notificar_finalizacion_HU(proyecto_id, hu_id):
+    """
+    Prepara un email de notificacion de finalizacion de un user story
+    @param proyecto_id: id de un proyecto
+    @param hu_id: id de un user story
+    """
+    proyecto = Proyectos.objects.get(id = proyecto_id)
+    equipo = Equipo.objects.get(proyecto_id = proyecto_id, rol_id = 3)
+    hu = UserStory.objects.get(id = hu_id)
+    usuario = User.objects.get(id = hu.usuario_Asignado)
+    scrumMaster = User.objects.get(id = equipo.usuario_id)
+            
+            
+    list = []
+    list.append(usuario)
+    asunto = 'SGPA - Finalizacion de User Story'
+    msg = 'Usuario :'+usuario.username+', el scrum master: '+scrumMaster.username+ 'ha dado por finalizado el user story: '+hu.nombre\
+    +' Proyecto: '+proyecto.nombre \
+    +'\n Sprint nro.:' + proyecto.nro_sprint
+    enviarMail(asunto, msg, list)
+    
+def es_ScrumMaster(user_id, proyecto_id, hu_id):
+    """
+    Verifica si el usuario que ha cambiado el estado del user story fue el Scrum Master, si es asi, 
+    prepara un email de notificacion para el usuario encargado del User Story, notificandole que
+    se ha cambiado de estado al user story 
+    @param user_id: id del usuario que ha cambiado el estado del user story 
+    @param proyecto_id: id de un proyecto
+    @param hu_id: id de un user story
+    """
+    proyecto = Proyectos.objects.get(id = proyecto_id)
+    equipo = Equipo.objects.get(proyecto_id = proyecto_id, rol_id = 3)
+    hu = UserStory.objects.get(id = hu_id)
+    usuario = User.objects.get(id = user_id)
+    usuario_asignado = User.objects.get(id = hu.usuario_Asignado)
+    scrumMaster = User.objects.get(id = equipo.usuario_id)
+    
+    if usuario == scrumMaster: 
+        actividad = Actividades.objects.get(id = hu.f_actividad)
+        estado = Estados.objects.get(id = hu.f_a_estado)
+        list = []
+        list.append(usuario_asignado)
+        asunto = 'SGPA - Finalizacion rechazada de User Story'
+        msg = 'Usuario :'+usuario_asignado.username+', el scrum master: '+scrumMaster.username+ 'no ha dado por finalizado el user story: '+hu.nombre\
+        
+        +'\nDetalles de la reprogramacion:'
+        +'\n    Proyecto: '+proyecto.nombre \
+        +'\n    Sprint nro.:' + proyecto.nro_sprint
+        +'\n    Actividad: '+actividad.descripcion \
+        +'\n    Estado:' + estado.descripcion
+        enviarMail(asunto, msg, list)
