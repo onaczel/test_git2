@@ -95,7 +95,51 @@
 				<table>
 					<tr>
 						<td><b>Usuario Asignado:</b>
-						<select name="username"  style="width:190px" sort = true>
+						{% if hu.estado_scrum_id == 1 or hu.estado_scrum_id == 2 %}
+							{% if sprint.estado != 2 and scrum.rol_id == 3 %}
+								<td>
+									<select name="username"  style="width:190px" sort = true>
+										{% if usuario %}
+											{% for hora_sprint_usuario in horas_sprint_usuario %}
+												{% if hora_sprint_usuario.usuario_id == usuario.id %}
+													{% if hora_sprint_usuario.horas != 0 %}
+														<option>{{usuario.username}}</option>
+													{% endif %}
+												{% endif %}
+											{% endfor %}
+											{% for user in users %}
+												{% if usuario.id != user.id %}
+													{% for hora_sprint_usuario in horas_sprint_usuario %}
+														{% if hora_sprint_usuario.usuario_id == user.id %}
+															{% if hora_sprint_usuario.horas != 0 %}
+																<option >{{user.username}}</option>
+															{% endif %}
+														{% endif %}
+													{% endfor %}
+												{% endif %}
+											{% endfor %}
+										{% else %}
+											{% for user in users %}
+												{% if usuario.id != user.id %}
+													{% for hora_sprint_usuario in horas_sprint_usuario %}
+														{% if hora_sprint_usuario.usuario_id == user.id %}
+															{% if hora_sprint_usuario.horas != 0 %}
+																<option >{{user.username}}</option>
+															{% endif %}
+														{% endif %}
+													{% endfor %}
+												{% endif %}
+											{% endfor %} 
+										{% endif %}
+									</select>
+								</td>
+							{% else %}
+								<td>{{usuario.username}}</td>
+							{% endif %}
+						{% else %}
+							<td>{{usuario.username}}</td>
+						{% endif %}
+						<!-- <select name="username"  style="width:190px" sort = true>
 							{% for user in users %}
 									{% if user.id == hu.usuario_Asignado %}
 											<option selected="selected">{{user.username}}</option>
@@ -103,7 +147,7 @@
 											<option >{{user.username}}</option>
 									{% endif %}
 							{% endfor %} 
-						</select>
+						</select> -->
 						</td>
 					</tr>
 					<tr>

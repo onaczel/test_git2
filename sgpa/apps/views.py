@@ -2221,8 +2221,23 @@ def editarHu(request, proyecto_id, hu_id):
         #return render_to_response('apps/hu_form_no_valido.html', context_instance = RequestContext(request))
     else:        
         form = HuCreateForm(initial={'descripcion':hu.descripcion, 'codigo':hu.codigo, 'tiempo_Estimado':hu.tiempo_Estimado, 'valor_Tecnico':hu.valor_Tecnico, 'valor_Negocio':hu.valor_Negocio})
-
-    return render_to_response('apps/hu_modify_fields.html', {"form":form, "proyecto_id":proyecto_id, "hu_id":hu_id, "hu":hu, 'misPermisos':mispermisos, 'users':users, 'flujos':flujos, 'proyecto_nombre':proyecto.nombre, 'proyecto':proyecto, 'prioridades':prioridades, 'userasig':userasig, 'marcado':marcado, 'rango':rango}, context_instance = RequestContext(request))
+    try:
+        sprint = Sprint.objects.get(proyecto_id = proyecto.id, nro_sprint = hu.sprint)
+        horas_sprint_usuario = horas_usuario_sprint.objects.filter(Sprint_id = sprint.id)
+    except:
+        sprint = []
+        horas_sprint_usuario = []
+    #El Scrum Master del proyecto "rol_id = 3"
+    scrum = []
+    try:
+        scrum = Equipo.objects.get(proyecto_id = proyecto_id, usuario_id = request.user.id, rol_id = 3)
+    except:
+        scrum = Equipo()
+    try:
+        usuario = User.objects.get(id = hu.usuario_Asignado)
+    except:
+        usuario = []
+    return render_to_response('apps/hu_modify_fields.html', {"usuario":usuario, "scrum":scrum, "sprint":sprint, "horas_sprint_usuario":horas_sprint_usuario, "form":form, "proyecto_id":proyecto_id, "hu_id":hu_id, "hu":hu, 'misPermisos':mispermisos, 'users':users, 'flujos':flujos, 'proyecto_nombre':proyecto.nombre, 'proyecto':proyecto, 'prioridades':prioridades, 'userasig':userasig, 'marcado':marcado, 'rango':rango}, context_instance = RequestContext(request))
 
 def finalizarHu(request, proyecto_id, hu_id):
     proyecto = Proyectos.objects.get(pk=proyecto_id)
@@ -4005,6 +4020,25 @@ def finalizarProyecto(request, proyecto_id, hu_id):
         return render_to_response('apps/project_finalizar_proyecto_cancelar_hu.html', {"proyecto":proyecto, "userStory":userStory, "cancelar_todos_los_hus":cancelar_todos_los_hus, "mensaje":mensaje}, context_instance = RequestContext(request))
     else:
         return render_to_response('apps/project_finalizar_proyecto.html', {"proyecto":proyecto, "hus":hus, "userStory":userStory, "usuario":usuario, "flujo":flujo, "prioridad":prioridad, "f_actividad":f_actividad, "f_a_estado":f_a_estado, "tiempo_hu_registrado":tiempo_hu_registrado, "mensaje":mensaje}, context_instance = RequestContext(request))
+
+def projectDetalles(request, proyecto_id):
+    """
+    Muestra los detalles del proyecto
+    @param request: Http request
+    @return:  render a apps/project_detalles
+    """
+    flujos = Flujos.objects.filter(proyecto_id = proyecto_id, estado = True)
+    proyecto = Proyectos.objects.get(id = proyecto_id)
+    mispermisos = misPermisos(request.user.id, proyecto.id)
+    us = Equipo.objects.get(proyecto_id= proyecto_id, rol_id=3)
+    scrumMaster = User.objects.get(id = us.usuario_id)
+    clientes = []
+    us2 = Equipo.objects.filter(proyecto_id= proyecto_id, rol_id=4)
+    for u in us2:
+        clientes.append(User.objects.get(id = u.usuario_id))
+    estado = Estados_Scrum.objects.get(id = proyecto.estado_id)
+    
+    return render_to_response('apps/project_detalles.html',{'flujos':flujos,'proyecto':proyecto, 'misPermisos':mispermisos, 'scrum':scrumMaster,'clientes':clientes, "estado":estado},context_instance=RequestContext(request))
 
 def reportes(request, proyecto_id):
     proyecto = Proyectos.objects.get(pk = proyecto_id)

@@ -1,9 +1,6 @@
 {% extends 'base.html' %}
-{% block uptitulo %}
+{% block titulo %}
 <h1>{{proyecto.nombre}}</h1>
-{% endblock %}
-{% block encabezado %}
-<h1>Reportes</h1>
 {% endblock %}
 {% block index %}
 	<li>
@@ -61,7 +58,7 @@
 	<li>
 		<a href="{% url 'apps:reportes' proyecto.id %}"><i class="fa fa-fw fa-edit"></i>Reportes</a>
 	</li>
-	{% endif %}	
+	{% endif %}
 	
 	{% if misPermisos.VP %}
 		<li>
@@ -71,22 +68,59 @@
 	
 {% endblock %}
 {% block contenido %}
-	
-	<table>
-	<tr><td><a href="{% url 'apps:reporte_por_equipo' proyecto.id proyecto.nro_sprint %}"><i class="fa fa-fw fa-edit"></i> Cantidad de trabajos en curso por equipo</a></br></br></td></tr>
-	
-	<tr><td><a href="{% url 'apps:reporte_select_user' proyecto.id %}"><i class="fa fa-fw fa-edit"></i> Cantidad de trabajos por usuario pendiente, en curso, finalizados</a></br></br></td></tr>
-	
-	<tr><td><a href="{% url 'apps:reporte_HU_porPrioridad' proyecto.id proyecto.nro_sprint %}"><i class="fa fa-fw fa-edit"></i> Lista clasificada por orden de prioridad de todas las actividades  para completar un proyecto</a></br></br></td></tr>
-	
-	<tr><td><a href="{% url 'apps:reporte_tiempo_estimadoPor_Proyecto' proyecto.id proyecto.nro_sprint %}"><i class="fa fa-fw fa-edit"></i> Lista de tiempo estimado por  proyecto y la ejecución del mismo (graficado, sprint por proyecto)</a></br></br></td></tr>
-	
-	<tr><td><a href="{% url 'apps:reporte_HU_porTiempoEstimado' proyecto.id  %}"><i class="fa fa-fw fa-edit"></i> El Backlog del Producto, lista ordenada de User Stories, en el orden que esperamos deban terminarse</a></br></br></td></tr>
-	
-	<tr><td><a href="{% url 'apps:reporte_HU_SprintEnCurso' proyecto.id proyecto.nro_sprint %}"><i class="fa fa-fw fa-edit"></i> El Backlog del Sprint, lista de los elementos del Backlog del Producto, elegidos para ser desarrollados en el Sprint actual</a></br></br></td></tr>
-	</table>
-
+	<center>
+		<h1>Detalles del proyecto {{proyecto.nombre}}</h1>
+		<h2>Resumen</h2>
+		<table border=10 cellspacing=1 cellpadding=15 bordercolor="green">
+			<tr>
+				<td><strong>Nombre proyecto: </td><td>{{proyecto.nombre}}</td>
+			</tr>
+		
+			<tr>
+				<td><strong>Estado: </strong> </td><td>{{estado.descripcion}}</td>
+			</tr>
+		
+			<tr>
+				<td><strong>Fecha inicio: </strong> </td><td>{{proyecto.fecha_ini}}</td>
+			</tr>
+		
+			<tr>
+				<td><strong>Fecha estimada de fin: </strong> </td><td>{{proyecto.fecha_est_fin}}</td>
+			</tr>
+		
+			<tr>
+				<td><strong>Descripción: </strong> </td><td><p>{{proyecto.descripcion}}</p></td>
+			</tr>
+		
+			<tr>
+				<td><strong>Observaciones: </strong> </td><td>{{proyecto.observaciones}}</td>
+			</tr>
+		
+			<tr>
+				<td><strong>Scrum Master: </strong> </td><td>{{scrum.username}}</td>
+			</tr>
+			{% for cli in clientes %}
+				<tr>
+					{% if forloop.counter == 1 %}
+						<td><strong>Clientes: </strong> </td><td>{{cli.username}}</td>
+					{% else %}
+						<td><strong> </strong> </td><td>{{cli.username}}</td>
+					{% endif %}
+				</tr>
+			{% endfor %}
+			{% for flu in flujos %}
+				<tr>
+					{% if forloop.counter == 1 %}
+						<td><strong>Flujos: </strong> </td><td>{{flu.descripcion}}</td>
+					{% else %}
+						<td><strong> </strong> </td><td>{{flu.descripcion}}</td>
+					{% endif %}
+				</tr>
+			{% endfor %}
+		</table>
+		<br></br>
+	</center>
 {% endblock %}
 {% block atras %}
-	<a href="{% url 'apps:accionesproyecto' proyecto.id %}">Atras</a>
+	<a href="{% url 'apps:accionesproyecto' proyecto.id %}">Volver</a>
 {% endblock %}
