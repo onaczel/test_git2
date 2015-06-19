@@ -81,6 +81,7 @@
 	{% endif %}
 
 {% if misPermisos.MUS %}
+
 		{% if hu.sprint == 0 %}
 			<table>
 				<tr>
@@ -96,17 +97,40 @@
 		{% if hu.sprint != 0 %}
 			<table>
 				<tr>
-					<td><b>Usuario Asignado:</b>
-					{{userA}}
-					</td>
+					<td width="150px"><b>Usuario Asignado:</b></td>
+					<td width="200px">{{userA}}</td>
 				</tr>
 				<tr>
-					<td><b>Flujo:</b>
+					<td width="100px"><b>Flujo:</b></td>
+					<td>
 						{% for f in flujos %}
 								{% if f.id == hu.flujo %}
 									{{f.descripcion}}
 								{% endif %}
 							{% endfor %} 
+					</td>
+				</tr>
+				<tr>
+					<td><b>Estado:</b></td>
+					<td>
+						{% if hu.finalizado and hu.estado_scrum.id != 5 %}
+							<font color="#E18700"><i class="fa fa-fw fa-exclamation"></i>En Revision</font>
+						{% elif hu.estado_scrum.id == 5 %}
+							<font color="#0000F0"><i class="fa fa-fw fa-check"></i>Finalizado</font>
+						{% elif hu.estado_scrum.id == 6 %}
+							<font color="#FF0000"><i class="fa fa-fw fa-close"></i>Cancelado</font>
+						{% elif hu.estado_scrum.id == 1 %}
+							<font color="#008000"><i class="fa fa-fw fa-arrow-circle-right"></i>En Progreso</font>
+						{% elif hu.estado_scrum.id == 4 %}
+							<font color="#EE82EE"><i class="fa fa-fw fa-minus-circle"></i>Pendiente</font>
+						{% elif hu.estado_scrum.id == 3 %}
+							<font color="#FFFFFF"><i class="fa fa-fw fa-circle"></i>No Planificado</font>
+						{% elif hu.estado_scrum.id == 2 %}
+							<font color="#FFFFFF"><i class="fa fa-fw fa-circle-o"></i>Planificado</font>
+						
+						
+						
+						{% endif %}
 					</td>
 				</tr>
 			</table>
