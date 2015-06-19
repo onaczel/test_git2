@@ -2610,7 +2610,7 @@ def setEstadoHu(request, proyecto_id, hu_id):
             setlog(request, hu.id)
             modificado = True
             #notificacion
-            es_ScrumMaster(request.user.id,proyecto_id,hu_id)
+            es_ScrumMaster(request.user,proyecto_id,hu_id)
             return render_to_response('apps/hu_set_estado.html', {'proyecto':proyecto, 'hu':hu, 'actividades':actividades, 'estados':estados, 'flujo_descripcion':flujo.descripcion, 'misPermisos':mispermisos, 'modificado':modificado, 'user_logged':user_logged}, context_instance = RequestContext(request))
         elif request.POST['submit'] == "Finalizar":
             hu.finalizado = True
@@ -2621,8 +2621,7 @@ def setEstadoHu(request, proyecto_id, hu_id):
             return render_to_response('apps/hu_set_estado.html', {'proyecto':proyecto, 'hu':hu, 'actividades':actividades, 'estados':estados, 'flujo_descripcion':flujo.descripcion, 'misPermisos':mispermisos, 'user_logged':user_logged}, context_instance = RequestContext(request))
 
     sprint = Sprint.objects.get(nro_sprint = proyecto.nro_sprint, proyecto_id = proyecto.id)
-    #notificacion
-    es_ScrumMaster(request.user.id,proyecto_id,hu_id)
+    
     
     #return render_to_response('apps/hu_modify_fields.html', {"form":form, "proyecto_id":proyecto_id, "hu_id":hu_id, "hu_descripcion":hu.descripcion, 'misPermisos':mispermisos, 'users':users, 'flujos':flujos, 'proyecto_nombre':proyecto.nombre, 'prioridades':prioridades, 'hu':hu}, context_instance = RequestContext(request))
     
