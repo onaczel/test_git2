@@ -5039,7 +5039,7 @@ def reporte_HU_porPrioridad(request,proyecto_id,nro_sprint):
     p.setFont('Helvetica', 9)
     
     y_final = y_final - 15
-    list_hu = UserStory.objects.filter(proyecto_id = proyecto_id).order_by('prioridad_id')
+    list_hu = UserStory.objects.filter(proyecto_id = proyecto_id).order_by('-prioridad_id')
     
     
   
