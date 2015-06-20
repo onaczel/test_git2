@@ -4430,8 +4430,8 @@ def reporte_por_usuario(request, proyecto_id, user_id):
     y_final = y_final - 15
     
     p.setFont('Helvetica', 9)
-    if UserStory.objects.filter(usuario_Asignado = user_id, estado_scrum =1):
-        for hu in UserStory.objects.filter(usuario_Asignado = user_id, estado_scrum =1):
+    if UserStory.objects.filter(usuario_Asignado = user_id, estado_scrum =1, proyecto_id = proyecto_id):
+        for hu in UserStory.objects.filter(usuario_Asignado = user_id, estado_scrum =1, proyecto_id = proyecto_id):
             if y_final <= 150:
                 y_final = 800
                 p.showPage()    
@@ -4506,8 +4506,8 @@ def reporte_por_usuario(request, proyecto_id, user_id):
     
     y_final = y_final - 15
     p.setFont('Helvetica', 9)
-    if UserStory.objects.filter(usuario_Asignado = user_id, estado_scrum =2):
-        for hu in UserStory.objects.filter(usuario_Asignado = user_id, estado_scrum =2):
+    if UserStory.objects.filter(usuario_Asignado = user_id, estado_scrum =2, proyecto_id = proyecto_id):
+        for hu in UserStory.objects.filter(usuario_Asignado = user_id, estado_scrum =2, proyecto_id = proyecto_id):
             if y_final <= 150:
                 y_final = 800
                 p.showPage()
@@ -4582,8 +4582,8 @@ def reporte_por_usuario(request, proyecto_id, user_id):
     
     y_final = y_final - 15
     p.setFont('Helvetica', 9)
-    if UserStory.objects.filter(usuario_Asignado = user_id, estado_scrum =4):
-        for hu in UserStory.objects.filter(usuario_Asignado = user_id, estado_scrum =4):
+    if UserStory.objects.filter(usuario_Asignado = user_id, estado_scrum =4, proyecto_id = proyecto_id):
+        for hu in UserStory.objects.filter(usuario_Asignado = user_id, estado_scrum =4, proyecto_id = proyecto_id):
             if y_final <= 150:
                 y_final = 800
                 p.showPage()
@@ -4661,8 +4661,8 @@ def reporte_por_usuario(request, proyecto_id, user_id):
     
     y_final = y_final - 15
     p.setFont('Helvetica', 9)
-    if UserStory.objects.filter(usuario_Asignado = user_id, estado_scrum =5):
-        for hu in UserStory.objects.filter(usuario_Asignado = user_id, estado_scrum =5):
+    if UserStory.objects.filter(usuario_Asignado = user_id, estado_scrum =5, proyecto_id = proyecto_id):
+        for hu in UserStory.objects.filter(usuario_Asignado = user_id, estado_scrum =5, proyecto_id = proyecto_id):
             if y_final <= 150:
                 y_final = 800
                 p.showPage()
@@ -4737,8 +4737,8 @@ def reporte_por_usuario(request, proyecto_id, user_id):
     
     y_final = y_final - 15
     p.setFont('Helvetica', 9)
-    if UserStory.objects.filter(usuario_Asignado = user_id, estado_scrum =6):
-        for hu in UserStory.objects.filter(usuario_Asignado = user_id, estado_scrum =6):
+    if UserStory.objects.filter(usuario_Asignado = user_id, estado_scrum =6, proyecto_id = proyecto_id):
+        for hu in UserStory.objects.filter(usuario_Asignado = user_id, estado_scrum =6, proyecto_id = proyecto_id):
             if y_final <= 150:
                 y_final = 800
                 p.showPage()
