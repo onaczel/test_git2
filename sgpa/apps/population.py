@@ -6,9 +6,11 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'apps.settings')
 import django
 django.setup()
 
+import datetime
+from datetime import timedelta, date, datetime
 from django.contrib.auth.models import User
 from apps.models import Users_Roles, Flujos, Roles, Actividades, Permisos, Permisos_Roles,\
-    Prioridad, Estados, Proyectos, Equipo, Estados_Scrum, UserStory
+    Prioridad, Estados, Proyectos, Equipo, Estados_Scrum, UserStory, Sprint, horas_usuario_sprint
 
 def populate():
     add_roles('Administrador', True)
@@ -32,6 +34,7 @@ def populate():
     add_user('Karina', 'Franco', 'kfran', 'a123', 'kfran@gmail.com', 2)
     add_user('Claudia', 'Rios', 'crios', 'a123', 'crios@gmail.com', 2)
     add_user('Natalia', 'Aguero', 'nag', 'a123', 'nag@gmail.com', 2)
+    add_user('Sergio', 'Aguero', 'sergio', 'a123', 'eyalshivas@gmail.com', 2)
     
     add_flujo('Plantilla Generica')
     add_flujo('Plantilla Generica 2')
@@ -84,26 +87,21 @@ def populate():
     add_estado_scrum("Finalizado")
     add_estado_scrum("Cancelado")
     
-    add_proyecto("Proyecto 1")
-    add_proyecto("Proyecto 2")
-    add_proyecto("Proyecto 3")
+    add_proyecto("Proyecto No Iniciado")
+    proyecto_2 = add_proyecto("Proyecto Iniciado")
+    add_proyecto("Proyecto Con Datos")
     
-    add_equipo(1, 3, 1)
+    add_equipo(1, 3, 15)
     add_equipo(1, 4, 2)
-    add_equipo(1, 5, 3)
-    add_equipo(1, 6, 4)
-    add_equipo(1, 5, 5)
-    add_equipo(1, 5, 6)
-    add_equipo(1, 5, 7)
-    add_equipo(1, 5, 8)
+
     
-    add_equipo(2, 3, 2)
+    add_equipo(2, 3, 15)
     add_equipo(2, 4, 3)
     add_equipo(2, 5, 3)
     add_equipo(2, 5, 9)
     add_equipo(2, 5, 10)
     
-    add_equipo(3, 3, 2)
+    add_equipo(3, 3, 15)
     add_equipo(3, 4, 3)
     add_equipo(3, 5, 3)
     add_equipo(3, 5, 8)
@@ -112,10 +110,18 @@ def populate():
     add_equipo(3, 5, 12)
     
     for h in range(1,10):
-        add_hu(1, "hu" +str(h), "User Story "+str(h), "Como usuario debo poder realizar esta funcion "+str(h))
         add_hu(2, "hu" +str(h), "User Story "+str(h), "Como usuario debo poder realizar esta funcion "+str(h))
         add_hu(3, "hu" +str(h), "User Story "+str(h), "Como usuario debo poder realizar esta funcion "+str(h))
-        
+      
+    '''  
+    sprint_p2 = add_sprint(1, 2, 2)
+    add_horas_usuario_sprint(8, sprint_p2.id , 3)
+    add_horas_usuario_sprint(6, sprint_p2.id , 9)
+    
+    add_hu_sprint(1, sprint_p2.nro_sprint, 5, 3)
+    add_hu_sprint(3, sprint_p2.nro_sprint, 5, 9)
+    '''
+    
 def add_estado_scrum(descripcion):
     estado = Estados_Scrum()
     estado.descripcion = descripcion
@@ -238,6 +244,42 @@ def add_hu(proyecto_id, codigo, nombre, descripcion):
     us.proyecto_id = proyecto_id
     us.estado_scrum = Estados_Scrum.objects.get(pk=3)
     us.save()
+
+def add_sprint(nro_sprint, duracion, proyecto_id):
+    sprint = Sprint()
+    sprint.nro_sprint = nro_sprint
+    sprint.estado = 0
+    sprint.fecha_ini = datetime.today().strftime("%Y-%m-%d")
+    d2 = datetime.today()
+    d1 = datetime.strptime(datetime.today().strftime("%Y-%m-%d"), "%Y-%m-%d")
+
+    for i in range(1, duracion*7):
+        d2 = d1 + timedelta(days=i)
+        
+    sprint.fecha_est_fin = d2.strftime("%Y-%m-%d")
+    sprint.duracion = 2
+    sprint.proyecto = Proyectos.objects.get(pk=2)
+    sprint.save()
+    return sprint
+    
+def add_horas_usuario_sprint(horas, sprint_id, usuario_id):
+    hus = horas_usuario_sprint()
+    hus.horas = horas
+    hus.Sprint = Sprint.objects.get(pk = sprint_id)
+    hus.usuario = User.objects.get(pk = usuario_id)
+    hus.save()
+    
+def add_hu_sprint(hu_id, sprint_id, flujo_id, usuario_id):
+    hu = UserStory.objects.get(pk=hu_id)
+    hu.sprint = sprint_id
+    hu.flujo = flujo_id
+    hu.usuario_Asignado = usuario_id
+    hu.f_actividad = 1
+    hu.f_a_estado = 1
+    hu.flujo_posicion = 1
+    hu.estado_scrum = Estados_Scrum.objects.get(pk=1)
+    hu.save()
+    
 
 if __name__ == '__main__':
     print "Starting population script..."

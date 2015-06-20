@@ -4431,7 +4431,7 @@ def reporte_por_usuario(request, proyecto_id, user_id):
     
     p.setFont('Helvetica', 9)
     if UserStory.objects.filter(usuario_Asignado = user_id, estado_scrum =1):
-        for hu in UserStory.objects.filter(usuario_Asignado = user_id, estado_scrum =1):
+        for hu in UserStory.objects.filter(usuario_Asignado = user_id, estado_scrum =1, proyecto_id = proyecto_id):
             if y_final <= 150:
                 y_final = 800
                 p.showPage()    
