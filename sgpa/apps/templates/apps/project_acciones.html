@@ -209,10 +209,10 @@
 		<table height=1> 
 			<tr><td><h4>Participantes:</h4></td>
 			{% if misPermisos.APP %}
-				<td><a href="{% url 'apps:listasigparticipante' proyecto.id %}">Agregar</a></td>
+				<td><font color="#008000"><i class="fa fa-fw fa-plus"></i></font><a href="{% url 'apps:listasigparticipante' proyecto.id %}">Agregar</a></td>
 			{% endif %}
 			{% if misPermisos.EPP %}
-				<td><a href="{% url 'apps:listelimparticipante' proyecto.id %}">Eliminar</a></td></tr>
+				<td><font color="#FF0000"><i class="fa fa-fw fa-close"></i></font><a href="{% url 'apps:listelimparticipante' proyecto.id %}">Eliminar</a></td></tr>
 			{% endif %}
 		</table>
 	{% endif %}

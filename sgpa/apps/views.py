@@ -1545,7 +1545,8 @@ def getlistaflujos(request, proyecto_id):
     @return: Lista de flujos
     """
     fproy = Flujos.objects.filter(proyecto_id = proyecto_id)
-    ftotal = Flujos.objects.all()
+    ftotal = Flujos.objects.filter()
+    
     flujos = []
     existe = False
     for fi in ftotal:
@@ -1562,14 +1563,21 @@ def getlistaflujos(request, proyecto_id):
             
             if flujo_nuevo != None:
                 ex = False
-                for fk in fproy:
+                
+                for fk in flujos:
                     if flujo_nuevo.descripcion == fk.descripcion:
                         ex = True
+                
+                if ex == False:
+                    for fk in fproy:
+                        if flujo_nuevo.descripcion == fk.descripcion:
+                            ex = True
                 
                 if ex == False:
                     flujos.append(flujo_nuevo)
                     #pass
         existe = False
+    
     
     return flujos
     

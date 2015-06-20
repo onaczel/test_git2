@@ -8,28 +8,34 @@
 {% block contenido %}
 <legend>Eliminar Participantes</legend>
 
-{% if usuarios %}
-	<h4>Usuarios del proyecto</h4>
-	{% for u in usuarios %}
-		{% if user_logged.id != u.id %}
+{% if usuarios or usuarios_con_hu %}
+	{% if usuarios %}
+	
+		<h4>Usuarios del proyecto</h4>
+		{% for u in usuarios %}
+			{% if user_logged.id != u.id %}
+				<table style="max-width: 100%; border-top: 1px solid rgb(100, 100, 100); border-left: 1px solid rgb(221, 221, 221); border-right: 1px solid rgb(221, 221, 221); border-bottom: 1px solid rgb(221, 221, 221);">
+					<tr>
+						<td width="250px">{{u.first_name}} {{u.last_name}} ({{u.username}})</td>
+						<td><a href="{% url 'apps:elimparticipante' proyecto.id u.id %}">Eliminar</a></td>
+					</tr>
+				</table>
+			{% endif %}
+			
+		{% endfor %}
+	{% endif %}
+	{% if usuarios_con_hu %}
+		<h4>Usuarios del proyecto asignados a User Stories</h4>
+		{% for u in usuarios_con_hu %}
 			<table style="max-width: 100%; border-top: 1px solid rgb(100, 100, 100); border-left: 1px solid rgb(221, 221, 221); border-right: 1px solid rgb(221, 221, 221); border-bottom: 1px solid rgb(221, 221, 221);">
 				<tr>
 					<td width="250px">{{u.first_name}} {{u.last_name}} ({{u.username}})</td>
-					<td><a href="{% url 'apps:elimparticipante' proyecto.id u.id %}">Eliminar</a></td>
 				</tr>
 			</table>
-		{% endif %}
-	{% endfor %}
-	<h4>Usuarios del proyecto asignados a User Stories</h4>
-	{% for u in usuarios_con_hu %}
-		<table style="max-width: 100%; border-top: 1px solid rgb(100, 100, 100); border-left: 1px solid rgb(221, 221, 221); border-right: 1px solid rgb(221, 221, 221); border-bottom: 1px solid rgb(221, 221, 221);">
-			<tr>
-				<td width="250px">{{u.first_name}} {{u.last_name}} ({{u.username}})</td>
-			</tr>
-		</table>
-	{% endfor %}
+		{% endfor %}
+	{% endif %}
 {% else %}
-	<p>No se encontro ningun usuario</p>
+	<p>No se encontro ningun usuario.</p>
 {% endif %}
 {% endblock %}
 <br />

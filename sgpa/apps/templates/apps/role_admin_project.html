@@ -100,7 +100,7 @@
 
 		<tr>
 		{% for r in roles %}
-			{% if r.estado == True %}
+			{% if r.estado == True and r.id != 3 and r.id != 4 %}
 				<td><label>{{r.descripcion}}</label></td>
 				{% if misPermisos.MRP %}
 					<td><a href="{% url  'apps:rolemodifyproj' proyecto.id r.id %}">Modificar</a></td>

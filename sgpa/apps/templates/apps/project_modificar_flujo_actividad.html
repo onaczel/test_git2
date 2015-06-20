@@ -1,6 +1,9 @@
 {% extends 'base.html' %}
-{% block titulo %}
-<h1>Modificar Actividad del flujo</h1>
+{% block uptitulo %}
+<h1>{{proyecto.nombre}}</h1>
+{% endblock %}
+{% block encabezado %}
+<h1>{{flujo.descripcion}}</h1>
 {% endblock %}
 {% block contenido %}
 <h3>Actividad</h3>
@@ -15,5 +18,5 @@
 {% endif %}
 {% endblock %}
 {% block atras %}
-<br><a href="{% url 'apps:flujosproyectosRequestMod' proyecto.id flujo.id 0 %}">Atras</a><br />
+<a href="{% url 'apps:flujosproyectosRequestMod' proyecto.id flujo.id 0 %}">Atras</a><br />
 {% endblock %}
