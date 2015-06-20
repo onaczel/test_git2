@@ -2630,21 +2630,21 @@ def setEstadoHu(request, proyecto_id, hu_id):
             hu.save()
             setlog(request, hu.id)
             modificado = True
-            
+            #notificacion
+            es_ScrumMaster(request.user,proyecto_id,hu_id)
             return render_to_response('apps/hu_set_estado.html', {'proyecto':proyecto, 'hu':hu, 'actividades':actividades, 'estados':estados, 'flujo_descripcion':flujo.descripcion, 'misPermisos':mispermisos, 'modificado':modificado, 'user_logged':user_logged}, context_instance = RequestContext(request))
         elif request.POST['submit'] == "Finalizar":
             hu.finalizado = True
             copiarHU(hu, huv, User.objects.get(pk = request.user.id))
             hu.save()
             #notificacion
-            notificar_pedido_finalizacion(request.user.id, proyecto_id, hu_id)
+            notificar_pedido_finalizacion(proyecto_id, hu_id)
             
 
             return render_to_response('apps/hu_set_estado.html', {'proyecto':proyecto, 'hu':hu, 'actividades':actividades, 'estados':estados, 'flujo_descripcion':flujo.descripcion, 'misPermisos':mispermisos, 'user_logged':user_logged}, context_instance = RequestContext(request))
 
     sprint = Sprint.objects.get(nro_sprint = proyecto.nro_sprint, proyecto_id = proyecto.id)
-    #notificacion
-    es_ScrumMaster(request.user,proyecto_id,hu_id)
+    
     
     #return render_to_response('apps/hu_modify_fields.html', {"form":form, "proyecto_id":proyecto_id, "hu_id":hu_id, "hu_descripcion":hu.descripcion, 'misPermisos':mispermisos, 'users':users, 'flujos':flujos, 'proyecto_nombre':proyecto.nombre, 'prioridades':prioridades, 'hu':hu}, context_instance = RequestContext(request))
     
@@ -4170,105 +4170,110 @@ def reporte_por_equipo(request, proyecto_id, nro_sprint):
                 y_inicial = y_inicial - 12
             
         y_inicial = y_inicial - 12
-                    
-    y_final = y_inicial - 20
-    p.setFont('Helvetica-Bold', 10)
-    p.drawString(50, y_final,  "User Stories en Curso")
-    y_final = y_final - 5
-    p.line(10, y_final, 590, y_final)   
-    y_final = y_final -20
-    
-    '''
-    p.setFont('Helvetica', 9)
-    p.drawString(50, 640,  "Equipo")
-    p.line(10, 635, 590, 635)
-    
-    sprint = Sprint.objects.filter(proyecto_id = proyecto_id, nro_sprint=nro_sprint)
-    sprint_object = sprint.first()
-    list_horas_sprint = horas_usuario_sprint.objects.filter(Sprint_id = sprint_object.id)
-    list_usuarios = User.objects.all()
-    
-    y_inicial = 620
-    for hs in list_horas_sprint:
-        if horas!=0:
-            for user in list_usuarios:
-                if user.id == hs.usuario_id:
-                    nombre_apellido = user.first_name + " " + user.last_name + " ("+ user.username +")"
-                    p.drawString(50, y_inicial, "- "+ nombre_apellido)                    
-                    y_inicial = y_inicial - 12
-                    
-    y_final = y_inicial - 20
-    '''
-    p.setFont('Helvetica', 9)
-    #p.drawString(50, y_final,  "User Stories en Curso")
-    #y_final = y_final - 5
-    #p.line(10, y_final, 590, y_final)   
-    
-    #y_final = y_final - 15
-    list_hu = UserStory.objects.filter(proyecto_id = proyecto_id, sprint = nro_sprint)
-    list_hu = sorted(list_hu, key=gethuidsort)
-    for hu in list_hu:
-        if y_final <= 150:
-            y_final = 800
-            p.showPage()
-        
+    try:                
+        y_final = y_inicial - 20
         p.setFont('Helvetica-Bold', 10)
-        p.drawString(50, y_final, hu.nombre)
-        p.setFontSize(8)
-        y_final = y_final - 20
+        p.drawString(50, y_final,  "User Stories en Curso")
+        y_final = y_final - 5
+        p.line(10, y_final, 590, y_final)   
+        y_final = y_final -20
         
-        p.setFont('Helvetica-Bold', 9)
-        p.drawString(60, y_final,"GENERAL")
+        '''
         p.setFont('Helvetica', 9)
-        y_final = y_final - 12
-        p.drawString(70, y_final,"Codigo: "+hu.codigo)
-        y_final = y_final - 10
-        p.drawString(70, y_final,"Descripcion: "+hu.descripcion)
-        y_final = y_final - 10
-        user_asig = User.objects.get(pk=hu.usuario_Asignado).username
-        p.drawString(70, y_final,"Usuario Asignado: "+user_asig)
-        y_final = y_final - 10
-        p.drawString(70, y_final,"Sprint: "+str(hu.sprint))
-        y_final = y_final - 10
+        p.drawString(50, 640,  "Equipo")
+        p.line(10, 635, 590, 635)
         
-        p.setFont('Helvetica-Bold', 9)
-        p.drawString(60, y_final,"VALORES")
-        y_final = y_final - 3
+        sprint = Sprint.objects.filter(proyecto_id = proyecto_id, nro_sprint=nro_sprint)
+        sprint_object = sprint.first()
+        list_horas_sprint = horas_usuario_sprint.objects.filter(Sprint_id = sprint_object.id)
+        list_usuarios = User.objects.all()
+        
+        y_inicial = 620
+        for hs in list_horas_sprint:
+            if horas!=0:
+                for user in list_usuarios:
+                    if user.id == hs.usuario_id:
+                        nombre_apellido = user.first_name + " " + user.last_name + " ("+ user.username +")"
+                        p.drawString(50, y_inicial, "- "+ nombre_apellido)                    
+                        y_inicial = y_inicial - 12
+                        
+        y_final = y_inicial - 20
+        '''
         p.setFont('Helvetica', 9)
-        y_final = y_final - 10
-        p.drawString(70, y_final,"Valor de Negocio: "+str(hu.valor_Negocio))
-        p.drawString(160, y_final,"Valor Tecnico: "+str(hu.valor_Tecnico))
-        p.drawString(250, y_final,"Prioridad: "+str(hu.prioridad))
-        y_final = y_final - 10
+        #p.drawString(50, y_final,  "User Stories en Curso")
+        #y_final = y_final - 5
+        #p.line(10, y_final, 590, y_final)   
         
-        p.setFont('Helvetica-Bold', 9)
-        p.drawString(60, y_final,"REGISTROS")
-        y_final = y_final - 3
-        p.setFont('Helvetica', 9)
-        y_final = y_final - 10
-        flujo = Flujos.objects.get(pk=hu.flujo)
-        flujod = flujo.descripcion
-        p.drawString(70, y_final,"Flujo: "+flujod)
-        y_final = y_final - 10
-        list_act = Actividades.objects.filter(flujo_id = flujo.id)
-        #list_act = list_act.first()
-        
-        list_act = sorted(list_act, key=gethuidsort)
-        c = 0
-        for act in list_act:
-            c = c+1
-            if c == hu.f_actividad:
-                actividad_actual = act
-        p.drawString(70, y_final,"Actividad Actual: "+actividad_actual.descripcion)
-        
-        estado = Estados.objects.get(pk=hu.f_a_estado).descripcion
-        p.drawString(200, y_final,"Estado Actual: "+estado)
-        y_final = y_final - 10
-        p.drawString(70, y_final,"Tiempo Estimado: "+str(hu.tiempo_Estimado))
-        p.drawString(200, y_final,"Tiempo Registrado: "+str(hu.tiempo_Real))
-        y_final = y_final - 10
-        
-        y_final = y_final - 12
+        #y_final = y_final - 15
+        list_hu = UserStory.objects.filter(proyecto_id = proyecto_id, sprint = nro_sprint)
+        list_hu = sorted(list_hu, key=gethuidsort)
+        for hu in list_hu:
+            if y_final <= 150:
+                y_final = 800
+                p.showPage()
+            
+            p.setFont('Helvetica-Bold', 10)
+            p.drawString(50, y_final, hu.nombre)
+            p.setFontSize(8)
+            y_final = y_final - 20
+            
+            p.setFont('Helvetica-Bold', 9)
+            p.drawString(60, y_final,"GENERAL")
+            p.setFont('Helvetica', 9)
+            y_final = y_final - 12
+            p.drawString(70, y_final,"Codigo: "+hu.codigo)
+            y_final = y_final - 10
+            p.drawString(70, y_final,"Descripcion: "+hu.descripcion)
+            y_final = y_final - 10
+            try:
+                user_asig = User.objects.get(pk=hu.usuario_Asignado).username
+                p.drawString(70, y_final,"Usuario Asignado: "+user_asig)
+            except:
+                p.drawString(70, y_final,"Usuario Asignado: None")
+            y_final = y_final - 10
+            p.drawString(70, y_final,"Sprint: "+str(hu.sprint))
+            y_final = y_final - 10
+            
+            p.setFont('Helvetica-Bold', 9)
+            p.drawString(60, y_final,"VALORES")
+            y_final = y_final - 3
+            p.setFont('Helvetica', 9)
+            y_final = y_final - 10
+            p.drawString(70, y_final,"Valor de Negocio: "+str(hu.valor_Negocio))
+            p.drawString(160, y_final,"Valor Tecnico: "+str(hu.valor_Tecnico))
+            p.drawString(250, y_final,"Prioridad: "+str(hu.prioridad))
+            y_final = y_final - 10
+            
+            p.setFont('Helvetica-Bold', 9)
+            p.drawString(60, y_final,"REGISTROS")
+            y_final = y_final - 3
+            p.setFont('Helvetica', 9)
+            y_final = y_final - 10
+            flujo = Flujos.objects.get(pk=hu.flujo)
+            flujod = flujo.descripcion
+            p.drawString(70, y_final,"Flujo: "+flujod)
+            y_final = y_final - 10
+            list_act = Actividades.objects.filter(flujo_id = flujo.id)
+            #list_act = list_act.first()
+            
+            list_act = sorted(list_act, key=gethuidsort)
+            c = 0
+            for act in list_act:
+                c = c+1
+                if c == hu.f_actividad:
+                    actividad_actual = act
+            p.drawString(70, y_final,"Actividad Actual: "+actividad_actual.descripcion)
+            
+            estado = Estados.objects.get(pk=hu.f_a_estado).descripcion
+            p.drawString(200, y_final,"Estado Actual: "+estado)
+            y_final = y_final - 10
+            p.drawString(70, y_final,"Tiempo Estimado: "+str(hu.tiempo_Estimado))
+            p.drawString(200, y_final,"Tiempo Registrado: "+str(hu.tiempo_Real))
+            y_final = y_final - 10
+            
+            y_final = y_final - 12
+    except:
+        pass
     # Close the PDF object cleanly, and we're done.
     p.showPage()
     p.save()
@@ -4861,84 +4866,87 @@ def reporte_HU_SprintEnCurso(request,proyecto_id,nro_sprint):
                     
     y_final = y_inicial - 20
     p.setFont('Helvetica-Bold', 10)
-    p.drawString(50, y_final,  "Listado de User Stories")
-    y_final = y_final - 5
-    p.line(10, y_final, 590, y_final)   
+    try:
+        p.drawString(50, y_final,  "Listado de User Stories")
+        y_final = y_final - 5
+        p.line(10, y_final, 590, y_final)   
     
-    p.setFont('Helvetica', 9)
+        p.setFont('Helvetica', 9)
     
-    y_final = y_final - 15
-    list_hu = UserStory.objects.filter(proyecto_id = proyecto_id, sprint = nro_sprint)
-    list_hu = sorted(list_hu, key=gethuidsort)
-    
-  
-    
-    for hu in list_hu:
+        y_final = y_final - 15
+        list_hu = UserStory.objects.filter(proyecto_id = proyecto_id, sprint = nro_sprint)
+        list_hu = sorted(list_hu, key=gethuidsort)
         
-        if y_final <= 150:
-            y_final = 800
-            p.showPage()
-        p.setFont('Helvetica-Bold', 9)
-        p.drawString(50, y_final, hu.nombre)
+      
         
-        p.setFontSize(8)
-        y_final = y_final - 10
-        p.setFont('Helvetica', 9)
-        
-        p.setFont('Helvetica-Bold', 9)
-        p.drawString(60, y_final,"GENERAL")
-        p.setFont('Helvetica', 9)
-        
-        y_final = y_final - 12
-        p.drawString(70, y_final,"Codigo: "+hu.codigo)
-        y_final = y_final - 10
-        p.drawString(70, y_final,"Descripcion: "+hu.descripcion)
-        y_final = y_final - 10
-        user_asig = User.objects.get(pk=hu.usuario_Asignado).username
-        p.drawString(70, y_final,"Usuario Asighoras reales0nado: "+user_asig)
-        y_final = y_final - 10
-        
-        p.setFont('Helvetica-Bold', 9)
-        y_final = y_final - 3
-        p.drawString(60, y_final,"VALORES")
-        y_final = y_final - 10
-        p.setFont('Helvetica', 9)
-        
-        p.drawString(70, y_final,"Valor de Negocio: "+str(hu.valor_Negocio))
-        p.drawString(160, y_final,"Valor Tecnico: "+str(hu.valor_Tecnico))
-        p.drawString(250, y_final,"Prioridad: "+str(hu.prioridad))
-        y_final = y_final - 10
-        
-        p.setFont('Helvetica-Bold', 9)
-        y_final = y_final - 3
-        p.drawString(60, y_final,"REGISTROS")
-        y_final = y_final - 10
-        p.setFont('Helvetica', 9)
-        
-        flujo = Flujos.objects.get(pk=hu.flujo)
-        flujod = flujo.descripcion
-        p.drawString(70, y_final,"Flujo: "+flujod)
-        y_final = y_final - 10
-        list_act = Actividades.objects.filter(flujo_id = flujo.id)
-        #list_act = list_act.first()
-        
-        list_act = sorted(list_act, key=gethuidsort)
-        c = 0
-        for act in list_act:
-            c = c+1
-            if c == hu.f_actividad:
-                actividad_actual = act
-        p.drawString(70, y_final,"Actividad Actual: "+actividad_actual.descripcion)
-        
-        estado = Estados.objects.get(pk=hu.f_a_estado).descripcion
-        p.drawString(200, y_final,"Estado Actual: "+estado)
-        y_final = y_final - 10
-        p.drawString(70, y_final,"Tiempo Estimado: "+str(hu.tiempo_Estimado))
-        p.drawString(200, y_final,"Tiempo Registrado: "+str(hu.tiempo_Real))
-        y_final = y_final - 10
-        
-        
-        print 'y final = '+ str(y_final)
+        for hu in list_hu:
+            
+            if y_final <= 150:
+                y_final = 800
+                p.showPage()
+            p.setFont('Helvetica-Bold', 9)
+            p.drawString(50, y_final, hu.nombre)
+            
+            p.setFontSize(8)
+            y_final = y_final - 10
+            p.setFont('Helvetica', 9)
+            
+            p.setFont('Helvetica-Bold', 9)
+            p.drawString(60, y_final,"GENERAL")
+            p.setFont('Helvetica', 9)
+            
+            y_final = y_final - 12
+            p.drawString(70, y_final,"Codigo: "+hu.codigo)
+            y_final = y_final - 10
+            p.drawString(70, y_final,"Descripcion: "+hu.descripcion)
+            y_final = y_final - 10
+            user_asig = User.objects.get(pk=hu.usuario_Asignado).username
+            p.drawString(70, y_final,"Usuario Asighoras reales0nado: "+user_asig)
+            y_final = y_final - 10
+            
+            p.setFont('Helvetica-Bold', 9)
+            y_final = y_final - 3
+            p.drawString(60, y_final,"VALORES")
+            y_final = y_final - 10
+            p.setFont('Helvetica', 9)
+            
+            p.drawString(70, y_final,"Valor de Negocio: "+str(hu.valor_Negocio))
+            p.drawString(160, y_final,"Valor Tecnico: "+str(hu.valor_Tecnico))
+            p.drawString(250, y_final,"Prioridad: "+str(hu.prioridad))
+            y_final = y_final - 10
+            
+            p.setFont('Helvetica-Bold', 9)
+            y_final = y_final - 3
+            p.drawString(60, y_final,"REGISTROS")
+            y_final = y_final - 10
+            p.setFont('Helvetica', 9)
+            
+            flujo = Flujos.objects.get(pk=hu.flujo)
+            flujod = flujo.descripcion
+            p.drawString(70, y_final,"Flujo: "+flujod)
+            y_final = y_final - 10
+            list_act = Actividades.objects.filter(flujo_id = flujo.id)
+            #list_act = list_act.first()
+            
+            list_act = sorted(list_act, key=gethuidsort)
+            c = 0
+            for act in list_act:
+                c = c+1
+                if c == hu.f_actividad:
+                    actividad_actual = act
+            p.drawString(70, y_final,"Actividad Actual: "+actividad_actual.descripcion)
+            
+            estado = Estados.objects.get(pk=hu.f_a_estado).descripcion
+            p.drawString(200, y_final,"Estado Actual: "+estado)
+            y_final = y_final - 10
+            p.drawString(70, y_final,"Tiempo Estimado: "+str(hu.tiempo_Estimado))
+            p.drawString(200, y_final,"Tiempo Registrado: "+str(hu.tiempo_Real))
+            y_final = y_final - 10
+            
+            
+            print 'y final = '+ str(y_final)
+    except:
+        pass
     # Close the PDF object cleanly, and we're done.
     p.showPage()
     p.save()
@@ -5237,8 +5245,10 @@ def reporte_tiempo_estimadoPor_Proyecto(request,proyecto_id,nro_sprint):
     p.drawString(70, y_inicial,"Fecha de incio: "+ str(proyecto.fecha_ini_real))
     y_inicial = y_inicial - 20
     
-  
-    p.drawString(70, y_inicial,"Dias transcurridos: " + str(date.today() - proyecto.fecha_ini_real))
+    try:  
+        p.drawString(70, y_inicial,"Dias transcurridos: " + str(date.today() - proyecto.fecha_ini_real))
+    except:
+        p.drawString(70, y_inicial,"Dias transcurridos: 0" ) 
     y_inicial = y_inicial - 20
     
     if proyecto.nro_sprint > 0:
@@ -5525,103 +5535,109 @@ def reporte_HU_porTiempoEstimado(request,proyecto_id):
                 y_inicial = y_inicial - 12
             
         y_inicial = y_inicial - 12
-                    
-    y_final = y_inicial - 20
-    p.setFont('Helvetica-Bold', 10)
-    p.drawString(50, y_final,  "Listado de User Stories")
-    y_final = y_final - 5
-    p.line(10, y_final, 590, y_final)   
     
-    p.setFont('Helvetica', 9)
-    
-    y_final = y_final - 15
-    
-    
-    list_hu = UserStory.objects.filter(proyecto_id = proyecto_id).order_by('tiempo_Estimado')
-    
-    
-  
-    c = 0
-    for hu in list_hu:
-        c = c+1
-        if y_final <= 150:
-            y_final = 800
-            p.showPage()
-        p.setFont('Helvetica-Bold', 9)
-        p.drawString(50, y_final, '  ')
-        y_final = y_final - 10
-        p.drawString(50, y_final, str(c)+'  '+hu.nombre)
-        
-        p.setFontSize(8)
-        y_final = y_final - 10
-        
-        y_final = y_final - 10
-        p.setFont('Helvetica', 9)
-        
-        p.setFont('Helvetica-Bold', 9)
-        y_final = y_final -3
-        p.drawString(60, y_final,"GENERAL")
-        p.setFont('Helvetica', 9)
-        
-        y_final = y_final - 12
-        p.drawString(70, y_final,"Codigo: "+hu.codigo)
-        y_final = y_final - 10
-        p.drawString(70, y_final,"Descripcion: "+hu.descripcion)
-        y_final = y_final - 10
-
-        
-        p.setFont('Helvetica-Bold', 9)
-        y_final = y_final -3
-        p.drawString(60, y_final,"VALORES")
-        y_final = y_final - 12
-        p.setFont('Helvetica', 9)
-        
-        p.drawString(70, y_final,"Valor de Negocio: "+str(hu.valor_Negocio))
-        p.drawString(160, y_final,"Valor Tecnico: "+str(hu.valor_Tecnico))
-        p.drawString(250, y_final,"Prioridad: "+str(hu.prioridad))
-        y_final = y_final - 10
-        
-        
-        p.setFont('Helvetica-Bold', 9)
-        y_final = y_final -3
-        p.drawString(60, y_final,"REGISTROS")
-        y_final = y_final - 12
-        p.setFont('Helvetica', 9)
-        
-        try: 
-            flujo = Flujos.objects.get(pk=hu.flujo)
-            flujod = flujo.descripcion
-            p.drawString(70, y_final,"Flujo: "+flujod)
-            y_final = y_final - 10
-            list_act = Actividades.objects.filter(flujo_id = flujo.id)
-        #list_act = list_act.first()
-        
-            list_act = sorted(list_act, key=gethuidsort)
+    try:          
+            y_final = y_inicial - 20
+            p.setFont('Helvetica-Bold', 10)
+            p.drawString(50, y_final,  "Listado de User Stories")
+            y_final = y_final - 5
+            p.line(10, y_final, 590, y_final)   
+            
+            p.setFont('Helvetica', 9)
+            
+            y_final = y_final - 15
+            
+            
+            list_hu = UserStory.objects.filter(proyecto_id = proyecto_id).order_by('tiempo_Estimado')
+            
+            
+          
             c = 0
-            for act in list_act:
+            for hu in list_hu:
                 c = c+1
-                if c == hu.f_actividad:
-                    actividad_actual = act
-            p.drawString(70, y_final,"Actividad Actual: "+actividad_actual.descripcion)
-            estado = Estados.objects.get(pk=hu.f_a_estado).descripcion
-            p.drawString(200, y_final,"Estado Actual: "+estado)
-        except:
-            
-            p.drawString(70, y_final,"Flujo: No asignado")
-            y_final = y_final - 10
-            p.drawString(70, y_final,"Actividad Actual: No asignado")
-            
-            p.drawString(200, y_final,"Estado Actual: No asignado")
-            
+                if y_final <= 150:
+                    y_final = 800
+                    p.showPage()
+                p.setFont('Helvetica-Bold', 9)
+                p.drawString(50, y_final, '  ')
+                y_final = y_final - 10
+                p.drawString(50, y_final, str(c)+'  '+hu.nombre)
+                
+                p.setFontSize(8)
+                y_final = y_final - 10
+                
+                y_final = y_final - 10
+                p.setFont('Helvetica', 9)
+                
+                p.setFont('Helvetica-Bold', 9)
+                y_final = y_final -3
+                p.drawString(60, y_final,"GENERAL")
+                p.setFont('Helvetica', 9)
+                
+                y_final = y_final - 12
+                p.drawString(70, y_final,"Codigo: "+hu.codigo)
+                y_final = y_final - 10
+                p.drawString(70, y_final,"Descripcion: "+hu.descripcion)
+                y_final = y_final - 10
         
-        y_final = y_final - 10
-        p.drawString(70, y_final,"Tiempo Estimado: "+str(hu.tiempo_Estimado))
-        p.drawString(200, y_final,"Tiempo Registrado: "+str(hu.tiempo_Real))
-        y_final = y_final - 10
-        
-        
-       
-    # Close the PDF object cleanly, and we're done.
+                
+                p.setFont('Helvetica-Bold', 9)
+                y_final = y_final -3
+                p.drawString(60, y_final,"VALORES")
+                y_final = y_final - 12
+                p.setFont('Helvetica', 9)
+                
+                p.drawString(70, y_final,"Valor de Negocio: "+str(hu.valor_Negocio))
+                p.drawString(160, y_final,"Valor Tecnico: "+str(hu.valor_Tecnico))
+                p.drawString(250, y_final,"Prioridad: "+str(hu.prioridad))
+                y_final = y_final - 10
+                
+                
+                p.setFont('Helvetica-Bold', 9)
+                y_final = y_final -3
+                p.drawString(60, y_final,"REGISTROS")
+                y_final = y_final - 12
+                p.setFont('Helvetica', 9)
+                
+                try: 
+                    flujo = Flujos.objects.get(pk=hu.flujo)
+                    flujod = flujo.descripcion
+                    p.drawString(70, y_final,"Flujo: "+flujod)
+                    y_final = y_final - 10
+                    list_act = Actividades.objects.filter(flujo_id = flujo.id)
+                #list_act = list_act.first()
+                
+                    list_act = sorted(list_act, key=gethuidsort)
+                    c = 0
+                    for act in list_act:
+                        c = c+1
+                        if c == hu.f_actividad:
+                            actividad_actual = act
+                    p.drawString(70, y_final,"Actividad Actual: "+actividad_actual.descripcion)
+                    estado = Estados.objects.get(pk=hu.f_a_estado).descripcion
+                    p.drawString(200, y_final,"Estado Actual: "+estado)
+                except:
+                    
+                    p.drawString(70, y_final,"Flujo: No asignado")
+                    y_final = y_final - 10
+                    p.drawString(70, y_final,"Actividad Actual: No asignado")
+                    
+                    p.drawString(200, y_final,"Estado Actual: No asignado")
+                    
+                
+                y_final = y_final - 10
+                p.drawString(70, y_final,"Tiempo Estimado: "+str(hu.tiempo_Estimado))
+                p.drawString(200, y_final,"Tiempo Registrado: "+str(hu.tiempo_Real))
+                y_final = y_final - 10
+                
+                
+               
+            # Close the PDF object cleanly, and we're done.
+            
+    
+    except:
+        p.drawString(60,400,"NO HAY REGISTROS")
+    
     p.showPage()
     p.save()
     return response
