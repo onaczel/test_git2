@@ -5496,7 +5496,7 @@ def reporte_HU_porTiempoEstimado(request,proyecto_id):
 
     proyecto = Proyectos.objects.get(pk=proyecto_id)
     p.setFont('Helvetica', 10)
-    p.drawString(50, 720, "TIPO: Resporte de user stories ordenados segun tiempo estimado de finalizacion")
+    p.drawString(50, 720, "TIPO: Reporte de user stories ordenados segun tiempo estimado de finalizacion")
     p.drawString(50, 700, "PROYECTO: "+ proyecto.nombre)
     try:
         estado = Estados_Scrum.objects.get(id = proyecto.estado_id) 
