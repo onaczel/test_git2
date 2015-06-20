@@ -13,8 +13,10 @@
 <form action="{% url 'apps:asigparticipanterol' proyecto.id usuario.id %}" method="post">{% csrf_token %}
 {% if roles %}
 	{% for r in roles%}
-		<input type="checkbox" name="roles[]" id="option{{r.id}}" value={{r.id}} />
-		<label for="option{{r.id}}"><b>{{r.descripcion}}</b></label><br />
+		{% if r.id != 3 and r.id != 4 %}
+			<input type="checkbox" name="roles[]" id="option{{r.id}}" value={{r.id}} />
+			<label for="option{{r.id}}"><b>{{r.descripcion}}</b></label><br />
+		{% endif %}
 	{% endfor %}
 {% else %}
  	<p>No hay roles disponibles</p>

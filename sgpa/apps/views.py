@@ -1626,6 +1626,7 @@ def listflujosproyectosMod(request, proyecto_id):
     flujos = Flujos.objects.filter(proyecto_id = proyecto_id, estado = True)
     actividades = Actividades.objects.filter(plantilla = False , estado=True)
     mispermisos = misPermisos(request.user.id, proyecto_id)
+    hu_lista = UserStory.objects.filter(sprint = proyecto.nro_sprint)
     
     return render_to_response("apps/project_modificar_listflujo.html", {"proyecto":proyecto , "flujos":flujos, "actividades":actividades, 'misPermisos':mispermisos})
 
