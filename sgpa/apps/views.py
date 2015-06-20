@@ -463,7 +463,7 @@ def listrolesproj(request, proyecto_id):
     de modificacion de roles
     """
     proyecto = Proyectos.objects.get(pk = proyecto_id)
-    roles = Roles.objects.filter(sistema=False)
+    roles = Roles.objects.filter(estado = True, sistema=False)
     user = request.user
     mispermisos = misPermisos(user.id, proyecto_id)
     return render_to_response("apps/role_admin_project.html", {"roles":roles, 'proyecto':proyecto, 'misPermisos':mispermisos,  'user_logged':user.id, 'guardado':False, 'proyectonombre':proyecto.nombre})
@@ -523,7 +523,7 @@ def asignarrolproj(request, proyecto_id, role_id):
         print "error"
     
     
-    roles = Roles.objects.filter(sistema = False)
+    roles = Roles.objects.filter(estado = True, sistema=False)
     user = request.user
     mispermisos = misPermisos(user.id, proyecto_id)
     proyecto = Proyectos.objects.get(pk=proyecto_id)
@@ -536,6 +536,9 @@ def rolemodifyproj(request, proyecto_id, role_id):
     @param role_id: Id de un rol registrado en el sistema
     @return: render a apps/role_set_permisos_mod.html con una lista de permisos, el id y la descripcion del rol
     """
+    rol_en_uso = False
+    user = request.user
+    mensaje = []
     proyecto = Proyectos.objects.get(pk=proyecto_id)
     rol = get_object_or_404(Roles, pk=role_id)
     mispermisos = misPermisos(request.user.id, proyecto_id)
@@ -547,9 +550,18 @@ def rolemodifyproj(request, proyecto_id, role_id):
         #return render_to_response("apps/role_set_permisos_mod.html", {"role_id":rol.id, "role_descripcion":rol.descripcion}, context_instance=RequestContext(request))
         return rolemodifypermisos(request, 0, rol.id, proyecto_id)
     else:
-        form = RoleModifyForm(initial={'descripcion':rol.descripcion})
+        equipos = Equipo.objects.filter(rol_id = role_id)
+        if not equipos:
+            form = RoleModifyForm(initial={'descripcion':rol.descripcion})
+        else:
+            rol_en_uso = True
+            roles = Roles.objects.filter(estado = True, sistema=False)
+            mensaje = "El Rol \"" + str(rol.descripcion) + "\" esta siendo usado por algun usuario"
     
-    return render_to_response('apps/role_modify_form.html' ,{'form':form, 'proyecto_id':proyecto.id, 'proyectonombre':proyecto.nombre, 'misPermisos':mispermisos, "rol":rol, 'user_logged':0, 'proj':True}, context_instance=RequestContext(request))
+    if rol_en_uso:
+        return render_to_response("apps/role_admin_project.html", {"roles":roles, 'proyecto':proyecto, 'misPermisos':mispermisos,  'user_logged':user.id, 'guardado':False, 'proyectonombre':proyecto.nombre, "mensaje":mensaje})
+    else:
+        return render_to_response('apps/role_modify_form.html' ,{'form':form, 'proyecto_id':proyecto.id, 'proyectonombre':proyecto.nombre, 'misPermisos':mispermisos, "rol":rol, 'user_logged':0, 'proj':True}, context_instance=RequestContext(request))
     
 def roledeleteproj(request, proyecto_id, role_id):
     """
@@ -562,14 +574,24 @@ def roledeleteproj(request, proyecto_id, role_id):
     """
     proyecto = Proyectos.objects.get(pk=proyecto_id)
     r = get_object_or_404(Roles, pk=role_id)
-    
-    r.estado = False
-    r.save()
+    user = request.user
+    mensaje = []
+    rol_en_uso = False
+    equipos = Equipo.objects.filter(rol_id = role_id)
+    if not equipos:
+        r.estado = False
+        r.save()
+    else:
+        rol_en_uso = True
+        mensaje = "El Rol \"" + str(r.descripcion) + "\" esta siendo usado por algun usuario"
     
     roles = Roles.objects.filter(estado = True, sistema=False)
     mispermisos = misPermisos(request.user.id, proyecto_id)
     
-    return render_to_response("apps/role_admin_project.html", {"roles":roles, 'misPermisos':mispermisos, 'proyecto':proyecto, 'eliminado':True})
+    if rol_en_uso:
+        return render_to_response("apps/role_admin_project.html", {"roles":roles, 'proyecto':proyecto, 'misPermisos':mispermisos,  'user_logged':user.id, 'guardado':False, 'proyectonombre':proyecto.nombre, "mensaje":mensaje})
+    else:
+        return render_to_response("apps/role_admin_project.html", {"roles":roles, 'misPermisos':mispermisos, 'proyecto':proyecto, 'eliminado':True})
 
 
 def muser(request, user_logged, user_id):

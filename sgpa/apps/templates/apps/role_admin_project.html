@@ -71,6 +71,11 @@
 	
 {% endblock %}
 {% block contenido %}
+	{% if mensaje %}
+		<table border=1 bordercolor="red" width=100%>
+			<tr><td align="center"><font color="red"><p>{{mensaje}}</p></font></td></tr>
+		</table>
+	{% endif %}
 	{% if guardado %}
 		<table bordercolor="green", border=1px, width=100%>
 			<tr>
