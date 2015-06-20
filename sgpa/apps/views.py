@@ -4430,7 +4430,8 @@ def reporte_por_usuario(request, proyecto_id, user_id):
     y_final = y_final - 15
     
     p.setFont('Helvetica', 9)
-    if UserStory.objects.filter(usuario_Asignado = user_id, estado_scrum =1):
+
+    if UserStory.objects.filter(usuario_Asignado = user_id, estado_scrum =1, proyecto_id = proyecto_id):
         for hu in UserStory.objects.filter(usuario_Asignado = user_id, estado_scrum =1, proyecto_id = proyecto_id):
             if y_final <= 150:
                 y_final = 800
@@ -4506,8 +4507,8 @@ def reporte_por_usuario(request, proyecto_id, user_id):
     
     y_final = y_final - 15
     p.setFont('Helvetica', 9)
-    if UserStory.objects.filter(usuario_Asignado = user_id, estado_scrum =2):
-        for hu in UserStory.objects.filter(usuario_Asignado = user_id, estado_scrum =2):
+    if UserStory.objects.filter(usuario_Asignado = user_id, estado_scrum =2, proyecto_id = proyecto_id):
+        for hu in UserStory.objects.filter(usuario_Asignado = user_id, estado_scrum =2, proyecto_id = proyecto_id):
             if y_final <= 150:
                 y_final = 800
                 p.showPage()
@@ -4582,8 +4583,8 @@ def reporte_por_usuario(request, proyecto_id, user_id):
     
     y_final = y_final - 15
     p.setFont('Helvetica', 9)
-    if UserStory.objects.filter(usuario_Asignado = user_id, estado_scrum =4):
-        for hu in UserStory.objects.filter(usuario_Asignado = user_id, estado_scrum =4):
+    if UserStory.objects.filter(usuario_Asignado = user_id, estado_scrum =4, proyecto_id = proyecto_id):
+        for hu in UserStory.objects.filter(usuario_Asignado = user_id, estado_scrum =4, proyecto_id = proyecto_id):
             if y_final <= 150:
                 y_final = 800
                 p.showPage()
@@ -4661,8 +4662,8 @@ def reporte_por_usuario(request, proyecto_id, user_id):
     
     y_final = y_final - 15
     p.setFont('Helvetica', 9)
-    if UserStory.objects.filter(usuario_Asignado = user_id, estado_scrum =5):
-        for hu in UserStory.objects.filter(usuario_Asignado = user_id, estado_scrum =5):
+    if UserStory.objects.filter(usuario_Asignado = user_id, estado_scrum =5, proyecto_id = proyecto_id):
+        for hu in UserStory.objects.filter(usuario_Asignado = user_id, estado_scrum =5, proyecto_id = proyecto_id):
             if y_final <= 150:
                 y_final = 800
                 p.showPage()
@@ -4737,8 +4738,8 @@ def reporte_por_usuario(request, proyecto_id, user_id):
     
     y_final = y_final - 15
     p.setFont('Helvetica', 9)
-    if UserStory.objects.filter(usuario_Asignado = user_id, estado_scrum =6):
-        for hu in UserStory.objects.filter(usuario_Asignado = user_id, estado_scrum =6):
+    if UserStory.objects.filter(usuario_Asignado = user_id, estado_scrum =6, proyecto_id = proyecto_id):
+        for hu in UserStory.objects.filter(usuario_Asignado = user_id, estado_scrum =6, proyecto_id = proyecto_id):
             if y_final <= 150:
                 y_final = 800
                 p.showPage()
@@ -4801,7 +4802,10 @@ def reporte_por_usuario(request, proyecto_id, user_id):
             y_final = y_final - 10
             
             y_final = y_final - 12
-            p.drawString(60, y_final,"Motivo de Cancelacion: "+hu.motivo_cancelacion)
+            try:
+                p.drawString(60, y_final,"Motivo de Cancelacion: "+hu.motivo_cancelacion)
+            except:
+                p.drawString(60, y_final,"Motivo de Cancelacion: Ninguno")
     else:
         p.setFontSize(8)
         p.drawString(60, y_final,  "No existen Registros")
@@ -4947,7 +4951,7 @@ def reporte_HU_SprintEnCurso(request,proyecto_id,nro_sprint):
             p.drawString(70, y_final,"Descripcion: "+hu.descripcion)
             y_final = y_final - 10
             user_asig = User.objects.get(pk=hu.usuario_Asignado).username
-            p.drawString(70, y_final,"Usuario Asighoras reales0nado: "+user_asig)
+            p.drawString(70, y_final,"Usuario Asignado: "+user_asig)
             y_final = y_final - 10
             
             p.setFont('Helvetica-Bold', 9)
@@ -5625,8 +5629,12 @@ def reporte_HU_porTiempoEstimado(request,proyecto_id):
                 y_final = y_final - 10
                 p.drawString(70, y_final,"Descripcion: "+hu.descripcion)
                 y_final = y_final - 10
-        
-                
+                try:
+                    user_asig = User.objects.get(pk=hu.usuario_Asignado).username
+                    p.drawString(70, y_final,"Usuario Asignado: "+user_asig)
+                except:
+                    p.drawString(70, y_final,"Usuario Asignado: None")
+                y_final = y_final - 10
                 p.setFont('Helvetica-Bold', 9)
                 y_final = y_final -3
                 p.drawString(60, y_final,"VALORES")
