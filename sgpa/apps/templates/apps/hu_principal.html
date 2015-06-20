@@ -14,7 +14,7 @@
               <a href="{% url 'apps:huprincipal' proyecto.id hu.id %}"></i><font color="FFFFFF">{{hu.codigo}} {{hu.nombre}}</font></a>          
         </li>	
 	{% if misPermisos.MUS %}
-		{% if hu.estado_scrum.id != 5 %}
+		{% if hu.estado_scrum.id != 5 and hu.estado_scrum.id != 6%}
 		<li>
               <a href="{% url 'apps:editarHu' proyecto.id hu.id  %}"><i class="fa fa-fw fa-edit"></i> Editar</a>          
         </li>			

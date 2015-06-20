@@ -92,21 +92,27 @@
 	{% endif %}
 	
 	{% if misPermisos.CRP %}
-		<a href="{% url 'apps:rolecreateproj' proyecto.id %}">Nuevo Rol</a><br />
+		{% if proyecto.estado_id != 5 %}
+			<a href="{% url 'apps:rolecreateproj' proyecto.id %}">Nuevo Rol</a><br />
+		{% endif %}
 	{% endif %}
 	<br>
 	{% if roles %}
-	<table width = 15%>
+	<table width = 30%>
 
 		<tr>
 		{% for r in roles %}
 			{% if r.estado == True and r.id != 3 and r.id != 4 %}
 				<td><label>{{r.descripcion}}</label></td>
 				{% if misPermisos.MRP %}
-					<td><a href="{% url  'apps:rolemodifyproj' proyecto.id r.id %}">Modificar</a></td>
+					{% if proyecto.estado_id != 5 %}
+						<td><a href="{% url  'apps:rolemodifyproj' proyecto.id r.id %}">Modificar</a></td>
+					{% endif %}
 				{% endif %}
 				{% if misPermisos.ERP %}
-					<td><a href="{% url 'apps:roledeleteproj' proyecto.id r.id %}">Eliminar</a></td>
+					{% if proyecto.estado_id != 5 %}
+						<td><a href="{% url 'apps:roledeleteproj' proyecto.id r.id %}">Eliminar</a></td>
+					{% endif %}
 				{% endif %}
 			{% endif %}
 			</tr>

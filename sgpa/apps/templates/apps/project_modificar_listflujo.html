@@ -78,8 +78,9 @@
 		<tr><td align="center"><p><font color="green">Mensaje: El flujo se ha eliminado con exito</font></p></td></tr>
 	</table>
 {% endif %}
-
-<br><a href="{% url 'apps:listflujosproyectos' proyecto.id %}">Asignar Nuevo Flujo</a><br />
+{% if proyecto.estado_id != 5 %}
+	<br><a href="{% url 'apps:listflujosproyectos' proyecto.id %}">Asignar Nuevo Flujo</a><br />
+{% endif %}
 
 <table border="0" frame="lhs" borderstyle= "doble" cellspacing=2 cellpadding=20 bordercolor="green" width=50%>	
 	{% for f in flujos_permitidos %}
@@ -102,12 +103,14 @@
 					<tr>
 				</table>
 			</td>
-			<td align="right" height=50px valign="bottom">
-				<br><a href="{% url 'apps:flujosproyectosRequestMod' proyecto.id f.id 0 %}">Modificar</a><br />
-			</td>
-			<td align="right" valign="bottom">
-				<br><a href="{% url 'apps:flowdeleteproj' proyecto.id f.id %}">Eliminar</a><br />
-			</td>
+			{% if proyecto.estado_id != 5 %}
+				<td align="right" height=50px valign="bottom">
+					<br><a href="{% url 'apps:flujosproyectosRequestMod' proyecto.id f.id 0 %}">Modificar</a><br />
+				</td>
+				<td align="right" valign="bottom">
+					<br><a href="{% url 'apps:flowdeleteproj' proyecto.id f.id %}">Eliminar</a><br />
+				</td>
+			{% endif %}
 		</tr>
 		<tr height=20px></tr>
 	{% endfor %} 
