@@ -2180,7 +2180,11 @@ def editarHu(request, proyecto_id, hu_id):
         
         
         try:
-            user = User.objects.get(username = request.POST['username'])
+            print "hola1"
+            asd = request.POST['username']
+            print "hola2"
+            print asd
+            user = User.objects.get(username = asd)
         except: 
             user = None
         

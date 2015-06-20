@@ -275,7 +275,7 @@ function drawCurveTypes() {
 				{% endif %}
 			</table>
 			<br />
-			{% if sprint.estado != 2%}
+			{% if sprint.estado != 2 and misPermisos.PS == True %}
 				<input type="submit", name="cambio", value="Establecer Horas">
 			{% endif %}
 		</form>
