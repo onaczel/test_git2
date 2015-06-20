@@ -66,7 +66,9 @@
 			<tr><td align="center"><font color="green"><p>Mensaje: La Nota se ha guardado correctamente.</p></font></td></tr>
 		</table>
 	{% endif %}
-	<a href="{% url 'apps:agregarNotaHu' proyecto.id hu.id %}">Nueva Nota</a>
+	{% if proyecto.estado_id != 5 %}
+		<a href="{% url 'apps:agregarNotaHu' proyecto.id hu.id %}">Nueva Nota</a>
+	{% endif %}
 	{% if notas %}
 		
 			<h3 align="center">Notas</h3>

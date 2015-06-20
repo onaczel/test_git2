@@ -1623,12 +1623,26 @@ def listflujosproyectosMod(request, proyecto_id):
     @return: render a apps/project_modificar_listflujo.html con el proyecto donde se encuentra, los flujos del proyecto y las actividades de los flujos
     """
     proyecto = Proyectos.objects.get(id = proyecto_id)
-    flujos = Flujos.objects.filter(proyecto_id = proyecto_id, estado = True)
+    flujos_list = Flujos.objects.filter(proyecto_id = proyecto_id, estado = True)
+    flujos = [] 
+    flujos_np = []
+    
     actividades = Actividades.objects.filter(plantilla = False , estado=True)
     mispermisos = misPermisos(request.user.id, proyecto_id)
-    hu_lista = UserStory.objects.filter(sprint = proyecto.nro_sprint)
+    hu_lista = UserStory.objects.filter(sprint = proyecto.nro_sprint, proyecto_id = proyecto.id)
+    existe = False
+    for fl in flujos_list:
+        for hu in hu_lista:
+            if hu.flujo == fl.id:
+                existe = True
+        if existe == False:
+            flujos.append(fl)
+        else:
+            flujos_np.append(fl)
+            existe = False
+            
     
-    return render_to_response("apps/project_modificar_listflujo.html", {"proyecto":proyecto , "flujos":flujos, "actividades":actividades, 'misPermisos':mispermisos})
+    return render_to_response("apps/project_modificar_listflujo.html", {"proyecto":proyecto , "flujos":flujos_list, "flujos_permitidos":flujos, "flujos_no_permitidos":flujos_np,"actividades":actividades, 'misPermisos':mispermisos})
 
 def flujosproyectosRequestMod(request, proyecto_id, flujo_id, actividad_id):
     """
@@ -1986,7 +2000,7 @@ def fileAdjunto(request, proyecto_id, hu_id):
                 adjunto.save()  
                 oldAdjunto.save()
         
-                return render_to_response('apps/hu_fileManager.html', {"msg":msg,"lista":lista,'misPermisos':mispermisos,'hu_id':hu_id,'hu':hu,"proyecto_id":proyecto_id, 'proyecto_nombre':proyecto.nombre, }, context_instance = RequestContext(request))
+                return render_to_response('apps/hu_fileManager.html', {"msg":msg,"lista":lista,'misPermisos':mispermisos,'hu_id':hu_id,'hu':hu,"proyecto_id":proyecto_id, 'proyecto_nombre':proyecto.nombre, "proyecto":proyecto}, context_instance = RequestContext(request))
             else:
                 adjunto = archivoAdjunto()
                 data = file.read()
@@ -1998,14 +2012,14 @@ def fileAdjunto(request, proyecto_id, hu_id):
                 
                 adjunto.save()  
         
-                return render_to_response('apps/hu_fileManager.html', {"msg":msg,"lista":lista,'misPermisos':mispermisos,'hu_id':hu_id,'hu':hu,"proyecto_id":proyecto_id, 'proyecto_nombre':proyecto.nombre, }, context_instance = RequestContext(request))
+                return render_to_response('apps/hu_fileManager.html', {"msg":msg,"lista":lista,'misPermisos':mispermisos,'hu_id':hu_id,'hu':hu,"proyecto_id":proyecto_id, 'proyecto_nombre':proyecto.nombre, "proyecto":proyecto}, context_instance = RequestContext(request))
         else:
             msg = "Archivo sobrepaso 10 MB"
-        return render_to_response('apps/hu_fileManager.html', {"msg":msg,"lista":lista,'misPermisos':mispermisos,'hu_id':hu_id,'hu':hu,"proyecto_id":proyecto_id, 'proyecto_nombre':proyecto.nombre, }, context_instance = RequestContext(request))
+        return render_to_response('apps/hu_fileManager.html', {"msg":msg,"lista":lista,'misPermisos':mispermisos,'hu_id':hu_id,'hu':hu,"proyecto_id":proyecto_id, 'proyecto_nombre':proyecto.nombre, "proyecto":proyecto}, context_instance = RequestContext(request))
 
     
     
-    return render_to_response('apps/hu_fileManager.html', {"msg":msg,"lista":lista,'misPermisos':mispermisos,'hu_id':hu_id,'hu':hu,"proyecto_id":proyecto_id, 'proyecto_nombre':proyecto.nombre, }, context_instance = RequestContext(request))
+    return render_to_response('apps/hu_fileManager.html', {"msg":msg,"lista":lista,'misPermisos':mispermisos,'hu_id':hu_id,'hu':hu,"proyecto_id":proyecto_id, 'proyecto_nombre':proyecto.nombre, "proyecto":proyecto}, context_instance = RequestContext(request))
 
 def notasHu(request, proyecto_id, hu_id):
     
@@ -3964,6 +3978,7 @@ def finalizarProyecto(request, proyecto_id, hu_id):
                 huv = UserStoryVersiones()
                 copiarHU(hu, huv, User.objects.get(username = request.user))
                 hu.estado_scrum_id = 6
+                hu.estado = False
                 hu.motivo_cancelacion = request.POST['motivo_cancelacion']
                 hu.save()
                 mensaje = "User Story \"" + str(hu.nombre) + "\" Cancelado, Motivo: \"" + str(hu.motivo_cancelacion) + "\""
@@ -3980,6 +3995,7 @@ def finalizarProyecto(request, proyecto_id, hu_id):
                     huv = UserStoryVersiones()
                     copiarHU(hu, huv, User.objects.get(username = request.user))
                     hu.estado_scrum_id = 6
+                    hu.estado = False
                     hu.motivo_cancelacion = request.POST['motivo_cancelacion']
                     hu.save()
                 hus = []

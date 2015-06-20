@@ -275,7 +275,9 @@ function drawCurveTypes() {
 				{% endif %}
 			</table>
 			<br />
-			<input type="submit", name="cambio", value="Establecer Horas">
+			{% if sprint.estado != 2%}
+				<input type="submit", name="cambio", value="Establecer Horas">
+			{% endif %}
 		</form>
 	</center>
 {% endblock %}

@@ -46,7 +46,9 @@
 	</center>
 	<br>
 	{% if misPermisos.MUS %}
-		<a href="{% url 'apps:volverVersionHU' proyecto_id hu.id huv.id %}">Volver a Version {{huv.version}}</a>
+		{% if proyecto.estado_id != 5 %}
+			<a href="{% url 'apps:volverVersionHU' proyecto_id hu.id huv.id %}">Volver a Version {{huv.version}}</a>
+		{% endif %}
 	{% endif %} 
 {% endblock %}
 {% block atras %}
