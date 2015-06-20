@@ -72,7 +72,7 @@
 	{% endif %}
 
 	<!-- Pero debe ser: Si el User Story esta "Iniciado" entonces se pueden sumar las horas -->
-	{% if hu.sprint == proyecto.nro_sprint %}
+	{% if hu.sprint == proyecto.nro_sprint and hu.usuario_Asignado == user_id %}
 		{% if hu.estado_scrum_id == 2 or hu.estado_scrum_id == 1%}
 			<a href="{% url 'apps:crearregistroHu' proyecto.id hu.id %}">Nuevo Registro</a>
 		{% endif %}

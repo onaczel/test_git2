@@ -2180,7 +2180,11 @@ def editarHu(request, proyecto_id, hu_id):
         
         
         try:
-            user = User.objects.get(username = request.POST['username'])
+            print "hola1"
+            asd = request.POST['username']
+            print "hola2"
+            print asd
+            user = User.objects.get(username = asd)
         except: 
             user = None
         
@@ -2291,9 +2295,10 @@ def registroHu(request, proyecto_id, hu_id):
     
     hu_reg = sorted(hu_reg, key=gethudate, reverse=True)
     proyecto = Proyectos.objects.get(pk=proyecto_id)
+    user_id = request.user.id
     mispermisos = misPermisos(request.user.id, proyecto_id)
     
-    return render_to_response('apps/hu_registro.html', {'hu_reg':hu_reg, 'hu':hu, 'proyecto':proyecto, 'misPermisos':mispermisos}, context_instance=RequestContext(request))
+    return render_to_response('apps/hu_registro.html', {'hu_reg':hu_reg, 'hu':hu, 'proyecto':proyecto, 'misPermisos':mispermisos, 'user_id':user_id}, context_instance=RequestContext(request))
 
 
 
@@ -2333,6 +2338,7 @@ def crearregistroHu(request, proyecto_id, hu_id):
         #"respuesta" se puede manejar como sea necesario
         #termina asignacion de horas a los dias del sprint
         hu_reg = UserStoryRegistro.objects.filter(idr = hu.id)
+        hu = UserStory.objects.get(pk=hu_id)
         
         hu_reg = sorted(hu_reg, key=gethudate, reverse=True)
         return render_to_response('apps/hu_registro.html', {'hu':hu, 'proyecto':proyecto, 'guardado':guardado, 'hu_reg':hu_reg, "respuesta":respuesta}, context_instance=RequestContext(request))
@@ -2958,6 +2964,7 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
                             mensaje = "No se olvide de asignarle un usuario responsable al User Story: " + str(hu_proyecto.nombre)
                             us = False
                             break
+                        setlog(request, hu_proyecto.id)
                     if us and flu:
                         proyecto.fecha_ini_real = datetime.today().strftime("%Y-%m-%d")
                         mensaje = iniciarSprint(proyecto_id, 1)
@@ -5493,7 +5500,7 @@ def reporte_HU_porTiempoEstimado(request,proyecto_id):
 
     proyecto = Proyectos.objects.get(pk=proyecto_id)
     p.setFont('Helvetica', 10)
-    p.drawString(50, 720, "TIPO: Resporte de user stories ordenados segun tiempo estimado de finalizacion")
+    p.drawString(50, 720, "TIPO: Reporte de user stories ordenados segun tiempo estimado de finalizacion")
     p.drawString(50, 700, "PROYECTO: "+ proyecto.nombre)
     try:
         estado = Estados_Scrum.objects.get(id = proyecto.estado_id) 

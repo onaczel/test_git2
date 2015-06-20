@@ -2,7 +2,7 @@
 {% block uptitulo %}
 <h1>{{proyecto.nombre}}</h1>
 {% endblock %}
-{% block encabezado %}
+{% block titulo %}
 <h1>Reportes</h1>
 {% endblock %}
 {% block index %}
@@ -73,17 +73,17 @@
 {% block contenido %}
 	
 	<table>
-	<tr><td><a href="{% url 'apps:reporte_por_equipo' proyecto.id proyecto.nro_sprint %}"><i class="fa fa-fw fa-edit"></i> Cantidad de trabajos en curso por equipo</a></br></br></td></tr>
+	<tr><td><a href="{% url 'apps:reporte_por_equipo' proyecto.id proyecto.nro_sprint %}"><i class="fa fa-fw fa-edit"></i> Reporte de Trabajos por Equipo </a></br></br></td></tr>
 	
-	<tr><td><a href="{% url 'apps:reporte_select_user' proyecto.id %}"><i class="fa fa-fw fa-edit"></i> Cantidad de trabajos por usuario pendiente, en curso, finalizados</a></br></br></td></tr>
+	<tr><td><a href="{% url 'apps:reporte_select_user' proyecto.id %}"><i class="fa fa-fw fa-edit"></i> Reporte de Trabajos por Usuario </a></br></br></td></tr>
 	
-	<tr><td><a href="{% url 'apps:reporte_HU_porPrioridad' proyecto.id proyecto.nro_sprint %}"><i class="fa fa-fw fa-edit"></i> Lista clasificada por orden de prioridad de todas las actividades  para completar un proyecto</a></br></br></td></tr>
+	<tr><td><a href="{% url 'apps:reporte_HU_porPrioridad' proyecto.id proyecto.nro_sprint %}"><i class="fa fa-fw fa-edit"></i> Reporte de Lista de Actividades para completar un Proyecto </a></br></br></td></tr>
 	
-	<tr><td><a href="{% url 'apps:reporte_tiempo_estimadoPor_Proyecto' proyecto.id proyecto.nro_sprint %}"><i class="fa fa-fw fa-edit"></i> Lista de tiempo estimado por  proyecto y la ejecución del mismo (graficado, sprint por proyecto)</a></br></br></td></tr>
+	<tr><td><a href="{% url 'apps:reporte_tiempo_estimadoPor_Proyecto' proyecto.id proyecto.nro_sprint %}"><i class="fa fa-fw fa-edit"></i> Reporte de Tiempo Estimado y Ejecucion del Proyecto</a></br></br></td></tr>
 	
-	<tr><td><a href="{% url 'apps:reporte_HU_porTiempoEstimado' proyecto.id  %}"><i class="fa fa-fw fa-edit"></i> El Backlog del Producto, lista ordenada de User Stories, en el orden que esperamos deban terminarse</a></br></br></td></tr>
+	<tr><td><a href="{% url 'apps:reporte_HU_porTiempoEstimado' proyecto.id  %}"><i class="fa fa-fw fa-edit"></i> Reporte del Backlog del Producto </a></br></br></td></tr>
 	
-	<tr><td><a href="{% url 'apps:reporte_HU_SprintEnCurso' proyecto.id proyecto.nro_sprint %}"><i class="fa fa-fw fa-edit"></i> El Backlog del Sprint, lista de los elementos del Backlog del Producto, elegidos para ser desarrollados en el Sprint actual</a></br></br></td></tr>
+	<tr><td><a href="{% url 'apps:reporte_HU_SprintEnCurso' proyecto.id proyecto.nro_sprint %}"><i class="fa fa-fw fa-edit"></i> Reporte del Backlog del Sprint en curso</a></br></br></td></tr>
 	</table>
 
 {% endblock %}
