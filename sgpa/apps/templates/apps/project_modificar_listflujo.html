@@ -82,7 +82,7 @@
 <br><a href="{% url 'apps:listflujosproyectos' proyecto.id %}">Asignar Nuevo Flujo</a><br />
 
 <table border="0" frame="lhs" borderstyle= "doble" cellspacing=2 cellpadding=20 bordercolor="green" width=50%>	
-	{% for f in flujos %}
+	{% for f in flujos_permitidos %}
 		<tr>
 			<td>
 				<table border=1 cellspacing=0 cellpadding=2 bordercolor="666633" width=100%>
@@ -107,6 +107,29 @@
 			</td>
 			<td align="right" valign="bottom">
 				<br><a href="{% url 'apps:flowdeleteproj' proyecto.id f.id %}">Eliminar</a><br />
+			</td>
+		</tr>
+		<tr height=20px></tr>
+	{% endfor %} 
+	{% for f in flujos_no_permitidos %}
+		<tr>
+			<td>
+				<table border=1 cellspacing=0 cellpadding=2 bordercolor="666633" width=100%>
+					<tr>
+						<strong>{{f.descripcion}}</strong>
+					</tr>
+					<tr>
+						{% if actividades %}
+							{% for actividad in actividades %}
+								{% if actividad.flujo_id == f.id%}
+									<td width=10%>{{actividad.descripcion}}</td>
+								{% endif %}
+							{% endfor %}
+						{% else %}
+							<td colspan="3">Sin Actividades</td>
+						{% endif %}
+					<tr>
+				</table>
 			</td>
 		</tr>
 		<tr height=20px></tr>

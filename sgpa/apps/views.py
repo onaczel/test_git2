@@ -1623,12 +1623,26 @@ def listflujosproyectosMod(request, proyecto_id):
     @return: render a apps/project_modificar_listflujo.html con el proyecto donde se encuentra, los flujos del proyecto y las actividades de los flujos
     """
     proyecto = Proyectos.objects.get(id = proyecto_id)
-    flujos = Flujos.objects.filter(proyecto_id = proyecto_id, estado = True)
+    flujos_list = Flujos.objects.filter(proyecto_id = proyecto_id, estado = True)
+    flujos = [] 
+    flujos_np = []
+    
     actividades = Actividades.objects.filter(plantilla = False , estado=True)
     mispermisos = misPermisos(request.user.id, proyecto_id)
-    hu_lista = UserStory.objects.filter(sprint = proyecto.nro_sprint)
+    hu_lista = UserStory.objects.filter(sprint = proyecto.nro_sprint, proyecto_id = proyecto.id)
+    existe = False
+    for fl in flujos_list:
+        for hu in hu_lista:
+            if hu.flujo == fl.id:
+                existe = True
+        if existe == False:
+            flujos.append(fl)
+        else:
+            flujos_np.append(fl)
+            existe = False
+            
     
-    return render_to_response("apps/project_modificar_listflujo.html", {"proyecto":proyecto , "flujos":flujos, "actividades":actividades, 'misPermisos':mispermisos})
+    return render_to_response("apps/project_modificar_listflujo.html", {"proyecto":proyecto , "flujos":flujos_list, "flujos_permitidos":flujos, "flujos_no_permitidos":flujos_np,"actividades":actividades, 'misPermisos':mispermisos})
 
 def flujosproyectosRequestMod(request, proyecto_id, flujo_id, actividad_id):
     """
