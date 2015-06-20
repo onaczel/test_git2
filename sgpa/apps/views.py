@@ -1082,8 +1082,9 @@ def eliminarflujo(request, flow_id):
     @return: objeto tipo Flujo
     """
     f = get_object_or_404(Flujos, pk=flow_id)
-    #f.estado = False
-    f.delete()
+    f.estado = False
+    #f.delete()
+    f.save()
     return f
 ###############################creacion de proyecto#################################################################################################
 
@@ -3052,7 +3053,7 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
                     userStory = UserStoryVersiones.objects.get(id = hu_id)
                 else:
                     userStory = UserStory.objects.get(id = hu_id)
-                flujos = Flujos.objects.filter(proyecto_id = proyecto_id)
+                flujos = Flujos.objects.filter(proyecto_id = proyecto_id, estado = True)
                 prioridades = Prioridad.objects.all()
                 try:
                     usuario = User.objects.get(id = userStory.usuario_Asignado)
@@ -3532,7 +3533,7 @@ def sprintsMas(request, proyecto_id, sprint_id, hu_id):
         sprints = []
     sprint = Sprint.objects.get(id = sprint_id)
     userStory = UserStory.objects.get(id = hu_id)
-    flujos = Flujos.objects.filter(proyecto_id = proyecto_id)
+    flujos = Flujos.objects.filter(proyecto_id = proyecto_id, estado = True)
     prioridades = Prioridad.objects.all()
     try:
         usuario = User.objects.get(id = userStory.usuario_Asignado)
