@@ -2961,6 +2961,7 @@ def sprints(request, proyecto_id, sprint_id, hu_id):
                             mensaje = "No se olvide de asignarle un usuario responsable al User Story: " + str(hu_proyecto.nombre)
                             us = False
                             break
+                        setlog(request, hu_proyecto.id)
                     if us and flu:
                         proyecto.fecha_ini_real = datetime.today().strftime("%Y-%m-%d")
                         mensaje = iniciarSprint(proyecto_id, 1)
