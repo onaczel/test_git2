@@ -3634,7 +3634,8 @@ def sprintsMas(request, proyecto_id, sprint_id, hu_id):
         scrum = Equipo.objects.get(proyecto_id = proyecto_id, usuario_id = request.user.id, rol_id = 3)
     except:
         scrum = Equipo()
-    return render_to_response('apps/project_sprint_planificar.html', {"planeado":planeado,"nplaneado":no_planeado,"horasp":h_planeadas,"proyecto":proyecto, "sprint":sprint, "hus":hus, "userStory":userStory, "usuario":usuario, "flujo":flujo, "prioridad":prioridad, "f_actividad":f_actividad, "f_a_estado":f_a_estado, "users":users, "flujos":flujos, "prioridades":prioridades, "scrum":scrum, "horas_sprint_usuario":horas_sprint_usuario, "cant_hus":cant_hus}, context_instance = RequestContext(request))
+    mispermisos = misPermisos(request.user.id, proyecto_id)
+    return render_to_response('apps/project_sprint_planificar.html', {"planeado":planeado,"nplaneado":no_planeado,"horasp":h_planeadas,"proyecto":proyecto, "sprint":sprint, "hus":hus, "userStory":userStory, "usuario":usuario, "flujo":flujo, "prioridad":prioridad, "f_actividad":f_actividad, "f_a_estado":f_a_estado, "users":users, "flujos":flujos, "prioridades":prioridades, "scrum":scrum, "horas_sprint_usuario":horas_sprint_usuario, "cant_hus":cant_hus, "misPermisos":mispermisos}, context_instance = RequestContext(request))
 
 
 def crearSprint(proyecto_id):
@@ -3898,8 +3899,8 @@ def horasUsuarioSprint(request, proyecto_id, sprint_id, usu_id):
     cant_hus = 0 #permite saber cuantos User Stories estoy enviando
     for hu in hus:
         cant_hus = cant_hus + 1
-    
-    return render_to_response('apps/project_sprint_planificar.html', {"proyecto":proyecto, "sprint":sprint, "hus":hus, "users":users, "scrum":scrum, "horas_sprint_usuario":horas_sprint_usuario, "cant_hus":cant_hus}, context_instance = RequestContext(request))
+    mispermisos = misPermisos(request.user.id, proyecto_id)
+    return render_to_response('apps/project_sprint_planificar.html', {"proyecto":proyecto, "sprint":sprint, "hus":hus, "users":users, "scrum":scrum, "horas_sprint_usuario":horas_sprint_usuario, "cant_hus":cant_hus, "misPermisos":mispermisos}, context_instance = RequestContext(request))
 
 def finalizarProyecto(request, proyecto_id, hu_id):
     """
