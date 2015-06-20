@@ -210,3 +210,5 @@ def es_ScrumMaster(user, proyecto_id, hu_id):
         asunto = 'SGPA - Finalizacion rechazada de User Story'
         msg = 'Usuario: '+usuario_asignado.username+', el scrum master: '+scrumMaster.username+ ' no ha dado por finalizado el user story: '+hu.nombre+'\n\nMotivo:'+'\n    '+hu.motivo_cambio_estado+'\n\nDetalles de la reprogramacion:'+'\n    Proyecto: '+proyecto.nombre+'\n    Sprint nro.: ' + str(proyecto.nro_sprint)+'\n    Actividad: '+actividad.descripcion+'\n    Estado: ' + estado.descripcion
         enviarMail(asunto, msg, list)
+        
+        
