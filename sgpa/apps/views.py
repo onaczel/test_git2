@@ -2291,9 +2291,10 @@ def registroHu(request, proyecto_id, hu_id):
     
     hu_reg = sorted(hu_reg, key=gethudate, reverse=True)
     proyecto = Proyectos.objects.get(pk=proyecto_id)
+    user_id = request.user.id
     mispermisos = misPermisos(request.user.id, proyecto_id)
     
-    return render_to_response('apps/hu_registro.html', {'hu_reg':hu_reg, 'hu':hu, 'proyecto':proyecto, 'misPermisos':mispermisos}, context_instance=RequestContext(request))
+    return render_to_response('apps/hu_registro.html', {'hu_reg':hu_reg, 'hu':hu, 'proyecto':proyecto, 'misPermisos':mispermisos, 'user_id':user_id}, context_instance=RequestContext(request))
 
 
 
@@ -2333,6 +2334,7 @@ def crearregistroHu(request, proyecto_id, hu_id):
         #"respuesta" se puede manejar como sea necesario
         #termina asignacion de horas a los dias del sprint
         hu_reg = UserStoryRegistro.objects.filter(idr = hu.id)
+        hu = UserStory.objects.get(pk=hu_id)
         
         hu_reg = sorted(hu_reg, key=gethudate, reverse=True)
         return render_to_response('apps/hu_registro.html', {'hu':hu, 'proyecto':proyecto, 'guardado':guardado, 'hu_reg':hu_reg, "respuesta":respuesta}, context_instance=RequestContext(request))
