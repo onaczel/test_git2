@@ -74,7 +74,9 @@
 
 {% block contenido %}
 {% if misPermisos.CUS %}
-<a href="{% url 'apps:crearHu' proyecto.id %}">Nuevo User Story</a>
+	{% if proyecto.estado_id != 5 %}
+		<a href="{% url 'apps:crearHu' proyecto.id %}">Nuevo User Story</a>
+	{% endif %}
 {% endif %}
 <br />
 <br />
