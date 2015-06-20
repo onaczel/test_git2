@@ -2570,8 +2570,7 @@ def setEstadoHu(request, proyecto_id, hu_id):
     user_logged = request.user.id
     count = 0
     
-    es_ScrumMaster(request.user,proyecto_id,hu_id)
-    
+        
     for act in actividadeslist:
         if count<=hu.f_actividad:
             actividades.append(act)
