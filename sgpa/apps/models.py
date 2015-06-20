@@ -249,6 +249,7 @@ class UserStoryLog(models.Model):
     sprint = models.IntegerField(null = True)
     user_modificador = models.CharField(max_length = 50, null = True)
     motivo_cambio_estado = models.CharField(max_length = 120, null = True)
+    estado_scrum = models.ForeignKey(Estados_Scrum, null = True)
 
 class Notas(models.Model):
     """

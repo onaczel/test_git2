@@ -143,7 +143,7 @@
 											 			<big><font title="Cancelado" color="#FF0000"><i class="fa fa-fw fa-times-circle"></i></font></big>
 											 			<small><a href="{% url 'apps:huprincipal' proyecto.id h.id %}"><font color="#0000"><b>{{h.nombre}}</b></font></a></small>
 											 		{% elif h.flujo_posicion == 1 %}
-											 			<big><font title="Pendiente" color="#EE82EE"><i class="fa fa-fw fa-minus-circle"></i></font></big>
+											 			<big><font title="Por Iniciar" color="#EE82EE"><i class="fa fa-fw fa-minus-circle"></i></font></big>
 											 			<small><a href="{% url 'apps:huprincipal' proyecto.id h.id %}"><font color="#0000"><b>{{h.nombre}}</b></font></a></small>
 													{% elif h.flujo_posicion > 1 and h.finalizado == False %}
 											 			<big><font title="En progreso" color="#008000"><i class="fa fa-fw fa-arrow-circle-right"></i></font></big>

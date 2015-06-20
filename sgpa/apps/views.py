@@ -1813,8 +1813,9 @@ def hulog(request, proyecto_id, hu_id):
     users = User.objects.all()
     estados = Estados.objects.all()
     actividades = Actividades.objects.filter(flujo_id = hu.flujo)
+    estados_scrum = Estados_Scrum.objects.all()
     
-    return render_to_response('apps/hu_log.html', {'hu':hu, 'proyecto':proyecto, 'listlog':listlog, 'users':users, 'estados':estados, 'actividades':actividades})
+    return render_to_response('apps/hu_log.html', {'hu':hu, 'proyecto':proyecto, 'listlog':listlog, 'users':users, 'estados':estados, 'actividades':actividades, 'estados_scrum':estados_scrum})
     
 
 def gethulog(hulog):
@@ -1842,6 +1843,7 @@ def setlog(request, hu_id):
         hulog.fechahora =  datetime.now() - hulog.fechahora
     except:
         hulog.fechahora = datetime.now()
+    hulog.estado_scrum = hu.estado_scrum
     hulog.usuario_Asignado = hu.usuario_Asignado
     hulog.sprint = hu.sprint
     hulog.save()
@@ -2242,7 +2244,11 @@ def editarHu(request, proyecto_id, hu_id):
 def finalizarHu(request, proyecto_id, hu_id):
     proyecto = Proyectos.objects.get(pk=proyecto_id)
     hu = UserStory.objects.get(pk=hu_id)
+    huv = UserStoryVersiones()
+    copiarHU(hu, huv, User.objects.get(pk =request.user.id)) 
+    
     hu.estado_scrum = Estados_Scrum.objects.get(pk=5)
+     
     hu.save()
     #notificacion
     notificar_finalizacion_HU(proyecto_id, hu_id)
@@ -2318,14 +2324,16 @@ def gethudate(hu):
     """
     return hu.fechahora
 
-def verregistroHu(request, proyecto_id, hu_id):
+def verregistroHu(request, proyecto_id, hu_reg_id):
     """
     Muestra los campos del registro de la actividad
     @param request: Http
     @param proyecto_id: id del proyecto actual
     @param hu_id: id del Registro del User Story
     """
-    hu_reg = UserStoryRegistro.objects.get(pk=hu_id)
+
+    hu_reg = UserStoryRegistro.objects.get(pk=hu_reg_id)
+    hu = UserStory.objects.get(pk = hu_reg.idr)
     proyecto = Proyectos.objects.get(pk=proyecto_id)
     flujo = Flujos.objects.get(pk=hu_reg.flujo)
     actividad = getActividadHu(hu_reg)
@@ -2340,7 +2348,7 @@ def verregistroHu(request, proyecto_id, hu_id):
     else:
         est = estado.descripcion
     
-    return render_to_response('apps/hu_registro_mostrar.html', {'hu_reg':hu_reg, 'proyecto':proyecto, 'actividad':act, 'estado':est, 'flujo':flujo.descripcion})
+    return render_to_response('apps/hu_registro_mostrar.html', {'hu_reg':hu_reg, 'proyecto':proyecto, 'actividad':act, 'estado':est, 'flujo':flujo.descripcion, 'hu':hu})
 
 def getActividadHu(hu):
     """
@@ -2532,6 +2540,8 @@ def setEstadoHu(request, proyecto_id, hu_id):
     proyecto = get_object_or_404(Proyectos, pk = proyecto_id)
     hu = get_object_or_404(UserStory, pk = hu_id)
     flujo = Flujos.objects.get(pk = hu.flujo)
+    huv = UserStoryVersiones()
+      
     actividadeslist = Actividades.objects.filter(flujo_id = hu.flujo)
     actividades = []
     user_logged = request.user.id
@@ -2605,7 +2615,9 @@ def setEstadoHu(request, proyecto_id, hu_id):
             try:
                 hu.motivo_cambio_estado = request.POST['motivo']
             except:
-                hu.motio_cambio_estado = None
+                hu.motivo_cambio_estado = None
+            
+            copiarHU(hu, huv, User.objects.get(pk = request.user.id))
             hu.save()
             setlog(request, hu.id)
             modificado = True
@@ -2613,6 +2625,7 @@ def setEstadoHu(request, proyecto_id, hu_id):
             return render_to_response('apps/hu_set_estado.html', {'proyecto':proyecto, 'hu':hu, 'actividades':actividades, 'estados':estados, 'flujo_descripcion':flujo.descripcion, 'misPermisos':mispermisos, 'modificado':modificado, 'user_logged':user_logged}, context_instance = RequestContext(request))
         elif request.POST['submit'] == "Finalizar":
             hu.finalizado = True
+            copiarHU(hu, huv, User.objects.get(pk = request.user.id))
             hu.save()
             #notificacion
             notificar_pedido_finalizacion(request.user.id, proyecto_id, hu_id)
