@@ -134,10 +134,18 @@
 									</select>
 								</td>
 							{% else %}
-								<td>{{usuario.username}}</td>
+								<td>
+									<select name="username"  style="width:190px" sort = true>
+										<option>{{usuario.username}}</option>
+									</select>
+								</td>
 							{% endif %}
 						{% else %}
-							<td>{{usuario.username}}</td>
+							<td>
+								<select name="username"  style="width:190px" sort = true>
+									<option>{{usuario.username}}</option>
+								</select>
+							</td>
 						{% endif %}
 						<!-- <select name="username"  style="width:190px" sort = true>
 							{% for user in users %}
